@@ -8,9 +8,9 @@
     "price": 95,
     "technique": "DTG",
     "images": [
-      "images/atlas_front.webp",
-      "images/atlas_back.webp",
-      "images/atlas_detail.webp"
+      "images/atlas_front.png",
+      "images/atlas_back.png",
+      "images/atlas_detail.png"
     ],
     "badge": "NEW",
     "sizes": { "S": 5, "M": 8, "L": 6, "XL": 4, "XXL": 2 },
@@ -25,8 +25,8 @@
     "price": 92,
     "technique": "DTG",
     "images": [
-      "images/calyras_ego_front.webp",
-      "images/calyras_ego_back.webp"
+      "images/calyras_ego_front.png",
+      "images/calyras_ego_back.png"
     ],
     "badge": "LIMITED",
     "sizes": { "S": 3, "M": 6, "L": 0, "XL": 5, "XXL": 1 },
@@ -41,8 +41,8 @@
     "price": 89,
     "technique": "DTF",
     "images": [
-      "images/mascaras_front.webp",
-      "images/mascaras_detail.webp"
+      "images/mascaras_front.png",
+      "images/mascaras_detail.png"
     ],
     "badge": "Bestseller",
     "sizes": { "S": 7, "M": 5, "L": 4, "XL": 0, "XXL": 2 },
@@ -57,8 +57,8 @@
     "price": 90,
     "technique": "DTG",
     "images": [
-      "images/like_gods_front.webp",
-      "images/like_gods_detail.webp"
+      "images/like_gods_front.png",
+      "images/like_gods_detail.png"
     ],
     "badge": "NEW",
     "sizes": { "S": 6, "M": 6, "L": 6, "XL": 3, "XXL": 1 },
@@ -73,8 +73,8 @@
     "price": 88,
     "technique": "DTG",
     "images": [
-      "images/letter_for_self_front.webp",
-      "images/letter_for_self_back.webp"
+      "images/letter_for_self_front.png",
+      "images/letter_for_self_back.png"
     ],
     "badge": "LIMITED",
     "sizes": { "S": 4, "M": 8, "L": 5, "XL": 2, "XXL": 0 },
