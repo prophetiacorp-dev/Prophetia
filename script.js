@@ -6,7 +6,7 @@
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click', e=>{
     const href = a.getAttribute('href');
-    if(href.startsWith('#')){
+    if(href && href.startsWith('#')){
       e.preventDefault();
       document.querySelector(href)?.scrollIntoView({behavior:'smooth'});
     }
@@ -41,22 +41,24 @@ function bindFilters(){
   if(!chips.length || !products.length) return;
 
   function apply(filter){
-    chips.forEach(c=>c.classList.toggle('chip-active', c.dataset.filter===filter || (filter==='all' && c.dataset.filter==='all')));
+    chips.forEach(c=>{
+      const isActive = c.dataset.filter===filter || (filter==='all' && c.dataset.filter==='all');
+      c.classList.toggle('chip-active', isActive);
+    });
     products.forEach(p=>{
-      const cat = p.dataset.cat;
-      p.style.display = (filter==='all' || cat===filter) ? '' : 'none';
+      p.style.display = (filter==='all' || p.dataset.cat===filter) ? '' : 'none';
     });
   }
 
   chips.forEach(ch=>{
     ch.addEventListener('click', ()=>{
-      apply(ch.dataset.filter);
-      if(ch.dataset.filter && ch.dataset.filter!=='all'){ location.hash = ch.dataset.filter; }
-      else { history.replaceState(null, '', location.pathname); }
+      const f = ch.dataset.filter || 'all';
+      apply(f);
+      if(f !== 'all') location.hash = f; else history.replaceState(null,'',location.pathname);
     });
   });
 
-  const fromHash = (location.hash || '#all').replace('#','').toLowerCase();
+  const fromHash = (location.hash||'#all').slice(1).toLowerCase();
   apply(['myth','baobab','ventus'].includes(fromHash) ? fromHash : 'all');
 }
 
@@ -70,15 +72,15 @@ async function loadCatalog() {
     const products = await res.json();
 
     grid.innerHTML = products.map(p => `
-      <article class="card product reveal-init" data-cat="${p.collection.toLowerCase()}">
+      <article class="card product reveal-init" data-cat="${(p.collection||'').toLowerCase()}">
         <a href="product.html?slug=${p.slug}">
           <div class="media frame">
-            <img loading="lazy" src="${p.images?.[0] || ''}" alt="${p.title} — Prophetia">
+            <img loading="lazy" src="${p.images?.[0] || ''}" alt="${p.title || ''} — Prophetia">
           </div>
           <div class="card-body">
-            <h2 class="product-title">${p.title}</h2>
-            <p class="product-meta">${p.collection} — ${p.technique || ''}</p>
-            <div class="price-tag">€${Number(p.price).toFixed(0)}</div>
+            <h2 class="product-title">${p.title || ''}</h2>
+            <p class="product-meta">${p.collection || ''} ${p.technique ? '— '+p.technique : ''}</p>
+            <div class="price-tag">€${Number(p.price||0).toFixed(0)}</div>
           </div>
         </a>
       </article>
@@ -111,18 +113,18 @@ loadCatalog();
     if(!p){ location.href='colecciones.html'; return; }
 
     document.title = `${p.title} — PROPHETIA`;
-    pTitle.textContent = p.title;
+    pTitle.textContent = p.title || '';
     pDesc.textContent  = p.description || '';
-    pPrice.textContent = '€' + Number(p.price).toFixed(0);
+    pPrice.textContent = '€' + Number(p.price||0).toFixed(0);
 
     const imgs = Array.isArray(p.images) && p.images.length ? p.images : ['images/placeholder.webp'];
-    pMain.src = imgs[0]; pMain.alt = p.title;
+    pMain.src = imgs[0]; pMain.alt = p.title || '';
 
-    pThumbs.innerHTML = imgs.map((src,i)=>`<img class="thumb ${i===0?'active':''}" src="${src}" alt="${p.title} vista ${i+1}">`).join('');
+    pThumbs.innerHTML = imgs.map((src,i)=>`<img class="thumb ${i===0?'active':''}" src="${src}" alt="${(p.title||'')+' vista '+(i+1)}">`).join('');
     pThumbs.querySelectorAll('.thumb').forEach(t=>{
       t.addEventListener('click', ()=>{
         pThumbs.querySelectorAll('.thumb').forEach(x=>x.classList.remove('active'));
-        t.classList.add('active'); pMain.src = t.src; pMain.alt = t.alt;
+        t.classList.add('active'); pMain.src=t.src; pMain.alt=t.alt;
       });
     });
 
@@ -169,8 +171,8 @@ function renderCart(){
       </div>`;
   }).join('') || '<p class="muted">Tu carrito está vacío.</p>';
 
-  totalEl && (totalEl.textContent = `€${total.toFixed(2)}`);
-  countEl && (countEl.textContent = cart.reduce((n,x)=>n+(x.qty||0),0));
+  if(totalEl) totalEl.textContent = `€${total.toFixed(2)}`;
+  if(countEl) countEl.textContent = cart.reduce((n,x)=>n+(x.qty||0),0);
 
   itemsEl.querySelectorAll('.remove').forEach(btn=>{
     btn.addEventListener('click', ()=> removeFromCart(btn.dataset.sku, btn.dataset.size));
@@ -178,7 +180,7 @@ function renderCart(){
 }
 renderCart();
 
-/* Drawer carrito */
+/* ===== Drawer del carrito ===== */
 const cartBtn = document.querySelector('.cart-btn');
 const cartDrawer = document.getElementById('cartDrawer');
 const cartBackdrop = document.getElementById('cartBackdrop');
@@ -189,7 +191,8 @@ cartBtn?.addEventListener('click', openCart);
 closeCartBtn?.addEventListener('click', closeCart);
 cartBackdrop?.addEventListener('click', closeCart);
 
-/* Checkout demo */
+/* ===== Checkout demo ===== */
 document.getElementById('checkoutBtn')?.addEventListener('click', ()=>{
   alert('Demo: aquí iría Stripe/PayPal o un formulario de pedido.');
 });
+
