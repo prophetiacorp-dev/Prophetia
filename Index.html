@@ -2,40 +2,72 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PROPHETIA — Silent Luxury</title>
+  <meta name="description" content="Prophetia: lujo silencioso, arte editorial y mitología mediterránea.">
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="Imágenes/favicon.ico">
 </head>
 <body>
-  <header>
-    <h1>PROPHETIA</h1>
-    <nav>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
+    <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    <nav class="site-nav">
       <a href="#about">About</a>
-      <a href="Imagenes/colecciones.html">Collections</a>
+      <a href="Imágenes/colecciones.html">Collections</a>
+      <a href="#journal">Journal</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
 
-  <section id="hero">
+  <section id="hero" class="reveal-init">
     <h2>Silent Luxury. Mediterranean Myth.</h2>
+    <p class="lede">Arte editorial, símbolos ancestrales y composición moderna para prendas con alma.</p>
   </section>
 
-  <section id="about">
-    <h3>About Prophetia</h3>
-    <p>Nacida en el Mediterráneo, Prophetia transforma mitos y símbolos en arte editorial y prendas de lujo silencioso.</p>
-  </section>
-
-  <section id="collections">
-    <h3>Collections</h3>
-    <div class="grid">
-      <div class="card">Myth Series</div>
-      <div class="card">Baobab</div>
-      <div class="card">Ventus</div>
+  <!-- ABOUT -->
+  <section id="about" class="about-wrap reveal-init">
+    <div class="about-head">
+      <h3>About Prophetia</h3>
+      <p class="lede">Nacida en el Mediterráneo, Prophetia traduce mitos y símbolos en gráficos de lujo silencioso.</p>
+    </div>
+    <div class="about-cols">
+      <p><span class="dropcap">P</span>rophetia es equilibrio entre lo antiguo y lo contemporáneo: líneas limpias, dorado envejecido y paletas tierra con acentos turquesa. Nuestra regla sagrada: aire, proporción, silencio.</p>
+      <p>Trabajamos con base editorial: títulos serenos, tipografía con carácter y ritmo visual. Cada diseño es un pequeño altar portátil: habla bajo, pero todos lo escuchan.</p>
+      <blockquote>“Lujo que no grita: susurra.”</blockquote>
+      <p>Producción cuidada, prints en PNG transparente 4K pensados para espalda, y storytelling que conecta con culturas y espíritus del Mediterráneo.</p>
     </div>
   </section>
 
-  <footer id="contact">
-    <p>Contact: hola@prophetia.com</p>
+  <!-- JOURNAL -->
+  <section id="journal" class="journal-wrap">
+    <header class="journal-head reveal-init">
+      <h3>Journal</h3>
+      <p class="lede">Procesos, mitología y notas de estudio.</p>
+    </header>
+    <div class="journal-grid">
+      <article class="journal-card reveal-init">
+        <h4>Atlas · Sello Editorial</h4>
+        <p>Composición axial con líneas geométricas y dorado mate. Inspirado en relieves griegos.</p>
+        <a class="text-link" href="#">Leer más →</a>
+      </article>
+      <article class="journal-card reveal-init">
+        <h4>Baobab · Trazos Tribales</h4>
+        <p>Monigotes lanceros estilizados sobre base beige lino. Silencio y fuerza.</p>
+        <a class="text-link" href="#">Leer más →</a>
+      </article>
+      <article class="journal-card reveal-init">
+        <h4>Ventus · Zephyrus</h4>
+        <p>Movimiento controlado, diagonales de aire y contraste mediterráneo.</p>
+        <a class="text-link" href="#">Leer más →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer id="contact" class="site-footer reveal-init">
+    <p>Contact: <a href="mailto:hola@prophetia.com">hola@prophetia.com</a></p>
+    <p>© PROPHETIA — Silent Luxury</p>
   </footer>
 
   <script src="script.js"></script>

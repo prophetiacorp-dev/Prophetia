@@ -88,3 +88,46 @@ async function loadCatalog() {
   }
 }
 loadCatalog();
+/* ===== Fade-in con IntersectionObserver ===== */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('reveal-show');
+      observer.unobserve(e.target);
+    }
+  });
+},{ threshold: 0.15 });
+
+document.querySelectorAll('.reveal-init').forEach(el=>observer.observe(el));
+
+/* ===== Hook para colecciones: observar tarjetas generadas dinámicamente ===== */
+async function loadCatalog() {
+  const grid = document.getElementById('productsGrid');
+  if (!grid) return;
+
+  try {
+    const response = await fetch('../catalog.json'); // si colecciones.html está en /Imágenes/
+    const products = await response.json();
+
+    grid.innerHTML = products.map(p => `
+      <article class="card product reveal-init" data-cat="${p.collection.toLowerCase()}">
+        <a href="../product.html?slug=${p.slug}">
+          <div class="media">
+            <img loading="lazy" src="${p.img}" alt="${p.title} — Prophetia">
+          </div>
+          <div class="card-body">
+            <h2 class="product-title">${p.title}</h2>
+            <p class="product-meta">${p.collection} — ${p.technique}</p>
+          </div>
+        </a>
+      </article>
+    `).join('');
+
+    // observar después de insertar
+    grid.querySelectorAll('.reveal-init').forEach(el=>observer.observe(el));
+  } catch (err) {
+    console.error("Error cargando catálogo:", err);
+    grid.innerHTML = "<p>Error al cargar los productos.</p>";
+  }
+}
+loadCatalog && loadCatalog();
