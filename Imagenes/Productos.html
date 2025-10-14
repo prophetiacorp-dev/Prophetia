@@ -4,12 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Producto — PROPHETIA</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta property="og:type" content="product">
   <link rel="icon" href="images/favicon.ico">
-  <!-- PayPal JS SDK (EUR). Reemplaza client-id. Para pruebas usa sandbox. -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- PayPal SDK (EUR) — cambia client-id -->
   <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" defer></script>
 </head>
 <body class="page-product">
+  <div id="announceBar" class="announce-bar">
+    <span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span>
+    <button id="closeAnnounce" aria-label="Cerrar">×</button>
+  </div>
+
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
@@ -29,7 +35,6 @@
     </nav>
   </header>
 
-  <!-- Carrito -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
     <div id="cartItems" class="cart-items"></div>
@@ -46,24 +51,15 @@
     <section class="product-info">
       <h1 id="pTitle"></h1>
       <p id="pDesc" class="lede"></p>
+      <div class="price-row"><span id="pPrice" class="price"></span><span class="tax-note">IVA incl.</span></div>
 
-      <div class="price-row">
-        <span id="pPrice" class="price"></span>
-        <span class="tax-note">IVA incl.</span>
-      </div>
-
-      <!-- Selector de talla (botones) + qty -->
       <div id="sizeRow" class="size-row"></div>
-      <div class="qty-row">
-        <label for="qty">Cantidad</label>
-        <input id="qty" type="number" min="1" value="1">
-      </div>
+      <div class="qty-row"><label for="qty">Cantidad</label><input id="qty" type="number" min="1" value="1"></div>
 
       <form id="buyForm" class="buy-form">
         <button type="submit" class="btn-primary">Añadir al carrito</button>
       </form>
 
-      <!-- PayPal Buttons -->
       <div id="paypalButtons" class="paypal-wrap"></div>
 
       <details class="accordion" open>
@@ -78,16 +74,17 @@
     </section>
   </main>
 
-  <!-- Barra sticky de compra rápida -->
   <div id="stickyBar" class="sticky-bar">
     <span id="stickyTitle"></span>
-    <div class="sticky-actions">
-      <span id="stickyPrice"></span>
-      <button id="stickyAdd" class="btn-primary">Añadir</button>
-    </div>
+    <div class="sticky-actions"><span id="stickyPrice"></span><button id="stickyAdd" class="btn-primary">Añadir</button></div>
   </div>
 
+  <!-- Aquí inyectaremos JSON-LD del producto -->
+  <script id="jsonld" type="application/ld+json"></script>
+
   <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
+  <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="script.js"></script>
+  <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
 </body>
 </html>
