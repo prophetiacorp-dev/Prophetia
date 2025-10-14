@@ -6,13 +6,22 @@
   <title>Producto — PROPHETIA</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="images/favicon.ico">
+  <!-- PayPal JS SDK (EUR). Reemplaza client-id. Para pruebas usa sandbox. -->
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" defer></script>
 </head>
 <body class="page-product">
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
     <nav class="site-nav">
-      <a href="colecciones.html">Collections</a>
+      <div class="dropdown">
+        <a href="colecciones.html">Collections ▾</a>
+        <div class="dropdown-menu">
+          <a href="colecciones.html#myth">Myth</a>
+          <a href="colecciones.html#baobab">Baobab</a>
+          <a href="colecciones.html#ventus">Ventus</a>
+        </div>
+      </div>
       <a href="index.html#about">About</a>
       <a href="index.html#journal">Journal</a>
       <a href="index.html#contact">Contact</a>
@@ -20,17 +29,11 @@
     </nav>
   </header>
 
-  <!-- CART DRAWER -->
+  <!-- Carrito -->
   <aside id="cartDrawer" class="cart-drawer">
-    <div class="cart-head">
-      <strong>Tu carrito</strong>
-      <button id="closeCart" aria-label="Cerrar">×</button>
-    </div>
+    <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
     <div id="cartItems" class="cart-items"></div>
-    <div class="cart-foot">
-      <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
-      <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
-    </div>
+    <div class="cart-foot"><div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div><button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button></div>
   </aside>
   <div id="cartBackdrop" class="cart-backdrop"></div>
 
@@ -49,14 +52,19 @@
         <span class="tax-note">IVA incl.</span>
       </div>
 
+      <!-- Selector de talla (botones) + qty -->
+      <div id="sizeRow" class="size-row"></div>
+      <div class="qty-row">
+        <label for="qty">Cantidad</label>
+        <input id="qty" type="number" min="1" value="1">
+      </div>
+
       <form id="buyForm" class="buy-form">
-        <label for="size">Talla</label>
-        <select id="size" required>
-          <option value="">Selecciona</option>
-          <option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option>
-        </select>
-        <button type="submit" class="btn-primary">Añadir</button>
+        <button type="submit" class="btn-primary">Añadir al carrito</button>
       </form>
+
+      <!-- PayPal Buttons -->
+      <div id="paypalButtons" class="paypal-wrap"></div>
 
       <details class="accordion" open>
         <summary>Detalles</summary>
@@ -65,16 +73,21 @@
           <li>Print en PNG transparente 4K (DTG/DTF)</li>
           <li>Corte regular/oversize</li>
           <li>Hecho en ___; estampado en España</li>
-          <li>Lavar del revés a 30 °C</li>
         </ul>
       </details>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>© PROPHETIA — Silent Luxury</p>
-  </footer>
+  <!-- Barra sticky de compra rápida -->
+  <div id="stickyBar" class="sticky-bar">
+    <span id="stickyTitle"></span>
+    <div class="sticky-actions">
+      <span id="stickyPrice"></span>
+      <button id="stickyAdd" class="btn-primary">Añadir</button>
+    </div>
+  </div>
 
+  <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
   <script src="script.js"></script>
 </body>
 </html>

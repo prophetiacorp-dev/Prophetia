@@ -166,3 +166,45 @@ select{ padding:.6rem .7rem; border:1px solid var(--line); border-radius:10px; b
   .site-nav{ display:none; }
   .nav-toggle{ display:block; }
 }
+/* Badges y hover de imagen en cards */
+.card .badge{
+  position:absolute; top:10px; left:10px; background:var(--gold); color:#fff;
+  padding:.25rem .5rem; font-size:.8rem; border-radius:999px;
+}
+.card .media{ position:relative; overflow:hidden; }
+.card .media .img-1, .card .media .img-2{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity .3s ease;
+}
+.card .media .img-2{ opacity:0; }
+.card:hover .media .img-2{ opacity:1; }
+.card:hover .media .img-1{ opacity:0; }
+
+/* Selector de tallas */
+.size-row{ display:flex; gap:.5rem; flex-wrap:wrap; margin:0 0 1rem 0; }
+.size-btn{
+  border:1px solid var(--line); background:#fff; padding:.45rem .8rem; border-radius:10px; cursor:pointer;
+}
+.size-btn.active{ border-color:var(--gold); color:var(--gold); font-weight:600; }
+.size-btn[disabled]{ opacity:.4; cursor:not-allowed; text-decoration:line-through; }
+
+/* Qty */
+.qty-row{ display:flex; align-items:center; gap:.6rem; margin-bottom:1rem; }
+.qty-row input{ width:80px; padding:.5rem .6rem; border:1px solid var(--line); border-radius:10px; }
+
+/* Sticky bar */
+.sticky-bar{
+  position:sticky; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--line);
+  padding:.7rem 1rem; display:flex; justify-content:space-between; align-items:center; z-index:40;
+}
+.sticky-actions{ display:flex; gap:.75rem; align-items:center; }
+.sticky-actions #stickyPrice{ font-weight:600; }
+
+/* PayPal wrap */
+.paypal-wrap{ margin-top:1rem; }
+
+/* Toast sencillo */
+.toast{
+  position:fixed; bottom:20px; right:20px; background:#111; color:#fff; padding:.7rem 1rem;
+  border-radius:999px; opacity:0; transform:translateY(8px); transition:all .3s; z-index:120;
+}
+.toast.show{ opacity:1; transform:none; }

@@ -6,12 +6,10 @@
     "collection": "Myth",
     "price": 95,
     "technique": "DTG",
-    "images": [
-      "images/apollon_mockup.webp",
-      "images/apollon_back.webp",
-      "images/apollon_detail.webp"
-    ],
-    "description": "Gráfico editorial inspirado en el relieve clásico griego. Líneas limpias, dorado envejecido, equilibrio y aire."
+    "images": ["images/apollon_mockup.webp", "images/apollon_back.webp", "images/apollon_detail.webp"],
+    "badge": "NEW",
+    "sizes": { "S": 3, "M": 6, "L": 0, "XL": 5, "XXL": 2 },
+    "description": "Gráfico editorial inspirado en relieve clásico griego. Líneas limpias, dorado envejecido y aire."
   },
   {
     "slug": "baobab-lancers",
@@ -20,9 +18,9 @@
     "collection": "Baobab",
     "price": 89,
     "technique": "DTF",
-    "images": [
-      "images/baobab_mockup.webp"
-    ],
+    "images": ["images/baobab_mockup.webp", "images/baobab_mockup.webp"],
+    "badge": "LIMITED",
+    "sizes": { "S": 10, "M": 8, "L": 5, "XL": 0, "XXL": 1 },
     "description": "Lanceros tribales estilizados junto a un baobab. Trazos negros y base beige lino: silencio y fuerza."
   },
   {
@@ -32,9 +30,9 @@
     "collection": "Ventus",
     "price": 92,
     "technique": "DTG",
-    "images": [
-      "images/ventus_mockup.webp"
-    ],
-    "description": "Diseño inspirado en los dioses del viento. Líneas ondulantes y aire mediterráneo."
+    "images": ["images/ventus_mockup.webp", "images/ventus_mockup.webp"],
+    "badge": "Bestseller",
+    "sizes": { "S": 4, "M": 0, "L": 7, "XL": 3, "XXL": 2 },
+    "description": "Inspirado en los dioses del viento. Líneas ondulantes y aire mediterráneo."
   }
 ]
