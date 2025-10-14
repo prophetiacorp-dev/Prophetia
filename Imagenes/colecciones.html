@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Colecciones — PROPHETIA</title>
+  <meta name="description" content="Colecciones: Myth Series y Letters from the Soul. Moda editorial y lujo silencioso.">
+  <link rel="icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-collections">
+  <div id="announceBar" class="announce-bar">
+    <span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span>
+    <button id="closeAnnounce" aria-label="Cerrar">×</button>
+  </div>
+
+  <!-- HEADER con mega menu (mismo que en index) -->
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
+    <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    <nav class="site-nav">
+      <div class="mega">
+        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Collections ▾</button>
+        <div class="mega-panel" role="menu">
+          <div class="mega-inner">
+            <div class="mega-cols">
+              <div class="mega-col">
+                <h5>Collections</h5>
+                <a href="#myth-series">Myth Series</a>
+                <a href="#letters-from-the-soul">Letters from the Soul</a>
+                <hr>
+                <a href="colecciones.html">All Products</a>
+                <a href="colecciones.html">New Arrivals</a>
+                <a href="colecciones.html">Bestsellers</a>
+              </div>
+              <div class="mega-col">
+                <h5>Clothing</h5>
+                <a href="colecciones.html">T-Shirts</a>
+                <a href="colecciones.html">Hoodies</a>
+                <a href="colecciones.html">Crewnecks</a>
+                <a href="colecciones.html">Longsleeve</a>
+              </div>
+              <div class="mega-col">
+                <h5>Accessories</h5>
+                <a href="colecciones.html">Posters</a>
+                <a href="colecciones.html">Art Prints</a>
+                <a href="colecciones.html">Gift Card</a>
+              </div>
+            </div>
+            <div class="mega-tiles">
+              <a class="mega-tile" href="#myth-series"><img src="images/mega_myth.png" alt=""><span>Myth Series</span></a>
+              <a class="mega-tile" href="#letters-from-the-soul"><img src="images/mega_letters.png" alt=""><span>Letters from the Soul</span></a>
+              <a class="mega-tile" href="colecciones.html"><img src="images/mega_tshirts.png" alt=""><span>T-Shirts</span></a>
+              <a class="mega-tile" href="colecciones.html"><img src="images/mega_hoodies.png" alt=""><span>Hoodies</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a href="index.html#about">About</a>
+      <a href="index.html#journal">Journal</a>
+      <a href="index.html#contact">Contact</a>
+      <button class="cart-btn" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <!-- CARRITO -->
+  <aside id="cartDrawer" class="cart-drawer">
+    <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
+      <div class="coupon-row">
+        <input id="couponInput" type="text" placeholder="Código de descuento">
+        <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
+      </div>
+      <div id="couponNote" class="coupon-applied" style="display:none;">Código aplicado: <span id="couponName"></span></div>
+      <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
+    </div>
+  </aside>
+  <div id="cartBackdrop" class="cart-backdrop"></div>
+
+  <main>
+    <section class="page-hero">
+      <h1>Collections</h1>
+      <p class="lede">Mitología y cartas íntimas. Lujo silencioso con alma editorial.</p>
+    </section>
+
+    <section class="filters">
+      <button class="chip chip-active" data-filter="all">All</button>
+      <button class="chip" data-filter="myth-series">Myth Series</button>
+      <button class="chip" data-filter="letters-from-the-soul">Letters from the Soul</button>
+    </section>
+
+    <section class="grid products-grid" id="productsGrid"></section>
+  </main>
+
+  <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

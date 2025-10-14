@@ -8,7 +8,7 @@
   <meta property="og:title" content="PROPHETIA — Silent Luxury">
   <meta property="og:description" content="Arte editorial, símbolos ancestrales y composición moderna.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="images/atlas_front.webp">
+  <meta property="og:image" content="images/atlas_front.png">
   <meta property="og:url" content="https://prophetiacorp-dev.github.io/prophetia/">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="images/favicon.ico">
@@ -21,31 +21,74 @@
     <button id="closeAnnounce" aria-label="Cerrar">×</button>
   </div>
 
-  <!-- Header -->
+  <!-- ===== HEADER con MEGA MENU ===== -->
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
+
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+
     <nav class="site-nav">
-      <div class="dropdown">
-        <a href="colecciones.html">Collections ▾</a>
-        <div class="dropdown-menu">
-          <a href="colecciones.html#myth-series">Myth Series</a>
-          <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
+      <!-- Mega menu -->
+      <div class="mega">
+        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Collections ▾</button>
+        <div class="mega-panel" role="menu">
+          <div class="mega-inner">
+            <!-- Columnas de texto -->
+            <div class="mega-cols">
+              <div class="mega-col">
+                <h5>Collections</h5>
+                <a href="colecciones.html#myth-series">Myth Series</a>
+                <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
+                <hr>
+                <a href="colecciones.html">All Products</a>
+                <a href="colecciones.html">New Arrivals</a>
+                <a href="colecciones.html">Bestsellers</a>
+              </div>
+              <div class="mega-col">
+                <h5>Clothing</h5>
+                <a href="colecciones.html">T-Shirts</a>
+                <a href="colecciones.html">Hoodies</a>
+                <a href="colecciones.html">Crewnecks</a>
+                <a href="colecciones.html">Longsleeve</a>
+              </div>
+              <div class="mega-col">
+                <h5>Accessories</h5>
+                <a href="colecciones.html">Posters</a>
+                <a href="colecciones.html">Art Prints</a>
+                <a href="colecciones.html">Gift Card</a>
+              </div>
+            </div>
+            <!-- Tiles de imagen -->
+            <div class="mega-tiles">
+              <a class="mega-tile" href="colecciones.html#myth-series">
+                <img src="images/mega_myth.png" alt="Myth Series"><span>Myth Series</span>
+              </a>
+              <a class="mega-tile" href="colecciones.html#letters-from-the-soul">
+                <img src="images/mega_letters.png" alt="Letters from the Soul"><span>Letters from the Soul</span>
+              </a>
+              <a class="mega-tile" href="colecciones.html">
+                <img src="images/mega_tshirts.png" alt="T-Shirts"><span>T-Shirts</span>
+              </a>
+              <a class="mega-tile" href="colecciones.html">
+                <img src="images/mega_hoodies.png" alt="Hoodies"><span>Hoodies</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
+      <!-- /mega menu -->
+
       <a href="#about">About</a>
       <a href="#journal">Journal</a>
       <a href="#contact">Contact</a>
+
       <button class="cart-btn" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
     </nav>
   </header>
 
-  <!-- Cart drawer -->
+  <!-- ===== CARRITO ===== -->
   <aside id="cartDrawer" class="cart-drawer">
-    <div class="cart-head">
-      <strong>Tu carrito</strong>
-      <button id="closeCart" aria-label="Cerrar">×</button>
-    </div>
+    <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart" aria-label="Cerrar">×</button></div>
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-foot">
       <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
@@ -59,13 +102,13 @@
   </aside>
   <div id="cartBackdrop" class="cart-backdrop"></div>
 
-  <!-- HERO -->
-  <section id="hero" class="reveal-init" style="padding-top:4rem;">
+  <!-- ===== HERO ===== -->
+  <section id="hero" class="reveal-init hero">
     <h2>Silent Luxury. Mediterranean Myth.</h2>
     <p class="lede">Arte editorial, símbolos ancestrales y composición moderna para prendas con alma.</p>
   </section>
 
-  <!-- ABOUT -->
+  <!-- ===== ABOUT ===== -->
   <section id="about" class="about-wrap reveal-init">
     <div class="about-head">
       <h3>About Prophetia</h3>
@@ -79,38 +122,26 @@
     </div>
   </section>
 
-  <!-- JOURNAL -->
+  <!-- ===== JOURNAL ===== -->
   <section id="journal" class="journal-wrap">
     <header class="journal-head reveal-init">
       <h3>Journal</h3>
       <p class="lede">Procesos, mitología y notas de estudio.</p>
     </header>
     <div class="journal-grid">
-      <article class="journal-card reveal-init">
-        <h4>Atlas · Sello Editorial</h4>
-        <p>Composición axial, geometría dorada y silencio visual.</p>
-        <a class="text-link" href="#">Leer más →</a>
-      </article>
-      <article class="journal-card reveal-init">
-        <h4>Calyra’s Ego</h4>
-        <p>Figura mitológica y ritmo geométrico contemporáneo.</p>
-        <a class="text-link" href="#">Leer más →</a>
-      </article>
-      <article class="journal-card reveal-init">
-        <h4>Like Gods</h4>
-        <p>Tipografía manuscrita con resonancia íntima.</p>
-        <a class="text-link" href="#">Leer más →</a>
-      </article>
+      <article class="journal-card reveal-init"><h4>Atlas · Sello Editorial</h4><p>Composición axial, geometría dorada y silencio visual.</p><a class="text-link" href="#">Leer más →</a></article>
+      <article class="journal-card reveal-init"><h4>Calyra’s Ego</h4><p>Figura mitológica y ritmo geométrico contemporáneo.</p><a class="text-link" href="#">Leer más →</a></article>
+      <article class="journal-card reveal-init"><h4>Like Gods</h4><p>Tipografía manuscrita con resonancia íntima.</p><a class="text-link" href="#">Leer más →</a></article>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- Footer -->
   <footer id="contact" class="site-footer reveal-init">
     <p>Contact: <a href="mailto:hola@prophetia.com">hola@prophetia.com</a></p>
     <p>© PROPHETIA — Silent Luxury</p>
   </footer>
 
-  <!-- POP-UP registro + descuento -->
+  <!-- Popup registro + descuento -->
   <div id="welcomeBackdrop" class="modal-backdrop"></div>
   <div id="welcomeModal" class="modal">
     <button id="welcomeClose" class="modal-close" aria-label="Cerrar">×</button>
