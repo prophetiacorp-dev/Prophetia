@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cinzel', serif;
+  background-color: #fdfcf8;
+  color: #111;
+  line-height: 1.6;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 4rem;
+  border-bottom: 1px solid #ccc;
+}
+
+h1 {
+  letter-spacing: 4px;
+  font-weight: 700;
+}
+
+nav a {
+  margin-left: 2rem;
+  text-decoration: none;
+  color: #111;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #bfa160;
+}
+
+#hero {
+  text-align: center;
+  padding: 10rem 2rem;
+  background: linear-gradient(180deg, #fff 0%, #f0ece4 100%);
+}
+
+#hero h2 {
+  font-size: 2.5rem;
+  color: #111;
+  letter-spacing: 1px;
+}
+
+section {
+  padding: 4rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.card {
+  border: 1px solid #e0d8c3;
+  padding: 3rem;
+  text-align: center;
+  font-weight: 600;
+  background-color: #fff;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+}
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background-color: #111;
+  color: #fff;
+}
