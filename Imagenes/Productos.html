@@ -7,7 +7,7 @@
   <meta property="og:type" content="product">
   <link rel="icon" href="images/favicon.ico">
   <link rel="stylesheet" href="style.css" />
-  <!-- PayPal SDK (EUR) — cambia client-id -->
+  <!-- PayPal SDK (EUR) — pon tu client-id (puede ser sandbox) -->
   <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" defer></script>
 </head>
 <body class="page-product">
@@ -35,13 +35,27 @@
     </nav>
   </header>
 
+  <!-- CARRITO con CUPÓN -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
     <div id="cartItems" class="cart-items"></div>
-    <div class="cart-foot"><div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div><button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
+
+      <div class="coupon-row">
+        <input id="couponInput" type="text" placeholder="Código de descuento">
+        <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
+      </div>
+      <div id="couponNote" class="coupon-applied" style="display:none;">
+        Código aplicado: <span id="couponName"></span>
+      </div>
+
+      <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
+    </div>
   </aside>
   <div id="cartBackdrop" class="cart-backdrop"></div>
 
+  <!-- PRODUCTO -->
   <main class="product-wrap">
     <section class="product-gallery">
       <img id="pMain" src="" alt="Vista principal" />
@@ -60,7 +74,8 @@
         <button type="submit" class="btn-primary">Añadir al carrito</button>
       </form>
 
-      <div id="paypalButtons" class="paypal-wrap"></div>
+      <!-- PayPal: usamos otro id para no duplicar con script.js -->
+      <div id="paypalPay" class="paypal-wrap"></div>
 
       <details class="accordion" open>
         <summary>Detalles</summary>
@@ -74,17 +89,105 @@
     </section>
   </main>
 
+  <!-- Barra sticky -->
   <div id="stickyBar" class="sticky-bar">
     <span id="stickyTitle"></span>
     <div class="sticky-actions"><span id="stickyPrice"></span><button id="stickyAdd" class="btn-primary">Añadir</button></div>
   </div>
 
-  <!-- Aquí inyectaremos JSON-LD del producto -->
+  <!-- JSON-LD slot -->
   <script id="jsonld" type="application/ld+json"></script>
 
-  <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
+  <!-- POP-UP REGISTRO + DESCUENTO -->
+  <div id="welcomeBackdrop" class="modal-backdrop"></div>
+  <div id="welcomeModal" class="modal">
+    <button id="welcomeClose" class="modal-close" aria-label="Cerrar">×</button>
+    <h3>-10% en tu primera compra</h3>
+    <p class="lede">Suscríbete para recibir tu código de bienvenida.</p>
+    <form id="welcomeForm" class="nl-form">
+      <input id="welcomeEmail" type="email" placeholder="tu@email.com" required>
+      <button type="submit" class="btn-primary">Recibir código</button>
+      <small class="muted">Sin spam.</small>
+    </form>
+    <div id="welcomeCodeBox" class="nl-thanks" hidden>
+      <p style="margin-bottom:.5rem;">Tu código:</p>
+      <div id="welcomeCode" style="font-weight:700; font-size:1.2rem; letter-spacing:.5px;">PROPHETIA10</div>
+      <button id="copyCode" class="btn-primary" style="margin-top:.75rem;">Copiar y aplicar</button>
+      <small class="muted">Se aplicará automáticamente en el carrito.</small>
+    </div>
+  </div>
+
+  <!-- EmailJS + App -->
   <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script src="script.js"></script>
   <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
+
+  <!-- Tu lógica general -->
+  <script src="script.js"></script>
+
+  <!-- PayPal con DESCUENTO aplicado en createOrder -->
+  <script>
+  // Usa la misma lógica que script.js para leer el producto:
+  (async function mountPayPal(){
+    const wrap = document.getElementById('paypalPay');
+    if(!wrap) return;
+
+    const slug = new URLSearchParams(location.search).get('slug');
+    const res  = await fetch('catalog.json', {cache:'no-store'});
+    const list = await res.json();
+    const p    = list.find(x=>x.slug===slug);
+    if(!p || !window.paypal) return;
+
+    const qtyInput   = document.getElementById('qty');
+    const sizeRow    = document.getElementById('sizeRow');
+    let currentSize  = null;
+
+    // Si script.js ya montó tallas, simplemente léelas
+    sizeRow?.querySelectorAll('.size-btn').forEach(btn=>{
+      if(btn.classList.contains('active')) currentSize = btn.dataset.size;
+      btn.addEventListener('click', ()=> currentSize = btn.dataset.size);
+    });
+
+    // Helpers de descuento, deben existir en script.js:
+    const DISCOUNT_PCT = 10;
+    function hasActiveCoupon(){
+      try{
+        const code  = localStorage.getItem('pp_coupon_applied');
+        const until = parseInt(localStorage.getItem('pp_coupon_expires_at')||'0',10);
+        return code === 'PROPHETIA10' && Date.now() < until;
+      }catch{ return false; }
+    }
+
+    paypal.Buttons({
+      style:{ layout:'vertical', color:'gold', shape:'rect', label:'paypal' },
+      createOrder: (data, actions)=>{
+        const qty  = Math.max(1, parseInt(qtyInput?.value || '1', 10));
+        const size = currentSize || 'S';
+        const base = Number(p.price||0) * qty;
+        const final = hasActiveCoupon() ? base * (1 - DISCOUNT_PCT/100) : base;
+
+        const unit = hasActiveCoupon()
+          ? (Number(p.price||0) * (1 - DISCOUNT_PCT/100)).toFixed(2)
+          : Number(p.price||0).toFixed(2);
+
+        return actions.order.create({
+          purchase_units:[{
+            amount:{ currency_code:'EUR', value: final.toFixed(2) },
+            items:[{
+              name:`${p.title} (Talla ${size})`,
+              unit_amount:{ currency_code:'EUR', value: unit },
+              quantity:String(qty),
+              sku: p.sku || p.slug
+            }]
+          }]
+        });
+      },
+      onApprove: async (data, actions)=>{
+        await actions.order.capture();
+        alert('¡Gracias! Pedido pagado con PayPal.');
+      },
+      onError: (err)=>{ console.error(err); alert('Error en el pago.'); }
+    }).render(wrap);
+  })();
+  </script>
 </body>
 </html>

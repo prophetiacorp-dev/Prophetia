@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Colecciones — PROPHETIA</title>
   <meta name="description" content="Colecciones Prophetia: Myth, Baobab y Ventus. Moda editorial y lujo silencioso.">
-  <meta property="og:title" content="Colecciones — PROPHETIA">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="images/apollon_mockup.webp">
   <link rel="icon" href="images/favicon.ico">
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -36,10 +33,23 @@
     </nav>
   </header>
 
+  <!-- CARRITO con CUPÓN -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
     <div id="cartItems" class="cart-items"></div>
-    <div class="cart-foot"><div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div><button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
+
+      <div class="coupon-row">
+        <input id="couponInput" type="text" placeholder="Código de descuento">
+        <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
+      </div>
+      <div id="couponNote" class="coupon-applied" style="display:none;">
+        Código aplicado: <span id="couponName"></span>
+      </div>
+
+      <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
+    </div>
   </aside>
   <div id="cartBackdrop" class="cart-backdrop"></div>
 
@@ -52,3 +62,37 @@
     <section class="filters">
       <button class="chip chip-active" data-filter="all">All</button>
       <button class="chip" data-filter="myth">Myth</button>
+      <button class="chip" data-filter="baobab">Baobab</button>
+      <button class="chip" data-filter="ventus">Ventus</button>
+    </section>
+
+    <section class="grid products-grid" id="productsGrid"></section>
+  </main>
+
+  <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
+
+  <!-- POP-UP REGISTRO + DESCUENTO -->
+  <div id="welcomeBackdrop" class="modal-backdrop"></div>
+  <div id="welcomeModal" class="modal">
+    <button id="welcomeClose" class="modal-close" aria-label="Cerrar">×</button>
+    <h3>-10% en tu primera compra</h3>
+    <p class="lede">Suscríbete para recibir tu código de bienvenida.</p>
+    <form id="welcomeForm" class="nl-form">
+      <input id="welcomeEmail" type="email" placeholder="tu@email.com" required>
+      <button type="submit" class="btn-primary">Recibir código</button>
+      <small class="muted">Sin spam.</small>
+    </form>
+    <div id="welcomeCodeBox" class="nl-thanks" hidden>
+      <p style="margin-bottom:.5rem;">Tu código:</p>
+      <div id="welcomeCode" style="font-weight:700; font-size:1.2rem; letter-spacing:.5px;">PROPHETIA10</div>
+      <button id="copyCode" class="btn-primary" style="margin-top:.75rem;">Copiar y aplicar</button>
+      <small class="muted">Se aplicará automáticamente en el carrito.</small>
+    </div>
+  </div>
+
+  <!-- EmailJS + App -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
+  <script src="script.js"></script>
+</body>
+</html>
