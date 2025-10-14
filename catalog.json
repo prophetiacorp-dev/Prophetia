@@ -1,0 +1,29 @@
+[
+  {
+    "slug": "the-apollon-seal",
+    "title": "The Apollon Seal",
+    "collection": "Myth Series",
+    "price": "95",
+    "img": "images/apollon_mockup.webp",
+    "technique": "DTG",
+    "description": "Gráfico editorial inspirado en el relieve clásico griego. Líneas limpias, dorado envejecido, equilibrio y aire."
+  },
+  {
+    "slug": "baobab-lancers",
+    "title": "Baobab Lancers",
+    "collection": "Baobab",
+    "price": "89",
+    "img": "images/baobab_mockup.webp",
+    "technique": "DTF",
+    "description": "Inspirado en los lanceros tribales estilizados del árbol Baobab. Trazos negros y beige, equilibrio y fuerza silenciosa."
+  },
+  {
+    "slug": "ventus-zephyrus",
+    "title": "Ventus Zephyrus",
+    "collection": "Ventus",
+    "price": "92",
+    "img": "images/ventus_mockup.webp",
+    "technique": "DTG",
+    "description": "Diseño inspirado en los dioses del viento. Líneas ondulantes y aire mediterráneo en movimiento."
+  }
+]
