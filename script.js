@@ -97,7 +97,7 @@ async function loadCatalog(){
     }).join('');
 
     bindFilters();
-    bindCardSlides(); // << slider por tarjeta
+    bindCardSlides();
 
   }catch(e){ console.error(e); grid.innerHTML='<p>Error al cargar catálogo.</p>'; }
 }
@@ -110,7 +110,7 @@ function bindFilters(){
   const h=(location.hash||'#all').slice(1).toLowerCase(); apply(['myth-series','letters-from-the-soul'].includes(h)?h:'all');
 }
 
-/* -- Slider de tarjeta: hover/clic en dots -- */
+/* -- Slider de tarjeta: hover autoplay + clic en dots -- */
 function bindCardSlides(){
   $$('.card.product .img-wrap').forEach(wrap=>{
     const img=wrap.querySelector('img'); if(!img) return;
@@ -118,17 +118,16 @@ function bindCardSlides(){
     let i=0, timer=null;
 
     const set=(idx)=>{ i=idx; img.style.opacity=0; setTimeout(()=>{ img.src=images[i]; img.style.opacity=1; },120);
-      const dots=wrap.querySelectorAll('.card-dot'); dots.forEach((d,k)=>d.classList.toggle('active',k===i)); };
+      wrap.querySelectorAll('.card-dot').forEach((d,k)=>d.classList.toggle('active',k===i));
+    };
 
     const next=()=> set((i+1)%images.length);
 
-    // Hover autoplay (si hay más de 1 imagen)
     if(images.length>1){
       wrap.addEventListener('mouseenter',()=>{ timer=setInterval(next,1500); });
       wrap.addEventListener('mouseleave',()=>{ clearInterval(timer); timer=null; set(0); });
     }
 
-    // Click en dots
     wrap.querySelectorAll('.card-dot').forEach(d=>{
       d.addEventListener('click',e=>{
         e.stopPropagation();
@@ -140,7 +139,7 @@ function bindCardSlides(){
 
 loadCatalog();
 
-/* ---------- PDP mínima (sigue igual que antes) ---------- */
+/* ---------- PDP (igual que antes) ---------- */
 (async function hydratePDP(){
   const slug=new URLSearchParams(location.search).get('slug'); if(!slug) return;
   const pTitle=$('#pTitle'), pDesc=$('#pDesc'), pPrice=$('#pPrice'), pMain=$('#pMain'), pThumbs=$('#pThumbs'), sizeRow=$('#sizeRow'), qty=$('#qty'), buyForm=$('#buyForm');
