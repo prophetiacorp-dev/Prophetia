@@ -1,38 +1,83 @@
 [
   {
-    "slug": "the-apollon-seal",
-    "sku": "PR-APOL-001",
-    "title": "The Apollon Seal",
-    "collection": "Myth",
+    "slug": "atlas-by-prophetia",
+    "sku": "PR-MYTH-ATL-001",
+    "title": "Atlas by Prophetia",
+    "collection": "Myth Series",
+    "collection_slug": "myth-series",
     "price": 95,
     "technique": "DTG",
-    "images": ["images/apollon_mockup.webp", "images/apollon_back.webp", "images/apollon_detail.webp"],
+    "images": [
+      "images/atlas_front.webp",
+      "images/atlas_back.webp",
+      "images/atlas_detail.webp"
+    ],
     "badge": "NEW",
-    "sizes": { "S": 3, "M": 6, "L": 0, "XL": 5, "XXL": 2 },
-    "description": "Gráfico editorial inspirado en relieve clásico griego. Líneas limpias, dorado envejecido y aire."
+    "sizes": { "S": 5, "M": 8, "L": 6, "XL": 4, "XXL": 2 },
+    "description": "Composición editorial inspirada en Atlas. Líneas limpias y dorado envejecido. Silencio y fuerza."
   },
   {
-    "slug": "baobab-lancers",
-    "sku": "PR-BAOB-001",
-    "title": "Baobab Lancers",
-    "collection": "Baobab",
-    "price": 89,
-    "technique": "DTF",
-    "images": ["images/baobab_mockup.webp", "images/baobab_mockup.webp"],
-    "badge": "LIMITED",
-    "sizes": { "S": 10, "M": 8, "L": 5, "XL": 0, "XXL": 1 },
-    "description": "Lanceros tribales estilizados junto a un baobab. Trazos negros y base beige lino: silencio y fuerza."
-  },
-  {
-    "slug": "ventus-zephyrus",
-    "sku": "PR-VENU-001",
-    "title": "Ventus Zephyrus",
-    "collection": "Ventus",
+    "slug": "calyras-ego-by-prophetia",
+    "sku": "PR-MYTH-CAL-001",
+    "title": "Calyra’s Ego by Prophetia",
+    "collection": "Myth Series",
+    "collection_slug": "myth-series",
     "price": 92,
     "technique": "DTG",
-    "images": ["images/ventus_mockup.webp", "images/ventus_mockup.webp"],
+    "images": [
+      "images/calyras_ego_front.webp",
+      "images/calyras_ego_back.webp"
+    ],
+    "badge": "LIMITED",
+    "sizes": { "S": 3, "M": 6, "L": 0, "XL": 5, "XXL": 1 },
+    "description": "Figura mitológica estilizada con ritmo geométrico. Equilibrio entre lo antiguo y lo contemporáneo."
+  },
+  {
+    "slug": "mascaras-del-mediterraneo",
+    "sku": "PR-MYTH-MED-001",
+    "title": "Máscaras del Mediterráneo — Mediterranean Culture by Prophetia",
+    "collection": "Myth Series",
+    "collection_slug": "myth-series",
+    "price": 89,
+    "technique": "DTF",
+    "images": [
+      "images/mascaras_front.webp",
+      "images/mascaras_detail.webp"
+    ],
     "badge": "Bestseller",
-    "sizes": { "S": 4, "M": 0, "L": 7, "XL": 3, "XXL": 2 },
-    "description": "Inspirado en los dioses del viento. Líneas ondulantes y aire mediterráneo."
+    "sizes": { "S": 7, "M": 5, "L": 4, "XL": 0, "XXL": 2 },
+    "description": "Iconografía mediterránea con contraste gráfico y textura editorial. Cultura y símbolo."
+  },
+  {
+    "slug": "like-gods",
+    "sku": "PR-LET-LGD-001",
+    "title": "Like Gods",
+    "collection": "Letters from the Soul",
+    "collection_slug": "letters-from-the-soul",
+    "price": 90,
+    "technique": "DTG",
+    "images": [
+      "images/like_gods_front.webp",
+      "images/like_gods_detail.webp"
+    ],
+    "badge": "NEW",
+    "sizes": { "S": 6, "M": 6, "L": 6, "XL": 3, "XXL": 1 },
+    "description": "Tipografía manuscrita con tono poético y gesto seguro. Declaración íntima en clave editorial."
+  },
+  {
+    "slug": "letter-for-self",
+    "sku": "PR-LET-LFS-001",
+    "title": "Letter for Self",
+    "collection": "Letters from the Soul",
+    "collection_slug": "letters-from-the-soul",
+    "price": 88,
+    "technique": "DTG",
+    "images": [
+      "images/letter_for_self_front.webp",
+      "images/letter_for_self_back.webp"
+    ],
+    "badge": "LIMITED",
+    "sizes": { "S": 4, "M": 8, "L": 5, "XL": 2, "XXL": 0 },
+    "description": "Carta interior en tinta editorial. Minimalismo con resonancia emocional y lujo silencioso."
   }
 ]

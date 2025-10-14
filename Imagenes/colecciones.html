@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Colecciones — PROPHETIA</title>
-  <meta name="description" content="Colecciones Prophetia: Myth, Baobab y Ventus. Moda editorial y lujo silencioso.">
+  <meta name="description" content="Colecciones: Myth Series y Letters from the Soul. Moda editorial y lujo silencioso.">
   <link rel="icon" href="images/favicon.ico">
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -21,9 +21,8 @@
       <div class="dropdown">
         <a href="colecciones.html" class="active">Collections ▾</a>
         <div class="dropdown-menu">
-          <a href="#myth">Myth</a>
-          <a href="#baobab">Baobab</a>
-          <a href="#ventus">Ventus</a>
+          <a href="#myth-series">Myth Series</a>
+          <a href="#letters-from-the-soul">Letters from the Soul</a>
         </div>
       </div>
       <a href="index.html#about">About</a>
@@ -33,21 +32,17 @@
     </nav>
   </header>
 
-  <!-- CARRITO con CUPÓN -->
+  <!-- Carrito -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-foot">
       <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
-
       <div class="coupon-row">
         <input id="couponInput" type="text" placeholder="Código de descuento">
         <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
       </div>
-      <div id="couponNote" class="coupon-applied" style="display:none;">
-        Código aplicado: <span id="couponName"></span>
-      </div>
-
+      <div id="couponNote" class="coupon-applied" style="display:none;">Código aplicado: <span id="couponName"></span></div>
       <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
     </div>
   </aside>
@@ -56,14 +51,13 @@
   <main>
     <section class="page-hero">
       <h1>Collections</h1>
-      <p class="lede">Mitología mediterránea en gráficos de lujo silencioso.</p>
+      <p class="lede">Mitología y cartas íntimas. Lujo silencioso con alma editorial.</p>
     </section>
 
     <section class="filters">
       <button class="chip chip-active" data-filter="all">All</button>
-      <button class="chip" data-filter="myth">Myth</button>
-      <button class="chip" data-filter="baobab">Baobab</button>
-      <button class="chip" data-filter="ventus">Ventus</button>
+      <button class="chip" data-filter="myth-series">Myth Series</button>
+      <button class="chip" data-filter="letters-from-the-soul">Letters from the Soul</button>
     </section>
 
     <section class="grid products-grid" id="productsGrid"></section>
@@ -71,7 +65,7 @@
 
   <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
 
-  <!-- POP-UP REGISTRO + DESCUENTO -->
+  <!-- Pop-up -->
   <div id="welcomeBackdrop" class="modal-backdrop"></div>
   <div id="welcomeModal" class="modal">
     <button id="welcomeClose" class="modal-close" aria-label="Cerrar">×</button>
@@ -90,7 +84,6 @@
     </div>
   </div>
 
-  <!-- EmailJS + App -->
   <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
   <script src="script.js"></script>

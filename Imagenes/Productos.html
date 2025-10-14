@@ -7,7 +7,6 @@
   <meta property="og:type" content="product">
   <link rel="icon" href="images/favicon.ico">
   <link rel="stylesheet" href="style.css" />
-  <!-- PayPal SDK (EUR) — pon tu client-id (puede ser sandbox) -->
   <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" defer></script>
 </head>
 <body class="page-product">
@@ -23,9 +22,8 @@
       <div class="dropdown">
         <a href="colecciones.html">Collections ▾</a>
         <div class="dropdown-menu">
-          <a href="colecciones.html#myth">Myth</a>
-          <a href="colecciones.html#baobab">Baobab</a>
-          <a href="colecciones.html#ventus">Ventus</a>
+          <a href="colecciones.html#myth-series">Myth Series</a>
+          <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
         </div>
       </div>
       <a href="index.html#about">About</a>
@@ -35,27 +33,21 @@
     </nav>
   </header>
 
-  <!-- CARRITO con CUPÓN -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-foot">
       <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
-
       <div class="coupon-row">
         <input id="couponInput" type="text" placeholder="Código de descuento">
         <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
       </div>
-      <div id="couponNote" class="coupon-applied" style="display:none;">
-        Código aplicado: <span id="couponName"></span>
-      </div>
-
+      <div id="couponNote" class="coupon-applied" style="display:none;">Código aplicado: <span id="couponName"></span></div>
       <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
     </div>
   </aside>
   <div id="cartBackdrop" class="cart-backdrop"></div>
 
-  <!-- PRODUCTO -->
   <main class="product-wrap">
     <section class="product-gallery">
       <img id="pMain" src="" alt="Vista principal" />
@@ -74,7 +66,6 @@
         <button type="submit" class="btn-primary">Añadir al carrito</button>
       </form>
 
-      <!-- PayPal: usamos otro id para no duplicar con script.js -->
       <div id="paypalPay" class="paypal-wrap"></div>
 
       <details class="accordion" open>
@@ -89,16 +80,14 @@
     </section>
   </main>
 
-  <!-- Barra sticky -->
   <div id="stickyBar" class="sticky-bar">
     <span id="stickyTitle"></span>
     <div class="sticky-actions"><span id="stickyPrice"></span><button id="stickyAdd" class="btn-primary">Añadir</button></div>
   </div>
 
-  <!-- JSON-LD slot -->
   <script id="jsonld" type="application/ld+json"></script>
 
-  <!-- POP-UP REGISTRO + DESCUENTO -->
+  <!-- Pop-up registro + descuento -->
   <div id="welcomeBackdrop" class="modal-backdrop"></div>
   <div id="welcomeModal" class="modal">
     <button id="welcomeClose" class="modal-close" aria-label="Cerrar">×</button>
@@ -117,16 +106,12 @@
     </div>
   </div>
 
-  <!-- EmailJS + App -->
   <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
-
-  <!-- Tu lógica general -->
   <script src="script.js"></script>
 
-  <!-- PayPal con DESCUENTO aplicado en createOrder -->
+  <!-- PayPal con descuento aplicado -->
   <script>
-  // Usa la misma lógica que script.js para leer el producto:
   (async function mountPayPal(){
     const wrap = document.getElementById('paypalPay');
     if(!wrap) return;
@@ -137,17 +122,16 @@
     const p    = list.find(x=>x.slug===slug);
     if(!p || !window.paypal) return;
 
-    const qtyInput   = document.getElementById('qty');
-    const sizeRow    = document.getElementById('sizeRow');
-    let currentSize  = null;
+    const qtyInput = document.getElementById('qty');
+    const sizeRow  = document.getElementById('sizeRow');
+    let currentSize = null;
 
-    // Si script.js ya montó tallas, simplemente léelas
     sizeRow?.querySelectorAll('.size-btn').forEach(btn=>{
       if(btn.classList.contains('active')) currentSize = btn.dataset.size;
       btn.addEventListener('click', ()=> currentSize = btn.dataset.size);
     });
 
-    // Helpers de descuento, deben existir en script.js:
+    // cupón activo (sincronizado con script.js)
     const DISCOUNT_PCT = 10;
     function hasActiveCoupon(){
       try{

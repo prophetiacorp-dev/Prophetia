@@ -8,20 +8,18 @@
   <meta property="og:title" content="PROPHETIA — Silent Luxury">
   <meta property="og:description" content="Arte editorial, símbolos ancestrales y composición moderna.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="images/apollon_mockup.webp">
+  <meta property="og:image" content="images/atlas_front.webp">
   <meta property="og:url" content="https://prophetiacorp-dev.github.io/prophetia/">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="images/favicon.ico">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- BARRA DE ANUNCIOS -->
   <div id="announceBar" class="announce-bar">
     <span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span>
     <button id="closeAnnounce" aria-label="Cerrar">×</button>
   </div>
 
-  <!-- HEADER -->
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
@@ -29,9 +27,8 @@
       <div class="dropdown">
         <a href="colecciones.html">Collections ▾</a>
         <div class="dropdown-menu">
-          <a href="colecciones.html#myth">Myth</a>
-          <a href="colecciones.html#baobab">Baobab</a>
-          <a href="colecciones.html#ventus">Ventus</a>
+          <a href="colecciones.html#myth-series">Myth Series</a>
+          <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
         </div>
       </div>
       <a href="#about">About</a>
@@ -41,32 +38,25 @@
     </nav>
   </header>
 
-  <!-- CARRITO (con campo cupón) -->
+  <!-- CARRITO (con cupón) -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head">
       <strong>Tu carrito</strong>
       <button id="closeCart" aria-label="Cerrar">×</button>
     </div>
     <div id="cartItems" class="cart-items"></div>
-
     <div class="cart-foot">
       <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
-
-      <!-- CUPÓN -->
       <div class="coupon-row">
         <input id="couponInput" type="text" placeholder="Código de descuento">
         <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
       </div>
-      <div id="couponNote" class="coupon-applied" style="display:none;">
-        Código aplicado: <span id="couponName"></span>
-      </div>
-
+      <div id="couponNote" class="coupon-applied" style="display:none;">Código aplicado: <span id="couponName"></span></div>
       <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
     </div>
   </aside>
   <div id="cartBackdrop" class="cart-backdrop"></div>
 
-  <!-- CONTENIDO -->
   <section id="hero" class="reveal-init">
     <h2>Silent Luxury. Mediterranean Myth.</h2>
     <p class="lede">Arte editorial, símbolos ancestrales y composición moderna para prendas con alma.</p>
@@ -79,9 +69,9 @@
     </div>
     <div class="about-cols">
       <p><span class="dropcap">P</span>rophetia es equilibrio entre lo antiguo y lo contemporáneo...</p>
-      <p>Trabajamos con base editorial...</p>
+      <p>Base editorial, títulos serenos, tipografía con carácter y ritmo visual...</p>
       <blockquote>“Lujo que no grita: susurra.”</blockquote>
-      <p>Producción cuidada...</p>
+      <p>Producción cuidada y storytelling con resonancia mediterránea.</p>
     </div>
   </section>
 
@@ -92,8 +82,8 @@
     </header>
     <div class="journal-grid">
       <article class="journal-card reveal-init"><h4>Atlas · Sello Editorial</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
-      <article class="journal-card reveal-init"><h4>Baobab · Trazos Tribales</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
-      <article class="journal-card reveal-init"><h4>Ventus · Zephyrus</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
+      <article class="journal-card reveal-init"><h4>Calyra’s Ego</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
+      <article class="journal-card reveal-init"><h4>Like Gods</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
     </div>
   </section>
 
@@ -102,7 +92,7 @@
     <p>© PROPHETIA — Silent Luxury</p>
   </footer>
 
-  <!-- POP-UP REGISTRO + DESCUENTO (justo antes de </body>) -->
+  <!-- POP-UP registro + descuento -->
   <div id="welcomeBackdrop" class="modal-backdrop"></div>
   <div id="welcomeModal" class="modal">
     <button id="welcomeClose" class="modal-close" aria-label="Cerrar">×</button>
@@ -111,7 +101,7 @@
     <form id="welcomeForm" class="nl-form">
       <input id="welcomeEmail" type="email" placeholder="tu@email.com" required>
       <button type="submit" class="btn-primary">Recibir código</button>
-      <small class="muted">Sin spam. Podrás darte de baja cuando quieras.</small>
+      <small class="muted">Sin spam.</small>
     </form>
     <div id="welcomeCodeBox" class="nl-thanks" hidden>
       <p style="margin-bottom:.5rem;">Tu código:</p>
@@ -121,7 +111,6 @@
     </div>
   </div>
 
-  <!-- EmailJS + App -->
   <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
   <script src="script.js"></script>
