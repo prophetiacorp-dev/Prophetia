@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product — PROPHETIA</title>
+  <meta name="description" content="Ficha de producto editorial de Prophetia. Silent Luxury, arte mediterráneo.">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="images/favicon.ico">
+</head>
+<body class="page-product">
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
+    <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    <nav class="site-nav">
+      <a href="collections.html">Collections</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="product-wrap">
+    <section class="product-gallery">
+      <img id="pMain" src="images/apollon_mockup.webp" alt="Mockup principal" />
+      <div class="thumbs">
+        <img class="thumb active" src="images/apollon_mockup.webp" alt="Vista 1">
+        <img class="thumb" src="images/apollon_back.webp" alt="Vista 2">
+        <img class="thumb" src="images/apollon_detail.webp" alt="Detalle">
+      </div>
+    </section>
+
+    <section class="product-info">
+      <h1 id="pTitle">The Apollon Seal — Prophetia</h1>
+      <p class="lede">Gráfico editorial inspirado en el relieve clásico griego. Líneas limpias, dorado envejecido, equilibrio y aire.</p>
+
+      <div class="price-row">
+        <span class="price">€95</span>
+        <span class="tax-note">IVA incl.</span>
+      </div>
+
+      <form class="buy-form" onsubmit="event.preventDefault(); alert('Demo: añadir al carrito.');">
+        <label for="size">Talla</label>
+        <select id="size" required>
+          <option value="">Selecciona</option>
+          <option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option>
+        </select>
+        <button type="submit" class="btn-primary">Añadir</button>
+      </form>
+
+      <details class="accordion" open>
+        <summary>Detalles</summary>
+        <ul class="bullets">
+          <li>Algodón peinado 100% (190–220 g/m²)</li>
+          <li>Print en **PNG transparente 4K** (DTG/DTF)</li>
+          <li>Corte regular/oversize</li>
+          <li>Hecho en ___; estampado en España</li>
+          <li>Lavar del revés a 30 °C</li>
+        </ul>
+      </details>
+
+      <details class="accordion">
+        <summary>Historia</summary>
+        <p>Inspirado en el mito de Apolo, este sello combina geometría clásica y lujo silencioso, con un dorado mate y composición editorial mediterránea.</p>
+      </details>
+
+      <details class="accordion">
+        <summary>Envíos y devoluciones</summary>
+        <p>Envío Península 48–72 h. Devolución 14 días.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© PROPHETIA — Silent Luxury</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
