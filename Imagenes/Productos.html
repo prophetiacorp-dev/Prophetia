@@ -3,42 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Product — PROPHETIA</title>
-  <meta name="description" content="Ficha de producto editorial de Prophetia. Silent Luxury, arte mediterráneo.">
+  <title>Producto — PROPHETIA</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="images/favicon.ico">
 </head>
 <body class="page-product">
+  <!-- header con carrito (mismo bloque que antes) -->
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
     <nav class="site-nav">
-      <a href="collections.html">Collections</a>
+      <a href="colecciones.html">Collections</a>
       <a href="index.html#about">About</a>
+      <a href="index.html#journal">Journal</a>
       <a href="index.html#contact">Contact</a>
+      <button class="cart-btn" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
     </nav>
   </header>
 
+  <!-- cajón carrito -->
+  <aside id="cartDrawer" class="cart-drawer">
+    <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-foot"><div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div><button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button></div>
+  </aside>
+  <div id="cartBackdrop" class="cart-backdrop"></div>
+
   <main class="product-wrap">
     <section class="product-gallery">
-      <img id="pMain" src="images/apollon_mockup.webp" alt="Mockup principal" />
-      <div class="thumbs">
-        <img class="thumb active" src="images/apollon_mockup.webp" alt="Vista 1">
-        <img class="thumb" src="images/apollon_back.webp" alt="Vista 2">
-        <img class="thumb" src="images/apollon_detail.webp" alt="Detalle">
-      </div>
+      <img id="pMain" src="" alt="Vista principal" />
+      <div id="pThumbs" class="thumbs"></div>
     </section>
-
     <section class="product-info">
-      <h1 id="pTitle">The Apollon Seal — Prophetia</h1>
-      <p class="lede">Gráfico editorial inspirado en el relieve clásico griego. Líneas limpias, dorado envejecido, equilibrio y aire.</p>
+      <h1 id="pTitle"></h1>
+      <p id="pDesc" class="lede"></p>
+      <div class="price-row"><span id="pPrice" class="price"></span><span class="tax-note">IVA incl.</span></div>
 
-      <div class="price-row">
-        <span class="price">€95</span>
-        <span class="tax-note">IVA incl.</span>
-      </div>
-
-      <form class="buy-form" onsubmit="event.preventDefault(); alert('Demo: añadir al carrito.');">
+      <form id="buyForm" class="buy-form">
         <label for="size">Talla</label>
         <select id="size" required>
           <option value="">Selecciona</option>
@@ -51,29 +52,47 @@
         <summary>Detalles</summary>
         <ul class="bullets">
           <li>Algodón peinado 100% (190–220 g/m²)</li>
-          <li>Print en **PNG transparente 4K** (DTG/DTF)</li>
+          <li>Print en PNG transparente 4K (DTG/DTF)</li>
           <li>Corte regular/oversize</li>
           <li>Hecho en ___; estampado en España</li>
-          <li>Lavar del revés a 30 °C</li>
         </ul>
-      </details>
-
-      <details class="accordion">
-        <summary>Historia</summary>
-        <p>Inspirado en el mito de Apolo, este sello combina geometría clásica y lujo silencioso, con un dorado mate y composición editorial mediterránea.</p>
-      </details>
-
-      <details class="accordion">
-        <summary>Envíos y devoluciones</summary>
-        <p>Envío Península 48–72 h. Devolución 14 días.</p>
       </details>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>© PROPHETIA — Silent Luxury</p>
-  </footer>
-
+  <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
   <script src="script.js"></script>
+  <script>
+  // Cargar datos del producto desde catalog.json por ?slug=
+  (async function(){
+    const slug = new URLSearchParams(location.search).get('slug');
+    if(!slug){ location.href='colecciones.html'; return; }
+    const res = await fetch('catalog.json'); const list = await res.json();
+    const p = list.find(x=>x.slug===slug);
+    if(!p){ location.href='colecciones.html'; return; }
+
+    document.title = p.title + ' — PROPHETIA';
+    document.getElementById('pTitle').textContent = p.title;
+    document.getElementById('pDesc').textContent = p.description;
+    document.getElementById('pPrice').textContent = '€'+p.price;
+
+    const main = document.getElementById('pMain');
+    const thumbs = document.getElementById('pThumbs');
+    main.src = p.images[0]; main.alt = p.title;
+    thumbs.innerHTML = p.images.map((src,i)=>`<img class="thumb ${i===0?'active':''}" src="${src}" alt="${p.title} vista ${i+1}">`).join('');
+    thumbs.querySelectorAll('.thumb').forEach(t=>{
+      t.addEventListener('click', ()=>{ thumbs.querySelectorAll('.thumb').forEach(x=>x.classList.remove('active')); t.classList.add('active'); main.src=t.src; main.alt=t.alt; });
+    });
+
+    // Añadir al carrito
+    document.getElementById('buyForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const size = document.getElementById('size').value;
+      if(!size) return alert('Elige talla');
+      addToCart({ sku: p.sku, title: p.title, price: p.price, size, qty: 1, img: p.images[0] });
+      openCart();
+    });
+  })();
+  </script>
 </body>
 </html>

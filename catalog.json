@@ -1,29 +1,40 @@
 [
   {
     "slug": "the-apollon-seal",
+    "sku": "PR-APOL-001",
     "title": "The Apollon Seal",
-    "collection": "Myth Series",
-    "price": "95",
-    "img": "images/apollon_mockup.webp",
+    "collection": "Myth",
+    "price": 95,
     "technique": "DTG",
+    "images": [
+      "images/apollon_mockup.webp",
+      "images/apollon_back.webp",
+      "images/apollon_detail.webp"
+    ],
     "description": "Gráfico editorial inspirado en el relieve clásico griego. Líneas limpias, dorado envejecido, equilibrio y aire."
   },
   {
     "slug": "baobab-lancers",
+    "sku": "PR-BAOB-001",
     "title": "Baobab Lancers",
     "collection": "Baobab",
-    "price": "89",
-    "img": "images/baobab_mockup.webp",
+    "price": 89,
     "technique": "DTF",
-    "description": "Inspirado en los lanceros tribales estilizados del árbol Baobab. Trazos negros y beige, equilibrio y fuerza silenciosa."
+    "images": [
+      "images/baobab_mockup.webp"
+    ],
+    "description": "Lanceros tribales estilizados junto a un baobab. Trazos negros y base beige lino: silencio y fuerza."
   },
   {
     "slug": "ventus-zephyrus",
+    "sku": "PR-VENU-001",
     "title": "Ventus Zephyrus",
     "collection": "Ventus",
-    "price": "92",
-    "img": "images/ventus_mockup.webp",
+    "price": 92,
     "technique": "DTG",
-    "description": "Diseño inspirado en los dioses del viento. Líneas ondulantes y aire mediterráneo en movimiento."
+    "images": [
+      "images/ventus_mockup.webp"
+    ],
+    "description": "Diseño inspirado en los dioses del viento. Líneas ondulantes y aire mediterráneo."
   }
 ]
