@@ -5,10 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Colecciones — PROPHETIA</title>
   <meta name="description" content="Colecciones Prophetia: Myth, Baobab y Ventus. Moda editorial y lujo silencioso.">
-  <link rel="stylesheet" href="style.css" />
+  <meta property="og:title" content="Colecciones — PROPHETIA">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/apollon_mockup.webp">
   <link rel="icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="page-collections">
+  <div id="announceBar" class="announce-bar">
+    <span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span>
+    <button id="closeAnnounce" aria-label="Cerrar">×</button>
+  </div>
+
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
@@ -28,7 +36,6 @@
     </nav>
   </header>
 
-  <!-- Carrito -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
     <div id="cartItems" class="cart-items"></div>
@@ -45,14 +52,3 @@
     <section class="filters">
       <button class="chip chip-active" data-filter="all">All</button>
       <button class="chip" data-filter="myth">Myth</button>
-      <button class="chip" data-filter="baobab">Baobab</button>
-      <button class="chip" data-filter="ventus">Ventus</button>
-    </section>
-
-    <section class="grid products-grid" id="productsGrid"></section>
-  </main>
-
-  <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
-  <script src="script.js"></script>
-</body>
-</html>

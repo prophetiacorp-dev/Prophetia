@@ -208,3 +208,85 @@ $('#checkoutBtn')?.addEventListener('click', ()=> alert('Demo: aquí iría un ch
 })();
 
 /* ===== Fin PDP ===== */
+/* ===== Announce bar (persistente 7 días) ===== */
+(function(){
+  const KEY='pp_announce_dismissed_until';
+  const bar=document.getElementById('announceBar');
+  const btn=document.getElementById('closeAnnounce');
+  if(!bar||!btn) return;
+  const now=Date.now();
+  const until=parseInt(localStorage.getItem(KEY)||'0',10);
+  if(until>now){ bar.style.display='none'; return; }
+  btn.addEventListener('click', ()=>{
+    bar.style.display='none';
+    const sevenDays=now + 7*24*60*60*1000;
+    localStorage.setItem(KEY, String(sevenDays));
+  });
+})();
+
+/* ===== Newsletter modal (EmailJS) ===== */
+(function(){
+  const MKEY='pp_newsletter_seen_until';
+  const modal=document.getElementById('nlModal');
+  const backdrop=document.getElementById('nlBackdrop');
+  const close=document.getElementById('nlClose');
+  const form=document.getElementById('nlForm');
+  const emailInput=document.getElementById('nlEmail');
+  const thanks=document.getElementById('nlThanks');
+  if(!modal||!backdrop||!form) return;
+
+  function open(){ modal.classList.add('show'); backdrop.classList.add('show'); }
+  function closeFn(){ modal.classList.remove('show'); backdrop.classList.remove('show'); }
+
+  // Mostrar tras 12s si no se mostró en 7 días
+  const now=Date.now(), until=parseInt(localStorage.getItem(MKEY)||'0',10);
+  if(until<=now){ setTimeout(open, 12000); }
+  close?.addEventListener('click', closeFn);
+  backdrop?.addEventListener('click', closeFn);
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const email=emailInput.value.trim();
+    if(!email) return;
+    try{
+      if(window.emailjs){
+        await emailjs.send("YOUR_EMAILJS_SERVICE_ID","YOUR_EMAILJS_TEMPLATE_ID",{ user_email: email });
+      }
+      form.style.display='none'; thanks.hidden=false;
+      const sevenDays=now + 7*24*60*60*1000;
+      localStorage.setItem(MKEY, String(sevenDays));
+      setTimeout(closeFn, 2000);
+    }catch(err){ console.error(err); alert('No se pudo enviar. Vuelve a intentar.'); }
+  });
+})();
+
+/* ===== JSON-LD dinámico para product.html ===== */
+(async function jsonldProduct(){
+  const slug=new URLSearchParams(location.search).get('slug');
+  const slot=document.getElementById('jsonld');
+  if(!slug||!slot) return;
+  try{
+    const res=await fetch('catalog.json',{cache:'no-store'});
+    const list=await res.json();
+    const p=list.find(x=>x.slug===slug);
+    if(!p) return;
+    const firstImg=(Array.isArray(p.images)&&p.images[0])||'';
+    const data={
+      "@context":"https://schema.org",
+      "@type":"Product",
+      "name": p.title,
+      "image": firstImg ? [firstImg] : [],
+      "description": p.description||"",
+      "sku": p.sku||p.slug,
+      "brand": {"@type":"Brand","name":"PROPHETIA"},
+      "offers":{
+        "@type":"Offer",
+        "price": String(p.price||0),
+        "priceCurrency":"EUR",
+        "availability": "https://schema.org/InStock",
+        "url": location.href
+      }
+    };
+    slot.textContent = JSON.stringify(data);
+  }catch(e){ console.error(e); }
+})();

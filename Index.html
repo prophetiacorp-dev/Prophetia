@@ -4,12 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PROPHETIA — Silent Luxury</title>
-  <meta name="description" content="Prophetia: lujo silencioso, arte editorial y mitología mediterránea.">
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Prophetia: lujo silencioso, arte editorial y mitología mediterránea en prendas con alma.">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="PROPHETIA — Silent Luxury">
+  <meta property="og:description" content="Arte editorial, símbolos ancestrales y composición moderna.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/apollon_mockup.webp">
+  <meta property="og:url" content="https://prophetiacorp-dev.github.io/prophetia/">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- HEADER + CART ICON -->
+  <!-- ANNOUNCE BAR -->
+  <div id="announceBar" class="announce-bar">
+    <span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span>
+    <button id="closeAnnounce" aria-label="Cerrar">×</button>
+  </div>
+
+  <!-- HEADER + CART -->
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
@@ -17,9 +32,9 @@
       <div class="dropdown">
         <a href="colecciones.html">Collections ▾</a>
         <div class="dropdown-menu">
-          <a href="colecciones.html#myth" data-goto="myth">Myth</a>
-          <a href="colecciones.html#baobab" data-goto="baobab">Baobab</a>
-          <a href="colecciones.html#ventus" data-goto="ventus">Ventus</a>
+          <a href="colecciones.html#myth">Myth</a>
+          <a href="colecciones.html#baobab">Baobab</a>
+          <a href="colecciones.html#ventus">Ventus</a>
         </div>
       </div>
       <a href="#about">About</a>
@@ -88,12 +103,36 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
+  <!-- NEWSLETTER MODAL -->
+  <div id="nlBackdrop" class="modal-backdrop"></div>
+  <div id="nlModal" class="modal">
+    <button id="nlClose" class="modal-close" aria-label="Cerrar">×</button>
+    <h3>Únete a PROPHETIA</h3>
+    <p class="lede">Recibe lanzamientos “LIMITED”, preventas y ofertas privadas.</p>
+    <form id="nlForm" class="nl-form">
+      <input id="nlEmail" type="email" placeholder="tu@email.com" required>
+      <button type="submit" class="btn-primary">Suscribirme</button>
+      <small class="muted">Sin spam. Puedes darte de baja cuando quieras.</small>
+    </form>
+    <div id="nlThanks" class="nl-thanks" hidden>¡Gracias! Revisa tu email para confirmar.</div>
+  </div>
+
+  <!-- FOOTER -->
   <footer id="contact" class="site-footer reveal-init">
     <p>Contact: <a href="mailto:hola@prophetia.com">hola@prophetia.com</a></p>
     <p>© PROPHETIA — Silent Luxury</p>
   </footer>
 
+  <!-- EmailJS (client-only) — cambia el PUBLIC KEY -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="script.js"></script>
+  <script>
+    // Inicializa EmailJS (sustituye por tu public key)
+    document.addEventListener('DOMContentLoaded', ()=> {
+      if (window.emailjs) {
+        emailjs.init({ publicKey: "YOUR_EMAILJS_PUBLIC_KEY" });
+      }
+    });
+  </script>
 </body>
 </html>
