@@ -2,7 +2,7 @@
    PROPHETIA — script.js
    ========================= */
 
-/* ===== Scroll suave para anclas internas ===== */
+/* ===== Scroll suave ===== */
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click', e=>{
     const href = a.getAttribute('href');
@@ -23,7 +23,7 @@ if (toggle && nav){
   });
 }
 
-/* ===== Animación reveal (fade-in) con IntersectionObserver ===== */
+/* ===== Fade-in con IntersectionObserver ===== */
 const observer = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
@@ -32,7 +32,6 @@ const observer = new IntersectionObserver((entries)=>{
     }
   });
 },{ threshold: 0.15 });
-
 document.querySelectorAll('.reveal-init').forEach(el=>observer.observe(el));
 
 /* ===== Filtros (chips) en colecciones ===== */
@@ -52,24 +51,19 @@ function bindFilters(){
   chips.forEach(ch=>{
     ch.addEventListener('click', ()=>{
       apply(ch.dataset.filter);
-      // refleja en hash para poder enlazar directamente
-      if(ch.dataset.filter && ch.dataset.filter!=='all'){
-        location.hash = ch.dataset.filter;
-      } else {
-        history.replaceState(null, '', location.pathname);
-      }
+      if(ch.dataset.filter && ch.dataset.filter!=='all'){ location.hash = ch.dataset.filter; }
+      else { history.replaceState(null, '', location.pathname); }
     });
   });
 
-  // aplicar filtro desde hash (#myth, #baobab, #ventus)
   const fromHash = (location.hash || '#all').replace('#','').toLowerCase();
   apply(['myth','baobab','ventus'].includes(fromHash) ? fromHash : 'all');
 }
 
-/* ===== Cargar catálogo automáticamente (imagen + precio) ===== */
+/* ===== Catálogo dinámico (imagen + precio) ===== */
 async function loadCatalog() {
   const grid = document.getElementById('productsGrid');
-  if (!grid) { return; } // no estamos en colecciones
+  if (!grid) return;
 
   try {
     const res = await fetch('catalog.json', {cache:'no-store'});
@@ -90,7 +84,6 @@ async function loadCatalog() {
       </article>
     `).join('');
 
-    // activar fade-in y filtros
     grid.querySelectorAll('.reveal-init').forEach(el=>observer.observe(el));
     bindFilters();
   } catch (e) {
@@ -100,18 +93,16 @@ async function loadCatalog() {
 }
 loadCatalog();
 
-/* ===== Mini-galería y datos dinámicos en product.html ===== */
+/* ===== PDP dinámica (product.html) ===== */
 (async function hydrateProduct(){
-  const q = new URLSearchParams(location.search);
-  const slug = q.get('slug');
+  const slug = new URLSearchParams(location.search).get('slug');
   const pTitle = document.getElementById('pTitle');
   const pDesc  = document.getElementById('pDesc');
   const pPrice = document.getElementById('pPrice');
   const pMain  = document.getElementById('pMain');
   const pThumbs= document.getElementById('pThumbs');
   const buyForm= document.getElementById('buyForm');
-
-  if(!slug || !pTitle || !pDesc || !pPrice || !pMain || !pThumbs || !buyForm) return; // no estamos en product.html
+  if(!slug || !pTitle || !pDesc || !pPrice || !pMain || !pThumbs || !buyForm) return;
 
   try {
     const res = await fetch('catalog.json', {cache:'no-store'});
@@ -135,46 +126,36 @@ loadCatalog();
       });
     });
 
-    // Añadir al carrito (si existe la infraestructura de carrito)
     buyForm.addEventListener('submit', (e)=>{
       e.preventDefault();
-      const size = (document.getElementById('size') || {}).value;
-      if(!size){ alert('Elige talla'); return; }
+      const size = (document.getElementById('size')||{}).value;
+      if(!size) return alert('Elige talla');
       addToCart({ sku: p.sku || p.slug, title: p.title, price: Number(p.price)||0, size, qty: 1, img: imgs[0] });
-      openCart?.();
+      openCart();
     });
-
-  } catch(err){
-    console.error(err);
-  }
+  } catch(err){ console.error(err); }
 })();
 
-/* ====== Carrito (localStorage) — guardas para que no rompa si no hay HTML ====== */
+/* ===== Carrito (localStorage) ===== */
 const CART_KEY = 'prophetia_cart';
-
 function getCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY)) || []; }catch{ return []; } }
 function setCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); renderCart(); }
-
 function addToCart(item){
   const cart = getCart();
   const i = cart.findIndex(x => x.sku === item.sku && x.size === item.size);
   if(i>=0){ cart[i].qty += item.qty; } else { cart.push(item); }
   setCart(cart);
 }
-
-function removeFromCart(sku, size){
-  setCart(getCart().filter(x => !(x.sku===sku && x.size===size)));
-}
+function removeFromCart(sku, size){ setCart(getCart().filter(x => !(x.sku===sku && x.size===size))); }
 
 function renderCart(){
   const itemsEl = document.getElementById('cartItems');
   const totalEl = document.getElementById('cartTotal');
   const countEl = document.getElementById('cartCount');
-  if(!itemsEl){ return; } // la página no tiene carrito
+  if(!itemsEl) return;
 
   const cart = getCart();
   let total = 0;
-
   itemsEl.innerHTML = cart.map(x=>{
     const line = (x.price||0) * (x.qty||0); total += line;
     return `
@@ -188,30 +169,27 @@ function renderCart(){
       </div>`;
   }).join('') || '<p class="muted">Tu carrito está vacío.</p>';
 
-  if(totalEl) totalEl.textContent = `€${total.toFixed(2)}`;
-  if(countEl) countEl.textContent = cart.reduce((n,x)=>n+(x.qty||0),0);
+  totalEl && (totalEl.textContent = `€${total.toFixed(2)}`);
+  countEl && (countEl.textContent = cart.reduce((n,x)=>n+(x.qty||0),0));
 
-  // bind remove
   itemsEl.querySelectorAll('.remove').forEach(btn=>{
     btn.addEventListener('click', ()=> removeFromCart(btn.dataset.sku, btn.dataset.size));
   });
 }
 renderCart();
 
-/* Abrir/cerrar cajón del carrito (si existe el HTML) */
+/* Drawer carrito */
 const cartBtn = document.querySelector('.cart-btn');
 const cartDrawer = document.getElementById('cartDrawer');
 const cartBackdrop = document.getElementById('cartBackdrop');
 const closeCartBtn = document.getElementById('closeCart');
-
 function openCart(){ if(cartDrawer && cartBackdrop){ cartDrawer.classList.add('open'); cartBackdrop.classList.add('show'); } }
 function closeCart(){ if(cartDrawer && cartBackdrop){ cartDrawer.classList.remove('open'); cartBackdrop.classList.remove('show'); } }
-
 cartBtn?.addEventListener('click', openCart);
 closeCartBtn?.addEventListener('click', closeCart);
 cartBackdrop?.addEventListener('click', closeCart);
 
 /* Checkout demo */
 document.getElementById('checkoutBtn')?.addEventListener('click', ()=>{
-  alert('Demo: aquí iría Stripe/PayPal o instrucciones de pago.');
+  alert('Demo: aquí iría Stripe/PayPal o un formulario de pedido.');
 });

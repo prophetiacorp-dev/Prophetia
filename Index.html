@@ -6,20 +6,44 @@
   <title>PROPHETIA — Silent Luxury</title>
   <meta name="description" content="Prophetia: lujo silencioso, arte editorial y mitología mediterránea.">
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="Imágenes/favicon.ico">
+  <link rel="icon" href="images/favicon.ico">
 </head>
 <body>
+  <!-- HEADER + CART ICON -->
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
     <nav class="site-nav">
+      <div class="dropdown">
+        <a href="colecciones.html">Collections ▾</a>
+        <div class="dropdown-menu">
+          <a href="colecciones.html#myth" data-goto="myth">Myth</a>
+          <a href="colecciones.html#baobab" data-goto="baobab">Baobab</a>
+          <a href="colecciones.html#ventus" data-goto="ventus">Ventus</a>
+        </div>
+      </div>
       <a href="#about">About</a>
-      <a href="Imágenes/colecciones.html">Collections</a>
       <a href="#journal">Journal</a>
       <a href="#contact">Contact</a>
+      <button class="cart-btn" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
     </nav>
   </header>
 
+  <!-- CART DRAWER -->
+  <aside id="cartDrawer" class="cart-drawer">
+    <div class="cart-head">
+      <strong>Tu carrito</strong>
+      <button id="closeCart" aria-label="Cerrar">×</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
+      <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
+    </div>
+  </aside>
+  <div id="cartBackdrop" class="cart-backdrop"></div>
+
+  <!-- HERO -->
   <section id="hero" class="reveal-init">
     <h2>Silent Luxury. Mediterranean Myth.</h2>
     <p class="lede">Arte editorial, símbolos ancestrales y composición moderna para prendas con alma.</p>
