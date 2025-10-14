@@ -15,11 +15,13 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Announce bar -->
   <div id="announceBar" class="announce-bar">
     <span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span>
     <button id="closeAnnounce" aria-label="Cerrar">×</button>
   </div>
 
+  <!-- Header -->
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
@@ -38,7 +40,7 @@
     </nav>
   </header>
 
-  <!-- CARRITO (con cupón) -->
+  <!-- Cart drawer -->
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head">
       <strong>Tu carrito</strong>
@@ -57,36 +59,52 @@
   </aside>
   <div id="cartBackdrop" class="cart-backdrop"></div>
 
-  <section id="hero" class="reveal-init">
+  <!-- HERO -->
+  <section id="hero" class="reveal-init" style="padding-top:4rem;">
     <h2>Silent Luxury. Mediterranean Myth.</h2>
     <p class="lede">Arte editorial, símbolos ancestrales y composición moderna para prendas con alma.</p>
   </section>
 
+  <!-- ABOUT -->
   <section id="about" class="about-wrap reveal-init">
     <div class="about-head">
       <h3>About Prophetia</h3>
       <p class="lede">Nacida en el Mediterráneo, Prophetia traduce mitos y símbolos en gráficos de lujo silencioso.</p>
     </div>
     <div class="about-cols">
-      <p><span class="dropcap">P</span>rophetia es equilibrio entre lo antiguo y lo contemporáneo...</p>
-      <p>Base editorial, títulos serenos, tipografía con carácter y ritmo visual...</p>
+      <p><span class="dropcap">P</span>rophetia es equilibrio entre lo antiguo y lo contemporáneo: líneas limpias, dorado envejecido y paletas tierra con acentos turquesa. Regla sagrada: aire, proporción, silencio.</p>
+      <p>Base editorial, títulos serenos y ritmo visual. Cada diseño es un pequeño altar portátil: habla bajo, pero todos lo escuchan.</p>
       <blockquote>“Lujo que no grita: susurra.”</blockquote>
-      <p>Producción cuidada y storytelling con resonancia mediterránea.</p>
+      <p>Producción cuidada, prints en PNG transparente 4K pensados para la espalda, y storytelling de raíz mediterránea.</p>
     </div>
   </section>
 
+  <!-- JOURNAL -->
   <section id="journal" class="journal-wrap">
     <header class="journal-head reveal-init">
       <h3>Journal</h3>
       <p class="lede">Procesos, mitología y notas de estudio.</p>
     </header>
     <div class="journal-grid">
-      <article class="journal-card reveal-init"><h4>Atlas · Sello Editorial</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
-      <article class="journal-card reveal-init"><h4>Calyra’s Ego</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
-      <article class="journal-card reveal-init"><h4>Like Gods</h4><p>...</p><a class="text-link" href="#">Leer más →</a></article>
+      <article class="journal-card reveal-init">
+        <h4>Atlas · Sello Editorial</h4>
+        <p>Composición axial, geometría dorada y silencio visual.</p>
+        <a class="text-link" href="#">Leer más →</a>
+      </article>
+      <article class="journal-card reveal-init">
+        <h4>Calyra’s Ego</h4>
+        <p>Figura mitológica y ritmo geométrico contemporáneo.</p>
+        <a class="text-link" href="#">Leer más →</a>
+      </article>
+      <article class="journal-card reveal-init">
+        <h4>Like Gods</h4>
+        <p>Tipografía manuscrita con resonancia íntima.</p>
+        <a class="text-link" href="#">Leer más →</a>
+      </article>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer id="contact" class="site-footer reveal-init">
     <p>Contact: <a href="mailto:hola@prophetia.com">hola@prophetia.com</a></p>
     <p>© PROPHETIA — Silent Luxury</p>
@@ -111,6 +129,7 @@
     </div>
   </div>
 
+  <!-- EmailJS + App -->
   <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
   <script src="script.js"></script>
