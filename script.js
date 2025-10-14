@@ -290,3 +290,115 @@ $('#checkoutBtn')?.addEventListener('click', ()=> alert('Demo: aquí iría un ch
     slot.textContent = JSON.stringify(data);
   }catch(e){ console.error(e); }
 })();
+/* =========================
+   DESCUENTO DE BIENVENIDA
+   ========================= */
+const DISCOUNT_CODE   = 'PROPHETIA10';  // el código visible para el cliente
+const DISCOUNT_PCT    = 10;             // % descuento
+const COUPON_KEY      = 'pp_coupon_applied';      // guarda si ya aplicamos
+const COUPON_EXPIRES  = 'pp_coupon_expires_at';   // caducidad local (30 días)
+const POPUP_SEEN_UNTIL= 'pp_welcome_seen_until';  // para no mostrar cada vez
+
+function hasActiveCoupon(){
+  const until = parseInt(localStorage.getItem(COUPON_EXPIRES)||'0',10);
+  return localStorage.getItem(COUPON_KEY) === DISCOUNT_CODE && Date.now()<until;
+}
+function setActiveCoupon(days=30){
+  const until = Date.now() + days*24*60*60*1000;
+  localStorage.setItem(COUPON_KEY, DISCOUNT_CODE);
+  localStorage.setItem(COUPON_EXPIRES, String(until));
+  // UI
+  const note = document.getElementById('couponNote');
+  const name = document.getElementById('couponName');
+  if(note && name){ name.textContent = DISCOUNT_CODE; note.style.display='block'; }
+  renderCart();  // recalcular totales
+}
+
+/* Recalcular total del carrito aplicando cupón si existe */
+const _renderCartOrig = renderCart;
+renderCart = function(){
+  _renderCartOrig && _renderCartOrig(); // dibuja líneas
+  // Ajuste de total por cupón
+  const totalEl = document.getElementById('cartTotal');
+  if(!totalEl) return;
+  const cart = getCart();
+  const subtotal = cart.reduce((s,x)=> s + (x.price||0)*(x.qty||0), 0);
+  let total = subtotal;
+  if(hasActiveCoupon()){
+    const discount = subtotal * (DISCOUNT_PCT/100);
+    total = Math.max(0, subtotal - discount);
+    totalEl.textContent = `€${total.toFixed(2)} (-${DISCOUNT_PCT}%)`;
+  }else{
+    totalEl.textContent = `€${total.toFixed(2)}`;
+  }
+  // Mostrar estado en nota
+  const note = document.getElementById('couponNote');
+  const name = document.getElementById('couponName');
+  if(note && name){
+    if(hasActiveCoupon()){ name.textContent = DISCOUNT_CODE; note.style.display='block'; }
+    else note.style.display='none';
+  }
+};
+renderCart();
+
+/* Campo manual para aplicar cupón */
+document.getElementById('applyCoupon')?.addEventListener('click', ()=>{
+  const val = (document.getElementById('couponInput')?.value || '').trim().toUpperCase();
+  if(val === DISCOUNT_CODE){ setActiveCoupon(); toast?.('Descuento aplicado'); }
+  else{ alert('Código no válido'); }
+});
+
+/* =========================
+   POPUP Registro + EmailJS
+   ========================= */
+(function(){
+  const modal = document.getElementById('welcomeModal');
+  const back  = document.getElementById('welcomeBackdrop');
+  const close = document.getElementById('welcomeClose');
+  const form  = document.getElementById('welcomeForm');
+  const email = document.getElementById('welcomeEmail');
+  const codeBox = document.getElementById('welcomeCodeBox');
+  const copyBtn = document.getElementById('copyCode');
+  if(!modal || !back || !form) return;
+
+  function open(){ modal.classList.add('show'); back.classList.add('show'); }
+  function hide(){ modal.classList.remove('show'); back.classList.remove('show'); }
+
+  // Mostrar a los 10s si no se mostró en 30 días y no hay cupón activo
+  const seenKey=POPUP_SEEN_UNTIL, now=Date.now(), until=parseInt(localStorage.getItem(seenKey)||'0',10);
+  if(!hasActiveCoupon() && now>=until){ setTimeout(open, 10000); }
+
+  close?.addEventListener('click', hide);
+  back?.addEventListener('click', hide);
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const value = email.value.trim();
+    if(!value) return;
+
+    // Enviar a EmailJS (sustituye IDs)
+    try{
+      if(window.emailjs){
+        await emailjs.send("YOUR_EMAILJS_SERVICE_ID","YOUR_EMAILJS_TEMPLATE_ID",{ user_email: value, coupon: DISCOUNT_CODE });
+      }
+    }catch(err){ console.error(err); /* si falla, seguimos igualmente */ }
+
+    // Mostrar código + aplicar cupón
+    form.style.display='none';
+    codeBox.hidden=false;
+    setActiveCoupon(); // lo aplicamos ya
+
+    // Guardar “visto” por 30 días
+    const next = now + 30*24*60*60*1000;
+    localStorage.setItem(seenKey, String(next));
+  });
+
+  copyBtn?.addEventListener('click', ()=>{
+    navigator.clipboard?.writeText(DISCOUNT_CODE);
+    toast?.('Código copiado y aplicado');
+    hide();
+  });
+})();
+
+/* =========================
+   PayPal: descontar si

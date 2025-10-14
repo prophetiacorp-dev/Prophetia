@@ -230,3 +230,18 @@ select{ padding:.6rem .7rem; border:1px solid var(--line); border-radius:10px; b
 .nl-thanks{ text-align:center; font-weight:600; }
 
 /* Badges / hover cards ya añadidos en versiones previas */
+/* Backdrop + Modal (si ya lo tienes, puedes omitir) */
+.modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:98; }
+.modal{ position:fixed; inset:0; margin:auto; top:10%; max-width:520px; background:#fff; border:1px solid var(--line);
+  border-radius:20px; padding:1.25rem 1.5rem; box-shadow:var(--shadow); display:none; z-index:99; }
+.modal.show, .modal-backdrop.show{ display:block; }
+.modal-close{ position:absolute; right:.6rem; top:.4rem; background:none; border:none; font-size:1.3rem; cursor:pointer; }
+.nl-form{ display:grid; gap:.6rem; margin-top:.5rem; }
+.nl-form input{ padding:.7rem .8rem; border:1px solid var(--line); border-radius:12px; }
+.nl-thanks{ text-align:center; }
+
+.coupon-row{
+  display:flex; gap:.5rem; align-items:center; margin-top:.5rem;
+}
+.coupon-row input{ flex:1; padding:.5rem .6rem; border:1px solid var(--line); border-radius:10px; }
+.coupon-applied{ color:var(--gold); font-weight:600; margin-top:.25rem; }
