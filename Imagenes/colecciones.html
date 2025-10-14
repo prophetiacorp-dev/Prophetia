@@ -4,46 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Colecciones — PROPHETIA</title>
-  <meta name="description" content="Colecciones de Prophetia: Myth Series, Baobab y Ventus. Moda editorial y arte mediterráneo.">
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="icon" href="../Imágenes/favicon.ico">
+  <meta name="description" content="Colecciones de Prophetia: Myth, Baobab y Ventus. Moda editorial, lujo silencioso.">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="images/favicon.ico">
 </head>
-
 <body class="page-collections">
   <header class="site-header">
-    <a class="brand" href="../index.html" aria-label="Inicio">PROPHETIA</a>
+    <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
     <nav class="site-nav">
-      <a href="../index.html#about">About</a>
-      <a href="colecciones.html" class="active">Collections</a>
-      <a href="../index.html#contact">Contact</a>
+      <a href="index.html#about">About</a>
+      <a class="active" href="colecciones.html">Collections</a>
+      <a href="index.html#journal">Journal</a>
+      <a href="index.html#contact">Contact</a>
     </nav>
   </header>
 
   <main>
     <section class="page-hero">
       <h1>Collections</h1>
-      <p class="lede">Mitología mediterránea. Composición silenciosa. Arte para la espalda.</p>
+      <p class="lede">Mitología mediterránea en gráficos de lujo silencioso.</p>
     </section>
 
-    <!-- Botones de filtro -->
+    <!-- Filtros -->
     <section class="filters">
       <button class="chip chip-active" data-filter="all">All</button>
-      <button class="chip" data-filter="myth">Myth Series</button>
+      <button class="chip" data-filter="myth">Myth</button>
       <button class="chip" data-filter="baobab">Baobab</button>
       <button class="chip" data-filter="ventus">Ventus</button>
     </section>
 
-    <!-- Aquí se generan los productos automáticamente -->
-    <section class="grid products-grid" id="productsGrid">
-      <!-- El catálogo se carga desde catalog.json -->
-    </section>
+    <!-- Grid dinámico -->
+    <section class="grid products-grid" id="productsGrid"></section>
   </main>
 
   <footer class="site-footer">
     <p>© PROPHETIA — Silent Luxury</p>
   </footer>
 
-  <script src="../script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
