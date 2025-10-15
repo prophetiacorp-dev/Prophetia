@@ -1,170 +1,355 @@
-/* ================ Config ================ */
-const CATALOG_URL = "catalog.json";
-const DISCOUNT_CODE = "PROPHETIA10";
-const DISCOUNT_PCT  = 10;
+/* ==========================
+   PROPHETIA — JS unificado (v60)
+   ========================== */
 
-const $  = (s,c=document)=>c.querySelector(s);
-const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
-const slugify = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-                  .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+// ------- Catálogo de ejemplo (añadí hoodies) -------
+const PRODUCTS = [
+  // T-Shirts
+  {
+    id:'atlas-seal',
+    title:'Atlas by Prophetia',
+    price:59, collection:'myth-series', category:'tshirts',
+    fit:'regular', gender:'unisex', stock:24, bestseller:true, newAt:'2025-01-05',
+    desc:'Perfil escultórico y sello griego en tinta dorada. DTG-ready.',
+    sizes:['S','M','L','XL'],
+    images:[
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png',
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png',
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-left-front-68eec465db71a.png',
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png'
+    ],
+    thumb:'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png'
+  },
+  {
+    id:'calyra-huella',
+    title:"Calyra's Ego by Prophetia",
+    price:64, collection:'myth-series', category:'tshirts',
+    fit:'oversized', gender:'unisex', stock:12, bestseller:false, newAt:'2025-01-18',
+    desc:'Diosa egipcia contemporánea, gesto geométrico y aura editorial.',
+    sizes:['S','M','L','XL'],
+    images:[
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png',
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png'
+    ],
+    thumb:'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png'
+  },
+  {
+    id:'letters-01',
+    title:'Letters from the Soul — I',
+    price:49, collection:'letters-from-the-soul', category:'tshirts',
+    fit:'oversized', gender:'unisex', stock:0, bestseller:false, newAt:'2024-12-20',
+    desc:'Manifiesto editorial: tipografía Prophetia y silencio elegante.',
+    sizes:['S','M','L','XL'],
+    images:[
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png',
+      'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png'
+    ],
+    thumb:'Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png'
+  },
 
-/* Announce */
-$('#closeAnnounce')?.addEventListener('click',()=>$('#announceBar').style.display='none');
+  // Hoodies (mock)
+  {
+    id:'hoodie-atlas',
+    title:'Atlas — Gilded Seal Hoodie',
+    price:89, collection:'myth-series', category:'hoodies',
+    fit:'regular', gender:'unisex', stock:18, bestseller:true, newAt:'2025-01-22',
+    desc:'Hoodie con sello dorado y composición axial Prophetia.',
+    sizes:['S','M','L','XL'],
+    images:['images/hoodie01_front.jpg','images/hoodie01_back.jpg'],
+    thumb:'images/hoodie01_front.jpg'
+  },
+  {
+    id:'hoodie-letters',
+    title:'Letters — Editorial Hoodie',
+    price:95, collection:'letters-from-the-soul', category:'hoodies',
+    fit:'oversized', gender:'unisex', stock:7, bestseller:false, newAt:'2025-01-15',
+    desc:'Hoodie tipográfico, minimalista y editorial.',
+    sizes:['S','M','L','XL'],
+    images:['images/hoodie02_front.jpg','images/hoodie02_back.jpg'],
+    thumb:'images/hoodie02_front.jpg'
+  }
+];
 
-/* Mega menu */
-(function(){
-  const mega=$('.mega'); if(!mega) return;
-  const btn=mega.querySelector('.mega-toggle');
-  const open =()=>{ mega.classList.add('open'); btn.setAttribute('aria-expanded','true'); };
-  const close=()=>{ mega.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
-  btn.addEventListener('click',e=>{e.preventDefault(); mega.classList.contains('open')?close():open();});
-  document.addEventListener('click',e=>{ if(!mega.contains(e.target)) close(); });
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
-})();
+// ------- Utilidades / carrito -------
+const qs=s=>document.querySelector(s), qsa=s=>Array.from(document.querySelectorAll(s));
+const fmt=n=>`€${n.toFixed(2)}`;
+const CART_KEY='pp_cart', COOKIES_KEY='prophetia_cookies', COUPON_KEY='pp_coupon_applied';
 
-/* Carrito + cupón */
-const CART_KEY='pp_cart';
-const getCart = ()=> JSON.parse(localStorage.getItem(CART_KEY)||'[]');
-const setCart = c  => localStorage.setItem(CART_KEY,JSON.stringify(c));
-function addToCart(p){ const c=getCart(); const ex=c.find(x=>x.sku===p.sku && x.size===p.size); ex?ex.qty+=p.qty:c.push(p); setCart(c); updateCartCount(); renderCart(); openCart(); }
-function updateCartCount(){ const el=$('#cartCount'); if(el) el.textContent=getCart().reduce((n,x)=>n+(x.qty||0),0); }
-function openCart(){ $('#cartDrawer')?.classList.add('show'); $('#cartBackdrop')?.classList.add('show'); }
-function closeCart(){ $('#cartDrawer')?.classList.remove('show'); $('#cartBackdrop')?.classList.remove('show'); }
-$('#cartBackdrop')?.addEventListener('click',closeCart); $('#closeCart')?.addEventListener('click',closeCart); $('.cart-btn')?.addEventListener('click',openCart);
-
-function hasActiveCoupon(){ const u=+localStorage.getItem('pp_coupon_expires_at')||0; return localStorage.getItem('pp_coupon_applied')===DISCOUNT_CODE && Date.now()<u; }
-function setActiveCoupon(days=30){ const until=Date.now()+days*86400000; localStorage.setItem('pp_coupon_applied',DISCOUNT_CODE); localStorage.setItem('pp_coupon_expires_at',String(until)); const n=$('#couponNote'), nm=$('#couponName'); if(n&&nm){ nm.textContent=DISCOUNT_CODE; n.style.display='block'; } renderCart(); }
-$('#applyCoupon')?.addEventListener('click',()=>{ const v=($('#couponInput')?.value||'').trim().toUpperCase(); if(v===DISCOUNT_CODE){ setActiveCoupon(); alert('Descuento aplicado'); } else alert('Código no válido'); });
+function getCart(){ try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]} }
+function setCart(c){ localStorage.setItem(CART_KEY,JSON.stringify(c)); renderCart(); }
+function addToCart(item){ const c=getCart(); const i=c.findIndex(x=>x.id===item.id&&x.size===item.size); if(i>-1)c[i].qty+=item.qty; else c.push(item); setCart(c); }
 
 function renderCart(){
-  const box=$('#cartItems'), tot=$('#cartTotal'); if(!box||!tot) return;
-  const c=getCart(); let subtotal=0;
-  box.innerHTML=c.map((x,i)=>{ const line=(x.price||0)*(x.qty||1); subtotal+=line; return `
+  const itemsEl=qs('#cartItems'), totalEl=qs('#cartTotal'), countEl=qs('#cartCount'); if(!itemsEl||!totalEl||!countEl)return;
+  const cart=getCart(); let total=0;
+  itemsEl.innerHTML=cart.map((c,i)=>{const p=PRODUCTS.find(p=>p.id===c.id)||{}; const line=(p.price||0)*c.qty; total+=line; return `
     <div class="cart-item">
-      <img src="${x.img||x.images?.[0]||'images/noimg.png'}" alt="${x.title}">
-      <div class="cart-info"><strong>${x.title}</strong><span>Talla: ${x.size||'-'} — €${Number(x.price||0).toFixed(0)} × ${x.qty||1}</span></div>
-      <button class="cart-remove" data-i="${i}">×</button>
-    </div>`; }).join('') || '<p class="muted">Tu carrito está vacío.</p>';
-  box.querySelectorAll('.cart-remove').forEach(b=> b.addEventListener('click',()=>{ const i=+b.dataset.i; const cc=getCart(); cc.splice(i,1); setCart(cc); renderCart(); updateCartCount(); }));
-  const total = hasActiveCoupon()? subtotal*(1-DISCOUNT_PCT/100) : subtotal;
-  tot.textContent = hasActiveCoupon()? `€${total.toFixed(2)} (-${DISCOUNT_PCT}%)` : `€${total.toFixed(2)}`;
+      <img src="${p.thumb||''}" alt="${p.title||''}">
+      <div style="flex:1"><div style="font-weight:700">${p.title||'Producto'}</div><small class="muted">Talla ${c.size} · ${c.qty} ud.</small></div>
+      <div style="font-weight:700">${fmt(line)}</div>
+      <button class="cart-remove" data-i="${i}" aria-label="Eliminar">×</button>
+    </div>`}).join('');
+  const applied=localStorage.getItem(COUPON_KEY); const discount=applied==='PROPHETIA10'? total*.10 : 0;
+  totalEl.textContent=fmt(Math.max(total-discount,0));
+  countEl.textContent=cart.reduce((a,b)=>a+b.qty,0);
+  qsa('.cart-remove').forEach(btn=>btn.addEventListener('click',()=>{const i=+btn.dataset.i; setCart(getCart().filter((_,idx)=>idx!==i));}));
 }
-updateCartCount(); renderCart();
-
-/* Catálogo (colecciones) */
-async function loadCatalog(){
-  const grid=$('#productsGrid'); if(!grid) return;
-  try{
-    const res=await fetch(CATALOG_URL,{cache:'no-store'});
-    const products=await res.json();
-
-    grid.innerHTML = products.map(p=>{
-      const cat=p.collection_slug||slugify(p.collection);
-      const imgs=Array.isArray(p.images)&&p.images.length?p.images:['images/noimg.png'];
-      const dots = imgs.map((_,i)=>`<span class="card-dot ${i===0?'active':''}" data-i="${i}"></span>`).join('');
-      return `
-        <article class="card product" data-cat="${cat}">
-          <div class="img-wrap" data-images='${JSON.stringify(imgs).replace(/'/g,"&apos;")}'>
-            ${p.badge?`<span class="badge">${p.badge}</span>`:''}
-            <img src="${imgs[0]}" alt="${p.title}">
-            <div class="card-arrows">
-              <button class="card-arrow prev" aria-label="Anterior">‹</button>
-              <button class="card-arrow next" aria-label="Siguiente">›</button>
-            </div>
-            <div class="card-dots">${dots}</div>
-          </div>
-          <h4>${p.title}</h4>
-          <p class="collection">${p.collection}${p.technique?` — ${p.technique}`:''}</p>
-          <strong class="price">€${Number(p.price||0).toFixed(0)}</strong>
-          <a class="btn-primary" href="product.html?slug=${p.slug}">Ver detalle</a>
-        </article>`;
-    }).join('');
-
-    bindFilters();
-    bindCardSlides();
-
-  }catch(e){
-    console.error(e);
-    grid.innerHTML = '<p>Error al cargar catálogo.</p>';
-  }
+function setupCartDrawer(){
+  const d=qs('#cartDrawer'), b=qs('#cartBackdrop'), o=qs('#openCart')||qs('.cart-btn'), c=qs('#closeCart');
+  const open=()=>{d?.classList.add('show'); b?.classList.add('show'); renderCart();};
+  const close=()=>{d?.classList.remove('show'); b?.classList.remove('show');};
+  o?.addEventListener('click',open); c?.addEventListener('click',close); b?.addEventListener('click',close);
+}
+function setupAnnounce(){qs('#closeAnnounce')?.addEventListener('click',()=>qs('#announceBar')?.remove());}
+function setupCookies(){const bn=qs('#cookieBanner'); if(!bn)return; if(!localStorage.getItem(COOKIES_KEY)) bn.style.display='flex';
+  qs('#acceptCookies')?.addEventListener('click',()=>{localStorage.setItem(COOKIES_KEY,'accepted'); bn.style.display='none';});
+  qs('#rejectCookies')?.addEventListener('click',()=>{localStorage.setItem(COOKIES_KEY,'rejected'); bn.style.display='none';});
+}
+function setupCoupon(){const i=qs('#couponInput'), a=qs('#applyCoupon'), n=qs('#couponNote'), nm=qs('#couponName');
+  a?.addEventListener('click',()=>{const v=(i?.value||'').trim().toUpperCase(); if(v==='PROPHETIA10'){localStorage.setItem(COUPON_KEY,'PROPHETIA10'); if(n&&nm){nm.textContent='PROPHETIA10'; n.style.display='block';} renderCart(); alert('10% aplicado.');} else alert('Cupón no válido.');});
+  if(localStorage.getItem(COUPON_KEY)==='PROPHETIA10'&&n&&nm){nm.textContent='PROPHETIA10'; n.style.display='block';}
 }
 
-/* Filtros: SOLO 2 colecciones */
-function bindFilters(){
-  const chips=$$('.chip'), cards=$$('.products-grid .product'); if(!chips.length||!cards.length) return;
-  function apply(f){
-    chips.forEach(c=>c.classList.toggle('chip-active', c.dataset.filter===f || (f==='all'&&c.dataset.filter==='all')));
-    cards.forEach(p=>{ p.style.display = (f==='all'||p.dataset.cat===f)?'':'none'; });
-  }
-  chips.forEach(ch=> ch.addEventListener('click',()=>{ const f=ch.dataset.filter||'all'; apply(f); if(f!=='all') location.hash=f; else history.replaceState(null,'',location.pathname); }));
-  const h=(location.hash||'#all').slice(1).toLowerCase();
-  apply(['myth-series','letters-from-the-soul'].includes(h)?h:'all');
-}
-
-/* Slider en tarjeta: flechas + puntos + autoplay hover */
-function bindCardSlides(){
-  $$('.card.product .img-wrap').forEach(wrap=>{
-    const img = $('img',wrap); if(!img) return;
-    const images = JSON.parse(wrap.dataset.images.replace(/&apos;/g,"'"));
-    let i=0, timer=null;
-
-    const set = (idx)=>{
-      i = (idx+images.length)%images.length;
-      img.style.opacity=0;
-      setTimeout(()=>{ img.src=images[i]; img.style.opacity=1; },100);
-      wrap.querySelectorAll('.card-dot').forEach((d,k)=>d.classList.toggle('active',k===i));
-    };
-
-    $('.prev',wrap)?.addEventListener('click',e=>{ e.stopPropagation(); set(i-1); });
-    $('.next',wrap)?.addEventListener('click',e=>{ e.stopPropagation(); set(i+1); });
-    wrap.querySelectorAll('.card-dot').forEach(d=> d.addEventListener('click',e=>{ e.stopPropagation(); set(+d.dataset.i); }));
-
-    if(images.length>1){
-      wrap.addEventListener('mouseenter',()=>{ timer=setInterval(()=>set(i+1),1600); });
-      wrap.addEventListener('mouseleave',()=>{ clearInterval(timer); timer=null; set(0); });
-    }
+// ------- Mega menu -------
+function setupMega(){
+  qsa('.mega').forEach(mega=>{
+    const t=mega.querySelector('.mega-toggle'); let timer;
+    const open=()=>{clearTimeout(timer); mega.classList.add('open'); t?.setAttribute('aria-expanded','true');};
+    const close=()=>{timer=setTimeout(()=>{mega.classList.remove('open'); t?.setAttribute('aria-expanded','false');},120);};
+    t?.addEventListener('click',e=>{e.preventDefault(); mega.classList.contains('open')?close():open();});
+    mega.addEventListener('mouseenter',open); mega.addEventListener('mouseleave',close);
   });
 }
 
-loadCatalog();
+// ------- Colecciones (página colecciones) -------
+function renderCollections(){
+  const grid=qs('#productsGrid'); if(!grid)return;
+  const hash=(location.hash||'').replace('#',''); let active=['myth-series','letters-from-the-soul'].includes(hash)?hash:'all';
+  draw(active);
+  qsa('.chip').forEach(ch=>ch.addEventListener('click',()=>{qsa('.chip').forEach(c=>c.classList.remove('chip-active')); ch.classList.add('chip-active'); draw(ch.dataset.filter);} ));
+  if(active!=='all'){ qsa('.chip').forEach(c=>{if(c.dataset.filter===active){qsa('.chip').forEach(x=>x.classList.remove('chip-active')); c.classList.add('chip-active');}}); }
+  function draw(filter){
+    const list=PRODUCTS.filter(p=> filter==='all'?true:p.collection===filter);
+    grid.innerHTML=list.map(p=>`
+      <article class="card">
+        <div class="img-wrap"><img src="${p.thumb}" alt="${p.title}"></div>
+        <h4>${p.title}</h4>
+        <p class="collection">${p.desc}</p>
+        <span class="price">${fmt(p.price)}</span>
+        <a class="btn-primary" href="productos.html?id=${encodeURIComponent(p.id)}">Ver</a>
+      </article>`).join('');
+  }
+}
 
-/* PDP (flechas + puntos + thumbs) */
-(async function hydratePDP(){
-  const slug=new URLSearchParams(location.search).get('slug'); if(!slug) return;
-  const pTitle=$('#pTitle'), pDesc=$('#pDesc'), pPrice=$('#pPrice'),
-        pMain=$('#pMain'), pThumbs=$('#pThumbs'), pDots=$('#pDots'),
-        sizeRow=$('#sizeRow'), qty=$('#qty'), buyForm=$('#buyForm');
-  try{
-    const res=await fetch(CATALOG_URL,{cache:'no-store'}); const list=await res.json();
-    const p=list.find(x=>x.slug===slug); if(!p) return;
+// ------- PDP -------
+function renderPDP(){
+  const id=new URLSearchParams(location.search).get('id'); if(!id)return;
+  const p=PRODUCTS.find(x=>x.id===id); if(!p)return;
+  const title=qs('#pTitle'), price=qs('#pPrice'), desc=qs('#pDesc'), main=qs('#pMain'), dots=qs('#pDots'), thumbs=qs('#pThumbs'), sizeRow=qs('#sizeRow'), form=qs('#buyForm'); let idx=0;
+  document.title=`${p.title} — PROPHETIA`; title?.textContent=p.title; price?.textContent=fmt(p.price); desc?.textContent=p.desc;
+  function setImg(i){idx=(i+p.images.length)%p.images.length; main.src=p.images[idx]; qsa('.dot',dots).forEach((d,di)=>d.classList.toggle('active',di===idx)); qsa('img',thumbs).forEach((t,ti)=>t.classList.toggle('active',ti===idx));}
+  if(!main)return;
+  main.alt=p.title; dots.innerHTML=p.images.map((_,i)=>`<span class="dot ${i===0?'active':''}"></span>`).join(''); thumbs.innerHTML=p.images.map((s,i)=>`<img src="${s}" alt="${p.title} ${i+1}" class="${i===0?'active':''}">`).join(''); setImg(0);
+  qs('.g-prev')?.addEventListener('click',()=>setImg(idx-1)); qs('.g-next')?.addEventListener('click',()=>setImg(idx+1));
+  qsa('.dot',dots).forEach((d,i)=>d.addEventListener('click',()=>setImg(i)));
+  qsa('img',thumbs).forEach((t,i)=>t.addEventListener('click',()=>setImg(i)));
+  sizeRow.innerHTML=p.sizes.map((s,i)=>`<button class="size-btn ${i===0?'active':''}" data-s="${s}">${s}</button>`).join(''); let sel=p.sizes[0];
+  qsa('.size-btn',sizeRow).forEach(b=>b.addEventListener('click',()=>{qsa('.size-btn',sizeRow).forEach(x=>x.classList.remove('active')); b.classList.add('active'); sel=b.dataset.s;}));
+  form?.addEventListener('submit',e=>{e.preventDefault(); const qty=Math.max(1,parseInt(qs('#qty').value,10)||1); addToCart({id:p.id,size:sel,qty}); alert('Añadido al carrito.');});
+}
 
-    document.title=`${p.title} — PROPHETIA`;
-    pTitle.textContent=p.title; pDesc.textContent=p.description||''; pPrice.textContent='€'+Number(p.price||0).toFixed(0);
+// ------- Catálogo (camisetas / hoodies) -------
+function renderCategoryPage(){
+  const grid=qs('#categoryGrid'); if(!grid)return;
+  const pager=qs('#pager'); const cat=(document.body.dataset.cat)||'tshirts';
+  let fit=(location.hash.replace('#','')==='oversized')?'oversized':'all', gender='all', inStock=false, sort='relevance', page=1, perPage=12;
 
-    const imgs=(Array.isArray(p.images)&&p.images.length?p.images:['images/noimg.png']);
-    let idx=0; const set = (k)=>{ idx=k; pMain.style.opacity=0; setTimeout(()=>{ pMain.src=imgs[idx]; pMain.style.opacity=1; },100);
-      $$('.thumb',pThumbs).forEach((t,i)=>t.classList.toggle('active',i===idx));
-      $$('.dot',pDots).forEach((d,i)=>d.classList.toggle('active',i===idx));
+  const fitChips=qsa('.chip[data-sub]'), genderChips=qsa('.chip[data-gender]'), stockChk=qs('#inStockOnly'), sortSel=qs('#sortSelect');
+
+  if(fit==='oversized'){ fitChips.forEach(c=>c.classList.toggle('chip-active', c.dataset.sub==='oversized')); }
+  fitChips.forEach(ch=>ch.addEventListener('click',()=>{fit=ch.dataset.sub; fitChips.forEach(x=>x.classList.remove('chip-active')); ch.classList.add('chip-active'); page=1; draw();}));
+  genderChips.forEach(ch=>ch.addEventListener('click',()=>{gender=ch.dataset.gender; genderChips.forEach(x=>x.classList.remove('chip-active')); ch.classList.add('chip-active'); page=1; draw();}));
+  stockChk?.addEventListener('change',()=>{inStock=!!stockChk.checked; page=1; draw();});
+  sortSel?.addEventListener('change',()=>{sort=sortSel.value; page=1; draw();});
+
+  function filtered(){
+    return PRODUCTS
+      .filter(p=>p.category===cat)
+      .filter(p=>fit==='all'?true:p.fit===fit)
+      .filter(p=>gender==='all'?true:p.gender===gender)
+      .filter(p=>inStock? p.stock>0 : true);
+  }
+  function sorted(list){
+    const byDate=(a,b)=>new Date(b.newAt)-new Date(a.newAt);
+    if(sort==='price-asc') return list.sort((a,b)=>a.price-b.price);
+    if(sort==='price-desc') return list.sort((a,b)=>b.price-a.price);
+    if(sort==='new') return list.sort(byDate);
+    return list.sort((a,b)=> (b.bestseller?1:0)-(a.bestseller?1:0) || byDate(a,b));
+  }
+  function paginate(list){const total=list.length; const pages=Math.max(1,Math.ceil(total/perPage)); page=Math.min(page,pages); const s=(page-1)*perPage; return {slice:list.slice(s,s+perPage), pages, total};}
+
+  function draw(){
+    let list=sorted(filtered()); const {slice,pages}=paginate(list);
+    grid.innerHTML=slice.map(p=>`
+      <article class="tile">
+        ${p.bestseller?'<span class="badge best">Best</span>':''}
+        ${new Date(p.newAt)>new Date(Date.now()-1000*60*60*24*21)?'<span class="badge new" style="left:auto;right:10px">New</span>':''}
+        <a href="productos.html?id=${encodeURIComponent(p.id)}">
+          <div class="tile-img"><img src="${p.thumb}" alt="${p.title}"></div>
+          <div class="tile-body"><div class="tile-title">${p.title}</div><div class="tile-price">${fmt(p.price)}${p.stock<=0?' · <span class="muted">Agotado</span>':''}</div></div>
+        </a>
+      </article>`).join('');
+
+    if(pages<=1){pager.innerHTML=''; return;}
+    let html=`<button class="page-btn" ${page<=1?'disabled':''} data-go="${page-1}">«</button>`;
+    for(let i=1;i<=pages;i++){
+      if(pages>7){
+        if(i===1||i===pages||Math.abs(i-page)<=1) html+=`<button class="page-btn ${i===page?'active':''}" data-go="${i}">${i}</button>`;
+        else if((i===2&&page>3)||(i===pages-1&&page<pages-2)) html+=`<span class="page-btn" disabled>…</span>`;
+      } else html+=`<button class="page-btn ${i===page?'active':''}" data-go="${i}">${i}</button>`;
+    }
+    html+=`<button class="page-btn" ${page>=pages?'disabled':''} data-go="${page+1}">»</button>`;
+    pager.innerHTML=html;
+    qsa('.page-btn',pager).forEach(b=>{const go=b.getAttribute('data-go'); if(!go)return; b.addEventListener('click',()=>{const n=parseInt(go,10); if(!isNaN(n)){page=n; draw();}});});
+  }
+  draw();
+}
+
+// ------- Modal Prophetia Tribe -------
+function setupTribe(){
+  const modal=qs('#tribeModal'); if(!modal) return;
+  const openBtn=qs('#openTribe'); const closeBtn=qs('#closeTribe'); const ok=qs('#tribeOk');
+  const form=qs('#tribeForm'); const thanks=qs('#tribeThanks');
+
+  const open=()=>{modal.classList.add('show'); modal.setAttribute('aria-hidden','false');};
+  const close=()=>{modal.classList.remove('show'); modal.setAttribute('aria-hidden','true');};
+
+  openBtn?.addEventListener('click',open);
+  closeBtn?.addEventListener('click',close);
+  ok?.addEventListener('click',close);
+  modal.addEventListener('click',e=>{ if(e.target===modal) close(); });
+
+  // auto-open una vez por sesión
+  if(!sessionStorage.getItem('pp_tribe_seen')){ setTimeout(open, 1400); sessionStorage.setItem('pp_tribe_seen','1'); }
+
+  form?.addEventListener('submit',e=>{
+    e.preventDefault();
+    // Aquí podrías integrar EmailJS; de momento sólo “ok”.
+    form.style.display='none'; thanks.style.display='block';
+    localStorage.setItem('pp_coupon_applied','PROPHETIA10'); // ejemplo
+  });
+}
+
+// ------- Init -------
+document.addEventListener('DOMContentLoaded', ()=>{
+  setupAnnounce();
+  setupMega();
+  setupCartDrawer();
+  setupCookies();
+  setupCoupon();
+  renderCollections();
+  renderPDP();
+  renderCart();
+  renderCategoryPage();
+  setupTribe();
+});
+document.addEventListener('DOMContentLoaded', () => {
+  /* ====== MEGA MENÚS (hover + click) ====== */
+  const megas = document.querySelectorAll('.mega');
+
+  megas.forEach(mega => {
+    const toggle = mega.querySelector('.mega-toggle');
+    const panel  = mega.querySelector('.mega-panel');
+    let hideTimer;
+
+    const open = () => {
+      clearTimeout(hideTimer);
+      mega.classList.add('open');
+      toggle?.setAttribute('aria-expanded','true');
+    };
+    const close = (delay = 120) => {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        mega.classList.remove('open');
+        toggle?.setAttribute('aria-expanded','false');
+      }, delay);
     };
 
-    pMain.src=imgs[0];
-    pThumbs.innerHTML = imgs.map((s,i)=>`<img class="thumb ${i===0?'active':''}" src="${s}" alt="${p.title} ${i+1}">`).join('');
-    pDots.innerHTML   = imgs.map((_,i)=>`<span class="dot ${i===0?'active':''}" data-i="${i}"></span>`).join('');
-    $$('.thumb',pThumbs).forEach((t,i)=> t.addEventListener('click',()=>set(i)));
-    $$('.dot',pDots).forEach((d,i)=> d.addEventListener('click',()=>set(i)));
-    $('.g-prev')?.addEventListener('click',()=> set((idx-1+imgs.length)%imgs.length));
-    $('.g-next')?.addEventListener('click',()=> set((idx+1)%imgs.length));
+    // Abrir por hover y focus
+    toggle?.addEventListener('mouseenter', open);
+    toggle?.addEventListener('focus', open);
+    panel?.addEventListener('mouseenter', open);
 
-    const sizes=p.sizes||{S:0,M:0,L:0,XL:0,XXL:0}; let currentSize=null;
-    sizeRow.innerHTML = Object.keys(sizes).map(k=>`<button type="button" class="size-btn" data-size="${k}" ${sizes[k]<=0?'disabled':''}>${k}</button>`).join('');
-    $$('.size-btn',sizeRow).forEach(b=> b.addEventListener('click',()=>{ if(b.disabled)return; $$('.size-btn',sizeRow).forEach(x=>x.classList.remove('active')); b.classList.add('active'); currentSize=b.dataset.size; }));
+    // Cerrar cuando salimos del botón o del panel
+    toggle?.addEventListener('mouseleave', () => close(120));
+    panel?.addEventListener('mouseleave', () => close(120));
 
-    buyForm?.addEventListener('submit',e=>{
+    // Toggle por click (móvil / touch / accesibilidad)
+    toggle?.addEventListener('click', (e) => {
       e.preventDefault();
-      const q=Math.max(1,parseInt(qty?.value||'1',10));
-      if(!currentSize) return alert('Elige talla');
-      addToCart({ sku:p.sku||p.slug, title:p.title, price:Number(p.price)||0, size:currentSize, qty:q, img:imgs[idx], images:imgs });
+      if (mega.classList.contains('open')) close(0);
+      else open();
     });
+  });
 
-  }catch(err){ console.error(err); }
-})();
+  // Cerrar todos con click fuera o ESC
+  const closeAllMegas = () => megas.forEach(m => m.classList.remove('open'));
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.mega')) closeAllMegas();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllMegas();
+  });
+
+  /* ====== AVISO SUPERIOR ====== */
+  document.getElementById('closeAnnounce')?.addEventListener('click', () => {
+    document.getElementById('announceBar')?.remove();
+  });
+
+  /* ====== CARRITO LATERAL (básico) ====== */
+  const cartDrawer   = document.getElementById('cartDrawer');
+  const cartBackdrop = document.getElementById('cartBackdrop');
+  const openCartBtn  = document.getElementById('openCart') || document.querySelector('.cart-btn');
+  const closeCartBtn = document.getElementById('closeCart');
+
+  const openCart  = () => { cartDrawer?.classList.add('show'); cartBackdrop?.classList.add('show'); };
+  const closeCart = () => { cartDrawer?.classList.remove('show'); cartBackdrop?.classList.remove('show'); };
+
+  openCartBtn?.addEventListener('click', openCart);
+  closeCartBtn?.addEventListener('click', closeCart);
+  cartBackdrop?.addEventListener('click', closeCart);
+
+  /* ====== COOKIES ====== */
+  const banner = document.getElementById('cookieBanner');
+  if (banner && !localStorage.getItem('prophetia_cookies')) {
+    banner.style.display = 'flex';
+  }
+  document.getElementById('acceptCookies')?.addEventListener('click', () => {
+    localStorage.setItem('prophetia_cookies','accepted');
+    banner.style.display = 'none';
+  });
+  document.getElementById('rejectCookies')?.addEventListener('click', () => {
+    localStorage.setItem('prophetia_cookies','rejected');
+    banner.style.display = 'none';
+  });
+
+  /* ====== MODAL “PROPHETIA TRIBE” ====== */
+  const tribeModal  = document.getElementById('tribeModal');
+  const openTribe   = document.getElementById('openTribe');
+  const closeTribe  = document.getElementById('closeTribe');
+  const tribeForm   = document.getElementById('tribeForm');
+  const tribeThanks = document.getElementById('tribeThanks');
+  const tribeOk     = document.getElementById('tribeOk');
+
+  const showTribe = () => { if (tribeModal) tribeModal.style.display = 'block'; };
+  const hideTribe = () => { if (tribeModal) tribeModal.style.display = 'none'; };
+
+  openTribe?.addEventListener('click', showTribe);
+  closeTribe?.addEventListener('click', hideTribe);
+  tribeOk?.addEventListener('click', hideTribe);
+  tribeForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    tribeForm.style.display  = 'none';
+    tribeThanks.style.display = 'block';
+  });
+});
