@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Producto — PROPHETIA</title>
+  <link rel="stylesheet" href="style.css?v=12" />
+</head>
+<body class="page-product">
+
+  <header class="site-header">
+    <a class="brand" href="index.html">PROPHETIA</a>
+    <nav class="site-nav">
+      <a href="colecciones.html">Collections</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#journal">Journal</a>
+      <a href="index.html#contact">Contact</a>
+      <button class="cart-btn" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <!-- Carrito -->
+  <aside id="cartDrawer" class="cart-drawer">
+    <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
+      <div class="coupon-row">
+        <input id="couponInput" type="text" placeholder="Código de descuento" />
+        <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
+      </div>
+      <div id="couponNote" class="coupon-applied" style="display:none;">Código aplicado: <span id="couponName"></span></div>
+      <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
+    </div>
+  </aside>
+  <div id="cartBackdrop" class="cart-backdrop"></div>
+
+  <main class="product-wrap">
+    <div class="gallery">
+      <div class="gallery-main">
+        <button class="g-prev" aria-label="Anterior">‹</button>
+        <img id="pMain" src="" alt="">
+        <button class="g-next" aria-label="Siguiente">›</button>
+      </div>
+      <div class="gallery-dots" id="pDots"></div>
+      <div class="thumbs" id="pThumbs"></div>
+    </div>
+
+    <div class="product-info">
+      <h1 id="pTitle">Producto</h1>
+      <p class="price" id="pPrice">€0</p>
+      <p id="pDesc" class="muted"></p>
+
+      <form id="buyForm" class="buy">
+        <div id="sizeRow" class="sizes"></div>
+        <label>Cantidad
+          <input id="qty" type="number" min="1" value="1" />
+        </label>
+        <button class="btn-primary" type="submit">Añadir al carrito</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© PROPHETIA — Silent Luxury</p>
+  </footer>
+
+  <script src="script.js?v=12"></script>
+</body>
+</html>
