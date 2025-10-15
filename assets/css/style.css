@@ -402,3 +402,18 @@ body.pp-leave{
   .grid{ grid-template-columns:repeat(10,1fr); gap:30px }
   .promo-claim{ font-size:clamp(52px,3vw,120px) }
 }
+.home-hero { padding: 48px 0 24px; }
+.home-hero .manifesto-eyebrow { margin-bottom: 8px; }
+.home-hero .manifesto-copy { margin-bottom: 18px; }
+.features.container { margin-top: 8px; }
+/* Centrado de textos del bloque manifiesto */
+.manifesto-wrap { text-align: center; }
+
+/* Asegura centrado visual del grid de features */
+.features.container { margin-left: auto; margin-right: auto; }
+
+/* (opcional) un poco más de aire */
+.home-hero { padding: 44px 0 24px; }
+.manifesto-eyebrow { margin: 0 0 8px; }
+.manifesto-copy { margin: 0 0 18px; color: var(--muted); }
+.ft { text-align: center; padding: 10px; }
