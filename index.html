@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PROPHETIA — Silent Luxury</title>
-  <meta name="description" content="Prophetia — boutique editorial de lujo silencioso con pulso streetwear." />
+  <meta name="description" content="Prophetia — boutique editorial de lujo silencioso con pulso streetwear.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-  <link rel="icon" href="images/favicon.ico" />
-  <link rel="stylesheet" href="style.css?v=62" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
 
@@ -18,69 +18,73 @@
     <button id="closeAnnounce" aria-label="Cerrar">×</button>
   </div>
 
-  <!-- Header + mega menus -->
+  <!-- HEADER unificado -->
   <header class="site-header">
-    <a class="brand" href="index.html">PROPHETIA</a>
+   <a class="brand" href="index.html" aria-label="Ir a inicio">
+  <img
+    class="brand-img"
+    src="assets/img/logo/prop.svg"
+    alt="PROPHETIA — Home"
+    loading="eager" decoding="async"
+  />
+</a>
+
+
     <nav class="site-nav">
+
       <!-- Women -->
-      <div class="mega mega-xl">
+      <div class="mega">
         <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Women ▾</button>
         <div class="mega-panel">
-          <div class="mega-xl-inner">
+          <div class="mega-inner">
             <div class="mega-col">
               <h5>Destacados</h5>
-              <a href="colecciones.html">Nuevo</a>
-              <a href="colecciones.html">Editorial Picks</a>
-              <a href="camisetas.html">All Women</a>
+              <a href="camisetas.html?gender=women">Nuevo</a>
+              <a href="camisetas.html?gender=women">Editorial Picks</a>
+              <a href="camisetas.html?gender=women">All Women</a>
             </div>
             <div class="mega-col">
               <h5>Tops</h5>
-              <a href="camisetas.html">T-Shirts</a>
-              <a href="camisetas.html#oversized">Oversized Tees</a>
-              <a href="hoodies.html">Hoodies</a>
+              <a href="camisetas.html?gender=women">T-Shirts</a>
+              <a href="hoodies.html?gender=women">Hoodies</a>
             </div>
             <div class="mega-col">
               <h5>Colecciones</h5>
-              <a href="colecciones.html#myth-series">Myth Series</a>
-              <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
+              <a href="camisetas.html?gender=women&collection=myth-series">Myth Series</a>
+              <a href="camisetas.html?gender=women&collection=letters-from-the-soul">Letters from the Soul</a>
+              <a href="colecciones.html">All Products</a>
             </div>
-            <a class="mega-promo" href="camisetas.html">
-              <img src="Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png" alt="">
-              <span class="promo-caption">Women · Drop</span>
-            </a>
           </div>
         </div>
       </div>
+
       <!-- Men -->
-      <div class="mega mega-xl">
+      <div class="mega">
         <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Men ▾</button>
         <div class="mega-panel">
-          <div class="mega-xl-inner">
+          <div class="mega-inner">
             <div class="mega-col">
               <h5>Destacados</h5>
-              <a href="colecciones.html">Nuevo</a>
-              <a href="colecciones.html">Editorial Picks</a>
-              <a href="camisetas.html">All Men</a>
+              <a href="camisetas.html?gender=men">Nuevo</a>
+              <a href="camisetas.html?gender=men">Editorial Picks</a>
+              <a href="camisetas.html?gender=men">All Men</a>
             </div>
             <div class="mega-col">
               <h5>Tops</h5>
-              <a href="camisetas.html">T-Shirts</a>
-              <a href="camisetas.html#oversized">Oversized Tees</a>
-              <a href="hoodies.html">Hoodies</a>
+              <a href="camisetas.html?gender=men">T-Shirts</a>
+              <a href="hoodies.html?gender=men">Hoodies</a>
             </div>
             <div class="mega-col">
               <h5>Colecciones</h5>
-              <a href="colecciones.html#myth-series">Myth Series</a>
-              <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
+              <a href="camisetas.html?gender=men&collection=myth-series">Myth Series</a>
+              <a href="camisetas.html?gender=men&collection=letters-from-the-soul">Letters from the Soul</a>
+              <a href="colecciones.html">All Products</a>
             </div>
-            <a class="mega-promo" href="hoodies.html">
-              <img src="Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png" alt="">
-              <span class="promo-caption">Men · Drop</span>
-            </a>
           </div>
         </div>
       </div>
-      <!-- Colections -->
+
+      <!-- Collections -->
       <div class="mega">
         <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Collections ▾</button>
         <div class="mega-panel">
@@ -95,7 +99,6 @@
               <h5>Clothing</h5>
               <a href="camisetas.html">T-Shirts</a>
               <a href="hoodies.html">Hoodies</a>
-              <a href="camisetas.html#oversized">Oversized</a>
             </div>
           </div>
         </div>
@@ -103,81 +106,61 @@
 
       <a href="about.html">About</a>
       <a href="journal.html">Journal</a>
-      <a href="#contact">Contact</a>
-      <button class="cart-btn" aria-label="Carrito" id="openCart">🛒 <span id="cartCount">0</span></button>
+      <a href="contact.html">Contact</a>
+      <button class="cart-btn" id="openCart" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
     </nav>
   </header>
 
-  <!-- BLOQUE PROMO: vídeo/gif -->
+  <!-- Hero de vídeo/gif -->
   <section class="promo-hero">
-    <video class="promo-media" autoplay muted loop playsinline preload="auto" poster="images/poster.jpg">
-      <source src="media/video.mp4" type="video/mp4">
-    </video>
+    <video class="promo-media" autoplay muted playsinline loop>
+  <!-- 4K (2160p) para pantallas ≥ 3840px -->
+  <source src="assets/img/hero/prophetia-2160p.mp4" type="video/mp4" media="(min-width: 3840px)">
+  <!-- 1440p para pantallas ≥ 1920px -->
+  <source src="assets/img/hero/prophetia-1440p.mp4" type="video/mp4" media="(min-width: 1920px)">
+  <!-- 1080p por defecto -->
+  <source src="assets/img/hero/prophetia-1080p.mp4" type="video/mp4">
+  <!-- Fallback -->
+  Tu navegador no soporta video HTML5.
+</video>
+
     <div class="promo-overlay">
       <div class="promo-eyebrow">PROPHETIA</div>
       <h1 class="promo-claim">Mediterranean Mythology<br>meets Editorial Design</h1>
       <div class="promo-cta">
-        <a class="btn-primary" href="camisetas.html">Shop T-Shirts</a>
+        <a class="btn-outline" href="camisetas.html">Shop T-Shirts</a>
         <a class="btn-outline" href="hoodies.html">Shop Hoodies</a>
       </div>
     </div>
   </section>
 
-  <!-- Manifesto -->
+  <!-- Manifiesto -->
   <section class="home-hero">
-    <div class="container">
-      <h2 class="manifesto-eyebrow">WE CREATE PIECES THAT TELL<br>STORIES, NOT TRENDS.</h2>
-      <p class="manifesto-copy">Each Prophetia garment carries meaning — crafted with intention,
-        heritage and Mediterranean soul.</p>
+    <p class="manifesto-eyebrow">WE CREATE PIECES THAT TELL<br>STORIES, NOT TRENDS.</p>
+    <p class="manifesto-copy">Each Prophetia garment carries meaning — crafted with intention, heritage and Mediterranean soul.</p>
+
+    <div class="features container">
+      <div class="ft">
+        <div class="ft-ico">👁️</div>
+        <h3 class="manifesto-eyebrow">Symbolic design</h3>
+        <p class="muted">Every line we draw blends art, culture and emotion into a wearable story.</p>
+      </div>
+      <div class="ft">
+        <div class="ft-ico">❤️</div>
+        <h3 class="manifesto-eyebrow">Made with soul</h3>
+        <p class="muted">Designed in the Mediterranean and crafted with devotion — built to last.</p>
+      </div>
+      <div class="ft">
+        <div class="ft-ico">🧍‍♀️</div>
+        <h3 class="manifesto-eyebrow">Beyond fashion</h3>
+        <p class="muted">Artists and storytellers shaping a future where style meets meaning.</p>
+      </div>
     </div>
   </section>
 
-  <!-- Pilares -->
-  <section class="features container">
-    <article class="ft">
-      <div class="ft-ico">👁️</div>
-      <h3>Symbolic design</h3>
-      <p>Every line we draw blends art, culture and emotion into a wearable story.</p>
-    </article>
-    <article class="ft">
-      <div class="ft-ico">❤️</div>
-      <h3>Made with soul</h3>
-      <p>Designed in the Mediterranean and crafted with devotion — built to last.</p>
-    </article>
-    <article class="ft">
-      <div class="ft-ico">👤</div>
-      <h3>Beyond fashion</h3>
-      <p>Artists and storytellers shaping a future where style meets meaning.</p>
-    </article>
-  </section>
-
-  <!-- Colecciones teaser -->
-  <section class="grid">
-    <article class="card">
-      <div class="img-wrap"><img src="Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png" alt="Atlas"></div>
-      <h4>Myth Series</h4>
-      <p class="collection">Iconografía clásica reimaginada en clave editorial.</p>
-      <a class="btn-primary" href="colecciones.html#myth-series">Explorar</a>
-    </article>
-    <article class="card">
-      <div class="img-wrap"><img src="Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png" alt="Letters"></div>
-      <h4>Letters from the Soul</h4>
-      <p class="collection">Tipografía Prophetia, mensajes íntimos y minimalismo.</p>
-      <a class="btn-primary" href="colecciones.html#letters-from-the-soul">Explorar</a>
-    </article>
-  </section>
-
-  <!-- Contacto -->
-  <section id="contact" class="container" style="margin:10px auto 60px">
-    <h3 style="font-family:'Playfair Display',serif;margin:0 0 14px;">Contact</h3>
-    <p class="muted" style="margin:0 0 10px;">¿Colaboraciones / pedidos especiales? Escríbenos.</p>
-    <a class="btn-primary" href="mailto:hello@prophetia.studio">hello@prophetia.studio</a>
-    <button class="btn-primary" style="margin-left:10px" id="openTribe">Prophetia Tribe</button>
-  </section>
-
-  <!-- ===== FOOTER NUEVO con redes ===== -->
+  <!-- FOOTER -->
   <footer class="pp-footer">
-    <div class="container pp-foot-grid">
+    <div class="pp-foot-grid container">
       <div>
         <h5>Shop</h5>
         <a href="camisetas.html">T-Shirts</a>
@@ -186,107 +169,81 @@
       </div>
       <div>
         <h5>Help</h5>
-        <a href="#">Shipping</a>
-        <a href="#">Returns</a>
-        <a href="#">FAQs</a>
+        <a href="shipping.html">Shipping</a>
+        <a href="returns.html">Returns</a>
+        <a href="faqs.html">FAQs</a>
       </div>
       <div>
         <h5>Studio</h5>
         <a href="about.html">About</a>
         <a href="journal.html">Journal</a>
-        <a href="mailto:hello@prophetia.studio">Contact</a>
+        <a href="contact.html">Contact</a>
       </div>
     </div>
-
-    <div class="container pp-socials" aria-label="Social links">
-      <a class="soc" href="https://www.instagram.com/prophetia_official/" target="_blank" rel="noopener" aria-label="Instagram">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.3 2.4.5.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.5.4 1.2.5 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.9-.5 2.4-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.5.2-1.2.4-2.4.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.3-2.4-.5a3.8 3.8 0 0 1-2.3-2.3c-.2-.5-.4-1.2-.5-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.9.5-2.4.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.5-.2 1.2-.4 2.4-.5C8.4 2.2 8.8 2.2 12 2.2Zm0 1.8c-3.2 0-3.5 0-4.8.1-1 0-1.6.2-2 .4-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.2.4-.4 1-.4 2 0 1.3-.1 1.6-.1 4.8s0 3.5.1 4.8c0 1 .2 1.6.4 2 .2.5.4.8.7 1.1.3.3.6.5 1.1.7.4.2 1 .4 2 .4 1.3.1 1.6.1 4.8.1s3.5 0 4.8-.1c1 0 1.6-.2 2-.4.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.2-.4.4-1 .4-2 .1-1.3.1-1.6.1-4.8s0-3.5-.1-4.8c0-1-.2-1.6-.4-2-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.4-.2-1-.4-2-.4-1.3-.1-1.6-.1-4.8-.1Zm0 3.3a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 1.8a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4ZM17.6 5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
-        </svg>
+    <div class="pp-socials">
+      <a class="soc" href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2z"/></svg>
       </a>
-      <a class="soc" href="https://www.tiktok.com/@prophetia" target="_blank" rel="noopener" aria-label="TikTok">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15.5 2h3.1c.2 2.3 1.5 3.9 3.4 4.3v3.2c-1.4 0-2.7-.4-3.8-1.1v6.8a7.2 7.2 0 1 1-6.8-7.2v3.3a3.9 3.9 0 1 0 2.8 3.7V2Z"/>
-        </svg>
+      <a class="soc" href="https://tiktok.com" aria-label="TikTok" target="_blank" rel="noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M13 2h3a5 5 0 0 0 5 5v3a8 8 0 0 1-5-2v7a7 7 0 1 1-7-7h2v3h-2a4 4 0 1 0 4 4V2z"/></svg>
       </a>
-      <a class="soc" href="https://www.youtube.com/@prophetia" target="_blank" rel="noopener" aria-label="YouTube">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M23 7.1a4 4 0 0 0-2.8-2.8C18.6 3.8 12 3.8 12 3.8s-6.6 0-8.2.5A4 4 0 0 0 1 7.1 41 41 0 0 0 .5 12 41 41 0 0 0 1 16.9a4 4 0 0 0 2.8 2.8c1.6.5 8.2.5 8.2.5s6.6 0 8.2-.5a4 4 0 0 0 2.8-2.8 41 41 0 0 0 .5-4.9c0-1.8-.2-3.5-.5-4.9ZM9.8 15.4V8.6l6.2 3.4-6.2 3.4Z"/>
-        </svg>
+      <a class="soc" href="https://youtube.com" aria-label="YouTube" target="_blank" rel="noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M23 8s0-3-3-3H4C1 5 1 8 1 8v8s0 3 3 3h16c3 0 3-3 3-3V8zM10 9l6 3-6 3V9z"/></svg>
       </a>
-      <a class="soc" href="https://x.com/prophetia" target="_blank" rel="noopener" aria-label="X">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 3h4.7l5 6.6L18.6 3H21l-6.9 8.6L21 21h-4.7l-5.4-7.1L8.7 21H3l7.1-9L3 3Z"/>
-        </svg>
-      </a>
-      <a class="soc" href="https://facebook.com/prophetia" target="_blank" rel="noopener" aria-label="Facebook">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M13.5 21v-7.3h2.5l.4-2.9h-2.9V8.6c0-.8.2-1.3 1.3-1.3h1.6V4.7c-.3 0-1.3-.1-2.4-.1-2.3 0-3.8 1.3-3.8 3.9v2.3H8v2.9h2.2V21h3.3Z"/>
-        </svg>
+      <a class="soc" href="https://x.com" aria-label="X" target="_blank" rel="noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M3 3h4l5 7 5-7h4l-7 9 7 9h-4l-5-7-5 7H3l7-9z"/></svg>
       </a>
     </div>
-
     <div class="pp-foot-bottom">© PROPHETIA — Silent Luxury</div>
   </footer>
 
-  <!-- Carrito -->
-  <aside id="cartDrawer" class="cart-drawer">
-    <div class="cart-head"><strong>Tu carrito</strong><button id="closeCart">×</button></div>
-    <div id="cartItems" class="cart-items"></div>
-    <div class="cart-foot">
-      <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
-      <div class="coupon-row">
-        <input id="couponInput" type="text" placeholder="Código de descuento" />
-        <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
-      </div>
-      <div id="couponNote" class="coupon-applied" style="display:none;">Código aplicado: <span id="couponName"></span></div>
-      <button id="checkoutBtn" class="btn-primary">Finalizar (demo)</button>
-    </div>
-  </aside>
-  <div id="cartBackdrop" class="cart-backdrop"></div>
-
-  <!-- Modal Tribe -->
+  <!-- ===== Prophetia Tribe – Private Access (POPUP) ===== -->
   <div id="tribeModal" class="tribe-modal" aria-hidden="true">
-    <div class="tribe-card">
-      <button class="tribe-close" id="closeTribe">×</button>
-      <div class="tribe-left">
-        <img src="images/tribe-emblem.svg" alt="Prophetia" />
-      </div>
-      <div class="tribe-right">
-        <h3>Prophetia Tribe — Private Access</h3>
-        <p class="muted">Acceso anticipado, diseños exclusivos y más beneficios siendo parte de la tribe.</p>
-        <form id="tribeForm" class="tribe-form">
-          <input type="text" name="name" placeholder="Nombre" required />
-          <input type="email" name="email" placeholder="Correo electrónico" required />
-          <label class="ck"><input type="checkbox" id="ckNews"> Email me news and offers</label>
-          <div class="dob">
-            <input type="text" name="mm" inputmode="numeric" maxlength="2" placeholder="MM">
-            <input type="text" name="dd" inputmode="numeric" maxlength="2" placeholder="DD">
-            <input type="text" name="yy" inputmode="numeric" maxlength="4" placeholder="YYYY">
-          </div>
-          <button class="btn-primary" type="submit">UNIRME</button>
-          <small class="muted">Sin spam. Podrás cancelar cuando quieras.</small>
-        </form>
-        <div id="tribeThanks" class="tribe-thanks" style="display:none;">
-          <p>¡Bienvenido/a a la Tribe! Te avisaremos de drops privados.</p>
-          <button class="btn-primary" id="tribeOk">Cerrar</button>
+    <div class="tribe-backdrop" data-close></div>
+
+    <div class="tribe-card" role="dialog" aria-modal="true" aria-labelledby="tribeTitle">
+      <button class="tribe-close" type="button" title="Cerrar" aria-label="Cerrar" data-close>×</button>
+
+      <div class="tribe-grid">
+        <!-- Izquierda: logo -->
+        <div class="tribe-left">
+          <img src="assets/img/logo/prophetia-emblem.png" alt="PROPHETIA" />
+        </div>
+
+        <!-- Derecha: texto + formulario -->
+        <div class="tribe-right">
+          <h3 id="tribeTitle" class="tribe-title">Prophetia Tribe – Private Access</h3>
+          <p class="tribe-sub">
+            Acceso anticipado por ser miembro de Prophetia.<br>
+            Diseños exclusivos y más beneficios siendo parte de la tribe.
+          </p>
+
+          <form id="tribeForm" class="tribe-form" novalidate>
+            <input class="t-input" type="text" name="name" placeholder="Nombre" required>
+            <input class="t-input" type="email" name="email" placeholder="Correo electrónico" required>
+
+            <label class="t-check">
+              <input type="checkbox" name="news" value="1">
+              <span>Email me news and offers</span>
+            </label>
+
+            <label class="t-label">Fecha de nacimiento</label>
+            <div class="t-birth">
+              <input class="t-input" type="text" name="mm" placeholder="MM" inputmode="numeric" maxlength="2">
+              <input class="t-input" type="text" name="dd" placeholder="DD" inputmode="numeric" maxlength="2">
+              <input class="t-input" type="text" name="yy" placeholder="YYYY" inputmode="numeric" maxlength="4">
+            </div>
+
+            <button type="submit" class="t-btn">UNIRME</button>
+            <p class="t-note">Sin spam. Podrás cancelar cuando quieras.</p>
+          </form>
         </div>
       </div>
     </div>
   </div>
+  <!-- ===== /POPUP ===== -->
 
-  <!-- Cookies -->
-  <div id="cookieBanner" class="cookie-banner" style="display:none;">
-    <div class="cookie-box">
-      <p>Usamos cookies propias y de terceros. Consulta la <a href="politica-cookies.html" target="_blank">política de cookies</a>.</p>
-      <div class="cookie-actions">
-        <button id="acceptCookies" class="btn-primary">Aceptar</button>
-        <button id="rejectCookies" class="btn-outline">Rechazar</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js?v=62"></script>
+  <script src="assets/js/script.js"></script>
 </body>
-</html>
 
+</html>

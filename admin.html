@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Prophetia</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  body{background:#faf6ee}
+  .adm-wrap{max-width:720px; margin:28px auto; background:#fff; border:1px solid rgba(16,16,16,.08); border-radius:14px; padding:18px}
+  .adm-row{display:grid; grid-template-columns:220px 1fr; gap:12px; align-items:center; margin:10px 0}
+  .adm-row input[type="text"], .adm-row input[type="number"], .adm-row textarea{
+    border:1px solid rgba(16,16,16,.12); border-radius:10px; padding:.6rem .8rem; width:100%; background:#fff;
+  }
+  .adm-actions{display:flex; gap:10px; margin-top:12px}
+  .adm-note{font-size:.9rem; color:#6b655a}
+</style>
+</head>
+<body>
+  <div class="announce-bar"><span>🔐 Admin: Popup “Prophetia Tribe”</span></div>
+  <main class="adm-wrap">
+    <p class="adm-note">Protección simple: introduce tu PIN para editar. (Por defecto: <strong>1111</strong>)</p>
+    <div class="adm-row">
+      <label>PIN</label>
+      <input id="pin" type="password" placeholder="••••">
+    </div>
+
+    <fieldset id="cfgBox" disabled style="border:0; padding:0; margin-top:10px">
+      <div class="adm-row">
+        <label>Activado</label>
+        <input id="cfgEnabled" type="checkbox">
+      </div>
+      <div class="adm-row">
+        <label>Retardo (ms)</label>
+        <input id="cfgDelay" type="number" value="2500" min="0" step="100">
+      </div>
+      <div class="adm-row">
+        <label>Reaparece cada (días)</label>
+        <input id="cfgDays" type="number" value="30" min="0" step="1">
+      </div>
+      <div class="adm-row">
+        <label>Título</label>
+        <input id="cfgTitle" type="text" value="Prophetia Tribe – Private Access">
+      </div>
+      <div class="adm-row">
+        <label>Subtítulo (HTML permitido)</label>
+        <textarea id="cfgSub" rows="4">Acceso anticipado por ser miembro de Prophetia.<br>Diseños exclusivos y más beneficios siendo parte de la tribe.</textarea>
+      </div>
+      <div class="adm-actions">
+        <button class="t-btn" id="btnSave">Guardar</button>
+        <button class="t-btn" id="btnResetSeen">Permitir mostrar de nuevo</button>
+        <button class="t-btn" id="btnPreview">Previsualizar ahora</button>
+      </div>
+    </fieldset>
+  </main>
+
+<script>
+  const CFG_KEY = 'pp_tribe_cfg';
+  const defaultCfg = {enabled:true, delayMs:2500, showEveryDays:30,
+    title:'Prophetia Tribe – Private Access',
+    sub:'Acceso anticipado por ser miembro de Prophetia.<br>Diseños exclusivos y más beneficios siendo parte de la tribe.'};
+
+  const pin = document.getElementById('pin');
+  const box = document.getElementById('cfgBox');
+  const inputs = {
+    enabled: document.getElementById('cfgEnabled'),
+    delay: document.getElementById('cfgDelay'),
+    days: document.getElementById('cfgDays'),
+    title: document.getElementById('cfgTitle'),
+    sub: document.getElementById('cfgSub'),
+  };
+
+  // PIN simple (1111). Cambia aquí si quieres.
+  function okPin(v){ return (v || '') === '1111'; }
+
+  pin.addEventListener('input', ()=> {
+    box.disabled = !okPin(pin.value);
+  });
+
+  function loadCfg(){
+    const cfg = Object.assign({}, defaultCfg, JSON.parse(localStorage.getItem(CFG_KEY) || '{}'));
+    inputs.enabled.checked = !!cfg.enabled;
+    inputs.delay.value = cfg.delayMs || 0;
+    inputs.days.value = cfg.showEveryDays || 0;
+    inputs.title.value = cfg.title || '';
+    inputs.sub.value = cfg.sub || '';
+  }
+  function saveCfg(){
+    const cfg = {
+      enabled: inputs.enabled.checked,
+      delayMs: parseInt(inputs.delay.value||'0',10),
+      showEveryDays: parseInt(inputs.days.value||'0',10),
+      title: inputs.title.value,
+      sub: inputs.sub.value
+    };
+    localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+    alert('Guardado. Recarga la página donde uses el popup para aplicar cambios.');
+  }
+  document.getElementById('btnSave').addEventListener('click', saveCfg);
+  document.getElementById('btnResetSeen').addEventListener('click', ()=> {
+    localStorage.removeItem('pp_tribe_dismissed_at');
+    alert('Hecho. El pop-up podrá mostrarse de nuevo.');
+  });
+  document.getElementById('btnPreview').addEventListener('click', ()=> {
+    // truco: guarda delay=0 y enabled=true temporalmente
+    const cur = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+    const temp = Object.assign({}, cur, {enabled:true, delayMs:0});
+    localStorage.setItem(CFG_KEY, JSON.stringify(temp));
+    window.open('index.html','_blank');
+  });
+
+  loadCfg();
+</script>
+</body>
+</html>
