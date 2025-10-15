@@ -1,5 +1,5 @@
 /* ================ Config ================ */
-const CATALOG_URL = "catalog.json";            // tu catálogo
+const CATALOG_URL = "catalog.json";
 const DISCOUNT_CODE = "PROPHETIA10";
 const DISCOUNT_PCT  = 10;
 
@@ -8,10 +8,10 @@ const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
 const slugify = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
                   .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
 
-/* ================ Announce ================ */
+/* Announce */
 $('#closeAnnounce')?.addEventListener('click',()=>$('#announceBar').style.display='none');
 
-/* ================ Mega menu ================ */
+/* Mega menu */
 (function(){
   const mega=$('.mega'); if(!mega) return;
   const btn=mega.querySelector('.mega-toggle');
@@ -22,7 +22,7 @@ $('#closeAnnounce')?.addEventListener('click',()=>$('#announceBar').style.displa
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
 })();
 
-/* ================ Carrito + cupón ================ */
+/* Carrito + cupón */
 const CART_KEY='pp_cart';
 const getCart = ()=> JSON.parse(localStorage.getItem(CART_KEY)||'[]');
 const setCart = c  => localStorage.setItem(CART_KEY,JSON.stringify(c));
@@ -51,7 +51,7 @@ function renderCart(){
 }
 updateCartCount(); renderCart();
 
-/* ================ Catálogo (Colecciones) ================ */
+/* Catálogo (colecciones) */
 async function loadCatalog(){
   const grid=$('#productsGrid'); if(!grid) return;
   try{
@@ -61,7 +61,6 @@ async function loadCatalog(){
     grid.innerHTML = products.map(p=>{
       const cat=p.collection_slug||slugify(p.collection);
       const imgs=Array.isArray(p.images)&&p.images.length?p.images:['images/noimg.png'];
-      // Dots + arrows para cada card
       const dots = imgs.map((_,i)=>`<span class="card-dot ${i===0?'active':''}" data-i="${i}"></span>`).join('');
       return `
         <article class="card product" data-cat="${cat}">
@@ -116,16 +115,10 @@ function bindCardSlides(){
       wrap.querySelectorAll('.card-dot').forEach((d,k)=>d.classList.toggle('active',k===i));
     };
 
-    // Flechas
     $('.prev',wrap)?.addEventListener('click',e=>{ e.stopPropagation(); set(i-1); });
     $('.next',wrap)?.addEventListener('click',e=>{ e.stopPropagation(); set(i+1); });
+    wrap.querySelectorAll('.card-dot').forEach(d=> d.addEventListener('click',e=>{ e.stopPropagation(); set(+d.dataset.i); }));
 
-    // Dots
-    wrap.querySelectorAll('.card-dot').forEach(d=>{
-      d.addEventListener('click',e=>{ e.stopPropagation(); set(+d.dataset.i); });
-    });
-
-    // Autoplay al pasar el ratón
     if(images.length>1){
       wrap.addEventListener('mouseenter',()=>{ timer=setInterval(()=>set(i+1),1600); });
       wrap.addEventListener('mouseleave',()=>{ clearInterval(timer); timer=null; set(0); });
@@ -135,7 +128,7 @@ function bindCardSlides(){
 
 loadCatalog();
 
-/* ================ PDP (galería con flechas/puntos) ================ */
+/* PDP (flechas + puntos + thumbs) */
 (async function hydratePDP(){
   const slug=new URLSearchParams(location.search).get('slug'); if(!slug) return;
   const pTitle=$('#pTitle'), pDesc=$('#pDesc'), pPrice=$('#pPrice'),
@@ -146,9 +139,7 @@ loadCatalog();
     const p=list.find(x=>x.slug===slug); if(!p) return;
 
     document.title=`${p.title} — PROPHETIA`;
-    pTitle.textContent=p.title;
-    pDesc.textContent=p.description||'';
-    pPrice.textContent='€'+Number(p.price||0).toFixed(0);
+    pTitle.textContent=p.title; pDesc.textContent=p.description||''; pPrice.textContent='€'+Number(p.price||0).toFixed(0);
 
     const imgs=(Array.isArray(p.images)&&p.images.length?p.images:['images/noimg.png']);
     let idx=0; const set = (k)=>{ idx=k; pMain.style.opacity=0; setTimeout(()=>{ pMain.src=imgs[idx]; pMain.style.opacity=1; },100);
@@ -164,12 +155,10 @@ loadCatalog();
     $('.g-prev')?.addEventListener('click',()=> set((idx-1+imgs.length)%imgs.length));
     $('.g-next')?.addEventListener('click',()=> set((idx+1)%imgs.length));
 
-    // Tallas
     const sizes=p.sizes||{S:0,M:0,L:0,XL:0,XXL:0}; let currentSize=null;
     sizeRow.innerHTML = Object.keys(sizes).map(k=>`<button type="button" class="size-btn" data-size="${k}" ${sizes[k]<=0?'disabled':''}>${k}</button>`).join('');
     $$('.size-btn',sizeRow).forEach(b=> b.addEventListener('click',()=>{ if(b.disabled)return; $$('.size-btn',sizeRow).forEach(x=>x.classList.remove('active')); b.classList.add('active'); currentSize=b.dataset.size; }));
 
-    // Comprar
     buyForm?.addEventListener('submit',e=>{
       e.preventDefault();
       const q=Math.max(1,parseInt(qty?.value||'1',10));

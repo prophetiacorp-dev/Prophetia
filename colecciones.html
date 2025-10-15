@@ -5,24 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Colecciones — PROPHETIA</title>
   <meta name="description" content="Colecciones: Myth Series y Letters from the Soul. Moda editorial y lujo silencioso.">
-  <link rel="icon" href="images/favicon.ico">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="images/favicon.ico" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body class="page-collections">
-  <div id="announceBar" class="announce-bar">
+  <div class="announce-bar" id="announceBar">
     <span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span>
     <button id="closeAnnounce" aria-label="Cerrar">×</button>
   </div>
 
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Inicio">PROPHETIA</a>
-    <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    <a class="brand" href="index.html">PROPHETIA</a>
     <nav class="site-nav">
-      <div class="dropdown">
-        <a href="colecciones.html" class="active">Collections ▾</a>
-        <div class="dropdown-menu">
-          <a href="#myth-series">Myth Series</a>
-          <a href="#letters-from-the-soul">Letters from the Soul</a>
+      <div class="mega">
+        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Collections ▾</button>
+        <div class="mega-panel">
+          <div class="mega-inner">
+            <div class="mega-col">
+              <h5>Collections</h5>
+              <a href="#myth-series">Myth Series</a>
+              <a href="#letters-from-the-soul">Letters from the Soul</a>
+              <hr>
+              <a href="colecciones.html">All Products</a>
+            </div>
+            <div class="mega-col">
+              <h5>Clothing</h5>
+              <a href="colecciones.html">T-Shirts</a>
+              <a href="colecciones.html">Hoodies</a>
+            </div>
+            <div class="mega-col">
+              <h5>Accessories</h5>
+              <a href="colecciones.html">Art Prints</a>
+              <a href="colecciones.html">Gift Card</a>
+            </div>
+          </div>
         </div>
       </div>
       <a href="index.html#about">About</a>
@@ -39,7 +55,7 @@
     <div class="cart-foot">
       <div class="cart-total"><span>Total</span><strong id="cartTotal">€0</strong></div>
       <div class="coupon-row">
-        <input id="couponInput" type="text" placeholder="Código de descuento">
+        <input id="couponInput" type="text" placeholder="Código de descuento" />
         <button id="applyCoupon" class="btn-primary" type="button">Aplicar</button>
       </div>
       <div id="couponNote" class="coupon-applied" style="display:none;">Código aplicado: <span id="couponName"></span></div>
@@ -51,7 +67,7 @@
   <main>
     <section class="page-hero">
       <h1>Collections</h1>
-      <p class="lede">Mitología y cartas íntimas. Lujo silencioso con alma editorial.</p>
+      <p class="lede">Mitología mediterránea en gráficos de lujo silencioso.</p>
     </section>
 
     <section class="filters">
@@ -65,27 +81,7 @@
 
   <footer class="site-footer"><p>© PROPHETIA — Silent Luxury</p></footer>
 
-  <!-- Pop-up -->
-  <div id="welcomeBackdrop" class="modal-backdrop"></div>
-  <div id="welcomeModal" class="modal">
-    <button id="welcomeClose" class="modal-close" aria-label="Cerrar">×</button>
-    <h3>-10% en tu primera compra</h3>
-    <p class="lede">Suscríbete para recibir tu código de bienvenida.</p>
-    <form id="welcomeForm" class="nl-form">
-      <input id="welcomeEmail" type="email" placeholder="tu@email.com" required>
-      <button type="submit" class="btn-primary">Recibir código</button>
-      <small class="muted">Sin spam.</small>
-    </form>
-    <div id="welcomeCodeBox" class="nl-thanks" hidden>
-      <p style="margin-bottom:.5rem;">Tu código:</p>
-      <div id="welcomeCode" style="font-weight:700; font-size:1.2rem; letter-spacing:.5px;">PROPHETIA10</div>
-      <button id="copyCode" class="btn-primary" style="margin-top:.75rem;">Copiar y aplicar</button>
-      <small class="muted">Se aplicará automáticamente en el carrito.</small>
-    </div>
-  </div>
-
-  <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>document.addEventListener('DOMContentLoaded',()=>{ if(window.emailjs){ emailjs.init({ publicKey:"YOUR_EMAILJS_PUBLIC_KEY" }); }});</script>
-  <script src="script.js"></script>
+  <script src="script.js?v=13"></script>
 </body>
 </html>
+
