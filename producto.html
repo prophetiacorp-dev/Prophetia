@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Producto — PROPHETIA</title>
+  <meta name="description" content="Descubre los detalles del diseño, galería y compra de las piezas de Prophetia. Lujo silencioso con pulso editorial." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body data-page="product">
+  <!-- Barra de anuncio -->
+  <div class="announce-bar"><span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span></div>
+
+  <!-- HEADER unificado con mega-menús -->
+  <header class="site-header">
+    <a class="brand" href="index.html">PROPHETIA</a>
+
+    <nav class="site-nav">
+      <!-- Women -->
+      <div class="mega">
+        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Women ▾</button>
+        <div class="mega-panel">
+          <div class="mega-inner">
+            <div class="mega-col">
+              <h5>Destacados</h5>
+              <a href="camisetas.html?gender=women">Nuevo</a>
+              <a href="camisetas.html?gender=women">Editorial Picks</a>
+              <a href="camisetas.html?gender=women">All Women</a>
+            </div>
+            <div class="mega-col">
+              <h5>Tops</h5>
+              <a href="camisetas.html?gender=women">T-Shirts</a>
+              <a href="hoodies.html?gender=women">Hoodies</a>
+            </div>
+            <div class="mega-col">
+              <h5>Colecciones</h5>
+              <a href="camisetas.html?gender=women&collection=myth-series">Myth Series</a>
+              <a href="camisetas.html?gender=women&collection=letters-from-the-soul">Letters from the Soul</a>
+              <a href="colecciones.html">All Products</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Men -->
+      <div class="mega">
+        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Men ▾</button>
+        <div class="mega-panel">
+          <div class="mega-inner">
+            <div class="mega-col">
+              <h5>Destacados</h5>
+              <a href="camisetas.html?gender=men">Nuevo</a>
+              <a href="camisetas.html?gender=men">Editorial Picks</a>
+              <a href="camisetas.html?gender=men">All Men</a>
+            </div>
+            <div class="mega-col">
+              <h5>Tops</h5>
+              <a href="camisetas.html?gender=men">T-Shirts</a>
+              <a href="hoodies.html?gender=men">Hoodies</a>
+            </div>
+            <div class="mega-col">
+              <h5>Colecciones</h5>
+              <a href="camisetas.html?gender=men&collection=myth-series">Myth Series</a>
+              <a href="camisetas.html?gender=men&collection=letters-from-the-soul">Letters from the Soul</a>
+              <a href="colecciones.html">All Products</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collections general -->
+      <div class="mega">
+        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Collections ▾</button>
+        <div class="mega-panel">
+          <div class="mega-inner">
+            <div class="mega-col">
+              <h5>Collections</h5>
+              <a href="colecciones.html#myth-series">Myth Series</a>
+              <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
+              <hr>
+              <a href="colecciones.html">All Products</a>
+            </div>
+            <div class="mega-col">
+              <h5>Clothing</h5>
+              <a href="camisetas.html">T-Shirts</a>
+              <a href="hoodies.html">Hoodies</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="about.html">About</a>
+      <a href="journal.html">Journal</a>
+      <a href="contact.html">Contact</a>
+      <button class="cart-btn" id="openCart" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <!-- PDP -->
+  <main class="product-wrap">
+    <div class="gallery">
+      <div class="gallery-main">
+        <button class="g-prev" aria-label="Anterior">‹</button>
+        <img id="pMain" src="" alt="">
+        <button class="g-next" aria-label="Siguiente">›</button>
+      </div>
+      <div class="gallery-dots" id="pDots"></div>
+      <div class="thumbs" id="pThumbs"></div>
+    </div>
+
+    <div class="product-info">
+      <h1 id="pTitle">Producto</h1>
+      <p class="price" id="pPrice">€0</p>
+      <p id="pDesc" class="muted"></p>
+
+      <form id="buyForm" class="buy">
+        <div id="sizeRow" class="sizes"></div>
+        <label>Cantidad <input id="qty" type="number" min="1" value="1" /></label>
+        <button class="btn-primary" type="submit">Añadir al carrito</button>
+      </form>
+
+      <!-- PayPal Smart Buttons (sandbox EUR) -->
+      <div style="margin-top:14px">
+        <div id="paypal-button-container"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER unificado -->
+  <footer class="pp-footer">
+    <div class="pp-foot-grid container">
+      <div class="pp-foot-col">
+        <h5>Shop</h5>
+        <a href="camisetas.html">T-Shirts</a>
+        <a href="camisetas.html?fit=oversized">Oversized Tees</a>
+        <a href="camisetas.html?fit=regular">Regular Fit</a>
+        <a href="hoodies.html">Hoodies</a>
+        <a href="colecciones.html">Collections</a>
+      </div>
+      <div class="pp-foot-col">
+        <h5>Help</h5>
+        <a href="shipping.html">Shipping</a>
+        <a href="returns.html">Returns</a>
+        <a href="faqs.html">FAQs</a>
+      </div>
+      <div class="pp-foot-col">
+        <h5>Studio</h5>
+        <a href="about.html">About</a>
+        <a href="journal.html">Journal</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="pp-foot-col">
+        <h5>Follow</h5>
+        <div class="pp-social">
+          <a aria-label="Instagram" href="https://instagram.com/prophetia" target="_blank" rel="noopener">IG</a>
+          <a aria-label="YouTube" href="https://youtube.com/" target="_blank" rel="noopener">YT</a>
+          <a aria-label="TikTok" href="https://tiktok.com/@prophetia" target="_blank" rel="noopener">TT</a>
+          <a aria-label="Facebook" href="https://facebook.com/" target="_blank" rel="noopener">FB</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp-foot-bottom">© PROPHETIA — Silent Luxury</div>
+  </footer>
+
+  <!-- JS principal (mega-menú, etc.) -->
+  <script src="assets/js/script.js"></script>
+  <!-- PayPal SDK (sandbox) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=EUR"></script>
+
+  <!-- ===== Prophetia Tribe – Private Access (POPUP) ===== -->
+  <div id="tribeModal" class="tribe-modal" aria-hidden="true">
+    <div class="tribe-backdrop" data-close></div>
+
+    <div class="tribe-card" role="dialog" aria-modal="true" aria-labelledby="tribeTitle">
+      <button class="tribe-close" type="button" title="Cerrar" aria-label="Cerrar" data-close>×</button>
+
+      <div class="tribe-grid">
+        <!-- Izquierda: logo -->
+        <div class="tribe-left">
+          <img src="assets/img/logo/prophetia-emblem.png" alt="PROPHETIA" />
+        </div>
+
+        <!-- Derecha: texto + formulario -->
+        <div class="tribe-right">
+          <h3 id="tribeTitle" class="tribe-title">Prophetia Tribe – Private Access</h3>
+          <p class="tribe-sub">
+            Acceso anticipado por ser miembro de Prophetia.<br>
+            Diseños exclusivos y más beneficios siendo parte de la tribe.
+          </p>
+
+          <form id="tribeForm" class="tribe-form" novalidate>
+            <input class="t-input" type="text" name="name" placeholder="Nombre" required>
+            <input class="t-input" type="email" name="email" placeholder="Correo electrónico" required>
+
+            <label class="t-check">
+              <input type="checkbox" name="news" value="1">
+              <span>Email me news and offers</span>
+            </label>
+
+            <label class="t-label">Fecha de nacimiento</label>
+            <div class="t-birth">
+              <input class="t-input" type="text" name="mm" placeholder="MM" inputmode="numeric" maxlength="2">
+              <input class="t-input" type="text" name="dd" placeholder="DD" inputmode="numeric" maxlength="2">
+              <input class="t-input" type="text" name="yy" placeholder="YYYY" inputmode="numeric" maxlength="4">
+            </div>
+
+            <button type="submit" class="t-btn">UNIRME</button>
+            <p class="t-note">Sin spam. Podrás cancelar cuando quieras.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ===== /POPUP ===== -->
+
+  <!-- Inicialización simple del pop-up (persistencia 7 días) -->
+ 
+
+  <!-- LÓGICA PDP (autónoma, lee catalog.json y genera galería + PayPal) -->
+  <script>
+  (function(){
+    const $ = (sel) => document.querySelector(sel);
+    const byId = (id) => document.getElementById(id);
+
+    const params = new URLSearchParams(location.search);
+    const productId = (params.get('id') || '').toLowerCase();
+
+    const els = {
+      main: byId('pMain'),
+      dots: byId('pDots'),
+      thumbs: byId('pThumbs'),
+      title: byId('pTitle'),
+      price: byId('pPrice'),
+      desc:  byId('pDesc'),
+      sizes: byId('sizeRow'),
+      qty:   byId('qty'),
+      form:  byId('buyForm'),
+      prev:  document.querySelector('.g-prev'),
+      next:  document.querySelector('.g-next'),
+      cartCount: byId('cartCount'),
+    };
+
+    // Fallback por si no hay catalog.json
+    const FALLBACK = [
+      {
+        id: "atlas-seal",
+        type: "tshirt",
+        title: "Atlas by Prophetia",
+        collection: "myth-series",
+        gender: "unisex",
+        fit: "regular",
+        price: 59.00,
+        inStock: true,
+        sizes: ["S","M","L","XL"],
+        images: ["assets/img/atlas/atlas-front.png", "assets/img/atlas/atlas-back.png"],
+        short: "Atlas by Prophetia. Sello griego y composición editorial. Tinta dorada envejecida."
+      },
+      {
+        id: "calyra-ego",
+        type: "tshirt",
+        title: "Calyra’s Ego by Prophetia",
+        collection: "letters-from-the-soul",
+        gender: "unisex",
+        fit: "oversized",
+        price: 64.00,
+        inStock: true,
+        sizes: ["S","M","L","XL"],
+        images: ["assets/img/atlas/atlas-back.png", "assets/img/atlas/atlas-front.png"],
+        short: "Calyra’s Ego by Prophetia. Gesto geométrico con aura editorial contemporánea."
+      }
+    ];
+
+    async function loadCatalog(){
+      try{
+        const res = await fetch('assets/data/catalog.json', {cache:'no-store'});
+        if(!res.ok) throw new Error('No catalog');
+        return await res.json();
+      }catch(e){
+        console.warn('Usando fallback PDP:', e);
+        return FALLBACK;
+      }
+    }
+
+    function fmtEUR(n){ return '€' + (n ?? 0).toFixed(2).replace('.', ','); }
+
+    function mountSizes(sizes = ["S","M","L","XL"]){
+      els.sizes.innerHTML = '';
+      sizes.forEach((sz, i)=>{
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'size-btn' + (i===0 ? ' active' : '');
+        b.textContent = sz;
+        b.dataset.size = sz;
+        b.addEventListener('click', ()=>{
+          els.sizes.querySelectorAll('.size-btn').forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+        });
+        els.sizes.appendChild(b);
+      });
+    }
+
+    function mountGallery(imgs){
+      let idx = 0;
+      function set(i){
+        idx = (i + imgs.length) % imgs.length;
+        els.main.src = imgs[idx];
+        els.main.alt = els.title.textContent || 'Producto';
+        els.dots.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('active', k===idx));
+        els.thumbs.querySelectorAll('img').forEach((t,k)=>{
+          t.classList.toggle('active', k===idx);
+          if(k===idx) t.scrollIntoView({block:'nearest', inline:'nearest'});
+        });
+      }
+
+      els.dots.innerHTML = imgs.map((_,k)=>`<span class="dot ${k===0?'active':''}"></span>`).join('');
+      els.thumbs.innerHTML = imgs.map((src,k)=>`<img src="${src}" alt="" class="${k===0?'active':''}">`).join('');
+      els.thumbs.querySelectorAll('img').forEach((t,k)=>t.addEventListener('click', ()=>set(k)));
+      els.dots.querySelectorAll('.dot').forEach((d,k)=>d.addEventListener('click', ()=>set(k)));
+      els.prev.addEventListener('click', ()=>set(idx-1));
+      els.next.addEventListener('click', ()=>set(idx+1));
+
+      set(0);
+    }
+
+    function getSelectedSize(){
+      const a = els.sizes.querySelector('.size-btn.active');
+      return a ? a.dataset.size : null;
+    }
+
+    function addToCart(item){
+      const LS = 'pp_cart';
+      const cart = JSON.parse(localStorage.getItem(LS) || '[]');
+      cart.push(item);
+      localStorage.setItem(LS, JSON.stringify(cart));
+      if(els.cartCount){
+        const total = cart.reduce((s, it)=> s + (it.qty||1), 0);
+        els.cartCount.textContent = String(total);
+      }
+      alert('Producto añadido al carrito (demo).');
+    }
+
+    function mountPayPal(product){
+      if (!window.paypal) {
+        console.warn('PayPal SDK no cargado.');
+        return;
+      }
+      const container = document.getElementById('paypal-button-container');
+      const getAmount = ()=> {
+        const q = Math.max(1, parseInt(els.qty.value||'1',10));
+        return (product.price * q).toFixed(2);
+      };
+
+      paypal.Buttons({
+        style: { layout: 'horizontal', height: 40, label: 'paypal' },
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              description: (product.title || 'Prophetia') + ' — ' + (getSelectedSize() || 'Talla'),
+              amount: { currency_code: 'EUR', value: getAmount() }
+            }]
+          });
+        },
+        onApprove: (data, actions) => actions.order.capture().then(() => {
+          alert('Pago aprobado (sandbox). ¡Gracias!');
+        }),
+        onError: (err) => {
+          console.error(err);
+          alert('Hubo un problema con PayPal (sandbox).');
+        }
+      }).render(container);
+    }
+
+    (async function init(){
+      const catalog = await loadCatalog();
+      const product = catalog.find(p => (p.id||'').toLowerCase() === productId);
+
+      if(!product){
+        byId('pTitle').textContent = 'Producto no encontrado';
+        byId('pDesc').textContent = 'Revisa el enlace o vuelve a Collections.';
+        document.querySelector('.product-wrap').style.opacity = .9;
+        return;
+      }
+
+      // Título / Precio / Descripción
+      els.title.textContent = product.title || 'Producto';
+      els.price.textContent = fmtEUR(product.price || 0);
+      els.desc.textContent = product.short || 'Pieza editorial con lujo silencioso y proporción mediterránea.';
+
+      // Tallas / Cantidad
+      mountSizes(product.sizes || ["S","M","L","XL"]);
+
+      // Galería
+      const imgs = (product.images && product.images.length) ? product.images : ['assets/img/placeholder.png'];
+      mountGallery(imgs);
+
+      // Añadir al carrito (demo)
+      els.form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const qty = Math.max(1, parseInt(els.qty.value||'1',10));
+        const size = getSelectedSize() || 'S';
+        addToCart({
+          id: product.id, title: product.title, price: product.price, size, qty,
+          image: imgs[0] || ''
+        });
+      });
+
+      // PayPal
+      mountPayPal(product);
+    })();
+  })();
+  </script>
+</body>
+</html>
