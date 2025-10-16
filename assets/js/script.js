@@ -15,7 +15,7 @@
 
   // ---------- Carga de catálogo ----------
 async function loadCatalog() {
-  if (window.PROPHETIA_CATALOG) return window.PROPHETIA_CATALOG;
+  // if (window.PROPHETIA_CATALOG) return window.PROPHETIA_CATALOG;
   try {
     const res = await fetch('assets/data/catalog.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('no catalog');
@@ -44,6 +44,7 @@ async function loadCatalog() {
         short: "Perfil escultórico y sello griego. DTG-ready.",
         sizes: ["S","M","L","XL"]
       }
+
     ];
   }
 }
@@ -469,26 +470,55 @@ async function loadCatalog() {
   /* ==========================================================
    *  Mega menú hover/click
    * ========================================================== */
-  (function bindMegaMenu() {
-    $$(".mega").forEach((m) => {
-      const btn = $(".mega-toggle", m);
-      const panel = $(".mega-panel", m);
-      if (!btn || !panel) return;
-      let over = false;
-      m.addEventListener("mouseenter", () => {
-        m.classList.add("open");
-        over = true;
+ /* ==========================================================
+ *  Mega menú accesible (hover en desktop + click/tap)
+ * ========================================================== */
+(function bindMegaMenu() {
+  document.querySelectorAll('.mega').forEach((m) => {
+    const btn   = m.querySelector('.mega-toggle');
+    const panel = m.querySelector('.mega-panel');
+    if (!btn || !panel) return;
+
+    // Asegura IDs/ARIA
+    if (!panel.id) panel.id = 'mega-' + Math.random().toString(36).slice(2);
+    btn.setAttribute('aria-haspopup', 'true');
+    btn.setAttribute('aria-controls', panel.id);
+    btn.setAttribute('aria-expanded', 'false');
+
+    const open  = () => { m.classList.add('open');  btn.setAttribute('aria-expanded', 'true');  };
+    const close = () => { m.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); };
+
+    // Hover solo en dispositivos con puntero "fino" (ratón)
+    if (matchMedia('(pointer:fine)').matches) {
+      m.addEventListener('mouseenter', open);
+      m.addEventListener('mouseleave', close);
+    }
+
+    // Click/tap en el botón
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const willOpen = !m.classList.contains('open');
+      // cierra otros abiertos
+      document.querySelectorAll('.mega.open').forEach(mm => {
+        if (mm !== m) {
+          mm.classList.remove('open');
+          mm.querySelector('.mega-toggle')?.setAttribute('aria-expanded','false');
+        }
       });
-      m.addEventListener("mouseleave", () => {
-        over = false;
-        setTimeout(() => !over && m.classList.remove("open"), 120);
-      });
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        m.classList.toggle("open");
-      });
+      if (willOpen) open(); else close();
     });
-  })();
+
+    // Cerrar con Escape
+    btn.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+    // Cerrar al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.mega')) close();
+    });
+  });
+})();
+
 
   /* ==========================================================
    *  Pop-up Prophetia Tribe (global)
@@ -551,3 +581,18 @@ async function loadCatalog() {
 
 })(); // ← fin del wrapper principal "(function(){ ... })()"
 
+(function(){
+  const btn = document.querySelector('.pp-audio-toggle');
+  const panel = document.getElementById('ppAudioPanel');
+  if (!btn || !panel) return;
+  btn.addEventListener('click', () => {
+    const open = panel.hasAttribute('hidden') ? false : true;
+    if (open) {
+      panel.setAttribute('hidden','');
+      btn.setAttribute('aria-expanded','false');
+    } else {
+      panel.removeAttribute('hidden');
+      btn.setAttribute('aria-expanded','true');
+    }
+  });
+})();
