@@ -213,14 +213,59 @@ body{
 .coupon-row input{ flex:1; border:1px solid var(--hair); border-radius:10px; padding:.5rem .6rem }
 .coupon-applied{ font-size:.9rem; color:var(--muted); margin:6px 0 }
 
-/* ===================== Footer ===================== */
-.pp-footer{ background:#101010; color:#e9e4da; margin-top:48px }
-.pp-foot-grid{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:24px; padding:28px 16px; max-width:1160px; margin:0 auto }
-.pp-foot-col h5{ margin:0 0 10px; color:#c9b48b; font-weight:700 }
-.pp-foot-col a{ display:block; color:#e9e4da; text-decoration:none; padding:.18rem 0 }
-.pp-foot-col a:hover{ color:#b8925d }
-.pp-social{ display:flex; gap:12px; font-size:18px; margin-top:6px }
-.pp-foot-bottom{ border-top:1px solid rgba(255,255,255,.09); text-align:center; padding:12px 16px; color:#bfb8aa }
+/* ===== Footer centrado ===== */
+.pp-footer{
+  background:#101010;
+  color:#e9e4da;
+  margin-top:48px;
+}
+
+.pp-foot-grid{
+  display:grid;
+  grid-template-columns: 1fr;        /* 1 columna móvil */
+  gap:24px;
+  max-width:1160px;
+  margin:0 auto;                     /* centra el bloque en la página */
+  padding:28px 16px;
+  text-align:center;                 /* centra títulos y enlaces */
+  justify-items:center;              /* centra cada columna */
+}
+
+.pp-foot-grid > div,
+.pp-foot-col{
+  min-width:220px;
+}
+
+.pp-foot-col h5,
+.pp-foot-grid h5{
+  margin:0 0 10px;
+  color:#c9b48b;
+  font-weight:700;
+}
+
+.pp-foot-col a,
+.pp-foot-grid a{
+  display:block;
+  color:#e9e4da;
+  text-decoration:none;
+  padding:.18rem 0;
+}
+.pp-foot-col a:hover,
+.pp-foot-grid a:hover{ color:#b8925d; }
+
+.pp-socials{ display:flex; gap:12px; justify-content:center; padding:12px 0 6px; }
+.pp-foot-bottom{
+  border-top:1px solid rgba(255,255,255,.09);
+  text-align:center;
+  padding:12px 16px;
+  color:#bfb8aa;
+}
+
+/* Desktop: 3 columnas centradas */
+@media (min-width: 900px){
+  .pp-foot-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+
 
 /* Redes con iconos (otra variante ya compilada) */
 .pp-socials{
@@ -402,18 +447,199 @@ body.pp-leave{
   .grid{ grid-template-columns:repeat(10,1fr); gap:30px }
   .promo-claim{ font-size:clamp(52px,3vw,120px) }
 }
-.home-hero { padding: 48px 0 24px; }
-.home-hero .manifesto-eyebrow { margin-bottom: 8px; }
-.home-hero .manifesto-copy { margin-bottom: 18px; }
-.features.container { margin-top: 8px; }
-/* Centrado de textos del bloque manifiesto */
-.manifesto-wrap { text-align: center; }
+/* ====== Pilares / features — acabado editorial ====== */
+.home-hero{ background:var(--bg); color:var(--ink); padding:44px 16px 40px; }
 
-/* Asegura centrado visual del grid de features */
-.features.container { margin-left: auto; margin-right: auto; }
+.features{
+  display:grid;
+  grid-template-columns: 1fr;         /* móvil: apilado */
+  gap:34px;
+  max-width:1160px;
+  margin:22px auto 0;
+  align-items:start;
+}
 
-/* (opcional) un poco más de aire */
-.home-hero { padding: 44px 0 24px; }
+/* Tarjeta/columna */
+.ft{
+  padding:8px 12px;
+}
+
+/* Badge del icono (puede ser emoji o <img>) */
+.ft-ico{
+  display:inline-grid;
+  place-items:center;
+  width:36px; height:36px;
+  border-radius:999px;
+  background:#efe6d3;
+  border:1px solid rgba(16,16,16,.08);
+  margin-bottom:10px;
+  font-size:18px;             /* si usas emoji */
+  color:#553;                 /* tono suave para emoji */
+}
+
+/* Si usas <img> dentro del badge (opcional) */
+.ft-ico img{
+  width:18px; height:18px; object-fit:contain;
+}
+
+/* Título y texto */
+.ft h3{
+  margin:4px 0 8px;
+  font-family:"Playfair Display", serif;
+  font-weight:700;
+  letter-spacing:.02em;
+  font-size:clamp(18px, 2.2vw, 24px);
+}
+
+.ft p{
+  margin:0;
+  color:var(--muted);
+  max-width:48ch;             /* ancho óptimo de lectura */
+}
+
+/* Desktop: 3 columnas y alineaciones L/C/R */
+@media (min-width: 900px){
+  .features{ grid-template-columns: repeat(3, 1fr); }
+
+  .features .ft:nth-child(1){ text-align:left; }
+  .features .ft:nth-child(1) p{ margin-left:0; margin-right:auto; }
+
+  .features .ft:nth-child(2){ text-align:center; }
+  .features .ft:nth-child(2) p{ margin-left:auto; margin-right:auto; }
+
+  .features .ft:nth-child(3){ text-align:right; }
+  .features .ft:nth-child(3) p{ margin-left:auto; margin-right:0; }
+}
+
 .manifesto-eyebrow { margin: 0 0 8px; }
 .manifesto-copy { margin: 0 0 18px; color: var(--muted); }
 .ft { text-align: center; padding: 10px; }
+
+
+/* ——— Manifiesto: título + párrafo centrados ——— */
+.home-hero .manifesto-eyebrow{
+  display:block;
+  text-align:center;
+  margin:0 auto 8px;
+  font-weight:700;
+  letter-spacing:.08em;
+}
+
+.home-hero .manifesto-copy{
+  text-align:center;
+  max-width: 980px;      /* ancho de lectura cómodo */
+  margin: 0 auto 28px;   /* centra y da respiro con los “pilares” */
+  padding: 0 12px;       /* un pelín de aire en móviles */
+}
+
+/* (opcional) un pelín más de separación del bloque superior */
+.home-hero{ padding-top: 44px; padding-bottom: 40px; }
+
+
+
+/* ============================
+   MOBILE POLISH — Prophetia
+   (pegar al final del CSS)
+   ============================ */
+
+/* base un poco más pequeña en móviles */
+@media (max-width: 740px){
+  html, body { font-size: 15px; }
+
+  /* header compacto */
+  .site-header{ padding:10px 12px; }
+  .brand-img{ height:26px; }
+
+  /* hero más contenido y elegante */
+  .page-hero{ padding:34px 14px 10px; }
+  .page-hero h1{ font-size: clamp(26px, 7.5vw, 34px); margin-bottom: 8px; }
+  .lede{ font-size:.98rem; line-height:1.5; max-width:30ch; margin: 0 auto; }
+
+  /* FILTROS: carrusel horizontal + chips compactas.
+     Ocultamos las etiquetas “Fit:”, “Género:”, etc. en móvil para liberar espacio */
+  .toolbar{ 
+    padding: 10px 8px;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+  .toolbar .row{ gap:8px; }
+  .toolbar .lab{ display:none; }          /* oculta “Fit:”, “Género:”, … */
+  .chip{
+    padding:.32rem .70rem;
+    font-size:.92rem;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  #orderSelect{ padding:.32rem .5rem; }
+
+  /* GRID de productos: 2 col en móviles, con menos gap y paddings */
+  .grid{
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 14px;
+    max-width: 920px;
+    padding: 0 12px 32px;
+  }
+  .card h4{ font-size:.98rem; margin:8px 10px 2px; }
+  .card .collection{ margin:4px 10px; font-size:.9rem; }
+  .btn-primary{ padding:.45rem .75rem; margin:0 10px 12px; }
+}
+
+/* teléfonos muy pequeños: 1 columna */
+@media (max-width: 390px){
+  .grid{ grid-template-columns: 1fr; }
+  .toolbar{ padding:8px; }
+}
+
+/* Footer más aire y centrado en móvil */
+@media (max-width: 740px){
+  .pp-foot-grid{
+    grid-template-columns: 1fr 1fr;
+    gap:16px;
+    padding:22px 14px;
+  }
+  .pp-foot-bottom{ font-size:.9rem; }
+}
+/* ---------- Lightbox (PDP) ---------- */
+.lb{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+}
+.lb.hidden{ display:none; }
+
+.lb-backdrop{
+  position:absolute; inset:0;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:saturate(140%) blur(2px);
+}
+
+.lb-figure{
+  position:relative;
+  max-width:92vw; max-height:92vh;
+  display:grid; align-items:center; justify-items:center;
+}
+
+.lb-img{
+  max-width:92vw; max-height:92vh;
+  border-radius:14px; background:#111;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.lb-close, .lb-prev, .lb-next{
+  position:absolute; z-index:2;
+  background:rgba(255,255,255,.94); color:#111;
+  border:0; width:40px; height:40px; border-radius:999px;
+  cursor:pointer; display:grid; place-items:center;
+  font-size:22px; line-height:1; box-shadow:0 8px 22px rgba(0,0,0,.22);
+}
+.lb-close{ top:-12px; right:-12px; }
+.lb-prev{ left:-56px; }
+.lb-next{ right:-56px; }
+
+@media (max-width:760px){
+  .lb-prev{ left:10px; bottom:16px; top:auto; }
+  .lb-next{ right:10px; bottom:16px; top:auto; }
+  .lb-close{ top:10px; right:10px; }
+}
+.lb-img { cursor: zoom-out; }

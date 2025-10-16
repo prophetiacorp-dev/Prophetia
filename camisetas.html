@@ -21,10 +21,8 @@
    <a class="brand" href="index.html" aria-label="Ir a inicio">
   <img
     class="brand-img"
-    src="assets/img/logo/prophetia-wordmark.png"
-    srcset="assets/img/logo/prophetia-wordmark.png 1x, assets/img/logo/prophetia-wordmark@2x.png 2x"
+    src="assets/img/logo/prop.svg"
     alt="PROPHETIA — Home"
-    width="220" height="36"
     loading="eager" decoding="async"
   />
 </a>
@@ -161,6 +159,16 @@
     <!-- Grid de productos -->
     <section class="grid products-grid" id="productsGrid"></section>
   </main>
+<!-- Lightbox / Zoom a pantalla completa (quick zoom de cards) -->
+<div id="lb" class="lb hidden" aria-hidden="true" role="dialog" aria-label="Vista ampliada">
+  <div class="lb-backdrop" data-lb-close></div>
+  <figure class="lb-figure">
+    <img id="lbImg" class="lb-img" alt="">
+    <button class="lb-close" id="lbClose" aria-label="Cerrar" title="Cerrar">&times;</button>
+    <button class="lb-prev"  id="lbPrev"  aria-label="Anterior">‹</button>
+    <button class="lb-next"  id="lbNext"  aria-label="Siguiente">›</button>
+  </figure>
+</div>
 
   <!-- FOOTER unificado -->
   <footer class="pp-footer">

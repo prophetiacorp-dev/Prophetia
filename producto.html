@@ -18,7 +18,14 @@
 
   <!-- HEADER unificado con mega-menús -->
   <header class="site-header">
-    <a class="brand" href="index.html">PROPHETIA</a>
+    <a class="brand" href="index.html" aria-label="Ir a inicio">
+  <img
+    class="brand-img"
+    src="assets/img/logo/prop.svg"
+    alt="PROPHETIA — Home"
+    loading="eager" decoding="async"
+  />
+</a>
 
     <nav class="site-nav">
       <!-- Women -->
@@ -109,9 +116,21 @@
         <img id="pMain" src="" alt="">
         <button class="g-next" aria-label="Siguiente">›</button>
       </div>
+      
       <div class="gallery-dots" id="pDots"></div>
       <div class="thumbs" id="pThumbs"></div>
     </div>
+<!-- Lightbox / Zoom a pantalla completa -->
+<div id="lb" class="lb hidden" aria-hidden="true" role="dialog" aria-label="Vista ampliada">
+  <div class="lb-backdrop" data-lb-close></div>
+  <figure class="lb-figure">
+    <img id="lbImg" class="lb-img" alt="">
+    <button class="lb-close" id="lbClose" aria-label="Cerrar" title="Cerrar">&times;</button>
+    <button class="lb-prev"  id="lbPrev"  aria-label="Anterior">‹</button>
+    <button class="lb-next"  id="lbNext"  aria-label="Siguiente">›</button>
+  </figure>
+</div>
+
 
     <div class="product-info">
       <h1 id="pTitle">Producto</h1>
@@ -304,17 +323,80 @@
       });
     }
 
-    function mountGallery(imgs){
-      let idx = 0;
-      function set(i){
-        idx = (i + imgs.length) % imgs.length;
-        els.main.src = imgs[idx];
-        els.main.alt = els.title.textContent || 'Producto';
-        els.dots.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('active', k===idx));
-        els.thumbs.querySelectorAll('img').forEach((t,k)=>{
-          t.classList.toggle('active', k===idx);
-          if(k===idx) t.scrollIntoView({block:'nearest', inline:'nearest'});
-        });
+   function mountGallery(imgs){
+  // --- Estado de galería
+  let idx = 0;
+
+  // Referencias del lightbox (una sola vez)
+  const $lb     = document.getElementById('lb');
+  const $lbImg  = document.getElementById('lbImg');
+  const $lbPrev = document.getElementById('lbPrev');
+  const $lbNext = document.getElementById('lbNext');
+  const $lbClose= document.getElementById('lbClose');
+
+  function set(i){
+    idx = (i + imgs.length) % imgs.length;
+    els.main.src = imgs[idx];
+    els.main.alt = els.title.textContent || 'Producto';
+
+    els.dots.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('active', k===idx));
+    els.thumbs.querySelectorAll('img').forEach((t,k)=>{
+      t.classList.toggle('active', k===idx);
+      if(k===idx) t.scrollIntoView({block:'nearest', inline:'nearest'});
+    });
+  }
+
+  // ---------- LIGHTBOX ----------
+  function lbShow(i = idx){
+    set(i);                                   // nos aseguramos de que coincida
+    $lbImg.src = imgs[idx];
+    $lb.classList.remove('hidden');
+    $lb.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function lbHide(){
+    $lb.classList.add('hidden');
+    $lb.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+  function lbPrev(){ set(idx - 1); $lbImg.src = imgs[idx]; }
+  function lbNext(){ set(idx + 1); $lbImg.src = imgs[idx]; }
+
+  // Eventos del lightbox (una vez)
+  if ($lb && !$lb._bound){
+    $lb._bound = true;
+    $lb.addEventListener('click', (e)=>{
+      if (e.target === $lb || e.target.hasAttribute('data-lb-close')) lbHide();
+    });
+    $lbClose?.addEventListener('click', lbHide);
+    $lbPrev ?.addEventListener('click', lbPrev);
+    $lbNext ?.addEventListener('click', lbNext);
+
+    // Teclado: ESC, ←, →
+    document.addEventListener('keydown', (e)=>{
+      if ($lb.classList.contains('hidden')) return;
+      if (e.key === 'Escape') lbHide();
+      if (e.key === 'ArrowLeft')  lbPrev();
+      if (e.key === 'ArrowRight') lbNext();
+    });
+  }
+
+  // ---------- Construcción de la galería (página) ----------
+  els.dots.innerHTML = imgs.map((_,k)=>`<span class="dot ${k===0?'active':''}"></span>`).join('');
+  els.thumbs.innerHTML = imgs.map((src,k)=>`<img src="${src}" alt="" class="${k===0?'active':''}">`).join('');
+
+  els.thumbs.querySelectorAll('img').forEach((t,k)=>t.addEventListener('click', ()=>set(k)));
+  els.dots  .querySelectorAll('.dot').forEach((d,k)=>d.addEventListener('click', ()=>set(k)));
+  els.prev.addEventListener('click', ()=>set(idx-1));
+  els.next.addEventListener('click', ()=>set(idx+1));
+
+  // **Abrir zoom al clicar la imagen principal**
+  els.main.style.cursor = 'zoom-in';
+  els.main.addEventListener('click', ()=> lbShow(idx));
+
+  set(0);
+}
+
       }
 
       els.dots.innerHTML = imgs.map((_,k)=>`<span class="dot ${k===0?'active':''}"></span>`).join('');

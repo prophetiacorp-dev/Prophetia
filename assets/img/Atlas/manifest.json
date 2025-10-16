@@ -1,0 +1,1046 @@
+﻿[
+    {
+        "value":  "manifest.json",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\manifest.json",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "manifest.json",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-back-68eec465dc243.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-back-68eec465dc243.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-back-68eec465dc243.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-back-68eec465dcb3f.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-back-68eec465dcb3f.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-back-68eec465dcb3f.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-back-68eec465dd7ca.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-back-68eec465dd7ca.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-back-68eec465dd7ca.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-back-68eec465dd9fe.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-back-68eec465dd9fe.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-back-68eec465dd9fe.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-back-68eec465ddf6f.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-back-68eec465ddf6f.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-back-68eec465ddf6f.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-back-68eec465de1a6.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-back-68eec465de1a6.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-back-68eec465de1a6.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465dd2c9.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-2-68eec465dd2c9.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465dd2c9.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465dd54b.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-2-68eec465dd54b.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465dd54b.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465e0ece.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-2-68eec465e0ece.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465e0ece.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465e13c0.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-2-68eec465e13c0.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-2-68eec465e13c0.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465daada.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465daada.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465daada.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465daff0.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465daff0.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465daff0.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465db47a.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465db47a.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465db47a.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465db952.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465db952.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465db952.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465dbb6d.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465dbb6d.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465dbb6d.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465dbd85.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465dbd85.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465dbd85.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465ddcbc.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465ddcbc.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465ddcbc.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465de3c7.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465de3c7.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465de3c7.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465de61e.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465de61e.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465de61e.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465def25.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465def25.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465def25.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465df84c.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465df84c.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465df84c.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465dfc0e.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465dfc0e.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465dfc0e.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-front-68eec465e04af.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-front-68eec465e04af.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-front-68eec465e04af.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-left-68eec465dc4c9.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-left-68eec465dc4c9.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-left-68eec465dc4c9.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-left-68eec465dcdba.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-left-68eec465dcdba.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-left-68eec465dcdba.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-left-68eec465e001e.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-left-68eec465e001e.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-left-68eec465e001e.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-left-front-68eec465db71a.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-left-front-68eec465db71a.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-left-front-68eec465db71a.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-left-front-68eec465df3d6.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-left-front-68eec465df3d6.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-left-front-68eec465df3d6.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-product-details-68eec465e09cb.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-product-details-68eec465e09cb.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-product-details-68eec465e09cb.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    },
+    {
+        "value":  "oversized-faded-t-shirt-faded-bone-right-68eec465deb70.png",
+        "PSPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas\\oversized-faded-t-shirt-faded-bone-right-68eec465deb70.png",
+        "PSParentPath":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\moise\\Desktop\\Prophetia_Web\\assets\\img\\Atlas",
+        "PSChildName":  "oversized-faded-t-shirt-faded-bone-right-68eec465deb70.png",
+        "PSDrive":  {
+                        "CurrentLocation":  "Users\\moise\\Desktop\\Prophetia_Web",
+                        "Name":  "C",
+                        "Provider":  "Microsoft.PowerShell.Core\\FileSystem",
+                        "Root":  "C:\\",
+                        "Description":  "OS",
+                        "MaximumSize":  null,
+                        "Credential":  "System.Management.Automation.PSCredential",
+                        "DisplayRoot":  null
+                    },
+        "PSProvider":  {
+                           "ImplementingType":  "Microsoft.PowerShell.Commands.FileSystemProvider",
+                           "HelpFile":  "System.Management.Automation.dll-Help.xml",
+                           "Name":  "FileSystem",
+                           "PSSnapIn":  "Microsoft.PowerShell.Core",
+                           "ModuleName":  "Microsoft.PowerShell.Core",
+                           "Module":  null,
+                           "Description":  "",
+                           "Capabilities":  52,
+                           "Home":  "C:\\Users\\moise",
+                           "Drives":  "C D"
+                       },
+        "PSIsContainer":  false
+    }
+]
