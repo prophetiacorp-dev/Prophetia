@@ -14,34 +14,40 @@
   const pageType = document.body?.dataset?.page || ""; // 'tshirts' | 'hoodies' | 'collections' | etc.
 
   // ---------- Carga de catálogo ----------
-  async function loadCatalog() {
-    if (window.PROPHETIA_CATALOG) return window.PROPHETIA_CATALOG;
-    try {
-      const res = await fetch("assets/data/catalog.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("no catalog");
-      return await res.json();
-    } catch (e) {
-      console.warn("Catalog not found, using fallback.", e);
-      return [
-        {
-          id: "atlas-seal",
-          type: "tshirt",
-          title: "Atlas by Prophetia",
-          collection: "myth-series",
-          gender: "unisex",
-          fit: "regular",
-          price: 59.0,
-          inStock: true,
-          images: [
-            "assets/img/atlas/atlas-front.png",
-            "assets/img/atlas/atlas-back.png"
-          ],
-          short: "Perfil escultórico y sello griego. DTG-ready.",
-          sizes: ["S", "M", "L", "XL"]
-        }
-      ];
-    }
+async function loadCatalog() {
+  if (window.PROPHETIA_CATALOG) return window.PROPHETIA_CATALOG;
+  try {
+    const res = await fetch('assets/data/catalog.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('no catalog');
+    return await res.json();
+  } catch (e) {
+    console.warn('Catalog not found, using fallback.', e);
+    return [
+      {
+        id: "atlas-seal",
+        type: "tshirt",
+        title: "Atlas by Prophetia",
+        collection: "myth-series",
+        gender: "unisex",
+        fit: "oversized",
+        price: 59.00,
+        inStock: true,
+
+          cover: "assets/img/Atlas/ATLASDEFINITIVO-IMPRES.png",
+        images: [
+          "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
+          "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
+          "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
+          "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
+          "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png"
+        ],
+        short: "Perfil escultórico y sello griego. DTG-ready.",
+        sizes: ["S","M","L","XL"]
+      }
+    ];
   }
+}
+
 
   // ---------- Pretty ----------
   function prettyCollection(c) {
@@ -167,8 +173,8 @@
     }
 
     function cardHTML(p) {
-      const base = (p.images && p.images[0]) || "assets/img/placeholder.png";
-      const hi = base.replace(/(\.\w+)$/, "@2x$1");
+       const base = p.cover || (p.images && p.images[0]) || "assets/img/placeholder.png";
+  const hi = base.replace(/(\.\w+)$/, "@2x$1");
       const price = (p.price ?? 0).toFixed(2).replace(".", ",");
       const title = p.title || "Producto";
       return `

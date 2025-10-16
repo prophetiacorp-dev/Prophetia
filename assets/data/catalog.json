@@ -1,74 +1,44 @@
 [
   {
-    "slug": "atlas-by-prophetia",
-    "sku": "PR-MYTH-ATL-001",
+    "id": "atlas-seal",
+    "type": "tshirt",
     "title": "Atlas by Prophetia",
-    "collection": "Myth Series",
-    "collection_slug": "myth-series",
-    "price": 95,
-    "technique": "DTG",
+    "collection": "myth-series",
+    "gender": "unisex",
+    "fit": "oversized",
+    "price": 59.00,
+    "inStock": true,
+    "sizes": ["S","M","L","XL"],
+    "short": "Composición editorial inspirada en Atlas. Silencio y fuerza.",
     "images": [
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daff0.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db47a.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db952.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465dbb6d.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465dbd85.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465ddcbc.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465de3c7.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465de61e.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465def25.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465df84c.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465dfc0e.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465e04af.png",
-
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-2-68eec465dd2c9.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-2-68eec465dd54b.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-2-68eec465e0ece.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-2-68eec465e13c0.png",
-
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dc243.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dcb3f.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dd7ca.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dd9fe.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465ddf6f.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465de1a6.png",
-
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465deb70.png",
-
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465dc4c9.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465dcdba.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465e001e.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-left-front-68eec465db71a.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-left-front-68eec465df3d6.png",
-
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png",
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-product-details-68eec465e09cb.png"
-    ],
-    "badge": "NEW",
-    "sizes": { "S": 5, "M": 8, "L": 6, "XL": 4, "XXL": 2 },
-    "description": "Composición editorial inspirada en Atlas. Líneas limpias y dorado envejecido. Silencio y fuerza."
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png"
+    ]
   },
 
   {
-    "slug": "calyras-ego-by-prophetia",
-    "sku": "PR-MYTH-CAL-001",
+    "id": "calyra-ego",
+    "type": "tshirt",
     "title": "Calyra’s Ego by Prophetia",
-    "collection": "Myth Series",
-    "collection_slug": "myth-series",
-    "price": 92,
-    "technique": "DTG",
+    "collection": "myth-series",
+    "gender": "unisex",
+    "fit": "oversized",
+    "price": 64.00,
+    "inStock": true,
+    "sizes": ["S","M","L","XL"],
+    "short": "Figura mitológica estilizada con ritmo geométrico.",
     "images": [
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
-    ],
-    "badge": "LIMITED",
-    "sizes": { "S": 3, "M": 6, "L": 0, "XL": 5, "XXL": 1 },
-    "description": "Figura mitológica estilizada con ritmo geométrico. Equilibrio entre lo antiguo y lo contemporáneo."
+      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-front-2-68e3d95416801.png",
+      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-back-68e3d95145bdd.png",
+      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-front-68e3c2c176f4c.png",
+      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-front-68e3d951416642.png",
+      "assets/img/Calyra'sEgo/oversized-faded-tshirt-faded-black-front-68e3d844c2783d.png"
+    ]
   },
+
 
   {
     "slug": "mascaras-del-mediterraneo",
