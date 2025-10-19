@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "women": "Mujer",
+    "men": "Hombre",
+    "collections": "Colecciones",
+    "about": "Sobre Prophetia",
+    "shipping": "Envíos y devoluciones"
+  },
+  "hero": {
+    "subtitle": "Silent Luxury Mediterráneo",
+    "title": "Mediterranean Mythology meets Editorial Design",
+    "copy": "Piezas atemporales inspiradas en la mitología mediterránea y el diseño editorial.",
+    "cta": "Explorar colección"
+  },
+  "filters": {
+    "all": "Todo",
+    "instock": "Sólo en stock",
+    "relevance": "Relevancia",
+    "priceAsc": "Precio ↑",
+    "priceDesc": "Precio ↓"
+  },
+  "list": { "view": "Ver" },
+  "auth": {
+    "welcome": "Bienvenido/a",
+    "login": "Iniciar sesión",
+    "signup": "Registrarme",
+    "email": "Correo electrónico*",
+    "password": "Contraseña*",
+    "enter": "Entrar",
+    "create": "Crear cuenta",
+    "forgot": "¿Has olvidado tu contraseña?"
+  },
+  "pdp": {
+    "size": "Talla",
+    "qty": "Cantidad",
+    "add": "Añadir al carrito",
+    "details": "Detalles",
+    "packaging": "Packaging",
+    "care": "Materiales & cuidado",
+    "specs": "Especificaciones",
+    "sheetTitle": "Detalles del producto"
+  },
+  "cart": {
+    "title": "Tu carrito",
+    "total": "Total:",
+    "keepShopping": "Seguir comprando",
+    "checkout": "Finalizar compra",
+    "subtotal": "Subtotal",
+    "note": "Los gastos de envío y las tasas se calculan en el checkout."
+  },
+  "footer": {
+    "legal": "Legal",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "follow": "Síguenos",
+    "rights": "© 2025 Prophetia — Todos los derechos reservados."
+  }
+}

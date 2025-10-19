@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "women": "Femme",
+    "men": "Homme",
+    "collections": "Collections",
+    "about": "À propos de Prophetia",
+    "shipping": "Expéditions & retours"
+  },
+  "hero": {
+    "subtitle": "Luxe silencieux méditerranéen",
+    "title": "La mythologie méditerranéenne rencontre le design éditorial",
+    "copy": "Des pièces intemporelles inspirées par la mythologie méditerranéenne et le design éditorial.",
+    "cta": "Explorer la collection"
+  },
+  "filters": {
+    "all": "Tout",
+    "instock": "En stock uniquement",
+    "relevance": "Pertinence",
+    "priceAsc": "Prix ↑",
+    "priceDesc": "Prix ↓"
+  },
+  "list": { "view": "Voir" },
+  "auth": {
+    "welcome": "Bienvenue",
+    "login": "Se connecter",
+    "signup": "S'inscrire",
+    "email": "Email*",
+    "password": "Mot de passe*",
+    "enter": "Entrer",
+    "create": "Créer un compte",
+    "forgot": "Mot de passe oublié ?"
+  },
+  "pdp": {
+    "size": "Taille",
+    "qty": "Quantité",
+    "add": "Ajouter au panier",
+    "details": "Détails",
+    "packaging": "Packaging",
+    "care": "Matériaux & entretien",
+    "specs": "Spécifications",
+    "sheetTitle": "Détails du produit"
+  },
+  "cart": {
+    "title": "Votre panier",
+    "total": "Total :",
+    "keepShopping": "Continuer vos achats",
+    "checkout": "Commander",
+    "subtotal": "Sous-total",
+    "note": "Frais de port et taxes calculés lors du paiement."
+  },
+  "footer": {
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "follow": "Suivez-nous",
+    "rights": "© 2025 Prophetia — Tous droits réservés."
+  }
+}

@@ -1,0 +1,117 @@
+<header class="pp-header">
+  <div class="container">
+    <div class="pp-topbar">
+
+      <!-- IZQUIERDA: mega-menú -->
+      <nav class="pp-left" aria-label="Primary">
+        <div class="mega">
+          <button class="mega-toggle" type="button">Mujer ▾</button>
+          <div class="mega-panel">
+            <div class="mega-col">
+              <a href="camisetas.html">Camisetas</a>
+              <a href="hoodies.html">Hoodies</a>
+              <a href="colecciones.html#myth">Myth Series</a>
+              <a href="colecciones.html#letters">Letters from the Soul</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mega">
+          <button class="mega-toggle" type="button">Hombre ▾</button>
+          <div class="mega-panel">
+            <div class="mega-col">
+              <a href="camisetas.html">Camisetas</a>
+              <a href="hoodies.html">Hoodies</a>
+              <a href="colecciones.html#myth">Myth Series</a>
+              <a href="colecciones.html#letters">Letters from the Soul</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mega">
+          <button class="mega-toggle" type="button">Colecciones ▾</button>
+          <div class="mega-panel">
+            <div class="mega-col">
+              <a href="colecciones.html#myth">Myth Series</a>
+              <a href="colecciones.html#letters">Letters from the Soul</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- DERECHA: buscador + logo-auth + guardados + carrito -->
+      <div class="pp-right">
+        <form class="search-inline" role="search" action="colecciones.html" method="get">
+          <label for="q" class="sr-only">Buscar</label>
+          <input id="q" name="q" class="search-input" type="search" placeholder="Buscar" />
+        </form>
+
+        <!-- logo que abre el modal de auth -->
+        <button id="ppAuthLogoBtn" class="brand-compact" type="button" title="Iniciar sesión / registrarse" aria-haspopup="dialog" aria-controls="ppAuthModal">
+          <img src="assets/img/logo/prop.png" alt="Prophetia" />
+        </button>
+
+        <!-- guardados -->
+        <button id="ppSavedBtn" class="icon-btn" title="Guardados" aria-label="Guardados">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor"/></svg>
+        </button>
+
+        <!-- carrito -->
+        <button id="ppCartBtn" class="icon-btn" title="Carrito (0)" aria-controls="ppCartDrawer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 5h2l2 12h10l2-8H7" stroke="currentColor"/><circle cx="10" cy="20" r="1" fill="currentColor"/><circle cx="17" cy="20" r="1" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<!-- ===================== /HEADER ===================== -->
+
+<!-- ====== MODAL Auth ====== -->
+<dialog id="ppAuthModal" class="modal" aria-modal="true" aria-labelledby="authTitle">
+  <div class="modal-card">
+    <button class="modal-close" data-close="auth" aria-label="Cerrar">✕</button>
+    <h3 id="authTitle" style="margin:0 0 6px;font-weight:700;">Bienvenido/a</h3>
+    <div class="tabs">
+      <button class="tab active" data-auth-tab="login">Iniciar sesión</button>
+      <button class="tab" data-auth-tab="register">Registrarme</button>
+    </div>
+
+    <form id="ppLoginForm" class="auth-form">
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Contraseña" required />
+      <button class="btn-primary" type="submit">Entrar</button>
+    </form>
+
+    <form id="ppRegisterForm" class="auth-form hidden">
+      <input type="text" placeholder="Nombre" required />
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Contraseña" required />
+      <button class="btn-primary" type="submit">Crear cuenta</button>
+    </form>
+  </div>
+</dialog>
+
+<!-- ====== Carrito (drawer) ====== -->
+<div id="ppCartOverlay" class="cart-overlay"></div>
+<aside id="ppCartDrawer" class="cart-drawer" aria-labelledby="cartTitle" role="dialog" aria-modal="true">
+  <div class="cart-head">
+    <strong id="cartTitle">Cesta</strong>
+    <button class="cart-close" data-close="cart" aria-label="Cerrar">✕</button>
+  </div>
+  <div id="ppCartList" class="cart-list">
+    <!-- Items se inyectan por JS -->
+  </div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span> <strong id="ppCartTotal">€0,00</strong></div>
+    <button class="cart-checkout">Finalizar compra</button>
+  </div>
+</aside>
+
+<!-- ====== Spotify chip + panel ====== -->
+<button class="pp-audio-toggle" id="ppAudioChip" type="button">♫ Prophetia</button>
+<section id="ppAudioPanel" class="hidden" aria-hidden="true">
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL?utm_source=generator"
+          width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</section>

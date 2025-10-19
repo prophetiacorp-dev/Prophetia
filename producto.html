@@ -1,500 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Producto — PROPHETIA</title>
-  <meta name="description" content="Descubre los detalles del diseño, galería y compra de las piezas de Prophetia. Lujo silencioso con pulso editorial." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+<body data-page="pdp">
+  <div id="header"></div>
 
-<body data-page="product">
-  <!-- Barra de anuncio -->
-  <div class="announce-bar"><span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span></div>
-
-  <!-- HEADER unificado con mega-menús -->
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Ir a inicio">
-  <img
-    class="brand-img"
-    src="assets/img/logo/prop.svg"
-    alt="PROPHETIA — Home"
-    loading="eager" decoding="async"
-  />
-</a>
-
-    <nav class="site-nav">
-      <!-- Women -->
-      <div class="mega">
-        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Women ▾</button>
-        <div class="mega-panel">
-          <div class="mega-inner">
-            <div class="mega-col">
-              <h5>Destacados</h5>
-              <a href="camisetas.html?gender=women">Nuevo</a>
-              <a href="camisetas.html?gender=women">Editorial Picks</a>
-              <a href="camisetas.html?gender=women">All Women</a>
-            </div>
-            <div class="mega-col">
-              <h5>Tops</h5>
-              <a href="camisetas.html?gender=women">T-Shirts</a>
-              <a href="hoodies.html?gender=women">Hoodies</a>
-            </div>
-            <div class="mega-col">
-              <h5>Colecciones</h5>
-              <a href="camisetas.html?gender=women&collection=myth-series">Myth Series</a>
-              <a href="camisetas.html?gender=women&collection=letters-from-the-soul">Letters from the Soul</a>
-              <a href="colecciones.html">All Products</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Men -->
-      <div class="mega">
-        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Men ▾</button>
-        <div class="mega-panel">
-          <div class="mega-inner">
-            <div class="mega-col">
-              <h5>Destacados</h5>
-              <a href="camisetas.html?gender=men">Nuevo</a>
-              <a href="camisetas.html?gender=men">Editorial Picks</a>
-              <a href="camisetas.html?gender=men">All Men</a>
-            </div>
-            <div class="mega-col">
-              <h5>Tops</h5>
-              <a href="camisetas.html?gender=men">T-Shirts</a>
-              <a href="hoodies.html?gender=men">Hoodies</a>
-            </div>
-            <div class="mega-col">
-              <h5>Colecciones</h5>
-              <a href="camisetas.html?gender=men&collection=myth-series">Myth Series</a>
-              <a href="camisetas.html?gender=men&collection=letters-from-the-soul">Letters from the Soul</a>
-              <a href="colecciones.html">All Products</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Collections general -->
-      <div class="mega">
-        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Collections ▾</button>
-        <div class="mega-panel">
-          <div class="mega-inner">
-            <div class="mega-col">
-              <h5>Collections</h5>
-              <a href="colecciones.html#myth-series">Myth Series</a>
-              <a href="colecciones.html#letters-from-the-soul">Letters from the Soul</a>
-              <hr>
-              <a href="colecciones.html">All Products</a>
-            </div>
-            <div class="mega-col">
-              <h5>Clothing</h5>
-              <a href="camisetas.html">T-Shirts</a>
-              <a href="hoodies.html">Hoodies</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <a href="about.html">About</a>
-      <a href="journal.html">Journal</a>
-      <a href="contact.html">Contact</a>
-      <button class="cart-btn" id="openCart" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
-    </nav>
-  </header>
-
-  <!-- PDP -->
-  <main class="product-wrap">
-    <div class="gallery">
-      <div class="gallery-main">
+ <main class="pdp">
+  <div class="product-wrap container">
+    <!-- Galería izquierda -->
+    <section class="pdp-gallery">
+      <div class="pdp-hero">
         <button class="g-prev" aria-label="Anterior">‹</button>
-        <img id="pMain" src="" alt="">
+        <img id="pMain" alt="" />
         <button class="g-next" aria-label="Siguiente">›</button>
       </div>
-      
-      <div class="gallery-dots" id="pDots"></div>
-      <div class="thumbs" id="pThumbs"></div>
-    </div>
-<!-- Lightbox / Zoom a pantalla completa -->
-<div id="lb" class="lb hidden" aria-hidden="true" role="dialog" aria-label="Vista ampliada">
-  <div class="lb-backdrop" data-lb-close></div>
-  <figure class="lb-figure">
-    <img id="lbImg" class="lb-img" alt="">
-    <button class="lb-close" id="lbClose" aria-label="Cerrar" title="Cerrar">&times;</button>
-    <button class="lb-prev"  id="lbPrev"  aria-label="Anterior">‹</button>
-    <button class="lb-next"  id="lbNext"  aria-label="Siguiente">›</button>
-  </figure>
-</div>
+      <div id="pThumbs" class="pdp-thumbs"></div>
+    </section>
 
+    <!-- Panel derecha -->
+    <aside class="pdp-panel" id="pInfo">
+      <nav class="pdp-breadcrumb" aria-label="breadcrumbs">
+        <a href="index.html">Home</a> ·
+        <a href="colecciones.html">Collections</a> ·
+        <span id="pCrumb">Product</span>
+      </nav>
 
-    <div class="product-info">
-      <h1 id="pTitle">Producto</h1>
-      <p class="price" id="pPrice">€0</p>
-      <p id="pDesc" class="muted"></p>
+      <h1 id="pTitle" class="pdp-title">Producto</h1>
+      <p id="pShort" class="pdp-short"></p>
 
-      <form id="buyForm" class="buy">
-        <div id="sizeRow" class="sizes"></div>
-        <label>Cantidad <input id="qty" type="number" min="1" value="1" /></label>
-        <button class="btn-primary" type="submit">Añadir al carrito</button>
-      </form>
+      <div class="pdp-purchase">
+        <div class="pdp-price"><span id="pPrice">€0,00</span></div>
 
-      <!-- PayPal Smart Buttons (sandbox EUR) -->
-      <div style="margin-top:14px">
-        <div id="paypal-button-container"></div>
-      </div>
-    </div>
-  </main>
-
-  <!-- FOOTER unificado -->
-  <footer class="pp-footer">
-    <div class="pp-foot-grid container">
-      <div class="pp-foot-col">
-        <h5>Shop</h5>
-        <a href="camisetas.html">T-Shirts</a>
-        <a href="camisetas.html?fit=oversized">Oversized Tees</a>
-        <a href="camisetas.html?fit=regular">Regular Fit</a>
-        <a href="hoodies.html">Hoodies</a>
-        <a href="colecciones.html">Collections</a>
-      </div>
-      <div class="pp-foot-col">
-        <h5>Help</h5>
-        <a href="shipping.html">Shipping</a>
-        <a href="returns.html">Returns</a>
-        <a href="faqs.html">FAQs</a>
-      </div>
-      <div class="pp-foot-col">
-        <h5>Studio</h5>
-        <a href="about.html">About</a>
-        <a href="journal.html">Journal</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div class="pp-foot-col">
-        <h5>Follow</h5>
-        <div class="pp-social">
-          <a aria-label="Instagram" href="https://instagram.com/prophetia" target="_blank" rel="noopener">IG</a>
-          <a aria-label="YouTube" href="https://youtube.com/" target="_blank" rel="noopener">YT</a>
-          <a aria-label="TikTok" href="https://tiktok.com/@prophetia" target="_blank" rel="noopener">TT</a>
-          <a aria-label="Facebook" href="https://facebook.com/" target="_blank" rel="noopener">FB</a>
-        </div>
-      </div>
-    </div>
-    <div class="pp-foot-bottom">© PROPHETIA — Silent Luxury</div>
-  </footer>
-
-  <!-- JS principal (mega-menú, etc.) -->
-  <script src="assets/js/script.js"></script>
-  <!-- PayPal SDK (sandbox) -->
-  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=EUR"></script>
-
-  <!-- ===== Prophetia Tribe – Private Access (POPUP) ===== -->
-  <div id="tribeModal" class="tribe-modal" aria-hidden="true">
-    <div class="tribe-backdrop" data-close></div>
-
-    <div class="tribe-card" role="dialog" aria-modal="true" aria-labelledby="tribeTitle">
-      <button class="tribe-close" type="button" title="Cerrar" aria-label="Cerrar" data-close>×</button>
-
-      <div class="tribe-grid">
-        <!-- Izquierda: logo -->
-        <div class="tribe-left">
-          <img src="assets/img/logo/prophetia-emblem.png" alt="PROPHETIA" />
+        <!-- Talla -->
+        <div class="pdp-row">
+          <button id="openSize" class="pdp-link">Talla</button>
+          <span id="pSizeSel" class="pdp-meta muted">—</span>
         </div>
 
-        <!-- Derecha: texto + formulario -->
-        <div class="tribe-right">
-          <h3 id="tribeTitle" class="tribe-title">Prophetia Tribe – Private Access</h3>
-          <p class="tribe-sub">
-            Acceso anticipado por ser miembro de Prophetia.<br>
-            Diseños exclusivos y más beneficios siendo parte de la tribe.
-          </p>
-
-          <form id="tribeForm" class="tribe-form" novalidate>
-            <input class="t-input" type="text" name="name" placeholder="Nombre" required>
-            <input class="t-input" type="email" name="email" placeholder="Correo electrónico" required>
-
-            <label class="t-check">
-              <input type="checkbox" name="news" value="1">
-              <span>Email me news and offers</span>
-            </label>
-
-            <label class="t-label">Fecha de nacimiento</label>
-            <div class="t-birth">
-              <input class="t-input" type="text" name="mm" placeholder="MM" inputmode="numeric" maxlength="2">
-              <input class="t-input" type="text" name="dd" placeholder="DD" inputmode="numeric" maxlength="2">
-              <input class="t-input" type="text" name="yy" placeholder="YYYY" inputmode="numeric" maxlength="4">
-            </div>
-
-            <button type="submit" class="t-btn">UNIRME</button>
-            <p class="t-note">Sin spam. Podrás cancelar cuando quieras.</p>
-          </form>
+        <!-- Color -->
+        <div class="pdp-row">
+          <span class="pdp-label">Color</span>
+          <div id="pColors" class="pdp-swatches"></div>
         </div>
+
+        <!-- Envío -->
+        <div class="pdp-row">
+          <button class="pdp-link" data-acc="ship">Envíos y devoluciones</button>
+        </div>
+
+        <!-- CTA -->
+        <form id="buyForm" class="pdp-buy">
+          <input id="qty" type="number" min="1" value="1" />
+          <button type="submit" class="btn-primary">Añadir a la cesta</button>
+        </form>
+      </div>
+
+      <!-- Detalles expandibles -->
+      <section class="pdp-accordions">
+        <button class="pdp-acc" data-acc="details">
+          <span>Todos los detalles</span><span class="acc-ico">+</span>
+        </button>
+        <div class="pdp-acc-panel" id="pDetails">
+          <div id="pDesc" class="pdp-desc"></div>
+          <dl class="pdp-specs" id="pSpecs"></dl>
+        </div>
+
+        <button class="pdp-acc" data-acc="ship">
+          <span>Envíos y devoluciones</span><span class="acc-ico">+</span>
+        </button>
+        <div class="pdp-acc-panel" id="pShip">
+          <ul class="muted">
+            <li>Envío gratis en 2–7 días laborables</li>
+            <li>Devoluciones online gratuitas en 14 días</li>
+            <li>Cambio en tienda gratuito 30 días</li>
+          </ul>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <!-- Modal Tallas -->
+  <div id="sizeModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Selecciona talla">
+    <div class="modal-card modal-wide">
+      <button class="modal-close" data-close>✕</button>
+      <h3>Selecciona tu talla</h3>
+      <div id="sizeGrid" class="size-grid"></div>
+      <div class="size-foot">
+        <a class="pdp-link" href="#" id="sizeGuide">Guía de tallas</a>
       </div>
     </div>
   </div>
-  <!-- ===== /POPUP ===== -->
+</main>
 
-  <!-- Inicialización simple del pop-up (persistencia 7 días) -->
- 
 
-  <!-- LÓGICA PDP (autónoma, lee catalog.json y genera galería + PayPal) -->
+
+  <!-- Zoom PDP -->
+  <div id="pdpZoom" class="lb hidden" aria-hidden="true" role="dialog">
+    <div class="lb-backdrop" data-lb-close></div>
+    <figure class="lb-figure">
+      <img id="pdpZoomImg" class="lb-img" alt="">
+      <button class="lb-close" id="pdpZoomClose" aria-label="Cerrar">&times;</button>
+      <button class="lb-prev"  id="pdpZoomPrev"  aria-label="Anterior">‹</button>
+      <button class="lb-next"  id="pdpZoomNext"  aria-label="Siguiente">›</button>
+    </figure>
+  </div>
+
+  <div id="footer"></div>
+    <script src="assets/js/header-init.js"></script>
+  <script src="assets/js/script.js"></script>
+
+  <script src="assets/js/script.js"></script>
   <script>
-  (function(){
-    const $ = (sel) => document.querySelector(sel);
-    const byId = (id) => document.getElementById(id);
+    (async function injectHF(){
+      const H = await fetch('/assets/partials/header.html').then(r=>r.text());
+      const F = await fetch('/assets/partials/footer.html').then(r=>r.text());
+      document.getElementById('header').innerHTML = H;
+      document.getElementById('footer').innerHTML = F;
+      window.ppInitHeader && window.ppInitHeader();
 
-    const params = new URLSearchParams(location.search);
-    const productId = (params.get('id') || '').toLowerCase();
-
-    const els = {
-      main: byId('pMain'),
-      dots: byId('pDots'),
-      thumbs: byId('pThumbs'),
-      title: byId('pTitle'),
-      price: byId('pPrice'),
-      desc:  byId('pDesc'),
-      sizes: byId('sizeRow'),
-      qty:   byId('qty'),
-      form:  byId('buyForm'),
-      prev:  document.querySelector('.g-prev'),
-      next:  document.querySelector('.g-next'),
-      cartCount: byId('cartCount'),
-    };
-
-    // Fallback por si no hay catalog.json
-    const FALLBACK = [
-      {
-        id: "atlas-seal",
-        type: "tshirt",
-        title: "Atlas by Prophetia",
-        collection: "myth-series",
-        gender: "unisex",
-        fit: "regular",
-        price: 59.00,
-        inStock: true,
-        sizes: ["S","M","L","XL"],
-        images: ["assets/img/atlas/atlas-front.png", "assets/img/atlas/atlas-back.png"],
-        short: "Atlas by Prophetia. Sello griego y composición editorial. Tinta dorada envejecida."
-      },
-      {
-        id: "calyra-ego",
-        type: "tshirt",
-        title: "Calyra’s Ego by Prophetia",
-        collection: "letters-from-the-soul",
-        gender: "unisex",
-        fit: "oversized",
-        price: 64.00,
-        inStock: true,
-        sizes: ["S","M","L","XL"],
-        images: ["assets/img/atlas/atlas-back.png", "assets/img/atlas/atlas-front.png"],
-        short: "Calyra’s Ego by Prophetia. Gesto geométrico con aura editorial contemporánea."
+      // Tabs simples (están fuera de tu JS principal)
+      const root = document.querySelector('.pdp-tabs');
+      if(root){
+        const tabs = root.querySelectorAll('.tabs-head .tab');
+        const panels = root.querySelectorAll('.tab-panel');
+        tabs.forEach(t=>{
+          t.addEventListener('click', ()=>{
+            tabs.forEach(x=>x.classList.remove('active'));
+            t.classList.add('active');
+            const target = t.dataset.tab;
+            panels.forEach(p=> p.classList.toggle('hidden', p.dataset.panel !== target));
+          });
+        });
       }
-    ];
+    })();
+  </script>
+    <script>
+    (async function initPDP(){
+      // 1) leer slug/id
+      const params = new URLSearchParams(location.search);
+      const slug = params.get('slug') || params.get('id');
 
-    async function loadCatalog(){
-      try{
-        const res = await fetch('assets/data/catalog.json', {cache:'no-store'});
-        if(!res.ok) throw new Error('No catalog');
-        return await res.json();
-      }catch(e){
-        console.warn('Usando fallback PDP:', e);
-        return FALLBACK;
+      // 2) cargar catálogo
+      const res = await fetch('assets/data/catalog.json', { cache:'no-store' });
+      const data = await res.json();
+      const items = Array.isArray(data) ? data : (data.items || []);
+      const prod = items.find(p => (p.slug || p.id) === slug) || items[0];
+      if(!prod){ console.warn('[PDP] Producto no encontrado'); return; }
+
+      // 3) pintar textos básicos
+      const $ = (sel)=>document.querySelector(sel);
+      $('#pTitle').textContent = prod.title || 'Producto';
+      $('#pPrice').textContent = (typeof prod.price==='number') ? window.ppCart.money(prod.price) : (prod.price || '—');
+      $('#pShort').textContent = prod.short || (prod.collection || '');
+
+      // migas
+      $('#pCrumb').textContent = prod.title || 'Product';
+
+      // 4) galería
+      const images = prod.images && prod.images.length ? prod.images : ['assets/img/products/placeholder.jpg'];
+      const main = $('#pMain');
+      const thumbs = $('#pThumbs');
+      let i = 0;
+      function paint(i0){
+        i = i0; main.src = images[i] || images[0];
       }
-    }
+      paint(0);
+      thumbs.innerHTML = images.map((src,idx)=>`<button class="pdp-thumb${idx===0?' is-active':''}" data-i="${idx}"><img src="${src}" alt=""></button>`).join('');
+      thumbs.addEventListener('click', (e)=>{
+        const b = e.target.closest('button[data-i]'); if(!b) return;
+        thumbs.querySelectorAll('.pdp-thumb').forEach(x=>x.classList.remove('is-active'));
+        b.classList.add('is-active');
+        paint(+b.dataset.i);
+      });
+      // flechas
+      document.querySelector('.g-prev')?.addEventListener('click', ()=> paint((i-1+images.length)%images.length));
+      document.querySelector('.g-next')?.addEventListener('click', ()=> paint((i+1)%images.length));
 
-    function fmtEUR(n){ return '€' + (n ?? 0).toFixed(2).replace('.', ','); }
-
-    function mountSizes(sizes = ["S","M","L","XL"]){
-      els.sizes.innerHTML = '';
-      sizes.forEach((sz, i)=>{
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'size-btn' + (i===0 ? ' active' : '');
-        b.textContent = sz;
-        b.dataset.size = sz;
-        b.addEventListener('click', ()=>{
-          els.sizes.querySelectorAll('.size-btn').forEach(x => x.classList.remove('active'));
+      // 5) tallas y colores (opcionales)
+      const sizes  = prod.sizes  || [];
+      const colors = prod.colors || [];
+      if (sizes.length){
+        const grid = document.getElementById('sizeGrid');
+        grid.innerHTML = sizes.map(s=>`<button class="size" data-size="${s}">${s}</button>`).join('');
+        grid.addEventListener('click', (e)=>{
+          const b = e.target.closest('[data-size]'); if(!b) return;
+          grid.querySelectorAll('.size').forEach(x=>x.classList.remove('active'));
+          b.classList.add('active');
+          document.getElementById('pSizeSel').textContent = b.dataset.size;
+        });
+      }
+      if (colors.length){
+        const sw = document.getElementById('pColors');
+        sw.innerHTML = colors.map(c=>`<button class="sw" data-color="${c}" title="${c}"></button>`).join('');
+        sw.addEventListener('click', (e)=>{
+          const b = e.target.closest('[data-color]'); if(!b) return;
+          sw.querySelectorAll('.sw').forEach(x=>x.classList.remove('active'));
           b.classList.add('active');
         });
-        els.sizes.appendChild(b);
-      });
-    }
-
-   function mountGallery(imgs){
-  // --- Estado de galería
-  let idx = 0;
-
-  // Referencias del lightbox (una sola vez)
-  const $lb     = document.getElementById('lb');
-  const $lbImg  = document.getElementById('lbImg');
-  const $lbPrev = document.getElementById('lbPrev');
-  const $lbNext = document.getElementById('lbNext');
-  const $lbClose= document.getElementById('lbClose');
-
-  function set(i){
-    idx = (i + imgs.length) % imgs.length;
-    els.main.src = imgs[idx];
-    els.main.alt = els.title.textContent || 'Producto';
-
-    els.dots.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('active', k===idx));
-    els.thumbs.querySelectorAll('img').forEach((t,k)=>{
-      t.classList.toggle('active', k===idx);
-      if(k===idx) t.scrollIntoView({block:'nearest', inline:'nearest'});
-    });
-  }
-
-  // ---------- LIGHTBOX ----------
-  function lbShow(i = idx){
-    set(i);                                   // nos aseguramos de que coincida
-    $lbImg.src = imgs[idx];
-    $lb.classList.remove('hidden');
-    $lb.setAttribute('aria-hidden','false');
-    document.body.style.overflow = 'hidden';
-  }
-  function lbHide(){
-    $lb.classList.add('hidden');
-    $lb.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
-  }
-  function lbPrev(){ set(idx - 1); $lbImg.src = imgs[idx]; }
-  function lbNext(){ set(idx + 1); $lbImg.src = imgs[idx]; }
-
-  // Eventos del lightbox (una vez)
-  if ($lb && !$lb._bound){
-    $lb._bound = true;
-    $lb.addEventListener('click', (e)=>{
-      if (e.target === $lb || e.target.hasAttribute('data-lb-close')) lbHide();
-    });
-    $lbClose?.addEventListener('click', lbHide);
-    $lbPrev ?.addEventListener('click', lbPrev);
-    $lbNext ?.addEventListener('click', lbNext);
-
-    // Teclado: ESC, ←, →
-    document.addEventListener('keydown', (e)=>{
-      if ($lb.classList.contains('hidden')) return;
-      if (e.key === 'Escape') lbHide();
-      if (e.key === 'ArrowLeft')  lbPrev();
-      if (e.key === 'ArrowRight') lbNext();
-    });
-  }
-
-  // ---------- Construcción de la galería (página) ----------
-  els.dots.innerHTML = imgs.map((_,k)=>`<span class="dot ${k===0?'active':''}"></span>`).join('');
-  els.thumbs.innerHTML = imgs.map((src,k)=>`<img src="${src}" alt="" class="${k===0?'active':''}">`).join('');
-
-  els.thumbs.querySelectorAll('img').forEach((t,k)=>t.addEventListener('click', ()=>set(k)));
-  els.dots  .querySelectorAll('.dot').forEach((d,k)=>d.addEventListener('click', ()=>set(k)));
-  els.prev.addEventListener('click', ()=>set(idx-1));
-  els.next.addEventListener('click', ()=>set(idx+1));
-
-  // **Abrir zoom al clicar la imagen principal**
-  els.main.style.cursor = 'zoom-in';
-  els.main.addEventListener('click', ()=> lbShow(idx));
-
-  set(0);
-}
-
       }
 
-      els.dots.innerHTML = imgs.map((_,k)=>`<span class="dot ${k===0?'active':''}"></span>`).join('');
-      els.thumbs.innerHTML = imgs.map((src,k)=>`<img src="${src}" alt="" class="${k===0?'active':''}">`).join('');
-      els.thumbs.querySelectorAll('img').forEach((t,k)=>t.addEventListener('click', ()=>set(k)));
-      els.dots.querySelectorAll('.dot').forEach((d,k)=>d.addEventListener('click', ()=>set(k)));
-      els.prev.addEventListener('click', ()=>set(idx-1));
-      els.next.addEventListener('click', ()=>set(idx+1));
-
-      set(0);
-    }
-
-    function getSelectedSize(){
-      const a = els.sizes.querySelector('.size-btn.active');
-      return a ? a.dataset.size : null;
-    }
-
-    function addToCart(item){
-      const LS = 'pp_cart';
-      const cart = JSON.parse(localStorage.getItem(LS) || '[]');
-      cart.push(item);
-      localStorage.setItem(LS, JSON.stringify(cart));
-      if(els.cartCount){
-        const total = cart.reduce((s, it)=> s + (it.qty||1), 0);
-        els.cartCount.textContent = String(total);
-      }
-      alert('Producto añadido al carrito (demo).');
-    }
-
-    function mountPayPal(product){
-      if (!window.paypal) {
-        console.warn('PayPal SDK no cargado.');
-        return;
-      }
-      const container = document.getElementById('paypal-button-container');
-      const getAmount = ()=> {
-        const q = Math.max(1, parseInt(els.qty.value||'1',10));
-        return (product.price * q).toFixed(2);
-      };
-
-      paypal.Buttons({
-        style: { layout: 'horizontal', height: 40, label: 'paypal' },
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            purchase_units: [{
-              description: (product.title || 'Prophetia') + ' — ' + (getSelectedSize() || 'Talla'),
-              amount: { currency_code: 'EUR', value: getAmount() }
-            }]
-          });
-        },
-        onApprove: (data, actions) => actions.order.capture().then(() => {
-          alert('Pago aprobado (sandbox). ¡Gracias!');
-        }),
-        onError: (err) => {
-          console.error(err);
-          alert('Hubo un problema con PayPal (sandbox).');
-        }
-      }).render(container);
-    }
-
-    (async function init(){
-      const catalog = await loadCatalog();
-      const product = catalog.find(p => (p.id||'').toLowerCase() === productId);
-
-      if(!product){
-        byId('pTitle').textContent = 'Producto no encontrado';
-        byId('pDesc').textContent = 'Revisa el enlace o vuelve a Collections.';
-        document.querySelector('.product-wrap').style.opacity = .9;
-        return;
-      }
-
-      // Título / Precio / Descripción
-      els.title.textContent = product.title || 'Producto';
-      els.price.textContent = fmtEUR(product.price || 0);
-      els.desc.textContent = product.short || 'Pieza editorial con lujo silencioso y proporción mediterránea.';
-
-      // Tallas / Cantidad
-      mountSizes(product.sizes || ["S","M","L","XL"]);
-
-      // Galería
-      const imgs = (product.images && product.images.length) ? product.images : ['assets/img/placeholder.png'];
-      mountGallery(imgs);
-
-      // Añadir al carrito (demo)
-      els.form.addEventListener('submit', (e)=>{
+      // 6) añadir al carrito
+      document.getElementById('buyForm')?.addEventListener('submit', (e)=>{
         e.preventDefault();
-        const qty = Math.max(1, parseInt(els.qty.value||'1',10));
-        const size = getSelectedSize() || 'S';
-        addToCart({
-          id: product.id, title: product.title, price: product.price, size, qty,
-          image: imgs[0] || ''
+        const qty   = Math.max(1, +document.getElementById('qty').value || 1);
+        const size  = document.querySelector('#sizeGrid .size.active')?.dataset.size || '';
+        const color = document.querySelector('#pColors .sw.active')?.dataset.color || '';
+        window.ppAddToCart({
+          id:   prod.slug || prod.id,
+          title: prod.title,
+          price: +prod.price || 0,
+          img:   images[0],
+          size, color, qty
         });
       });
-
-      // PayPal
-      mountPayPal(product);
     })();
-  })();
   </script>
+
 </body>
 </html>
