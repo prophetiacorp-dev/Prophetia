@@ -6,19 +6,24 @@
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "oversized",
-    "price": 59.00,
+    "price": 59.0,
     "inStock": true,
-    "sizes": ["S","M","L","XL"],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
     "short": "Composición editorial inspirada en Atlas. Silencio y fuerza.",
     "images": [
-      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
+      
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png"
     ]
   },
-
   {
     "id": "calyra-ego",
     "type": "tshirt",
@@ -26,65 +31,84 @@
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "oversized",
-    "price": 64.00,
+    "price": 64.0,
     "inStock": true,
-    "sizes": ["S","M","L","XL"],
-    "short": "Figura mitológica estilizada con ritmo geométrico.",
+    "cover": "assets/img/CalyrasEgo/CalyraFinal.png",
     "images": [
-      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-front-2-68e3d95416801.png",
-      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-back-68e3d95145bdd.png",
-      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-front-68e3c2c176f4c.png",
-      "assets/img/Calyra'sEgo/unisex-staple-tshirt-heather-natural-front-68e3d951416642.png",
-      "assets/img/Calyra'sEgo/oversized-faded-tshirt-faded-black-front-68e3d844c2783d.png"
+      "assets/img/CalyrasEgo/oversized-faded-t-shirt-faded-black-back-68e3d44c27f24.png",
+      "assets/img/CalyrasEgo/unisex-staple-tshirt-heather-natural-back-68e3d95145bdd.png",
+      "assets/img/CalyrasEgo/unisex-staple-tshirt-heather-natural-front-68e3c2c176f4c.png",
+      "assets/img/CalyrasEgo/oversized-faded-tshirt-faded-black-front-68e3d844c2783d.png"
+    ],
+    "short": "Figura mitológica estilizada con ritmo geométrico. Equilibrio entre lo antiguo y lo contemporáneo.",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
     ]
   },
-
-
   {
-    "slug": "mascaras-del-mediterraneo",
-    "sku": "PR-MYTH-MED-001",
+    "id": "mascaras-del-mediterraneo",
+    "type": "tshirt",
     "title": "Máscaras del Mediterráneo — Mediterranean Culture by Prophetia",
-    "collection": "Myth Series",
-    "collection_slug": "myth-series",
+    "collection": "myth-series",
+    "gender": "unisex",
+    "fit": "regular",
     "price": 89,
-    "technique": "DTF",
-    "images": [
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+    "inStock": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
     ],
-    "badge": "Bestseller",
-    "sizes": { "S": 7, "M": 5, "L": 4, "XL": 0, "XXL": 2 },
-    "description": "Iconografía mediterránea con contraste gráfico y textura editorial. Cultura y símbolo."
+    "images": [
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+    ],
+    "short": "Iconografía mediterránea con contraste gráfico y textura editorial."
   },
-
   {
-    "slug": "like-gods",
-    "sku": "PR-LET-LGD-001",
+    "id": "like-gods",
+    "type": "tshirt",
     "title": "Like Gods",
-    "collection": "Letters from the Soul",
-    "collection_slug": "letters-from-the-soul",
+    "collection": "letters-from-the-soul",
+    "gender": "unisex",
+    "fit": "regular",
     "price": 90,
-    "technique": "DTG",
-    "images": [
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+    "inStock": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
     ],
-    "badge": "NEW",
-    "sizes": { "S": 6, "M": 6, "L": 6, "XL": 3, "XXL": 1 },
-    "description": "Tipografía manuscrita con tono poético y gesto seguro. Declaración íntima en clave editorial."
+    "images": [
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+    ],
+    "short": "Tipografía manuscrita con tono poético y gesto seguro. Declaración íntima."
   },
-
   {
-    "slug": "letter-for-self",
-    "sku": "PR-LET-LFS-001",
+    "id": "letter-for-self",
+    "type": "tshirt",
     "title": "Letter for Self",
-    "collection": "Letters from the Soul",
-    "collection_slug": "letters-from-the-soul",
+    "collection": "letters-from-the-soul",
+    "gender": "unisex",
+    "fit": "regular",
     "price": 88,
-    "technique": "DTG",
-    "images": [
-      "Imagenes/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+    "inStock": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
     ],
-    "badge": "LIMITED",
-    "sizes": { "S": 4, "M": 8, "L": 5, "XL": 2, "XXL": 0 },
-    "description": "Carta interior en tinta editorial. Minimalismo con resonancia emocional y lujo silencioso."
+    "images": [
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+    ],
+    "short": "Carta interior en tinta editorial. Minimalismo con resonancia emocional."
   }
 ]

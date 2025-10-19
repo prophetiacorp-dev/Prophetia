@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "women": "Women",
+    "men": "Men",
+    "collections": "Collections",
+    "about": "About Prophetia",
+    "shipping": "Shipping & Returns"
+  },
+  "hero": {
+    "subtitle": "Mediterranean Silent Luxury",
+    "title": "Mediterranean Mythology meets Editorial Design",
+    "copy": "Timeless pieces inspired by Mediterranean mythology and editorial design.",
+    "cta": "Explore collection"
+  },
+  "filters": {
+    "all": "All",
+    "instock": "In stock only",
+    "relevance": "Relevance",
+    "priceAsc": "Price ↑",
+    "priceDesc": "Price ↓"
+  },
+  "list": { "view": "View" },
+  "auth": {
+    "welcome": "Welcome",
+    "login": "Log in",
+    "signup": "Sign up",
+    "email": "Email*",
+    "password": "Password*",
+    "enter": "Enter",
+    "create": "Create account",
+    "forgot": "Forgot your password?"
+  },
+  "pdp": {
+    "size": "Size",
+    "qty": "Quantity",
+    "add": "Add to cart",
+    "details": "Details",
+    "packaging": "Packaging",
+    "care": "Materials & care",
+    "specs": "Specifications",
+    "sheetTitle": "Product details"
+  },
+  "cart": {
+    "title": "Your cart",
+    "total": "Total:",
+    "keepShopping": "Keep shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "note": "Shipping and taxes calculated at checkout."
+  },
+  "footer": {
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "follow": "Follow us",
+    "rights": "© 2025 Prophetia — All rights reserved."
+  }
+}

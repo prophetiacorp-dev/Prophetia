@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Sobre Prophetia — Silent Luxury</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container prose">
+    <h1>Sobre Prophetia</h1>
+    <p>Prophetia nace en el Mediterráneo, donde la luz es diseño y el tiempo una textura.</p>
+    <p>Nuestra visión: <strong>silent luxury</strong>. Materiales honestos, gráficos editoriales, y un lenguaje visual que respira.</p>
+  </main>
+  <div id="footer"></div>
+  <script src="assets/js/script.js"></script>
+  <script>
+    (async function injectHF(){
+      const H = await fetch('header.html').then(r=>r.text());
+      const F = await fetch('footer.html').then(r=>r.text());
+      document.getElementById('header').innerHTML = H;
+      document.getElementById('footer').innerHTML = F;
+      window.ppInitHeader && window.ppInitHeader();
+    })();
+  </script>
+</body>
+</html>

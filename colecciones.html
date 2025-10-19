@@ -1,121 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Colecciones — PROPHETIA</title>
-  <meta name="description" content="Colecciones de Prophetia: Myth Series y Letters from the Soul. Moda editorial y lujo silencioso." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <title>Collections — PROPHETIA</title>
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- Tipografías -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
+<body data-page="collections">
+  <div id="header"></div>
 
-<body data-page="tshirts">
-  <!-- Barra de anuncio -->
-  <div class="announce-bar"><span>🚚 Envío 48–72h · 🔁 Devoluciones 14 días · ✨ Pago seguro</span></div>
-
-  <!-- HEADER unificado con mega-menús -->
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Ir a inicio">
-  <img
-    class="brand-img"
-    src="assets/img/logo/prop.svg"
-    alt="PROPHETIA — Home"
-    loading="eager" decoding="async"
-  />
-</a>
-
-    <nav class="site-nav">
-      <!-- Women -->
-      <div class="mega">
-        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Women ▾</button>
-        <div class="mega-panel">
-          <div class="mega-inner">
-            <div class="mega-col">
-              <h5>Destacados</h5>
-              <a href="camisetas.html?gender=women">Nuevo</a>
-              <a href="camisetas.html?gender=women">Editorial Picks</a>
-              <a href="camisetas.html?gender=women">All Women</a>
-            </div>
-            <div class="mega-col">
-              <h5>Tops</h5>
-              <a href="camisetas.html?gender=women">T-Shirts</a>
-              <a href="hoodies.html?gender=women">Hoodies</a>
-            </div>
-            <div class="mega-col">
-              <h5>Colecciones</h5>
-              <a href="camisetas.html?gender=women&collection=myth-series">Myth Series</a>
-              <a href="camisetas.html?gender=women&collection=letters-from-the-soul">Letters from the Soul</a>
-              <a href="colecciones.html">All Products</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Men -->
-      <div class="mega">
-        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Men ▾</button>
-        <div class="mega-panel">
-          <div class="mega-inner">
-            <div class="mega-col">
-              <h5>Destacados</h5>
-              <a href="camisetas.html?gender=men">Nuevo</a>
-              <a href="camisetas.html?gender=men">Editorial Picks</a>
-              <a href="camisetas.html?gender=men">All Men</a>
-            </div>
-            <div class="mega-col">
-              <h5>Tops</h5>
-              <a href="camisetas.html?gender=men">T-Shirts</a>
-              <a href="hoodies.html?gender=men">Hoodies</a>
-            </div>
-            <div class="mega-col">
-              <h5>Colecciones</h5>
-              <a href="camisetas.html?gender=men&collection=myth-series">Myth Series</a>
-              <a href="camisetas.html?gender=men&collection=letters-from-the-soul">Letters from the Soul</a>
-              <a href="colecciones.html">All Products</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Collections general -->
-      <div class="mega">
-        <button class="mega-toggle" aria-haspopup="true" aria-expanded="false">Collections ▾</button>
-        <div class="mega-panel">
-          <div class="mega-inner">
-            <div class="mega-col">
-              <h5>Collections</h5>
-              <a href="#myth-series">Myth Series</a>
-              <a href="#letters-from-the-soul">Letters from the Soul</a>
-              <hr>
-              <a href="colecciones.html" aria-current="page">All Products</a>
-            </div>
-            <div class="mega-col">
-              <h5>Clothing</h5>
-              <a href="camisetas.html">T-Shirts</a>
-              <a href="hoodies.html">Hoodies</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <a href="about.html">About</a>
-      <a href="journal.html">Journal</a>
-      <a href="contact.html">Contact</a>
-      <button class="cart-btn" id="openCart" aria-label="Carrito">🛒 <span id="cartCount">0</span></button>
-    </nav>
-  </header>
-
-  <main>
-    <!-- Hero -->
-    <section class="page-hero">
+  <main class="container">
+    <header class="page-hero">
       <h1>Collections</h1>
       <p class="lede">Mitología mediterránea y diseño editorial de lujo silencioso.</p>
-    </section>
+    </header>
 
-    <!-- Toolbar de filtros (mismo sistema que camisetas/hoodies) -->
+    <!-- filtros -->
     <section class="filters toolbar">
       <div class="row">
         <span class="lab">Fit:</span>
@@ -126,7 +30,7 @@
 
       <div class="row">
         <span class="lab">Género:</span>
-        <button class="chip chip-active" data-k="gender" data-v="all">All</button>
+        <button class="chip" data-k="gender" data-v="all">All</button>
         <button class="chip" data-k="gender" data-v="men">Men</button>
         <button class="chip" data-k="gender" data-v="women">Women</button>
         <button class="chip" data-k="gender" data-v="unisex">Unisex</button>
@@ -135,8 +39,8 @@
       <div class="row">
         <span class="lab">Colección:</span>
         <button class="chip chip-active" data-k="collection" data-v="all">All</button>
-        <button class="chip" id="myth-series" data-k="collection" data-v="myth-series">Myth Series</button>
-        <button class="chip" id="letters-from-the-soul" data-k="collection" data-v="letters-from-the-soul">Letters from the Soul</button>
+        <button class="chip" data-k="collection" data-v="myth-series">Myth Series</button>
+        <button class="chip" data-k="collection" data-v="letters-from-the-soul">Letters from the Soul</button>
       </div>
 
       <div class="row">
@@ -155,96 +59,27 @@
       </div>
     </section>
 
-    <!-- Grid de productos -->
     <section class="grid products-grid" id="productsGrid"></section>
   </main>
 
-  <!-- FOOTER unificado -->
-  <footer class="pp-footer">
-    <div class="pp-foot-grid container">
-      <div class="pp-foot-col">
-        <h5>Shop</h5>
-        <a href="camisetas.html">T-Shirts</a>
-        <a href="camisetas.html?fit=oversized">Oversized Tees</a>
-        <a href="camisetas.html?fit=regular">Regular Fit</a>
-        <a href="hoodies.html">Hoodies</a>
-        <a href="colecciones.html" aria-current="page">Collections</a>
-      </div>
-      <div class="pp-foot-col">
-        <h5>Help</h5>
-        <a href="shipping.html">Shipping</a>
-        <a href="returns.html">Returns</a>
-        <a href="faqs.html">FAQs</a>
-      </div>
-      <div class="pp-foot-col">
-        <h5>Studio</h5>
-        <a href="about.html">About</a>
-        <a href="journal.html">Journal</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div class="pp-foot-col">
-        <h5>Follow</h5>
-        <div class="pp-social">
-          <a aria-label="Instagram" href="https://instagram.com/prophetia" target="_blank" rel="noopener">IG</a>
-          <a aria-label="YouTube" href="https://youtube.com/" target="_blank" rel="noopener">YT</a>
-          <a aria-label="TikTok" href="https://tiktok.com/@prophetia" target="_blank" rel="noopener">TT</a>
-          <a aria-label="Facebook" href="https://facebook.com/" target="_blank" rel="noopener">FB</a>
-        </div>
-      </div>
-    </div>
-    <div class="pp-foot-bottom">© PROPHETIA — Silent Luxury</div>
-  </footer>
-
-  <!-- JS principal (render, filtros, mega-menú…) -->
+  <div id="footer"></div>
+    <script src="assets/js/header-init.js"></script>
   <script src="assets/js/script.js"></script>
 
-  <!-- ===== Prophetia Tribe – Private Access (POPUP) ===== -->
-  <div id="tribeModal" class="tribe-modal" aria-hidden="true">
-    <div class="tribe-backdrop" data-close></div>
+<section class="brand-hero brand-hero--tight">
+  <p class="brand-kicker">PROPHETIA</p>
+  <h1 class="h2" style="text-align:center;">Hoodies</h1>
+</section>
 
-    <div class="tribe-card" role="dialog" aria-modal="true" aria-labelledby="tribeTitle">
-      <button class="tribe-close" type="button" title="Cerrar" aria-label="Cerrar" data-close>×</button>
+<aside class="cat-cats">
+  <h3>Categorías</h3>
+  <nav class="cat-list" aria-label="Categorías">
+    <a href="camisetas.html">Camisetas</a>
+    <a href="hoodies.html" class="active" aria-current="page">Hoodies</a>
+  </nav>
+</aside>
 
-      <div class="tribe-grid">
-        <!-- Izquierda: logo -->
-        <div class="tribe-left">
-          <img src="assets/img/logo/prophetia-emblem.png" alt="PROPHETIA" />
-        </div>
+<div class="products-grid catalog" id="gridHoodies"></div>
 
-        <!-- Derecha: texto + formulario -->
-        <div class="tribe-right">
-          <h3 id="tribeTitle" class="tribe-title">Prophetia Tribe – Private Access</h3>
-          <p class="tribe-sub">
-            Acceso anticipado por ser miembro de Prophetia.<br>
-            Diseños exclusivos y más beneficios siendo parte de la tribe.
-          </p>
-
-          <form id="tribeForm" class="tribe-form" novalidate>
-            <input class="t-input" type="text" name="name" placeholder="Nombre" required>
-            <input class="t-input" type="email" name="email" placeholder="Correo electrónico" required>
-
-            <label class="t-check">
-              <input type="checkbox" name="news" value="1">
-              <span>Email me news and offers</span>
-            </label>
-
-            <label class="t-label">Fecha de nacimiento</label>
-            <div class="t-birth">
-              <input class="t-input" type="text" name="mm" placeholder="MM" inputmode="numeric" maxlength="2">
-              <input class="t-input" type="text" name="dd" placeholder="DD" inputmode="numeric" maxlength="2">
-              <input class="t-input" type="text" name="yy" placeholder="YYYY" inputmode="numeric" maxlength="4">
-            </div>
-
-            <button type="submit" class="t-btn">UNIRME</button>
-            <p class="t-note">Sin spam. Podrás cancelar cuando quieras.</p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ===== /POPUP ===== -->
-
-  <!-- Inicialización simple del pop-up (persistencia 7 días) -->
-  
 </body>
 </html>
