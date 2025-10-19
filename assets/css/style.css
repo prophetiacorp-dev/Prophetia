@@ -594,12 +594,12 @@ small, .muted{ color:var(--muted); }
 /* .hero-video{
   position: relative;
   width: 100vw;              /* ancho total de la ventana */
-  left: 50%;
+ /*  left: 50%;
   right: 50%;
   margin-left: -50vw;        /* truco full-bleed */
-  height: clamp(260px, 56vw, 720px); /* 16:9 fluido */
-  overflow: hidden;
-  background: #000;          /* por si el video tarda */
+  /* height: clamp(260px, 56vw, 720px); /* 16:9 fluido */
+  /* overflow: hidden;
+  /* background: #000;          /* por si el video tarda */
 /*}
 
 /* El vídeo ocupa todo y recorta */
@@ -704,4 +704,6 @@ transform: translate(-0.9%, -38.7%); /* mueve 4% a la izquierda y mantiene altur
 
 /* opcional: aplica márgenes laterales al bloque del hero */
 .hero { padding-inline: var(--hero-gutter); }
+
+
 
