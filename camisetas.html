@@ -138,14 +138,14 @@
   <label>
     <input type="checkbox" value="beige">
     <span class="swatch splash" style="--sw:#E8D9C7"></span>
-    Beige <span class="count" data-count-for="beige">–</span>
+    beige <span class="count" data-count-for="beige">–</span>
   </label>
 </li>
   <li>
   <label>
-    <input type="checkbox" value="Marrón">
+    <input type="checkbox" value="marron">
     <span class="swatch splash" style="--sw:#E8D9C7"></span>
-    Marrón<span class="count" data-count-for="Marrón">–</span>
+    Marrón <span class="count" data-count-for="marron">–</span>
   </label>
 </li>
             <li><label><span class="swatch" style="--sw:#4CAF50"></span><input type="checkbox" value="verde"> Verde <span class="count" data-count-for="verde">–</span></label></li>
@@ -192,16 +192,22 @@
            GRID del catálogo (rellena ppInitCatalog desde JSON)
            --------------------------------------------------------- -->
       <div class="products-grid catalog" id="gridCamisetas">
-        <!--
-          Aquí se pintan las cards desde assets/data/catalog.json con
-          window.ppInitCatalog({ target:'#gridCamisetas', category:'camisetas' })
-        -->
+ 
+
+
       </div>
     </section>
 
     <!-- ===================== Categorías (columna derecha) ===================== -->
     
   </main>
+<!-- ============ TOAST / AVISO SUPERIOR ============ -->
+<div id="ppToast" class="pp-toast" role="status" aria-live="polite" hidden>
+  <div class="pp-toast__inner">
+    <span id="ppToastMsg">Añadido a artículos guardados</span>
+    <a id="ppToastAction" class="pp-toast__cta" href="wishlist.html">Ver</a>
+  </div>
+</div>
 
   <!-- PARCIAL: footer -->
   <div id="footer"></div>

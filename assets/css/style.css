@@ -301,6 +301,12 @@ dialog:not([open]){ display:none; }
 .product-card .img-wrap img, .products-grid .card .img-wrap img{
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:0 !important;
 }
+/* Posicionar el corazón arriba-dcha de la imagen */
+.product-card .img-wrap{ position: relative; }
+.product-card .img-wrap .icon-btn.save{
+  position: absolute; top: 10px; right: 10px;
+}
+
 /* Body de card */
 .product-card .body, .products-grid .card .body{ padding:14px 14px 16px; display:grid; gap:8px; }
 .product-card h4, .products-grid .card h4{
@@ -1085,4 +1091,137 @@ transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
 .camisetas-page #gridCamisetas{
   padding-inline: var(--edge) !important;  /* igual que la toolbar */
   box-sizing: border-box;                  /* para que no desborde */
+}
+
+
+/* =============================
+   PROPHETIA — Wishlist (Mi selección)
+   ============================= */
+.wishlist-page .wl-layout{
+  max-width: 1640px;
+  margin-inline: auto;
+  padding-inline: var(--edge);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px,3vw,40px);
+}
+
+.wishlist-page .wl-hero.container{
+  padding-inline: 0; /* ya hereda del layout */
+}
+
+.wishlist-page .wl-title{
+  font-size: clamp(28px, 3vw, 40px);
+  letter-spacing: .02em;
+  margin: 0;
+}
+.wishlist-page .wl-sub{
+  margin: 6px 0 0;
+  opacity: .7;
+}
+
+/* Grid de guardados */
+.wishlist-page .wishlist-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: clamp(28px,3vw,48px);
+}
+
+/* Estado vacío elegante */
+.wishlist-page .wl-empty{
+  text-align: center;
+  padding: clamp(40px, 8vw, 120px) 0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,.04);
+}
+.wishlist-page .wl-empty-title{
+  font-size: clamp(22px, 2.2vw, 28px);
+  margin: 0 0 8px;
+}
+.wishlist-page .wl-empty-sub{
+  margin: 0 0 18px;
+  opacity: .7;
+}
+
+/* Reutilizamos estilos de .product-card del catálogo */
+.icon-btn.save{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:999px;
+  border:1px solid rgba(0,0,0,.08);
+  background:#fff; cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.icon-btn.save:hover{ transform: translateY(-2px); box-shadow:0 8px 18px rgba(0,0,0,.08); }
+.icon-btn.save.is-saved{ color:#111; background:#fff; border-color:#111; }
+.icon-btn.save svg{ display:block; }
+
+
+/* ===== Prophetia Heart — estilos finales ===== */
+:root{
+  --pp-red: #B01030;        /* rojo vino (reposo) */
+  --pp-red-on: #E00025;     /* rojo encendido (guardado) */
+}
+
+.card, .product-card{ position: relative; }
+
+.icon-btn.save{
+  position: absolute; top: 12px; right: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 999px;
+  background: #fff; border: 1px solid rgba(0,0,0,.10);
+  color: var(--pp-red);                 /* ♥ rojo en reposo */
+  cursor: pointer; z-index: 10;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, color .25s ease;
+}
+.icon-btn.save:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.10);
+}
+.icon-btn.save svg{ display:block; }
+
+/* Estado guardado: rojo encendido + latido corto */
+.icon-btn.save.is-saved{
+  color: var(--pp-red-on);              /* ♥ rojo más vivo */
+  border-color: currentColor;
+  animation: pp-heartbeat .22s ease-out;
+}
+
+/* Latido (respetando reduce motion) */
+@keyframes pp-heartbeat{
+  0%{ transform: scale(1); }
+  40%{ transform: scale(1.18); }
+  100%{ transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce){
+  .icon-btn.save.is-saved{ animation: none; }
+}
+
+/* Opcional: corazón relleno cuando está guardado */
+.icon-btn.save.is-saved path{
+  fill: currentColor;                   /* rellena el trazo */
+}
+/* ===== Prophetia — TOAST superior ===== */
+.pp-toast{
+  position: fixed; top: 0; left: 0; right: 0;
+  background: #000; color: #fff;
+  transform: translateY(-100%);
+  transition: transform .35s ease;
+  z-index: 9999;
+}
+.pp-toast.is-open{ transform: translateY(0); }
+.pp-toast__inner{
+  max-width: 1640px; margin: 0 auto;
+  padding: 10px var(--edge);         /* usa tu mismo borde de header */
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.pp-toast__cta{
+  display:inline-flex; align-items:center; justify-content:center;
+  height: 32px; padding: 0 14px; border-radius: 999px;
+  background: #fff; color: #111; text-decoration: none; font-weight: 600;
+}
+@media (max-width: 640px){
+  .pp-toast__inner{ padding: 10px 16px; }
 }

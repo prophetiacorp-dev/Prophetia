@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PROPHETIA · Camisetas</title>
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Tipografías: Playfair/Inter que usas, y Cinzel si la activas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="wishlist-page">
+  <!-- ====================================================
+       PARCIALES (Header/Footer) – los rellenas por JS (igual que camisetas.html)
+       ==================================================== -->
+  <div id="header"></div>
+
+  <main class="wl-layout">
+    <!-- ====== HERO / TÍTULO ====== -->
+    <section class="wl-hero container">
+      <h1 class="wl-title">Mi selección</h1>
+      <p class="wl-sub">Tienes <span id="wlCount">0</span> productos en tu selección</p>
+    </section>
+
+    <!-- ====== RESULTADOS ====== -->
+    <section class="wl-results">
+      <!-- Estado vacío -->
+      <div id="wlEmpty" class="wl-empty" hidden>
+        <p class="wl-empty-title">Tu selección está vacía</p>
+        <p class="wl-empty-sub">Explora el catálogo y añade tus favoritos.</p>
+        <a class="btn" href="camisetas.html">Ver camisetas</a>
+      </div>
+
+      <!-- Grid de guardados -->
+      <div id="gridWishlist" class="products-grid wishlist-grid"></div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <!-- ====== SCRIPTS ====== -->
+  <!-- Tu init de parciales/header/footer, igual que en camisetas.html -->
+  <script src="assets/js/header-init.js" defer></script>
+  <script src="assets/js/script.js" defer></script>
+
+  <!-- Wishlist render mínimo -->
+  <script>
+  (function(){
+    const KEY = 'pp_wishlist';       // usa la misma clave que tu sistema de favoritos (ajústala si ya tienes otra)
+    const grid = document.getElementById('gridWishlist');
+    const empty = document.getElementById('wlEmpty');
+    const count = document.getElementById('wlCount');
+
+    function load(){
+      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    function cardTpl(p){
+      /* p = { id, title, price, image, url } */
+      return `
+        <article class="product-card">
+          <a class="product-card__img" href="${p.url || '#'}" aria-label="${p.title}">
+            <img src="${p.image}" alt="${p.title}">
+          </a>
+          <div class="product-card__body">
+            <h3 class="product-card__title">${p.title}</h3>
+            ${p.price ? `<p class="product-card__price">${p.price}</p>` : ``}
+            <div class="product-card__actions">
+              <a class="btn ghost" href="${p.url || '#'}">Ver producto</a>
+              <button class="btn danger" data-remove="${p.id}">Quitar</button>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function render(){
+      const items = load();
+      count.textContent = items.length;
+      if(!items.length){
+        empty.hidden = false;
+        grid.innerHTML = '';
+        return;
+      }
+      empty.hidden = true;
+      grid.innerHTML = items.map(cardTpl).join('');
+      grid.addEventListener('click', (ev)=>{
+        const btn = ev.target.closest('[data-remove]');
+        if(!btn) return;
+        const id = btn.getAttribute('data-remove');
+        const next = load().filter(x => String(x.id) !== String(id));
+        localStorage.setItem(KEY, JSON.stringify(next));
+        render();
+      }, { once:false });
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+  })();
+  </script>
+</body>
+</html>

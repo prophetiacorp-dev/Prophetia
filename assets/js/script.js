@@ -182,7 +182,7 @@
       const meta  = [it.color, it.size].filter(Boolean).join(' · ');
       const metaHtml = meta ? `<div class="cart-item__meta">${meta}</div>` : '';
 
-      html += `
+      html  ` 
         <article class="cart-item" data-i="${i}" style="display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eee;">
           <div class="cart-item__thumb" style="width:72px;height:92px;border:1px solid #eee;border-radius:10px;overflow:hidden;background:#f7f7f7;">
             <img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover;">
@@ -289,4 +289,200 @@
 
   // Si mañana necesitas init de la home, puedes definir:
   window.ppInitHome = window.ppInitHome || function(){};
+})();
+
+
+/* =========================================================
+   PROPHETIA — Wishlist (guardar desde catálogo)
+   ========================================================= */
+(function(){
+  const KEY = 'pp_wishlist';
+
+  const load = () => {
+    try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+    catch { return []; }
+  };
+  const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+  const find = (id, arr) => arr.find(x => String(x.id) === String(id));
+
+  // Marca visual si ya está guardado
+  function syncSavedState() {
+    const list = load();
+    document.querySelectorAll('[data-save]').forEach(btn=>{
+      const id = btn.getAttribute('data-id');
+      const on = !!find(id, list);
+      btn.classList.toggle('is-saved', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.title = on ? 'En Mi selección' : 'Guardar en Mi selección';
+    });
+  }
+
+  // Delegación de clicks
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('[data-save]');
+    if(!btn) return;
+
+    const item = {
+      id    : btn.getAttribute('data-id'),
+      title : btn.getAttribute('data-title') || 'Producto Prophetia',
+      price : btn.getAttribute('data-price') || '',
+      image : btn.getAttribute('data-image') || 'assets/img/placeholder.png',
+      url   : btn.getAttribute('data-url')   || 'producto.html'
+    };
+
+    let list = load();
+    const hit = find(item.id, list);
+
+    if (hit) {
+      // Si ya existe, togglear: lo quitamos
+      list = list.filter(x => String(x.id) !== String(item.id));
+    } else {
+      list.push(item);
+    }
+
+    save(list);
+    syncSavedState();
+  });
+
+  // Sincroniza cuando el catálogo se pinta o cambia
+  window.addEventListener('partials:ready', syncSavedState);
+  document.addEventListener('DOMContentLoaded', syncSavedState);
+  const obs = new MutationObserver(syncSavedState);
+  const grid = document.getElementById('gridCamisetas');
+  if (grid) obs.observe(grid, { childList:true, subtree:true });
+})();
+
+
+(function addWishlistButtonsPostRender(){
+  function addButtons() {
+    const cards = document.querySelectorAll('#gridCamisetas .product-card');
+    cards.forEach(card=>{
+      if (card.querySelector('[data-save]')) return; // ya tiene botón
+      const id    = card.getAttribute('data-id') || crypto.randomUUID();
+      const title = card.querySelector('.product-card__title')?.textContent?.trim() || 'Producto Prophetia';
+      const img   = card.querySelector('img')?.getAttribute('src') || 'assets/img/placeholder.png';
+      const url   = card.querySelector('a')?.getAttribute('href') || 'producto.html';
+
+      const btn = document.createElement('button');
+      btn.className = 'icon-btn save';
+      btn.setAttribute('data-save','');
+      btn.setAttribute('data-id', id);
+      btn.setAttribute('data-title', title);
+      btn.setAttribute('data-image', img);
+      btn.setAttribute('data-url', url);
+      btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.35-9.33-8.05A5.5 5.5 0 1 1 12 6.2a5.5 5.5 0 1 1 9.33 6.75C19 16.65 12 21 12 21z" fill="currentColor"/></svg>';
+
+      (card.querySelector('.product-card__actions') || card).appendChild(btn);
+    });
+    // dispara sincronización si el handler A está cargado
+    window.dispatchEvent(new Event('partials:ready'));
+  }
+  document.addEventListener('DOMContentLoaded', addButtons);
+  const grid = document.getElementById('gridCamisetas');
+  if (grid) new MutationObserver(addButtons).observe(grid, { childList:true, subtree:true });
+})();
+
+
+/* ===== Wishlist: botón ❤️ por card + handler ===== */
+(function(){
+  const KEY = 'pp_wishlist';
+  const grid = document.getElementById('gridCamisetas');
+
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; } };
+  const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+  const exists = (id, arr) => arr.some(x => String(x.id) === String(id));
+
+  function makeBtn(data){
+    const btn = document.createElement('button');
+    btn.className = 'icon-btn save';
+    btn.setAttribute('data-save','');
+    for (const [k,v] of Object.entries(data)) btn.setAttribute('data-'+k, v||'');
+    btn.innerHTML = btn.innerHTML = `
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+     stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M3 10.5c0-2.6 2-4.5 4.5-4.5 1.6 0 3 .9 4 2 1-1.1 2.4-2 4-2 2.5 0 4.5 1.9 4.5 4.5 0 4.4-8.5 9.5-8.5 9.5S3 14.9 3 10.5Z"/>
+</svg>`;
+
+    return btn;
+  }
+
+  function injectButtons(){
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.card');
+
+    cards.forEach(card=>{
+      if (card.querySelector('[data-save]')) return;
+
+      // Datos básicos desde la card
+      const id    = card.getAttribute('data-id') || crypto.randomUUID();
+      const title = card.querySelector('.product-card__title, h4')?.textContent?.trim() || 'Producto Prophetia';
+      const image = card.querySelector('img')?.getAttribute('src') || 'assets/img/placeholder.png';
+      const url   = card.querySelector('a')?.getAttribute('href') || 'producto.html';
+
+      // asegura posicionamiento
+      if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+
+      const btn = makeBtn({ id, title, image, url });
+      // si tienes .img-wrap, colócalo dentro para que quede sobre la imagen
+      (card.querySelector('.img-wrap') || card).appendChild(btn);
+    });
+    syncState();
+  }
+
+  function syncState(){
+    const list = load();
+    document.querySelectorAll('[data-save]').forEach(btn=>{
+      const on = exists(btn.getAttribute('data-id'), list);
+      btn.classList.toggle('is-saved', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.title = on ? 'En Mi selección' : 'Guardar en Mi selección';
+    });
+  }
+
+  // Toggle guardar/quitar
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('[data-save]');
+    if (!btn) return;
+    const item = {
+      id: btn.getAttribute('data-id'),
+      title: btn.getAttribute('data-title') || 'Producto Prophetia',
+      price: btn.getAttribute('data-price') || '',
+      image: btn.getAttribute('data-image') || 'assets/img/placeholder.png',
+      url: btn.getAttribute('data-url') || 'producto.html'
+    };
+    let list = load();
+    if (exists(item.id, list)) list = list.filter(x => String(x.id) !== String(item.id));
+    else list.push(item);
+    save(list);
+    syncState();
+  });
+
+  // Observa cuando ppInitCatalog termine de inyectar
+  const obs = new MutationObserver(injectButtons);
+  if (grid) obs.observe(grid, { childList:true, subtree:true });
+  document.addEventListener('DOMContentLoaded', injectButtons);
+  window.addEventListener('partials:ready', injectButtons);
+})();
+/* ===== Prophetia — Toast helper ===== */
+(function(){
+  const TOAST_TIME = 2600; // ms visible
+  let hideTimer = null;
+
+  window.ppToast = function(msg = 'Añadido a artículos guardados', actionHref = 'wishlist.html'){
+    const box = document.getElementById('ppToast');
+    if(!box) return; // si no existe, salimos sin romper nada
+
+    box.hidden = false;
+    box.querySelector('#ppToastMsg').textContent = msg;
+    box.querySelector('#ppToastAction').setAttribute('href', actionHref);
+
+    // muestra
+    box.classList.add('is-open');
+
+    // rearmar temporizador
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{
+      box.classList.remove('is-open');
+    }, TOAST_TIME);
+  };
 })();

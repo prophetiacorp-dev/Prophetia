@@ -210,3 +210,8 @@ const audioPanel = $('#ppAudioPanel');
   /* ---------- Mejora: evitar que el buscador tape iconos (solo UI ya lo resuelve con CSS) ---------- */
   // Sin lógica adicional necesaria: el CSS reducido la anchura con media-queries.
 })();
+
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('#ppSavedBtn');
+  if(btn){ location.href = 'wishlist.html'; }
+});
