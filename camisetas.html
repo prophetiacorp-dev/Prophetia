@@ -3,103 +3,426 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Prophetia · Camisetas</title>
+  <title>PROPHETIA · Camisetas</title>
+
+  <!-- CSS principal -->
   <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Fuentes elegantes para títulos -->
+
+  <!-- Tipografías: Playfair/Inter que usas, y Cinzel si la activas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Libre+Baskerville:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
 
- <div id="header"></div>
+<body class="camisetas-page">
+  <!-- =========================================================
+       PARCIALES (Header/Footer) – los rellenamos por JS abajo
+       ========================================================= -->
+  <div id="header"></div>
 
-  <!-- ====== BREADCRUMB / H2 de sección ====== -->
-   <section class="brand-hero brand-hero--tight">
-    <h1 class="h2" style="text-align:center; font-family:'Libre Baskerville',serif; font-weight:700;">Camisetas</h1>
-  </section>
+<!-- ======================= FRANJA DEL LOGO ======================= -->
+<div class="brand-band">
+  <div class="container">
+    <a class="page-logo" href="index.html" aria-label="Inicio Prophetia">
+      <img src="assets/img/logo/propnegro.png" alt="PROPHETIA">
+    </a>
+  </div>
+</div>
+<!-- =============================================================== -->
 
-  <!-- ====== LAYOUT: filtros | grid | categorías ====== -->
+
+  <!-- =========================================================
+       LAYOUT de categoría: filtros | resultados | categorías
+       ========================================================= -->
   <main class="cat-layout">
-    <!-- Filtros (izquierda) -->
-    <aside class="cat-filters">
-      <h3>Filtros</h3>
 
-      <label class="chip-toggle"><input id="onlyStock" type="checkbox"> En stock</label>
+    <!-- ===================== Filtros (columna izquierda) ===================== -->
 
-      <div class="chip-group">
-        <h4>Tiro / Fit</h4>
-        <button class="chip chip-active" data-fit="all">Todos</button>
-        <button class="chip" data-fit="oversized">Oversized</button>
-        <button class="chip" data-fit="regular">Regular</button>
-      </div>
+
+      
     </aside>
 
-    <!-- Resultados (centro) -->
+    <!-- ===================== Resultados (centro) ===================== -->
     <section class="cat-results">
-      <div class="results-bar">
-        <span class="results-title">Ordenar por</span>
-        <select id="orderSelect" class="order-select" aria-label="Ordenar">
-          <option value="relevancia">Relevancia</option>
-          <option value="precio-asc">Precio: menor a mayor</option>
-          <option value="precio-desc">Precio: mayor a menor</option>
-          <option value="nuevo">Novedad</option>
-        </select>
-      </div>
+<!-- ======= TOOLBAR de categoría: Filtros + Tiro/Fit + Ordenar por + En stock ======= -->
+<div class="cat-toolbar container">
+  <div class="toolbar-left">
+    <button class="btn ghost" type="button" data-filters-open>Filtros</button>
+    <a href="#" class="pill pill--active">Todos</a>
+    <a href="#" class="pill">Oversized</a>
+    <a href="#" class="pill">Regular</a>
+  </div>
 
-      <!-- Grid (vista “Loewe” catálogo) -->
+  <div class="toolbar-right">
+    <div class="sort-wrap">
+      <button class="sort-label" type="button" aria-hidden="true" tabindex="-1">Ordenar por</button>
+      <select id="sortSelect" aria-label="Ordenar por">
+        <option value="relevance" selected>Relevancia</option>
+        <option value="price_asc">Precio: menor a mayor</option>
+        <option value="price_desc">Precio: mayor a menor</option>
+        <option value="newest">Novedades</option>
+      </select>
+    </div>
+
+    <label class="stock-toggle">
+      <input type="checkbox" id="stockOnly" />
+      <span>En stock</span>
+    </label>
+  </div>
+</div>
+
+<!-- ======= FIN TOOLBAR ======= -->
+
+
+      <!-- ---------------------------------------------------------
+           OVERLAY + DRAWER de filtros (colgando del <body>)
+           * Añadimos los data-attributes:
+             - data-filters-overlay en el overlay
+             - data-filters-drawer  en el aside
+             - data-filters-close   en la X
+           --------------------------------------------------------- -->
+
+      <!-- Overlay: clic fuera cierra -->
+     <div class="filters-overlay" hidden data-filters-overlay></div>
+
+      <!-- Drawer lateral derecho -->
+      <aside class="filters-drawer"
+             hidden
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="filtersTitle"
+             id="filtersDrawer"
+             data-filters-drawer>
+
+        <header class="filters-head">
+          <h3 id="filtersTitle">Filtros</h3>
+
+          <!-- Botón X que CIERRA -->
+          <button class="filters-close"
+                  type="button"
+                  aria-label="Cerrar filtros"
+                  data-filters-close>
+            ✕
+          </button>
+        </header>
+
+        <!-- Tabs (Color / Talla) -->
+        <nav class="filters-tabs" role="tablist" aria-label="Tipos de filtro">
+          <button class="filters-tab active"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="tabColors"
+                  id="tabColorsBtn"
+                  type="button">
+            Color
+          </button>
+
+          <button class="filters-tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="tabSizes"
+                  id="tabSizesBtn"
+                  type="button">
+            Talla
+          </button>
+        </nav>
+
+        <!-- Panel: COLORES -->
+        <section class="filters-panel"
+                 id="tabColors"
+                 role="tabpanel"
+                 aria-labelledby="tabColorsBtn">
+          <ul class="filters-list colors">
+            <!-- data-count-for = clave normalizada (coincidirá con data-colors de las cards) -->
+            <li>
+  <label>
+    <input type="checkbox" value="beige">
+    <span class="swatch splash" style="--sw:#E8D9C7"></span>
+    Beige <span class="count" data-count-for="beige">–</span>
+  </label>
+</li>
+  <li>
+  <label>
+    <input type="checkbox" value="Marrón">
+    <span class="swatch splash" style="--sw:#E8D9C7"></span>
+    Marrón<span class="count" data-count-for="Marrón">–</span>
+  </label>
+</li>
+            <li><label><span class="swatch" style="--sw:#4CAF50"></span><input type="checkbox" value="verde"> Verde <span class="count" data-count-for="verde">–</span></label></li>
+            <li><label><span class="swatch" style="--sw:#1E66D0"></span><input type="checkbox" value="azul"> Azul <span class="count" data-count-for="azul">–</span></label></li>
+            <li><label><span class="swatch" style="--sw:#111"></span><input type="checkbox" value="negro"> Negro <span class="count" data-count-for="negro">–</span></label></li>
+            <li><label><span class="swatch" style="--sw:#D32F2F"></span><input type="checkbox" value="rojo"> Rojo <span class="count" data-count-for="rojo">–</span></label></li>
+            <li><label><span class="swatch" style="--sw:#9C27B0"></span><input type="checkbox" value="morado"> Morado <span class="count" data-count-for="morado">–</span></label></li>
+            <li><label><span class="swatch" style="--sw:#FB6A2A"></span><input type="checkbox" value="naranja"> Naranja <span class="count" data-count-for="naranja">–</span></label></li>
+            <li><label><span class="swatch" style="--sw:#EEE"></span><input type="checkbox" value="blanco"> Blanco <span class="count" data-count-for="blanco">–</span></label></li>
+            <li><label><span class="swatch" style="--sw:#9E9E9E"></span><input type="checkbox" value="gris"> Gris <span class="count" data-count-for="gris">–</span></label></li>
+          </ul>
+        </section>
+
+        <!-- Panel: TALLAS -->
+        <section class="filters-panel hidden"
+                 id="tabSizes"
+                 role="tabpanel"
+                 aria-labelledby="tabSizesBtn">
+          <ul class="filters-list">
+            <!-- data-count-for = talla en MAYÚSCULAS; debe existir en data-sizes de las cards -->
+            <li><label><input type="checkbox" value="ONE SIZE"> ONE SIZE <span class="count" data-count-for="ONE SIZE">–</span></label></li>
+            <li><label><input type="checkbox" value="XXS"> XXS <span class="count" data-count-for="XXS">–</span></label></li>
+            <li><label><input type="checkbox" value="XS"> XS <span class="count" data-count-for="XS">–</span></label></li>
+            <li><label><input type="checkbox" value="S"> S <span class="count" data-count-for="S">–</span></label></li>
+            <li><label><input type="checkbox" value="M"> M <span class="count" data-count-for="M">–</span></label></li>
+            <li><label><input type="checkbox" value="L"> L <span class="count" data-count-for="L">–</span></label></li>
+            <li><label><input type="checkbox" value="XL"> XL <span class="count" data-count-for="XL">–</span></label></li>
+            <li><label><input type="checkbox" value="XXL"> XXL <span class="count" data-count-for="XXL">–</span></label></li>
+            <li><label><input type="checkbox" value="3XL"> 3XL <span class="count" data-count-for="3XL">–</span></label></li>
+            <li><label><input type="checkbox" value="4XL"> 4XL <span class="count" data-count-for="4XL">–</span></label></li>
+          </ul>
+        </section>
+
+        <!-- Pie del drawer -->
+        <footer class="filters-foot">
+          <button class="btn-pill" id="clearFilters" type="button">Limpiar</button>
+          <button class="btn-primary grow" id="applyFilters" type="button">
+            Ver <span id="resultsCount">0</span> resultados
+          </button>
+        </footer>
+      </aside>
+
+      <!-- ---------------------------------------------------------
+           GRID del catálogo (rellena ppInitCatalog desde JSON)
+           --------------------------------------------------------- -->
       <div class="products-grid catalog" id="gridCamisetas">
-        <!-- Tus tarjetas (pueden venir de script.js / catalog.json). Ejemplo estático mínimo: -->
         <!--
-        <article class="card">
-          <a class="img-wrap" href="producto.html?id=atlas">
-            <img src="assets/img/products/atlas-tee.jpg" alt="Atlas by Prophetia">
-          </a>
-          <h4>Atlas by Prophetia</h4>
-          <p class="collection">Myth Series</p>
-          <span class="price">€59,00</span>
-          <a href="producto.html?id=atlas" class="btn-primary">Ver</a>
-        </article>
+          Aquí se pintan las cards desde assets/data/catalog.json con
+          window.ppInitCatalog({ target:'#gridCamisetas', category:'camisetas' })
         -->
       </div>
     </section>
 
-    <!-- Categorías (derecha) -->
-    <aside class="cat-cats">
-      <h3>Categorías</h3>
-      <nav class="cat-list" aria-label="Categorías">
-      <a href="camisetas.html" class="active" aria-current="page">Camisetas</a>
+    <!-- ===================== Categorías (columna derecha) ===================== -->
+    
+  </main>
 
-               <a href="hoodies.html">Hoodies</a>
-
-      </nav>
-    </aside>
-    </main>
+  <!-- PARCIAL: footer -->
   <div id="footer"></div>
 
-  <!-- Carga de JS SIEMPRE fuera del footer/header, antes del script de inyección -->
-  <script src="assets/js/header-init.js"></script>
-  <script src="assets/js/script.js"></script>
+  <!-- =========================================================
+       SCRIPTS principales
+       ========================================================= -->
+  <script src="assets/js/header-init.js" defer></script>
+  <script src="assets/js/script.js" defer></script>
+  <!-- Si tienes cart.js aparte, cárgalo también:
+  <script src="assets/js/cart.js" defer></script>
+  -->
 
- 
-   <script>
+  <!-- =========================================================
+       Inyección de header/footer + init header + catálogo + carrito
+       (idéntico a index, con rutas relativas)
+       ========================================================= -->
+  <script>
     (async function injectHF(){
-      // Inyecta los parciales desde su carpeta real
-      const H = await fetch('assets/partials/header.html').then(r=>r.text());
-      const F = await fetch('assets/partials/footer.html').then(r=>r.text());
-      document.getElementById('header').innerHTML = H;
-      document.getElementById('footer').innerHTML = F;
+      try {
+        const [H, F] = await Promise.all([
+          fetch('assets/partials/header.html').then(r=>r.text()),
+          fetch('assets/partials/footer.html').then(r=>r.text())
+        ]);
 
-      // Inicializa el header (modal/cart/audio)
-      window.ppInitHeader && window.ppInitHeader();
+        const $H = document.getElementById('header');
+        const $F = document.getElementById('footer');
+        if ($H) $H.innerHTML = H;
+        if ($F) $F.innerHTML = F;
 
-      // Pinta el grid de camisetas con el catálogo
-      window.ppInitCatalog && window.ppInitCatalog({
-        target:'#gridCamisetas',
-        category:'camisetas'
-      });
+        // Inicializaciones del header (menú, auth, audio, etc.)
+        if (window.ppInitHeader) window.ppInitHeader();
+
+        // Carrito (si tienes ppCartInit)
+        if (window.ppCartInit) window.ppCartInit();
+
+        // Pinta grid desde catalog.json (solo camisetas)
+        if (window.ppInitCatalog) {
+          window.ppInitCatalog({
+            target: '#gridCamisetas',
+            category: 'camisetas'
+          });
+        }
+
+        // Evento de compatibilidad por si otros scripts escuchan
+        window.dispatchEvent(new CustomEvent('partials:ready'));
+      } catch(err){
+        console.error('Error inyectando parciales:', err);
+      }
     })();
   </script>
 
+  <!-- =========================================================
+       LÓGICA del Drawer de Filtros basada en data-attributes
+       (open/close + tabs + limpiar + contar resultados)
+       ========================================================= -->
+  <script>
+    (function initFiltersDrawer(){
+      const $  = (s, r=document)=> r.querySelector(s);
+      const $$ = (s, r=document)=> Array.from(r.querySelectorAll(s));
 
+      // Ganchos por data-attributes
+      const openBtn = $('[data-filters-open]');
+      const overlay = $('[data-filters-overlay]');
+      const drawer  = $('[data-filters-drawer]');
+      const closeBtn= $('[data-filters-close]');
+
+      if(!openBtn || !overlay || !drawer || !closeBtn){
+        // Si no existen, no interferimos.
+        return;
+      }
+
+      const body = document.body;
+
+      // ---- Abrir / cerrar ----
+      const open = () => {
+        drawer.hidden  = false;
+        overlay.hidden = false;
+        // fuerza reflow para que la transición 'open' funcione si tu CSS la usa
+        drawer.getBoundingClientRect(); overlay.getBoundingClientRect();
+        drawer.classList.add('open');
+        overlay.classList.add('open');
+        body.classList.add('no-scroll');
+        // foco accesible
+        closeBtn.focus();
+        document.addEventListener('keydown', onEsc);
+      };
+
+   const close = () => {
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  body.classList.remove('no-scroll');
+  document.removeEventListener('keydown', onEsc);
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    drawer.hidden  = true;
+    overlay.hidden = true;
+    drawer.removeEventListener('transitionend', finish);
+  };
+
+  // 1) Cierra al terminar la transición (camino normal)
+  drawer.addEventListener('transitionend', finish, { once: true });
+
+  // 2) Fallback por si la transición no se dispara (CSS deshabilitado, etc.)
+  setTimeout(finish, 350);
+
+  // Devuelve el foco al botón abrir
+  openBtn && openBtn.focus();
+};
+
+
+      const onEsc = (e) => { if (e.key === 'Escape') close(); };
+
+      openBtn.addEventListener('click', open);
+      closeBtn.addEventListener('click', close);
+      overlay.addEventListener('click', close);
+
+      // ---- Tabs Color / Talla ----
+      const tabBtnColors = $('#tabColorsBtn');
+      const tabBtnSizes  = $('#tabSizesBtn');
+      const panelColors  = $('#tabColors');
+      const panelSizes   = $('#tabSizes');
+
+      const setTab = (which) => {
+        const isColors = which === 'colors';
+        tabBtnColors?.classList.toggle('active', isColors);
+        tabBtnSizes?.classList.toggle('active', !isColors);
+        tabBtnColors?.setAttribute('aria-selected', String(isColors));
+        tabBtnSizes?.setAttribute('aria-selected', String(!isColors));
+        panelColors?.classList.toggle('hidden', !isColors);
+        panelSizes?.classList.toggle('hidden', isColors);
+      };
+
+      tabBtnColors?.addEventListener('click', ()=> setTab('colors'));
+      tabBtnSizes?.addEventListener('click',  ()=> setTab('sizes'));
+      setTab('colors'); // por defecto
+
+      // ---- Filtro funcional básico + contador de resultados ----
+      const resultsCountEl = $('#resultsCount');
+      const applyBtn  = $('#applyFilters');
+      const clearBtn  = $('#clearFilters');
+      const grid      = $('#gridCamisetas');
+
+      const norm = (s) => (s||'').toString().trim().toLowerCase();
+
+      function getCards(){
+        return $$('#gridCamisetas .card, #gridCamisetas .product-card');
+      }
+
+      function refreshCounts(){
+        const cards = getCards();
+        const colors = {};
+        const sizes  = {};
+        cards.forEach(card => {
+          // data-colors="negro, beige"  |  data-sizes="S,M,L"
+          const cList = (card.dataset.colors||'').split(',').map(norm).filter(Boolean);
+          const sList = (card.dataset.sizes||'').split(',').map(s=>s.trim().toUpperCase()).filter(Boolean);
+          cList.forEach(c => colors[c] = (colors[c]||0)+1);
+          sList.forEach(s => sizes[s]  = (sizes[s] ||0)+1);
+        });
+        // Pinta contadores
+        $$('#tabColors .count').forEach(el=>{
+          const key = el.dataset.countFor;
+          el.textContent = (key in colors) ? colors[key] : 0;
+        });
+        $$('#tabSizes .count').forEach(el=>{
+          const key = el.dataset.countFor;
+          el.textContent = (key in sizes) ? sizes[key] : 0;
+        });
+      }
+
+      function applyFiltersNow(){
+        const chosenColors = $$('#tabColors input[type="checkbox"]:checked').map(i=>norm(i.value));
+        const chosenSizes  = $$('#tabSizes  input[type="checkbox"]:checked').map(i=>i.value.trim().toUpperCase());
+        const cards = getCards();
+        let visible = 0;
+
+        cards.forEach(card=>{
+          const cColors = (card.dataset.colors||'').split(',').map(norm);
+          const cSizes  = (card.dataset.sizes||'').split(',').map(s=>s.trim().toUpperCase());
+          const passColor = chosenColors.length ? chosenColors.some(k=>cColors.includes(k)) : true;
+          const passSize  = chosenSizes.length  ? chosenSizes.some(k=>cSizes.includes(k))   : true;
+          const show = passColor && passSize;
+          card.classList.toggle('is-hidden', !show);
+          if (show) visible++;
+        });
+
+        if (resultsCountEl) resultsCountEl.textContent = visible;
+      }
+
+      // Botones del pie
+      applyBtn?.addEventListener('click', ()=> { applyFiltersNow(); close(); });
+      clearBtn?.addEventListener('click', ()=>{
+        drawer.querySelectorAll('input[type="checkbox"]').forEach(ch=> ch.checked=false);
+        applyFiltersNow();
+        refreshCounts();
+      });
+
+      // Actualiza en vivo la cifra del CTA al marcar
+      drawer.addEventListener('change', (e)=>{
+        if (e.target && e.target.matches('input[type="checkbox"]')) {
+          applyFiltersNow();
+        }
+      });
+
+      // Enlace “Ordenar por”: llevar el foco al select
+      $('#openSort')?.addEventListener('click', ()=> $('#orderSelect')?.focus());
+
+      // Primera carga: si el catálogo llega después, recontar
+      const obs = new MutationObserver(()=>{ refreshCounts(); applyFiltersNow(); });
+      if (grid) obs.observe(grid, { childList: true });
+
+      // Si ya hay tarjetas inyectadas, inicializa
+      refreshCounts(); applyFiltersNow();
+
+    })();
+  </script>
+
+  <!-- Footer parcial ya inyectado arriba -->
 </body>
 </html>

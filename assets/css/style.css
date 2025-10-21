@@ -16,9 +16,8 @@
   --shadow-md: 0 10px 24px rgba(0,0,0,.10);
   --shadow-lg: 0 24px 40px rgba(0,0,0,.16);
 
-  /* Tipografías */
-  --font-ui: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  --font-display: "Playfair Display", Georgia, "Times New Roman", Times, serif;
+
+
 
   /* Medidas */
   --container: 1220px;
@@ -76,14 +75,14 @@ dialog:not([open]){ display:none; }
 
 /* Fila única: IZQ (mega-menú)  ——  DCHA (acciones) */
 .pp-topbar{
-  height:56px;
+  height:90px;
   display:flex; align-items:center; justify-content:space-between;
   gap:16px;
 }
 
 /* IZQUIERDA — mega-menú (Mujer / Hombre / Colecciones) */
 .pp-left{
-  display:flex; align-items:center; gap:22px;
+  display:flex; align-items:center; gap:35px;
   font-weight:500;
 }
 .mega{ position:relative; }
@@ -105,11 +104,20 @@ dialog:not([open]){ display:none; }
 /* Buscador inline (línea negra) */
 .search-inline{ position:relative; display:flex; align-items:center; }
 .search-inline .search-input{
-  width: min(36vw, 340px);
+  width: clamp(180px, 32vw, 320px);
   border:0; border-bottom:2px solid #000;
   padding:8px 0; outline:none; background:transparent;
 }
 .search-inline .search-input::placeholder{ color:#444; opacity:.6; }
+
+
+/* === Offset horizontal del mega-menú (Mujer / Hombre / Colecciones) === */
+/* Cambia este valor para afinar la alineación con el logo del hero */
+
+
+/* Quitamos el padding por defecto del contenedor para no sumar dos márgenes */
+
+
 
 /* Logo como botón circular (abre modal auth) */
 .brand-compact{
@@ -145,7 +153,7 @@ dialog:not([open]){ display:none; }
    HERO
    ============================================================ */
 .hero{
-  padding:56px 0 32px;
+  padding:39.5px 0 32px;
   text-align:center;
 }
 .eyebrow{
@@ -433,45 +441,25 @@ small, .muted{ color:var(--muted); }
 
 
 /* --- Fix de layout para que NO salte a dos filas --- */
-.pp-topbar{
-  flex-wrap: nowrap;               /* fuerza una sola línea */
-}
+
 .pp-left, .pp-right{
   flex: 0 1 auto;                  /* no estirar, no encoger raro */
 }
 
 /* El buscador no puede crecer de más */
 .search-inline{ flex: 0 1 auto; }
-.search-inline .search-input{
-  width: clamp(180px, 32vw, 320px);  /* ancho elástico pero controlado */
-}
+
 
 /* Si quieres pegar el contenido más al borde izquierdo, reduce el padding del contenedor */
-.pp-header .container{
-  padding-left: 16px;
-  padding-right: 16px;
-}
+
 
 
 /* HEADER full-bleed (ocupa todo el ancho de la ventana) */
-.pp-header .container{
-  max-width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
-}
+
 
 /* Empuja los grupos a los extremos */
-.pp-topbar{
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: nowrap;
-}
-.pp-left{ flex: 0 0 auto; margin-right: auto; }  /* grupo izq pegado a la izquierda */
-.pp-right{ flex: 0 0 auto; margin-left: auto; }   /* grupo dcha pegado a la derecha */
 
-/* Controla el ancho del buscador para que no desplace nada */
-.search-inline .search-input{
-  width: clamp(180px, 32vw, 320px);
-}
+
 .icon-btn, .brand-compact {
   border: none;
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
@@ -499,115 +487,30 @@ small, .muted{ color:var(--muted); }
   margin: 0;
 }
 
-/* Alineación y altura tipo Loewe */
-.brand-band .container{
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  min-height: 92px;                 /* altura elegante (Loewe usa ~90–100px) */
-}
-
 /* Logo SVG Prophetia */
 .brand-band__img{
   display: block;
   height: 140px;
   width: auto;
   object-fit: contain;
-  margin-left: 20px;                /* espacio de aire lateral */
-  transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
+ margin-left: var(--edge, 24px);
+transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
   image-rendering: optimizeQuality;
 }
 
-/* Hero inmediato: elimina separación superior */
-.hero{
-  margin-top: 0;
-  padding-top: 40px; /* o 56px si quieres aire debajo del logo */
-}
 /* El contenedor del hero “recibe” al logo */
-.hero, .promo, #home_hero { position: relative; }
+.hero, .promo, #home_hero { position:relative; }
 
-/* Logo flotante tipo Loewe */
-.floating-logo{
-  position: absolute;
-  left: 24px;      /* borde izquierdo */
-  top: 72px;       /* distancia desde el top del hero */
-  z-index: 20;     /* por encima del vídeo/hero */
-  line-height: 0;
-  pointer-events: auto; /* clicable, si no quieres, pon none */
-}
 
-.floating-logo img{
-  height: clamp(96px, 12vw, 170px);  /* escala fluida como Loewe */
-  width: auto;
-  display: block;
-  object-fit: contain;
-  image-rendering: optimizeQuality;
-}
-
-/* Ajustes responsivos (Loewe lo reduce en móvil) */
+/* (Opcional) Si deseas mantener ajustes de móvil, adapta valores actuales: */
 @media (max-width: 900px){
-  .floating-logo{ top: 60px; left: 16px; }
-  .floating-logo img{ height: 76px; }
+  .floating-logo img{ height: clamp(80px, 16vw, 140px); }
 }
 @media (max-width: 600px){
-  .floating-logo{ top: 52px; left: 12px; }
-  .floating-logo img{ height: 58px; }
+  .floating-logo img{ height: clamp(60px, 20vw, 100px); }
 }
 
 
-
-/* ===== Logo flotante tipo Loewe ===== */
-.hero, #home_hero { position: relative; }
-
-.floating-logo{
-  position: absolute;
-  left: 24px;      /* separación desde el borde izquierdo */
-  top: 72px;       /* separación desde arriba */
-  z-index: 20;     /* encima del contenido */
-  line-height: 0;
-  pointer-events: auto;
-}
-
-.floating-logo img{
-  height: clamp(96px, 12vw, 170px);
-  width: auto;
-  display: block;
-  object-fit: contain;
-  image-rendering: optimizeQuality;
-}
-
-/* Responsivo */
-@media (max-width: 900px){
-  .floating-logo{ top: 60px; left: 16px; }
-  .floating-logo img{ height: 76px; }
-}
-@media (max-width: 600px){
-  .floating-logo{ top: 52px; left: 12px; }
-  .floating-logo img{ height: 58px; }
-}
-/* ===== HERO con vídeo full-bleed ===== */
-.hero, #home_hero { position: relative; }
-
-/* Contenedor que se “desborda” a ancho de viewport */
-/* .hero-video{
-  position: relative;
-  width: 100vw;              /* ancho total de la ventana */
- /*  left: 50%;
-  right: 50%;
-  margin-left: -50vw;        /* truco full-bleed */
-  /* height: clamp(260px, 56vw, 720px); /* 16:9 fluido */
-  /* overflow: hidden;
-  /* background: #000;          /* por si el video tarda */
-/*}
-
-/* El vídeo ocupa todo y recorta */
-/*.hero-video__media{
-  position: absolute; inset: 0;
-  width: 90%; height: 90%;
-  object-fit: cover;         /* recorte elegante */
-/*}
 
 /* Quitamos esquinas/sombra de la versión anterior */
 .promo, .video-wrap{
@@ -661,37 +564,11 @@ small, .muted{ color:var(--muted); }
 
 
 /* === LOGO flotante Prophetia sobre el vídeo === */
-.floating-logo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 20;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 22px 28px;             /* margen interior desde el borde del vídeo */
-}
 
-/* ===== HERO LOGO Prophetia — estilo Loewe ===== */
-.floating-logo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 20;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 0;                    /* sin margen interior */
-}
 
-.floating-logo img {
-  height: auto;
-  width: min(37vw, 800px);       /* escala proporcional al ancho de pantalla */
-  object-fit: contain;
-  filter: brightness(100%) contrast(105%);
-  opacity: 1;
-transform: translate(-0.9%, -38.7%); /* mueve 4% a la izquierda y mantiene altura */
-}
+.floating-logo{ position:absolute; left:-1px; top:17px; z-index:20; line-height:0; }
+.floating-logo img{ height: clamp(120px, 4vw, 170px); width:auto; display:block; }
+
 
 /* Responsivo — se ajusta en móvil */
 @media (max-width: 900px) {
@@ -707,3 +584,505 @@ transform: translate(-0.9%, -38.7%); /* mueve 4% a la izquierda y mantiene altur
 
 
 
+/* === Cart · estado vacío (UI) =================================== */
+.cart-empty {
+  display: grid;
+  place-items: center;
+  padding: 40px 16px 28px;
+  color: #111;
+  text-align: center;
+}
+.cart-empty__emblem {
+  width: 230px;
+  height: 96px;
+  margin-bottom: 12px;
+  opacity: .95;
+}
+.cart-empty__text {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Acordeón informativo (plazo, envíos, contacto) */
+.cart-info {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+}
+.cart-info .acc {
+  border-bottom: 1px solid var(--line);
+}
+.cart-info .acc__btn {
+  width: 100%;
+  padding: 16px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 500;
+  text-align: left;
+}
+.cart-info .acc__chev {
+  transition: transform .18s ease;
+}
+.cart-info .acc[open] .acc__chev {
+  transform: rotate(90deg);
+}
+.cart-info .acc__panel {
+  padding: 0 14px 14px;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ===============================
+   LOGO PROPHETIA (Camisetas)
+   Estilo idéntico al .floating-logo del index
+   =============================== */
+
+
+
+
+/* ===== Ajuste de posición de los filtros bajo el logo ===== */
+.camisetas-page .cat-filters {
+  margin-top: clamp(310px, 88vw, 120px); /* lo baja por debajo del logo */
+  padding-left: clamp(12px, 3vw, 48px); /* lo alinea visualmente con el logo */
+}
+
+/* Opcional: si quieres que las tarjetas también bajen igual */
+.camisetas-page .cat-results {
+  margin-top: clamp(20px, 5vw, 80px);
+}
+
+
+/* ====== Barra superior ====== */
+
+.filters-toggle, .sort-toggle{
+  font: 500 15px/1 var(--font-ui, "Inter", system-ui);
+  padding:10px 14px; border:1px solid var(--line, #e5e7eb);
+  border-radius:999px; background:#fff; cursor:pointer;
+}
+.sort-inline{ display:flex; align-items:center; gap:12px; }
+.order-select{ padding:8px 10px; border:1px solid var(--line); border-radius:10px; }
+
+/* ====== Drawer ====== */
+.filters-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease;
+  z-index: 1190;
+}
+.filters-overlay.open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.filters-drawer{
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(520px, 92vw);
+  background: #fff;
+  border-left: 1px solid var(--line, #eee);
+  box-shadow: -18px 0 40px rgba(0,0,0,.18);
+  transform: translateX(100%);                 /* << fuera de pantalla */
+  transition: transform .28s ease;             /* << transición correcta */
+  will-change: transform;
+  z-index: 1210;
+}
+.filters-drawer.open{
+  transform: translateX(0);                    /* << visible */
+}
+
+
+
+
+.filters-head{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--line,#eee); }
+.filters-close{ width:36px; height:36px; border:1px solid var(--line,#e5e7eb); border-radius:999px; background:#fff; cursor:pointer; }
+
+.filters-tabs{ display:flex; gap:12px; padding:14px 18px 0; }
+.filters-tab{ border:0; background:transparent; padding:10px 12px; border-bottom:2px solid transparent; cursor:pointer; }
+.filters-tab.active{ border-color:#111; font-weight:700; }
+
+.filters-panel{ padding:10px 18px 18px; overflow:auto; }
+.filters-panel.hidden{ display:none; }
+
+.filters-list{ list-style:none; padding:0; margin:6px 0 0; display:grid; gap:12px; grid-template-columns:repeat(2, minmax(0,1fr)); }
+.filters-list label{ display:flex; align-items:center; gap:10px; cursor:pointer; }
+.filters-list input[type="checkbox"]{ width:18px; height:18px; }
+.filters-list .count{ margin-left:auto; color:#666; }
+
+.filters-list.colors .swatch{
+  width:16px; height:16px; flex:0 0 16px; border-radius:3px; border:1px solid #d0d0d0; background:var(--sw, #ccc);
+}
+
+.filters-foot{ margin-top:auto; padding:12px 18px 16px; display:flex; gap:10px; align-items:center; }
+.btn-pill{ padding:10px 14px; border-radius:999px; border:1px solid var(--line,#e5e7eb); background:#fff; cursor:pointer; }
+.btn-primary{ padding:12px 18px; border-radius:999px; background:#111; color:#fff; border:0; cursor:pointer; }
+.grow{ flex:1; }
+
+/* Ocultat tarjetas filtradas */
+.card.is-hidden{ display:none !important; }
+
+
+
+/* =======================
+   Barra superior resultados
+   ======================= */
+.results-bar{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;          /* permite 2 filas cuando haga falta */
+  padding:8px 0;
+}
+
+/* Orden visual dentro de la barra */
+.results-bar .filters-toggle{ order: 1; }
+
+.results-bar .sort-inline{
+  order: 2;
+  margin-left:auto;        /* empuja el bloque de ordenar a la derecha */
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.results-bar .stock-inline{
+  order: 3;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+}
+
+/* Tiro/Fit a una segunda línea ocupando todo el ancho */
+.results-bar .chip-group{
+  order: 4;
+  flex-basis:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:6px;
+}
+
+/* Detalles visuales (puedes ajustar a tu gusto) */
+.results-bar .sort-toggle{
+  background:transparent;
+  border:0;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--line, #e5e5e5);
+  cursor:pointer;
+}
+.results-bar .order-select{
+  border:1px solid var(--line, #e5e5e5);
+  border-radius:12px;
+  padding:8px 10px;
+  background:#fff;
+}
+.results-bar .chip-toggle input{
+  accent-color:#111;
+}
+
+/* Evitar solapes si el logo/hero tiene pointer-events */
+.page-logo { pointer-events:auto; }
+/* ===== Toolbar de categoría (camisetas) ===== */
+
+
+.toolbar-left,
+.toolbar-right{
+  display:flex;
+  align-items:center;
+  gap: clamp(10px, 2vw, 22px);
+}
+
+
+/* Bloque Fit */
+.toolbar-fit{
+  display:flex; align-items:center; gap:10px;
+}
+.fit-label{ font-weight:600; }
+.fit-pills{
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:6px 10px; border:1px solid var(--line);
+  border-radius:999px; background:#fff; color:inherit; text-decoration:none;
+}
+.pill--active{ background:#111; color:#fff; border-color:#111; }
+
+/* Ordenar por */
+.sort-wrap{
+  display:flex; align-items:center; gap:8px;
+}
+.sort-label{ 
+  border:0; background:transparent; color:inherit; 
+  opacity:.75; cursor:default; padding:0; 
+}
+
+/* Select de ordenar */
+#sortSelect{
+  min-width: 180px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:#fff; color:inherit;
+}
+
+/* En stock */
+.stock-toggle{
+  display:inline-flex; align-items:center; gap:8px; 
+  user-select:none; cursor:pointer;
+}
+.stock-toggle input{ transform: translateY(1px); }
+
+/* Responsive: si no cabe, que caiga a dos líneas */
+@media (max-width: 920px){
+  .cat-toolbar{
+    flex-wrap:wrap;
+  }
+  .toolbar-right{
+    margin-left:auto;
+  }
+}
+@media (max-width: 620px){
+  .toolbar-right{
+    width:100%;
+    justify-content:flex-end;
+  }
+  .toolbar-left{
+    width:100%;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+}
+/* === Alinear la barra de filtros con el header === */
+
+
+/* Alturas base de header y franja del logo */
+/* === Alto del header y respiro del logo (estilo Loewe) === */
+
+
+
+  /* === Alineación única de borde izquierdo (header / logo / filtros) === */
+:root{
+  /* Borde izquierdo real del header. Ajusta a tu gusto: 16, 20, 24… */
+  --edge: 24px;
+
+  /* Compensa la “sobresalida” del glifo a la izquierda (óptico) */
+  --logo-optical-fix: -6px; /* -3 a -8px suele ser el rango correcto */
+}
+
+
+
+
+
+/* === Alinear exactamente la barra de filtros con el header/LOGO === */
+
+
+/* === FINAL OVERRIDE — Alinear logo + barra de filtros al mismo borde del header === */
+
+/* Borde izquierdo único (mismo que usa tu header) */
+
+
+
+
+/* BARRA de filtros: mismo borde que el header y SIN sticky */
+
+
+/* Si dentro de cat-toolbar hay una .results-bar, que no sume padding extra */
+.cat-toolbar .results-bar{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* No permitas márgenes accidentales en el botón Filtros */
+.cat-toolbar .filters-toggle{ margin-left: 0 !important; }
+
+
+/* === Ajuste óptico del botón Filtros (chip ghost) ================== */
+/* 1) Misma familia de reglas, da igual si usas .filters-toggle o .btn.ghost */
+.cat-toolbar .filters-toggle,
+.cat-toolbar .btn.ghost{
+  /* Alturas cómodas y borde fino */
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  line-height: 1;
+
+  /* Horizontal: mantenemos 14 a la dcha, reducimos a 10 a la izda para “pegarlo” al borde */
+  padding: 8px 14px 8px 10px;  /* top/right/bottom/left */
+
+  /* Pequeño empuje negativo para compensar el 1px del borde y el redondeo */
+  margin-left: -2px;           /* prueba -1px / -2px / -3px según tu ojo */
+}
+
+/* Si tu HTML usa .btn.ghost dentro de .toolbar-left, garantizamos que no haya margen previo */
+.cat-toolbar .toolbar-left > .btn.ghost,
+.cat-toolbar .toolbar-left > .filters-toggle{
+  margin-left: +3px;
+}
+
+/* La barra sigue alineada al mismo borde del header */
+:root{ --edge: 24px; }                 /* tu borde izquierdo maestro */
+
+/* Asegura orden y separación en los grupos */
+.cat-toolbar .toolbar-left,
+.cat-toolbar .toolbar-right{ display:flex; align-items:center; gap:14px; }
+
+/* --- Botón Filtros sin “ghost” (texto limpio) ---------------- */
+.cat-toolbar .btn.ghost{
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;              /* sin relleno que lo desplace */
+  margin: 0 !important;
+  line-height: 1;
+  font-weight: 500;                   /* un poco más sólido */
+}
+
+/* Píldoras de Tiro/Fit con borde suave */
+.cat-toolbar .pill{
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px 10px;
+}
+.cat-toolbar .pill--active{ background:#111; color:#fff; border-color:#111; }
+/* ===== Swatches de color con “splash” ======================== */
+/* (funciona en Chrome, Edge, Safari, Firefox modernos) */
+
+/* Swatch estilo splash (mancha) */
+
+.filters-list.colors input[type="checkbox"]:checked ~ .splash{
+  outline:2px solid #111; outline-offset:1px; border-radius:2px;
+}
+
+
+
+/* Alinear grupos: izquierda = filtros+píldoras | derecha = ordenar+stock */
+
+.toolbar-left{ display:flex; align-items:center; gap:12px; }
+.toolbar-right{ display:flex; align-items:center; gap:12px; margin-left:auto; } /* ← empuja a la derecha */
+
+/* ========== BASES COMUNES (alineación/aire) ========== */
+/* ===== CAMISETAS: alineación menú + logo + toolbar (override final y único) ===== */
+:root{
+  --edge: 24px;                 /* borde izquierdo igual que el header */
+  --logo-gap: 6px;              /* aire mínimo entre menú y logo (ajusta 0–10px) */
+}
+
+/* Header: mismo borde a ambos lados */
+.pp-header .container{
+  max-width: 100%;
+  padding-inline: var(--edge) !important;
+}
+
+/* Banda del logo: no debe forzar altura ni empujar hacia abajo */
+.brand-band{ margin:0; padding:0 !important; border:0 !important; }
+.brand-band .container{
+  display:flex !important;
+  align-items:flex-start !important;   /* SUBE el logo */
+  min-height:0 !important;             /* anula cualquier 92px heredado */
+  padding:0 !important;
+}
+
+/* Logo grande en Camisetas: flujo normal, pegado al header */
+.camisetas-page .page-logo{
+  position:relative !important;
+  margin: var(--logo-gap) 0 0 var(--edge) !important;  /* top right bottom left */
+  line-height:0;
+}
+.camisetas-page .page-logo img{
+  width: min(37vw, 800px);
+  height:auto;
+  display:block;
+  object-fit:contain;
+  transform:none !important;           /* por si quedó algún transform suelto */
+}
+
+/* Toolbar debajo del logo: sin sticky y alineada al mismo borde */
+.cat-toolbar{
+  position:relative !important;
+  top:0 !important;
+  max-width:100% !important;
+  margin: clamp(8px, 1vw, 14px) 0 clamp(22px, 3vw, 40px) !important;
+  padding-inline: var(--edge) !important;
+  background:transparent !important;
+  display:flex; align-items:center; gap:16px;
+}
+
+/* La sección que envuelve toolbar + grid */
+.camisetas-page .cat-results{
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 3vw, 40px);
+}
+
+
+.cat-toolbar .toolbar-left{ display:flex; align-items:center; gap:12px; }
+.cat-toolbar .toolbar-right{ display:flex; align-items:center; gap:12px; margin-left:auto; }
+.cat-toolbar .btn.ghost{ border:0 !important; background:transparent !important; padding:0 !important; margin:0 !important; font-weight:500; line-height:1; }
+
+
+/* ===== Alinear page-logo exactamente como el menú ===== */
+:root{
+  --edge: 30px;                /* mismo padding izquierdo que el header */
+  --page-logo-offset-y: -51px; /* sube(-) / baja(+) el logo */
+  --page-logo-maxw: 820px;
+}
+
+/* 1) La franja del logo no centra nada */
+.camisetas-page .brand-band{
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:#fff;
+  text-align:left !important;          /* por si hay text-align heredado */
+}
+
+/* 2) El contenedor NO se centra y ocupa todo el ancho del viewport */
+.camisetas-page .brand-band > .container{
+  max-width: 100% !important;          /* fuera el ancho limitado */
+  padding-inline: var(--edge) !important;
+  margin-left: 0 !important;           /* anula auto-centering */
+  margin-right: 0 !important;
+  display: block !important;           /* simple y sin justify-content */
+  text-align: left !important;
+}
+
+/* ===== Movimiento fino solo del logo Prophetia ===== */
+.camisetas-page .page-logo {
+  display: inline-block;
+  line-height: 0;
+  margin: 0 !important;
+  transform: translate(
+    calc(-43px),             /* ← mueve a la izquierda (más negativo = más a la izquierda) */
+    var(--page-logo-offset-y)
+  ) !important;
+}
+
+
+/* 4) La imagen no hereda centrados */
+.camisetas-page .page-logo img{
+  width: min(40vw, var(--page-logo-maxw)) !important;
+  height: auto !important;
+  margin: 0 !important;                /* evita centrado por márgenes */
+  object-fit: contain;
+  
+}
+
+/* 5) La toolbar queda al mismo borde que el menú */
+.camisetas-page .cat-toolbar{
+  margin: clamp(8px, 1vw, 14px) 0 0 !important;
+  padding-inline: var(--edge) !important;
+  background: transparent !important;
+}
+
+/* ===== Camisetas: que el GRID respete el mismo borde que header/logo ===== */
+.camisetas-page #gridCamisetas{
+  padding-inline: var(--edge) !important;  /* igual que la toolbar */
+  box-sizing: border-box;                  /* para que no desborde */
+}

@@ -70,10 +70,10 @@
     "short": "Iconografía mediterránea con contraste gráfico y textura editorial."
   },
   {
-    "id": "like-gods",
+    "id": "Apolo-Lost in Athens",
     "type": "tshirt",
-    "title": "Like Gods",
-    "collection": "letters-from-the-soul",
+    "title": "Apolo-Lost in Athens by Prophetia",
+    "collection": "myth-series",
     "gender": "unisex",
     "fit": "regular",
     "price": 90,
@@ -89,6 +89,28 @@
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
     ],
     "short": "Tipografía manuscrita con tono poético y gesto seguro. Declaración íntima."
+  },
+
+  {
+    "id": "Like-Gods",
+    "type": "tshirt",
+    "title": "Like Gods by Prophetia",
+    "collection": "letters-from-the-soul",
+    "gender": "unisex",
+    "fit": "regular",
+    "price": 88,
+    "inStock": true,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "images": [
+      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+    ],
+    "short": "Carta interior en tinta editorial. Minimalismo con resonancia emocional."
   },
   {
     "id": "letter-for-self",
