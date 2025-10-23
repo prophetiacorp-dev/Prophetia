@@ -41,6 +41,22 @@ btnAuthLogo?.addEventListener('click', openAuth);
   const formRegister = $('#ppRegisterForm');              // <form id="ppRegisterForm">
   const tabLogin     = $('[data-auth-tab="login"]');      // botón pestaña Login
   const tabRegister  = $('[data-auth-tab="register"]');   // botón pestaña Register
+  function switchAuthTab(which) {
+  const isLogin = which === 'login';
+
+  // pestañas
+  tabLogin?.classList.toggle('active', isLogin);
+  tabRegister?.classList.toggle('active', !isLogin);
+
+  // formularios
+  formLogin?.classList.toggle('hidden', !isLogin);
+  formRegister?.classList.toggle('hidden', isLogin);
+
+  tabLogin?.addEventListener('click', () => switchAuthTab('login'));
+tabRegister?.addEventListener('click', () => switchAuthTab('register'));
+
+}
+
 
   function openAuth() {
     if (!authModal) return;
@@ -49,6 +65,8 @@ btnAuthLogo?.addEventListener('click', openAuth);
       authModal.showModal();
     } else {
       authModal.classList.remove('hidden');
+      // Al abrir desde el logo, queremos ver "Registrarme"
++  switchAuthTab('register');
       authModal.setAttribute('aria-hidden', 'false');
     }
     document.body.classList.add('no-scroll');
@@ -211,7 +229,67 @@ const audioPanel = $('#ppAudioPanel');
   // Sin lógica adicional necesaria: el CSS reducido la anchura con media-queries.
 })();
 
+
 document.addEventListener('click', (e)=>{
   const btn = e.target.closest('#ppSavedBtn');
   if(btn){ location.href = 'wishlist.html'; }
 });
+
+// === header-init.js ===
+window.ppInitHeader = function() {
+  const dlg         = document.getElementById('ppAuthModal');
+  const openBtn     = document.getElementById('ppAuthLogoBtn');
+  const tabLogin    = document.querySelector('[data-auth-tab="login"]');
+  const tabRegister = document.querySelector('[data-auth-tab="register"]');
+  const formLogin   = document.getElementById('ppLoginForm');
+  const formReg     = document.getElementById('ppRegisterForm');
+  const closeBtn    = document.querySelector('#ppAuthModal .modal-close,[data-close="auth"]');
+
+  if (!dlg || !openBtn) return; // si el header aún no está inyectado
+
+  function switchAuthTab(which){
+    const isLogin = which === 'login';
+    tabLogin && tabLogin.classList.toggle('active',  isLogin);
+    tabRegister && tabRegister.classList.toggle('active', !isLogin);
+    formLogin && formLogin.classList.toggle('hidden', !isLogin);
+    formReg   && formReg.classList.toggle('hidden',  isLogin);
+  }
+
+  function openAuthRegister(){
+    // Usa SIEMPRE el dialog del header inyectado
+    if (typeof dlg.showModal === 'function') dlg.showModal();
+    else dlg.classList.remove('hidden'); // fallback sin <dialog>
+    switchAuthTab('register');
+  }
+
+  openBtn.addEventListener('click', openAuthRegister);
+  tabLogin    && tabLogin.addEventListener('click',    () => switchAuthTab('login'));
+  tabRegister && tabRegister.addEventListener('click', () => switchAuthTab('register'));
+  closeBtn    && closeBtn.addEventListener('click',    () => dlg.close ? dlg.close() : dlg.classList.add('hidden'));
+
+  dlg.addEventListener('cancel', (e)=>{ e.preventDefault(); dlg.close && dlg.close(); }); // tecla Esc
+};
+// Cerrar con suave fallback si <dialog> no soporta .close()
+function ppCloseDialog(dlg){
+  try { dlg.close(); } catch(e){ dlg.setAttribute('open',''); dlg.removeAttribute('open'); }
+}
+
+window.ppInitHeader = function () {
+  const dlg = document.getElementById('ppAuthModal');
+  const openBtn = document.getElementById('ppAuthLogoBtn');
+  // ... (tu código de tabs switchAuthTab etc.)
+
+  if (openBtn && dlg) {
+    openBtn.addEventListener('click', () => {
+      dlg.showModal();
+      // si quieres que entre directamente en "Registrarme":
+      // switchAuthTab('register');
+    });
+  }
+
+  const closeBtn = dlg?.querySelector('.modal-close,[data-close="auth"]');
+  closeBtn && closeBtn.addEventListener('click', () => ppCloseDialog(dlg));
+
+  // Cerrar al pulsar ESC
+  dlg?.addEventListener('cancel', e => { e.preventDefault(); ppCloseDialog(dlg); });
+};

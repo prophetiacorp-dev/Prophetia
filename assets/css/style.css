@@ -265,22 +265,68 @@ dialog:not([open]){ display:none; }
 /* ============================================================
    Spotify chip + panel (arrastrable)
    ============================================================ */
+/* --- Spotify Prophetia Chip --- */
+/* === Spotify Prophetia Circular Button === */
+.pp-audio-toggle {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5000;
+
+  /* aspecto */
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  transition: all .25s ease;
+}
+
+.pp-audio-toggle:hover {
+  background: #C1A45F;
+  box-shadow: 0 6px 24px rgba(0,0,0,.3);
+}
+
+/* oculta el texto “Prophetia Playlist” dentro del chip */
+.pp-audio-toggle span {
+  display: none;
+}
+
+/* el icono SVG centrado y elegante */
+.pp-audio-toggle img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: invert(75%) sepia(15%) saturate(300%) hue-rotate(15deg) brightness(95%) contrast(90%);
+}
+.pp-audio-toggle {
+  border: 1.5px solid #C1A45F;
+}
+.pp-audio-toggle:hover {
+  background: #C1A45F;
+  border-color: #111;
+}
+:root{
+  --z-audio: 99999; /* por encima de TODO */
+}
+
+/* Botón circular */
 .pp-audio-toggle{
-  position:fixed; top:12px; right:12px;
-  z-index:var(--z-audio);
-  user-select:none; touch-action:none;
-  padding:8px 12px; border-radius:999px;
-  background:#111; color:#fff;
-  box-shadow:var(--shadow-md);
+  position: fixed;
+  z-index: var(--z-audio);
 }
-.pp-audio-toggle.dragging{ cursor:grabbing; transition:none !important; }
+
+/* Panel del reproductor */
 #ppAudioPanel{
-  position:fixed; right:12px; top:60px;
-  width:340px; max-width:calc(100vw - 24px);
-  background:#fff; border:1px solid var(--line);
-  border-radius:16px; box-shadow:var(--shadow-lg);
-  padding:10px; z-index:calc(var(--z-audio) - 1);
+  position: fixed;
+  z-index: calc(var(--z-audio) - 1);
 }
+
 
 /* ============================================================
    GRID / Tarjetas de producto rectangulares (listados)
@@ -1224,4 +1270,285 @@ transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
 }
 @media (max-width: 640px){
   .pp-toast__inner{ padding: 10px 16px; }
+}
+
+
+/* ——— Quitar la “tarjeta” interna del modal (que crea el recuadro feo) ——— */
+#ppAuthModal .modal-card,
+#ppAuthModal .modal-content,
+#ppAuthModal .modal-inner,
+#ppAuthModal .card,
+#ppAuthModal .panel-card {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Asegura que el panel es el propio dialog (sin margen ni sombra secundaria) */
+#ppAuthModal {
+  margin: 0 !important;
+  border: 0;
+  border-radius: 0;
+  width: min(448px, 92vw);
+  height: 100vh;
+  position: fixed;
+  inset: 0 0 0 auto;           /* pegado a la derecha */
+  background: #fff;
+  box-shadow: -18px 0 48px rgba(0,0,0,.08);
+  transform: translateX(100%);
+  transition: transform .35s ease;
+}
+#ppAuthModal[open]{ transform: translateX(0); }
+#ppAuthModal::backdrop{
+  background: rgba(0,0,0,.35);
+  backdrop-filter: saturate(120%) blur(2px);
+}
+
+/* Cabecera fija + cuerpo scrolleable (si existen esas clases) */
+#ppAuthModal .modal-head{
+  position: sticky; top: 0; z-index: 2;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 20px 24px; background:#fff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+#ppAuthModal .modal-body{
+  height: calc(100vh - 68px);
+  overflow: auto;
+  padding: 20px 24px 28px;
+}
+
+/* Estética limpia de inputs/botón (por si la “card” les metía estilos) */
+#ppAuthModal .auth-form{ display:grid; gap:16px; }
+#ppAuthModal input[type="email"],
+#ppAuthModal input[type="password"],
+#ppAuthModal input[type="text"]{
+  height:44px; border:1px solid #d9d9d9; border-radius:2px; padding:10px 12px;
+  background:#fff; outline:none;
+}
+#ppAuthModal input:focus{ border-color:#111; }
+#ppAuthModal .btn-primary{
+  height:44px; border:0; border-radius:2px; background:#111; color:#fff; font-weight:600;
+}
+/* === Ajuste final: el panel de login llega hasta el borde inferior === */
+#ppAuthModal {
+  height: 100dvh !important;    /* usa unidades dinámicas reales de viewport */
+  min-height: 100dvh !important;
+}
+
+#ppAuthModal .modal-body {
+  height: calc(100dvh - 68px) !important;  /* 68px ≈ altura cabecera */
+  overflow-y: auto;
+}
+/* =========================================================
+   AUTH PANEL • Fondo artístico Prophetia (tipo Loewe)
+   Archivo CSS: assets/css/style.css
+   Imagen:      assets/img/textures/fondoform.png
+   ========================================================= */
+
+/* Opción A) Fondo en TODO el panel lateral */
+#ppAuthModal{
+  /* Textura + velo blanco para legibilidad */
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,.92), rgba(255,255,255,0.42)),
+    url("../img/textures/fondoform.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* Ajustes finos de “silent luxury” */
+  filter: brightness(1.02) contrast(3.92);
+}
+
+/* Acento de nitidez en pantallas grandes */
+@media (min-width: 992px){
+  #ppAuthModal{
+    filter: brightness(1.04) contrast(.9);
+  }
+}
+
+/* Respeta accesibilidad: reduce efectos si el usuario lo pide */
+@media (prefers-reduced-transparency: reduce){
+  #ppAuthModal{
+    background:
+      linear-gradient(to bottom, #fff, #fff);
+    filter: none;
+  }
+}
+
+/* --------- ALTERNATIVA ---------
+   Opción B) Fondo SOLO detrás del formulario
+   (deja el panel liso y aplica la textura a .modal-body)
+----------------------------------*/
+/*
+#ppAuthModal .modal-body{
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,.94), rgba(255,255,255,.94)),
+    url("../img/textures/fondoform.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(1.02) contrast(.92);
+}
+@media (prefers-reduced-transparency: reduce){
+  #ppAuthModal .modal-body{
+    background: #fff;
+    filter: none;
+  }
+}
+*/
+/* ============================================================
+   Prophetia Tribe — POPUP
+   ============================================================ */
+:root{
+  --tribe-bg: #F3EFE7;
+  --tribe-ink: #111111;
+  --tribe-line: #E6E2D9;
+  --tribe-radius: 16px;
+  --tribe-shadow: 0 24px 60px rgba(0,0,0,.18);
+  --tribe-z: calc(var(--z-modal, 1200) + 50);
+}
+.no-scroll{ overflow:hidden; }
+
+/* Contenedor global (oculto por defecto) */
+.tribe-modal{
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: var(--tribe-z);
+}
+.tribe-modal.open{ opacity: 1; pointer-events: auto; }
+
+/* Backdrop */
+.tribe-backdrop{
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: saturate(115%) blur(2px);
+}
+
+/* Panel */
+.tribe-panel{
+  position: relative;
+  width: min(980px, 92vw);
+  background: var(--tribe-bg);
+  color: var(--tribe-ink);
+  border: 1px solid var(--tribe-line);
+  border-radius: var(--tribe-radius);
+  box-shadow: var(--tribe-shadow);
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  overflow: hidden;
+}
+.tribe-close{
+  position: absolute; top: 10px; right: 10px;
+  width: 36px; height: 36px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--tribe-line);
+  font-size: 20px; line-height: 1;
+  display: grid; place-items: center; cursor: pointer;
+}
+.tribe-left{
+  display: grid; place-items: center;
+  padding: clamp(18px, 4vw, 32px);
+  background: linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,0));
+}
+.tribe-emblem{
+  width: min(320px, 70%);
+  height: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(0,0,0,.06));
+}
+.tribe-right{
+  padding: clamp(20px, 4.2vw, 36px);
+  display: grid; align-content: start; gap: 14px;
+}
+.tribe-title{
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(22px, 2.6vw, 30px);
+  line-height: 1.15; margin: 0;
+}
+.tribe-sub{ margin: 4px 0 10px; opacity: .85; }
+
+/* Form */
+.tribe-form{ display: grid; gap: 10px; }
+.tribe-form input{
+  width: 100%; height: 44px;
+  padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--tribe-line); background: #fff; outline: none;
+}
+.tribe-form input:focus{ border-color: #111; }
+.tribe-check input[type="checkbox"]{
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--tribe-line);
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+}
+.tribe-check input[type="checkbox"]:checked::after{
+  content: "";
+  position: absolute;
+  top: 2px; left: 4px;
+  width: 4px; height: 8px;
+  border: solid #111;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+.tribe-dob{ display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 10px; }
+.tribe-dob input{ text-align: center; }
+
+.tribe-btn{
+  height: 46px; border-radius: 10px;
+  border: 0; background: #111; color: #fff;
+  font-weight: 700; letter-spacing: .02em; cursor: pointer;
+}
+.tribe-btn:hover{ transform: translateY(-1px); }
+
+/* Responsive */
+@media (max-width: 860px){
+  .tribe-panel{ grid-template-columns: 1fr; }
+  .tribe-left{ display: none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .tribe-modal{ transition: none; }
+}
+
+/* ===== Cookies (GDPR) ===== */
+:root{
+  --cc-bg:#F3EFE7; --cc-ink:#111; --cc-line:#E6E2D9;
+  --cc-z: 1500; --cc-radius:14px; --cc-shadow:0 18px 50px rgba(0,0,0,.18);
+}
+.cc-btn{height:42px;padding:0 14px;border-radius:10px;border:1px solid var(--cc-line);cursor:pointer}
+.cc-btn.cc-primary{background:#111;color:#fff;border-color:#111}
+.cc-btn.cc-outline{background:#fff}
+.cc-btn.cc-secondary{background:#fff}
+
+/* Banner bottom */
+.cc-banner{position:fixed;left:0;right:0;bottom:0;z-index:var(--cc-z);background:var(--cc-bg);border-top:1px solid var(--cc-line);box-shadow:0 -8px 30px rgba(0,0,0,.08)}
+.cc-inner{max-width:1200px;margin:auto;padding:16px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.cc-text{font-size:14px;line-height:1.45}
+.cc-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Modal */
+.cc-modal{position:fixed;inset:0;z-index:calc(var(--cc-z) + 1)}
+.cc-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
+.cc-panel{position:relative;background:var(--cc-bg);border:1px solid var(--cc-line);border-radius:var(--cc-radius);box-shadow:var(--cc-shadow);width:min(680px,92vw);margin:10vh auto;padding:22px}
+.cc-close{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:999px;border:1px solid var(--cc-line);background:#fff;cursor:pointer}
+.cc-title{margin:0 0 8px;font-size:22px}
+.cc-group{border-top:1px solid var(--cc-line);padding:12px 0}
+.cc-switch{display:flex;gap:10px;align-items:center;font-weight:600}
+.cc-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
+
+/* Hidden helpers */
+[hidden]{display:none!important}
+
+@media (max-width:860px){
+  .cc-inner{grid-template-columns:1fr}
 }

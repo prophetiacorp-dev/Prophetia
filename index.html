@@ -98,30 +98,6 @@
 
   </main>
 
-  <!-- Modal auth (tu bloque tal cual) -->
-  <div id="authModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Acceso">
-    <div class="modal-card">
-      <button class="modal-close" id="authClose" aria-label="Cerrar">✕</button>
-
-      <div class="tabs">
-        <button class="tab active" data-tab="login">Iniciar sesión</button>
-        <button class="tab" data-tab="register">Registrarme</button>
-      </div>
-
-      <form class="auth-form" id="formLogin">
-        <input type="email" placeholder="Email" required>
-        <input type="password" placeholder="Contraseña" required>
-        <button class="btn-primary" type="submit">Entrar</button>
-      </form>
-
-      <form class="auth-form hidden" id="formRegister">
-        <input type="text" placeholder="Nombre" required>
-        <input type="email" placeholder="Email" required>
-        <input type="password" placeholder="Contraseña" required>
-        <button class="btn-primary" type="submit">Crear cuenta</button>
-      </form>
-    </div>
-  </div>
   <!-- Footer inyectado -->
   <div id="footer"></div>
 
@@ -152,6 +128,8 @@
     <!-- Parciales + init -->
   <script src="assets/js/header-init.js" defer></script>
   <script src="assets/js/script.js"></script>
+<script src="assets/js/popup.js" defer></script>
+<script src="assets/js/cookies.js" defer></script>
 
   <!-- CARGA cart.js ANTES de llamar a ppCartInit -->
   <script src="assets/js/cart.js"></script>
@@ -159,6 +137,7 @@
   <script>
     (async function injectHF(){
       const H = await fetch('/assets/partials/header.html').then(r=>r.text());
+      window.ppInitAudio && window.ppInitAudio();
       const F = await fetch('/assets/partials/footer.html').then(r=>r.text());
       document.getElementById('header').innerHTML = H;
       document.getElementById('footer').innerHTML = F;
@@ -166,7 +145,7 @@
       // Inicializaciones que dependen del header inyectado:
       window.ppInitHeader && window.ppInitHeader();
       window.ppInitHome && window.ppInitHome();
-
+    window.ppInitAudio && window.ppInitAudio();
       // 🔔 Ahora cart.js ya está cargado: podemos enganchar los listeners
       if (window.ppCartInit) window.ppCartInit();
 
@@ -176,6 +155,103 @@
   </script>
 
 <!-- … 5 líneas DESPUÉS del bloque … -->
+<!-- ===== Prophetia Tribe — Private Access (POPUP) ===== -->
+<div id="tribeModal" class="tribe-modal" aria-hidden="true">
+  <div class="tribe-backdrop" data-close></div>
+
+  <section class="tribe-panel" role="dialog" aria-modal="true" aria-labelledby="tribeTitle">
+    <button class="tribe-close" type="button" aria-label="Cerrar" data-close>×</button>
+
+    <div class="tribe-left">
+      <img src="assets/img/logo/prophetia-emblem.png" alt="Prophetia Emblem" class="tribe-emblem" />
+    </div>
+
+    <div class="tribe-right">
+      <h2 id="tribeTitle" class="tribe-title">Prophetia Tribe – Private Access</h2>
+      <p class="tribe-sub">
+        Acceso anticipado por ser miembro de Prophetia.<br/>
+        Diseños exclusivos y más beneficios siendo parte de la tribe.
+      </p>
+
+      <form class="tribe-form" id="tribeForm" autocomplete="on">
+        <label class="sr-only" for="tribeName">Nombre</label>
+        <input id="tribeName" name="name" type="text" placeholder="Nombre" required>
+
+        <label class="sr-only" for="tribeEmail">Correo electrónico</label>
+        <input id="tribeEmail" name="email" type="email" placeholder="Correo electrónico" required>
+
+        <label class="tribe-check">
+          <input id="tribeOptIn" name="optin" type="checkbox">
+          <span>Email me news and offers</span>
+        </label>
+
+        <div class="tribe-dob">
+          <div><input id="dobMM" name="dobMM" inputmode="numeric" maxlength="2" placeholder="MM"></div>
+          <div><input id="dobDD" name="dobDD" inputmode="numeric" maxlength="2" placeholder="DD"></div>
+          <div><input id="dobYY" name="dobYY" inputmode="numeric" maxlength="4" placeholder="YYYY"></div>
+        </div>
+
+        <button class="tribe-btn" type="submit">UNIRME</button>
+      </form>
+    </div>
+  </section>
+</div>
+<!-- ===== /Prophetia Tribe — POPUP ===== -->
+<!-- ===== Cookies (GDPR) ===== -->
+<div id="cc-banner" class="cc-banner" aria-live="polite" hidden>
+  <div class="cc-inner">
+    <div class="cc-text">
+      Usamos cookies propias y de terceros para mejorar tu experiencia y analizar el uso.
+      Puedes aceptar todas, rechazarlas o configurar tus preferencias.
+      Lee nuestra <a href="legal_privacy.html" target="_blank" rel="noopener">política de privacidad</a>.
+    </div>
+    <div class="cc-actions">
+      <button class="cc-btn cc-secondary" data-cc="reject">Rechazar</button>
+      <button class="cc-btn cc-outline" data-cc="settings">Configurar</button>
+      <button class="cc-btn cc-primary" data-cc="accept">Aceptar todo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de preferencias -->
+<div id="cc-modal" class="cc-modal" aria-hidden="true" role="dialog" aria-labelledby="ccTitle" hidden>
+  <div class="cc-backdrop" data-cc="close"></div>
+  <section class="cc-panel">
+    <button class="cc-close" data-cc="close" aria-label="Cerrar">×</button>
+    <h3 id="ccTitle" class="cc-title">Preferencias de cookies</h3>
+
+    <div class="cc-group">
+      <label class="cc-switch">
+        <input type="checkbox" checked disabled>
+        <span>Necesarias (siempre activas)</span>
+      </label>
+      <small>Imprescindibles para el funcionamiento del sitio.</small>
+    </div>
+
+    <div class="cc-group">
+      <label class="cc-switch">
+        <input id="cc-analytics" type="checkbox">
+        <span>Analíticas</span>
+      </label>
+      <small>Nos ayudan a medir y mejorar (ej. Google Analytics).</small>
+    </div>
+
+    <div class="cc-group">
+      <label class="cc-switch">
+        <input id="cc-marketing" type="checkbox">
+        <span>Marketing</span>
+      </label>
+      <small>Personalización y publicidad.</small>
+    </div>
+
+    <div class="cc-foot">
+      <button class="cc-btn cc-secondary" data-cc="reject">Rechazar</button>
+      <button class="cc-btn cc-primary" data-cc="save">Guardar preferencias</button>
+    </div>
+  </section>
+</div>
+<!-- ===== /Cookies ===== -->
+
 
 </body>
 </html>

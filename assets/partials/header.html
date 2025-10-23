@@ -30,8 +30,9 @@
           <button class="mega-toggle" type="button">Colecciones ▾</button>
           <div class="mega-panel">
             <div class="mega-col">
-              <a href="colecciones.html#myth">Myth Series</a>
-              <a href="colecciones.html#letters">Letters from the Soul</a>
+              <a href="assets/collects/ms.html">Myth Series</a>
+ <a href="assets/collects/lfts.html">Letters From The Soul</a>
+              
             </div>
           </div>
         </div>
@@ -46,7 +47,7 @@
 
         <!-- logo que abre el modal de auth -->
         <button id="ppAuthLogoBtn" class="brand-compact" type="button" title="Iniciar sesión / registrarse" aria-haspopup="dialog" aria-controls="ppAuthModal">
-          <img src="assets/img/logo/prop.png" alt="Prophetia" />
+          <img src="assets/img/logo/emblem.svg" alt="Prophetia" />
         </button>
 
         <!-- guardados -->
@@ -67,6 +68,34 @@
     </div>
   </div>
 </header>
+<!-- ===== Prophetia Spotify Floating Button ===== -->
+<!-- ===== Prophetia Spotify Player (embed correcto) ===== -->
+<div id="ppAudioChip" class="pp-audio-toggle">
+  <img src="assets/icons/spo.svg" alt="Prophetia Playlist" height="20" />
+
+  <span>Prophetia Playlist</span>
+</div>
+
+<div id="ppAudioPanel" class="hidden" aria-hidden="true">
+  <iframe
+    style="border-radius:12px"
+    src="https://open.spotify.com/embed/playlist/3saExGHgNBNz9ZDxlUyYn2"
+    width="100%" height="152" frameborder="0"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
+    referrerpolicy="origin"
+    loading="lazy">
+  </iframe>
+
+  <!-- Respaldo claro por si el usuario quiere abrir completo -->
+  <p style="margin:8px 0 0; text-align:center;">
+    <a href="https://open.spotify.com/playlist/3saExGHgNBNz9ZDxlUyYn2"
+       target="_blank" rel="noopener" style="font-weight:600; text-decoration:none;">
+      Abrir en Spotify ↗
+    </a>
+  </p>
+</div>
+
 
 <!-- ===================== /HEADER ===================== -->
 
@@ -76,22 +105,55 @@
     <button class="modal-close" data-close="auth" aria-label="Cerrar">✕</button>
     <h3 id="authTitle" style="margin:0 0 6px;font-weight:700;">Bienvenido/a</h3>
     <div class="tabs">
-      <button class="tab active" data-auth-tab="login">Iniciar sesión</button>
-      <button class="tab" data-auth-tab="register">Registrarme</button>
+   <div class="tabs">
+  <button class="tab active" data-auth-tab="register">Iniciar sesión</button>
+  <button class="tab" data-auth-tab="login">Nuevos clientes</button>
+</div>
+
     </div>
 
-    <form id="ppLoginForm" class="auth-form">
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Contraseña" required />
-      <button class="btn-primary" type="submit">Entrar</button>
-    </form>
+ <!-- === LOGIN === -->
+<form id="ppLoginForm" class="auth-form">
+  <div class="form-group">
+    <label for="authEmail">Dirección de correo electrónico *</label>
+    <input id="authEmail" name="email" type="email" autocomplete="email" required>
+  </div>
+  <div class="form-group">
+    <label for="authPass">Contraseña *</label>
+    <input id="authPass" name="password" type="password" autocomplete="current-password" required>
+  </div>
 
-    <form id="ppRegisterForm" class="auth-form hidden">
-      <input type="text" placeholder="Nombre" required />
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Contraseña" required />
-      <button class="btn-primary" type="submit">Crear cuenta</button>
-    </form>
+  <p class="helper"><a href="#">¿Has olvidado tu contraseña?</a></p>
+
+  <button class="btn-primary" type="submit">Inicio de sesión</button>
+
+  <ul class="benefits">
+    <li>🖤 <span>Crea una lista de deseos y guarda los artículos</span></li>
+    <li>📦 <span>Gestiona tus pedidos y devoluciones</span></li>
+  </ul>
+</form>
+
+
+<!-- === REGISTRO === -->
+<form id="ppRegisterForm" class="auth-form hidden">
+  <div class="form-group">
+    <label for="regEmail">Correo electrónico *</label>
+    <input id="regEmail" name="email" type="email" autocomplete="email" required>
+  </div>
+  <div class="form-group">
+    <label for="regPass">Contraseña *</label>
+    <input id="regPass" name="password" type="password" autocomplete="new-password" required>
+  </div>
+
+  <button class="btn-primary" type="submit">Registrarme</button>
+
+  <ul class="benefits">
+    <li>🌿 <span>Acceso a colecciones exclusivas Prophetia</span></li>
+    <li>💎 <span>Historial de pedidos y ventajas de miembro</span></li>
+  </ul>
+</form>
+
+
   </div>
 </dialog>
 
@@ -110,10 +172,3 @@
     <button class="cart-checkout">Finalizar compra</button>
   </div>
 </aside>
-
-<!-- ====== Spotify chip + panel ====== -->
-<button class="pp-audio-toggle" id="ppAudioChip" type="button">♫ Prophetia</button>
-<section id="ppAudioPanel" class="hidden" aria-hidden="true">
-  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL?utm_source=generator"
-          width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-</section>

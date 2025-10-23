@@ -2,84 +2,105 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Collections — PROPHETIA</title>
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <!-- Tipografías -->
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PROPHETIA · Colecciones</title>
 
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body data-page="collections">
+
+<body class="collections-page">
+  <!-- Parcial: header (lo inyectamos por JS) -->
   <div id="header"></div>
 
-  <main class="container">
-    <header class="page-hero">
-      <h1>Collections</h1>
-      <p class="lede">Mitología mediterránea y diseño editorial de lujo silencioso.</p>
-    </header>
+  <!-- ======================= FRANJA DEL LOGO ======================= -->
+  <div class="brand-band">
+    <div class="container">
+      <a class="page-logo" href="index.html" aria-label="Inicio Prophetia">
+        <img src="assets/img/logo/propnegro.png" alt="PROPHETIA" />
+      </a>
+    </div>
+  </div>
+  <!-- =============================================================== -->
 
-    <!-- filtros -->
-    <section class="filters toolbar">
-      <div class="row">
-        <span class="lab">Fit:</span>
-        <button class="chip" data-k="fit" data-v="all">All</button>
-        <button class="chip" data-k="fit" data-v="oversized">Oversized</button>
-        <button class="chip" data-k="fit" data-v="regular">Regular</button>
+  <main class="section-gap">
+    <div class="container">
+      <!-- Grid 2 columnas: Myth Series / Letters From The Soul -->
+      <div class="tiles" style="grid-template-columns: repeat(2, minmax(0,1fr));">
+        <!-- MYTH SERIES -->
+        <a class="tile" href="assets/collects/ms.html" aria-label="Ver colección Myth Series">
+          <div class="tile-body">
+            <h3 class="tile-title">Myth Series</h3>
+            <p class="tile-sub">Arquetipos griegos, forja olímpica y lujo editorial.</p>
+          </div>
+        </a>
+
+        <!-- LETTERS FROM THE SOUL -->
+        <a class="tile" href="assets/collects/lfts.html" aria-label="Ver colección Letters From The Soul">
+          <div class="tile-body">
+            <h3 class="tile-title">Letters From The Soul</h3>
+            <p class="tile-sub">Manifiesto tipográfico sagrado. Silencio y proporción.</p>
+          </div>
+        </a>
       </div>
-
-      <div class="row">
-        <span class="lab">Género:</span>
-        <button class="chip" data-k="gender" data-v="all">All</button>
-        <button class="chip" data-k="gender" data-v="men">Men</button>
-        <button class="chip" data-k="gender" data-v="women">Women</button>
-        <button class="chip" data-k="gender" data-v="unisex">Unisex</button>
-      </div>
-
-      <div class="row">
-        <span class="lab">Colección:</span>
-        <button class="chip chip-active" data-k="collection" data-v="all">All</button>
-        <button class="chip" data-k="collection" data-v="myth-series">Myth Series</button>
-        <button class="chip" data-k="collection" data-v="letters-from-the-soul">Letters from the Soul</button>
-      </div>
-
-      <div class="row">
-        <label class="lab" style="display:flex;align-items:center;gap:8px;">
-          <input id="onlyStock" type="checkbox" /> En stock
-        </label>
-      </div>
-
-      <div class="row" style="margin-left:auto">
-        <span class="lab">Ordenar:</span>
-        <select id="orderSelect">
-          <option value="relevance">Relevancia</option>
-          <option value="price-asc">Precio ↑</option>
-          <option value="price-desc">Precio ↓</option>
-        </select>
-      </div>
-    </section>
-
-    <section class="grid products-grid" id="productsGrid"></section>
+    </div>
   </main>
 
+  <!-- Parcial: footer -->
   <div id="footer"></div>
-    <script src="assets/js/header-init.js"></script>
-  <script src="assets/js/script.js"></script>
 
-<section class="brand-hero brand-hero--tight">
-  <p class="brand-kicker">PROPHETIA</p>
-  <h1 class="h2" style="text-align:center;">Hoodies</h1>
-</section>
+  <!-- ====== CART: overlay + drawer (igual que index/camisetas) ====== -->
+  <div id="cartOverlay" class="cart-overlay" hidden></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Cesta">
+    <div class="cart-head">
+      <strong>Cesta · <span id="cartCount">0</span></strong>
+      <button id="cartClose" class="cart-close" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="cart-list" id="cartList"></div>
+    <div class="cart-foot">
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <strong id="cartSubtotal">0,00 €</strong>
+      </div>
+      <button class="cart-checkout" id="cartCheckout">Finalizar compra</button>
+    </div>
+  </aside>
 
-<aside class="cat-cats">
-  <h3>Categorías</h3>
-  <nav class="cat-list" aria-label="Categorías">
-    <a href="camisetas.html">Camisetas</a>
-    <a href="hoodies.html" class="active" aria-current="page">Hoodies</a>
-  </nav>
-</aside>
+  <!-- JS base -->
+  <script src="assets/js/header-init.js" defer></script>
+  <script src="assets/js/script.js" defer></script>
+  <script src="assets/js/cart.js"></script>
 
-<div class="products-grid catalog" id="gridHoodies"></div>
+  <!-- Inyección de parciales + init header + carrito -->
+  <script>
+    (async function injectHF(){
+      try{
+        const [H, F] = await Promise.all([
+          fetch('assets/partials/header.html').then(r=>r.text()),
+          fetch('assets/partials/footer.html').then(r=>r.text())
+        ]);
+        const $H = document.getElementById('header');
+        const $F = document.getElementById('footer');
+        if ($H) $H.innerHTML = H;
+        if ($F) $F.innerHTML = F;
 
+        // Header (menús, buscador, auth panel…)
+        window.ppInitHeader && window.ppInitHeader();
+
+        // Carrito
+        window.ppCartInit && window.ppCartInit();
+
+        // Evento de compatibilidad
+        window.dispatchEvent(new CustomEvent('partials:ready'));
+      }catch(err){
+        console.error('Error inyectando header/footer:', err);
+      }
+    })();
+  </script>
 </body>
 </html>

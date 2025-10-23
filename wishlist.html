@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PROPHETIA · Camisetas</title>
+  <title>PROPHETIA · Mi selección</title>
+
 
   <!-- CSS principal -->
   <link rel="stylesheet" href="assets/css/style.css">
@@ -18,7 +19,16 @@
        PARCIALES (Header/Footer) – los rellenas por JS (igual que camisetas.html)
        ==================================================== -->
   <div id="header"></div>
+ 
 
+<!-- ======================= FRANJA DEL LOGO ======================= -->
+<div class="brand-band">
+  <div class="container">
+    <a class="page-logo" href="index.html" aria-label="Inicio Prophetia">
+      <img src="assets/img/logo/propnegro.png" alt="PROPHETIA">
+    </a>
+  </div>
+</div>
   <main class="wl-layout">
     <!-- ====== HERO / TÍTULO ====== -->
     <section class="wl-hero container">
@@ -48,58 +58,53 @@
   <script src="assets/js/script.js" defer></script>
 
   <!-- Wishlist render mínimo -->
-  <script>
-  (function(){
-    const KEY = 'pp_wishlist';       // usa la misma clave que tu sistema de favoritos (ajústala si ya tienes otra)
-    const grid = document.getElementById('gridWishlist');
-    const empty = document.getElementById('wlEmpty');
-    const count = document.getElementById('wlCount');
+  <!-- Inyección de parciales + init header + carrito -->
+   <!-- ====== CART: overlay + drawer ====== -->
+<div id="cartOverlay" class="cart-overlay" hidden></div>
 
-    function load(){
-      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
-      catch { return []; }
+<aside id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Cesta">
+  <div class="cart-head">
+    <strong>Cesta · <span id="cartCount">0</span></strong>
+    <button id="cartClose" class="cart-close" aria-label="Cerrar">✕</button>
+  </div>
+
+  <div class="cart-list" id="cartList"></div>
+
+  <div class="cart-foot">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartSubtotal">0,00 €</strong>
+    </div>
+    <button class="cart-checkout" id="cartCheckout">Finalizar compra</button>
+  </div>
+</aside>
+
+<script>
+  (async function injectHF(){
+    try {
+      const [H, F] = await Promise.all([
+        fetch('assets/partials/header.html').then(r=>r.text()),
+        fetch('assets/partials/footer.html').then(r=>r.text())
+      ]);
+
+      const $H = document.getElementById('header');
+      const $F = document.getElementById('footer');
+      if ($H) $H.innerHTML = H;
+      if ($F) $F.innerHTML = F;
+
+      // Inicializaciones que dependen del header inyectado:
+      if (window.ppInitHeader) window.ppInitHeader();
+      if (window.ppCartInit)   window.ppCartInit();
+
+      window.dispatchEvent(new CustomEvent('partials:ready'));
+    } catch(err){
+      console.error('Error inyectando parciales:', err);
     }
-
-    function cardTpl(p){
-      /* p = { id, title, price, image, url } */
-      return `
-        <article class="product-card">
-          <a class="product-card__img" href="${p.url || '#'}" aria-label="${p.title}">
-            <img src="${p.image}" alt="${p.title}">
-          </a>
-          <div class="product-card__body">
-            <h3 class="product-card__title">${p.title}</h3>
-            ${p.price ? `<p class="product-card__price">${p.price}</p>` : ``}
-            <div class="product-card__actions">
-              <a class="btn ghost" href="${p.url || '#'}">Ver producto</a>
-              <button class="btn danger" data-remove="${p.id}">Quitar</button>
-            </div>
-          </div>
-        </article>`;
-    }
-
-    function render(){
-      const items = load();
-      count.textContent = items.length;
-      if(!items.length){
-        empty.hidden = false;
-        grid.innerHTML = '';
-        return;
-      }
-      empty.hidden = true;
-      grid.innerHTML = items.map(cardTpl).join('');
-      grid.addEventListener('click', (ev)=>{
-        const btn = ev.target.closest('[data-remove]');
-        if(!btn) return;
-        const id = btn.getAttribute('data-remove');
-        const next = load().filter(x => String(x.id) !== String(id));
-        localStorage.setItem(KEY, JSON.stringify(next));
-        render();
-      }, { once:false });
-    }
-
-    document.addEventListener('DOMContentLoaded', render);
   })();
-  </script>
+</script>
+<script src="assets/js/header-init.js" defer></script>
+<script src="assets/js/script.js" defer></script>
+<script src="assets/js/cart.js"></script>
+
 </body>
 </html>

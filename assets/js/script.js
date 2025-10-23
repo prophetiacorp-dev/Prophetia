@@ -486,3 +486,189 @@
     }, TOAST_TIME);
   };
 })();
+
+
+// =====================================================
+// Prophetia — Spotify Chip (drag + toggle + remember)
+// Requiere: #ppAudioChip y #ppAudioPanel del header.html
+// =====================================================
+window.ppInitAudio = function initAudioChip(){
+  const chip  = document.getElementById('ppAudioChip');
+  const panel = document.getElementById('ppAudioPanel');
+  if (!chip || !panel) return;
+
+  const KEY = 'pp_audio_pos_v1';
+
+  // --- helpers de posición ---
+  const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+  const getChipRect = () => chip.getBoundingClientRect();
+  const getPanelRect = () => panel.getBoundingClientRect();
+  const viewport = () => ({ w: window.innerWidth, h: window.innerHeight });
+
+  function savePos(x, y){ localStorage.setItem(KEY, JSON.stringify({x,y})); }
+  function loadPos(){
+    try { return JSON.parse(localStorage.getItem(KEY) || 'null'); }
+    catch { return null; }
+  }
+
+  function place(x, y){
+    // límites para que el chip no “salga” de la pantalla
+    const { w, h } = viewport();
+    const cw = chip.offsetWidth  || 1;
+    const ch = chip.offsetHeight || 1;
+    const safeX = clamp(x, 8, w - cw - 8);
+    const safeY = clamp(y, 8, h - ch - 8);
+    chip.style.left = safeX + 'px';
+    chip.style.top  = safeY + 'px';
+    chip.style.right = 'auto'; // anulamos right/top fijos del CSS
+    chip.style.position = 'fixed';
+    savePos(safeX, safeY);
+    positionPanel();
+  }
+
+  function positionPanel(){
+    // sitúa el panel justo debajo del chip y alineado al borde dcho del chip
+    const cr = getChipRect();
+    panel.style.position = 'fixed';
+    panel.style.top  = Math.round(cr.bottom + 8) + 'px';
+    // si cabe a la derecha, alineado; si no, que no se salga
+    const { w } = viewport();
+    const pr = getPanelRect(); // ojo: si está oculto, dale un width fijo CSS
+    const desiredRight = Math.max(12, w - cr.right);
+    panel.style.right = desiredRight + 'px';
+  }
+
+  // --- estado inicial (posición) ---
+  const stored = loadPos();
+  if (stored) {
+    place(stored.x, stored.y);
+  } else {
+    // posición por defecto: centrado arriba (debajo del header)
+    requestAnimationFrame(() => {
+      const { w } = viewport();
+      const cw = chip.offsetWidth || 140;
+      const x = Math.round((w - cw) / 2);
+      const y = 16; // pegado arriba
+      place(x, y);
+    });
+  }
+
+  // --- Drag (mouse + touch) ---
+  let dragging = false, startX = 0, startY = 0, baseX = 0, baseY = 0;
+
+  function onDown(e){
+    const p = e.touches ? e.touches[0] : e;
+    dragging = true;
+    chip.classList.add('dragging');
+    const r = getChipRect();
+    startX = p.clientX; startY = p.clientY;
+    baseX = r.left;     baseY = r.top;
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchmove', onMove, {passive:false});
+    document.addEventListener('touchend', onUp);
+  }
+
+  function onMove(e){
+    if (!dragging) return;
+    const p = e.touches ? e.touches[0] : e;
+    if (e.touches) e.preventDefault(); // evita scroll mientras arrastras
+    const dx = p.clientX - startX;
+    const dy = p.clientY - startY;
+    place(baseX + dx, baseY + dy);
+  }
+
+  function onUp(){
+    dragging = false;
+    chip.classList.remove('dragging');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('touchend', onUp);
+  }
+
+  chip.addEventListener('mousedown', onDown);
+  chip.addEventListener('touchstart', onDown, {passive:true});
+
+  // --- Toggle del panel ---
+  let open = false;
+  function togglePanel(){
+    open = !open;
+    panel.classList.toggle('hidden', !open);
+    panel.setAttribute('aria-hidden', String(!open));
+    if (open) positionPanel();
+  }
+  chip.addEventListener('click', (e) => {
+    // Si el click fue “dragging”, no togglear: tolerancia pequeña
+    if (dragging) return;
+    togglePanel();
+  });
+
+  // Recalcula límites si cambia el viewport
+  window.addEventListener('resize', () => {
+    const pos = loadPos();
+    if (pos) place(pos.x, pos.y);
+    if (!panel.classList.contains('hidden')) positionPanel();
+  });
+};
+/* ======================================================
+   Prophetia Tribe — POPUP controller
+   ====================================================== */
+(function () {
+  const KEY = 'pp_tribe_seen_v1';  // cambia versión para “forzar” reaparición
+  const DELAY_MS = 3000;           // retraso antes de mostrar (3s)
+  const REOPEN_DAYS = 30;          // reaparece tras X días (30 = una vez/mes)
+
+  const $modal = document.getElementById('tribeModal');
+  if (!$modal) return;
+
+  const $backdrop = $modal.querySelector('.tribe-backdrop');
+  const $closes = $modal.querySelectorAll('[data-close]');
+  const $firstFocus = $modal.querySelector('input, button, [href], select, textarea');
+
+  const now = () => Date.now();
+  const days = d => d * 24 * 60 * 60 * 1000;
+
+  const getSeenUntil = () => {
+    try { return parseInt(localStorage.getItem(KEY) || '0', 10); }
+    catch { return 0; }
+  };
+  const setSeenForDays = (d) => {
+    try { localStorage.setItem(KEY, String(now() + days(d))); }
+    catch {}
+  };
+
+  const open = () => {
+    $modal.classList.add('open');
+    $modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('no-scroll');
+    $firstFocus && $firstFocus.focus({ preventScroll: true });
+  };
+
+  const close = () => {
+    $modal.classList.remove('open');
+    $modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('no-scroll');
+    setSeenForDays(REOPEN_DAYS);
+  };
+
+  $backdrop?.addEventListener('click', close);
+  $closes.forEach(btn => btn.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && $modal.classList.contains('open')) close();
+  });
+
+  const seenUntil = getSeenUntil();
+  if (isNaN(seenUntil) || now() > seenUntil) {
+    setTimeout(open, DELAY_MS);
+  }
+
+  const $form = document.getElementById('tribeForm');
+  if ($form) {
+    $form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // TODO: aquí integrar fetch/AJAX hacia tu backend o servicio (Klaviyo/Mailchimp).
+      close();
+    });
+  }
+})();
