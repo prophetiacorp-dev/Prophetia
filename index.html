@@ -193,10 +193,29 @@
 
         <button class="tribe-btn" type="submit">UNIRME</button>
       </form>
+      <!-- ===== Estado de éxito tras enviar ===== -->
+<div id="tribeSuccess" class="tribe-success" hidden aria-live="polite">
+  <div class="tribe-success__icon">✓</div>
+  <h3 class="tribe-success__title">¡Gracias por unirte!</h3>
+  <p class="tribe-success__text">
+    Te hemos enviado un correo para confirmar tu suscripción.<br>
+    Revisa spam o promociones si no lo ves.
+  </p>
+  <button type="button" class="tribe-btn tribe-success__close" data-close>
+    Seguir navegando
+  </button>
+</div>
+
     </div>
   </section>
 </div>
+
 <!-- ===== /Prophetia Tribe — POPUP ===== -->
+ <!-- ===== Reabrir Prophetia Tribe (botón flotante) ===== -->
+<button id="tribeReopen" class="tribe-reopen" aria-label="Abrir Prophetia Tribe" hidden>
+  <img class="tribe-reopen__img" src="assets/img/logo/prophetia-emblem.png" alt="" />
+</button>
+
 <!-- ===== Cookies (GDPR) ===== -->
 <div id="cc-banner" class="cc-banner" aria-live="polite" hidden>
   <div class="cc-inner">
