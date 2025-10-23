@@ -103,58 +103,54 @@
 <dialog id="ppAuthModal" class="modal" aria-modal="true" aria-labelledby="authTitle">
   <div class="modal-card">
     <button class="modal-close" data-close="auth" aria-label="Cerrar">✕</button>
-    <h3 id="authTitle" style="margin:0 0 6px;font-weight:700;">Bienvenido/a</h3>
-    <div class="tabs">
-   <div class="tabs">
-  <button class="tab active" data-auth-tab="register">Iniciar sesión</button>
-  <button class="tab" data-auth-tab="login">Nuevos clientes</button>
-</div>
 
+    <h3 id="authTitle" style="margin:0 0 6px;font-weight:700;">Bienvenido/a</h3>
+
+    <div class="tabs" role="tablist" aria-label="Acceso">
+      <button class="tab active" data-auth-tab="login" aria-selected="true" aria-controls="ppLoginForm">
+        Iniciar sesión
+      </button>
+      <button class="tab" data-auth-tab="register" aria-selected="false" aria-controls="ppRegisterForm">
+        Nuevos clientes
+      </button>
     </div>
 
- <!-- === LOGIN === -->
-<form id="ppLoginForm" class="auth-form">
-  <div class="form-group">
-    <label for="authEmail">Dirección de correo electrónico *</label>
-    <input id="authEmail" name="email" type="email" autocomplete="email" required>
-  </div>
-  <div class="form-group">
-    <label for="authPass">Contraseña *</label>
-    <input id="authPass" name="password" type="password" autocomplete="current-password" required>
-  </div>
+    <!-- === LOGIN === -->
+    <form id="ppLoginForm" class="auth-form">
+      <div class="form-group">
+        <label for="authEmail">Dirección de correo electrónico *</label>
+        <input id="authEmail" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="authPass">Contraseña *</label>
+        <input id="authPass" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <p class="helper"><a href="#">¿Has olvidado tu contraseña?</a></p>
+      <button class="btn-primary" type="submit">Inicio de sesión</button>
+      <ul class="benefits">
+        <li>🖤 <span>Crea una lista de deseos y guarda los artículos</span></li>
+        <li>📦 <span>Gestiona tus pedidos y devoluciones</span></li>
+      </ul>
+    </form>
 
-  <p class="helper"><a href="#">¿Has olvidado tu contraseña?</a></p>
+    <!-- === REGISTRO === -->
+    <form id="ppRegisterForm" class="auth-form hidden">
+      <div class="form-group">
+        <label for="regEmail">Correo electrónico *</label>
+        <input id="regEmail" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="regPass">Contraseña *</label>
+        <input id="regPass" name="password" type="password" autocomplete="new-password" required>
+      </div>
+      <button class="btn-primary" type="submit">Registrarme</button>
+      <ul class="benefits">
+        <li>🌿 <span>Acceso a colecciones exclusivas Prophetia</span></li>
+        <li>💎 <span>Historial de pedidos y ventajas de miembro</span></li>
+      </ul>
+    </form>
 
-  <button class="btn-primary" type="submit">Inicio de sesión</button>
-
-  <ul class="benefits">
-    <li>🖤 <span>Crea una lista de deseos y guarda los artículos</span></li>
-    <li>📦 <span>Gestiona tus pedidos y devoluciones</span></li>
-  </ul>
-</form>
-
-
-<!-- === REGISTRO === -->
-<form id="ppRegisterForm" class="auth-form hidden">
-  <div class="form-group">
-    <label for="regEmail">Correo electrónico *</label>
-    <input id="regEmail" name="email" type="email" autocomplete="email" required>
-  </div>
-  <div class="form-group">
-    <label for="regPass">Contraseña *</label>
-    <input id="regPass" name="password" type="password" autocomplete="new-password" required>
-  </div>
-
-  <button class="btn-primary" type="submit">Registrarme</button>
-
-  <ul class="benefits">
-    <li>🌿 <span>Acceso a colecciones exclusivas Prophetia</span></li>
-    <li>💎 <span>Historial de pedidos y ventajas de miembro</span></li>
-  </ul>
-</form>
-
-
-  </div>
+  </div> <!-- fin de modal-card -->
 </dialog>
 
 <!-- ====== Carrito (drawer) ====== -->

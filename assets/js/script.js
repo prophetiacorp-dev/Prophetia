@@ -672,3 +672,12 @@ window.ppInitAudio = function initAudioChip(){
     });
   }
 })();
+
+
+// === Fade-in Prophetia ===
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+},{threshold:.2});
+document.querySelectorAll('[data-fade]').forEach(el=>observer.observe(el));

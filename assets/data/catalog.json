@@ -8,17 +8,11 @@
     "fit": "oversized",
     "price": 59.0,
     "inStock": true,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "short": "Composición editorial inspirada en Atlas. Silencio y fuerza.",
     "images": [
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-back-68eec465dbff1.png",
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465db232.png",
-      
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-left-68eec465de884.png",
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-right-68eec465dc891.png",
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-product-details-68eec465dd046.png"
@@ -41,12 +35,7 @@
       "assets/img/CalyrasEgo/oversized-faded-tshirt-faded-black-front-68e3d844c2783d.png"
     ],
     "short": "Figura mitológica estilizada con ritmo geométrico. Equilibrio entre lo antiguo y lo contemporáneo.",
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ]
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "id": "mascaras-del-mediterraneo",
@@ -57,42 +46,29 @@
     "fit": "regular",
     "price": 89,
     "inStock": true,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "XXL"],
     "images": [
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
     ],
     "short": "Iconografía mediterránea con contraste gráfico y textura editorial."
   },
   {
-    "id": "Apolo-Lost in Athens",
+    "id": "apolo-lost-in-athens",
     "type": "tshirt",
-    "title": "Apolo-Lost in Athens by Prophetia",
+    "title": "Apolo — Lost in Athens by Prophetia",
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "regular",
     "price": 90,
     "inStock": true,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "XXL"],
     "images": [
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
     ],
     "short": "Tipografía manuscrita con tono poético y gesto seguro. Declaración íntima."
   },
-
   {
-    "id": "Like-Gods",
+    "id": "like-gods",
     "type": "tshirt",
     "title": "Like Gods by Prophetia",
     "collection": "letters-from-the-soul",
@@ -100,13 +76,7 @@
     "fit": "regular",
     "price": 88,
     "inStock": true,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "XXL"],
     "images": [
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
     ],
@@ -121,13 +91,7 @@
     "fit": "regular",
     "price": 88,
     "inStock": true,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "XXL"],
     "images": [
       "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
     ],
