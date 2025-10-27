@@ -28,17 +28,26 @@
 <body data-page="pdp">
   <div id="header"></div>
 
- <main class="pdp">
-  <div class="product-wrap container">
+   <main id="swup" data-page="pdp">
+    <div class="brand-band">
+  <div class="container">
+    <a class="page-logo" href="index.html" aria-label="Inicio Prophetia">
+      <img src="assets/img/logo/propnegro.png" alt="PROPHETIA">
+    </a>
+  </div>
+</div>
+
+  <div class="product-wrap">
     <!-- Galería izquierda -->
-    <section class="pdp-gallery">
-      <div class="pdp-hero">
-        <button class="g-prev" aria-label="Anterior">‹</button>
-        <img id="pMain" alt="" />
-        <button class="g-next" aria-label="Siguiente">›</button>
-      </div>
-      <div id="pThumbs" class="pdp-thumbs"></div>
-    </section>
+   <section class="pdp-gallery">
+  <div class="pdp-hero">
+    <img id="pMain" alt="" />
+    <div class="g-zone g-prev" aria-label="Anterior"></div>
+    <div class="g-zone g-next" aria-label="Siguiente"></div>
+  </div>
+  <div id="pThumbs" class="pdp-thumbs"></div>
+</section>
+
 
     <!-- Panel derecha -->
     <aside class="pdp-panel" id="pInfo">
@@ -53,18 +62,15 @@
 
       <div class="pdp-purchase">
         <div class="pdp-price"><span id="pPrice">€0,00</span></div>
+<!-- Talla -->
+<div class="pdp-row">
+  <a href="#" class="attr-link" data-attr="size">Talla</a>
+</div>
 
-        <!-- Talla -->
-        <div class="pdp-row">
-          <button id="openSize" class="pdp-link">Talla</button>
-          <span id="pSizeSel" class="pdp-meta muted">—</span>
-        </div>
-
-        <!-- Color -->
-        <div class="pdp-row">
-          <span class="pdp-label">Color</span>
-          <div id="pColors" class="pdp-swatches"></div>
-        </div>
+<!-- Color -->
+<div class="pdp-row">
+  <a href="#" class="attr-link" data-attr="color">Color</a>
+</div>
 
         <!-- Envío -->
         <div class="pdp-row">
@@ -103,6 +109,7 @@
   </div>
 
   <!-- Modal Tallas -->
+  <!-- Modal Tallas -->
   <div id="sizeModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Selecciona talla">
     <div class="modal-card modal-wide">
       <button class="modal-close" data-close>✕</button>
@@ -113,18 +120,37 @@
       </div>
     </div>
   </div>
+
+  <!-- Side panel atributos (Talla / Color) -->
+  <!-- Modal atributos (centrado, fade-in) -->
+<div id="attrDrawer" class="ad" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="ad-backdrop" data-ad-close></div>
+  <aside class="ad-panel" role="document" aria-labelledby="adTitle">
+    <header class="ad-head">
+      <h3 id="adTitle" class="ad-title">Selecciona</h3>
+      <button class="ad-close" type="button" data-ad-close aria-label="Cerrar">×</button>
+    </header>
+    <div id="adBody" class="ad-body"></div>
+  </aside>
+</div>
+
 </main>
 
 
 
+
   <!-- Zoom PDP -->
+    <!-- Zoom PDP (con tira de miniaturas) -->
   <div id="pdpZoom" class="lb hidden" aria-hidden="true" role="dialog">
     <div class="lb-backdrop" data-lb-close></div>
     <figure class="lb-figure">
-      <img id="pdpZoomImg" class="lb-img" alt="">
       <button class="lb-close" id="pdpZoomClose" aria-label="Cerrar">&times;</button>
+      <img id="pdpZoomImg" class="lb-img" alt="">
       <button class="lb-prev"  id="pdpZoomPrev"  aria-label="Anterior">‹</button>
       <button class="lb-next"  id="pdpZoomNext"  aria-label="Siguiente">›</button>
+
+      <!-- tira vertical de thumbs -->
+      <ul id="pdpZoomThumbs" class="lb-thumbs" aria-label="Otras imágenes"></ul>
     </figure>
   </div>
 
@@ -171,63 +197,176 @@ window.__pdp = prod;
       // migas
       $('#pCrumb').textContent = prod.title || 'Product';
 
-      // 4) galería
-      const images = prod.images && prod.images.length ? prod.images : ['assets/img/products/placeholder.jpg'];
-      const main = $('#pMain');
-      const thumbs = $('#pThumbs');
-      let i = 0;
-      function paint(i0){
-        i = i0; main.src = images[i] || images[0];
-      }
-      paint(0);
-      thumbs.innerHTML = images.map((src,idx)=>`<button class="pdp-thumb${idx===0?' is-active':''}" data-i="${idx}"><img src="${src}" alt=""></button>`).join('');
-      thumbs.addEventListener('click', (e)=>{
-        const b = e.target.closest('button[data-i]'); if(!b) return;
-        thumbs.querySelectorAll('.pdp-thumb').forEach(x=>x.classList.remove('is-active'));
-        b.classList.add('is-active');
-        paint(+b.dataset.i);
-      });
-      // flechas
-      document.querySelector('.g-prev')?.addEventListener('click', ()=> paint((i-1+images.length)%images.length));
-      document.querySelector('.g-next')?.addEventListener('click', ()=> paint((i+1)%images.length));
+      // 4) Galería (dedupe + sin duplicar activa en thumbs + zoom completo)
+const rawImages = (prod.images && prod.images.length) ? prod.images : ['assets/img/products/placeholder.jpg'];
+// Deduplicar por src
+const images = [...new Map(rawImages.map(src => [src, src])).values()];
+
+const main   = document.querySelector('#pMain');
+const thumbs = document.querySelector('#pThumbs');
+let i = 0;
+
+// Pinta principal y rehace thumbs (excluye la activa)
+function paint(i0){
+  i = i0;
+  const current = images[i] || images[0];
+  main.src = current;
+
+  thumbs.innerHTML = images
+    .map((src, idx) => ({ src, idx }))
+    .filter(o => o.idx !== i)
+    .map(o => `<img class="pdp-thumb" data-i="${o.idx}" src="${o.src}" alt="">`)
+    .join('');
+}
+
+// Arrancar en "front" si existe, si no índice 0
+const frontIdx = images.findIndex(src => /front/i.test(src));
+paint(frontIdx >= 0 ? frontIdx : 0);
+
+// Click en thumbs (fuera del zoom)
+thumbs.addEventListener('click', (e)=>{
+  const t = e.target.closest('.pdp-thumb[data-i]'); if(!t) return;
+  paint(+t.dataset.i);
+});
+
+// Zonas invisibles de avance/retroceso en la hero
+document.querySelector('.g-prev')?.addEventListener('click', ()=> paint((i - 1 + images.length) % images.length));
+document.querySelector('.g-next')?.addEventListener('click', ()=> paint((i + 1) % images.length));
+
+// === Lightbox (zoom con todas las imágenes) ===
+const Z = {
+  el     : document.getElementById('pdpZoom'),
+  img    : document.getElementById('pdpZoomImg'),
+  thumbs : document.getElementById('pdpZoomThumbs'),
+  i      : 0
+};
+
+function zoomPaint(idx){
+  Z.i = idx;
+  Z.img.src = images[idx] || images[0];
+  Z.thumbs.innerHTML = images.map((src, k) =>
+    `<li class="${k===idx?'is-active':''}" data-i="${k}"><img src="${src}" alt=""></li>`
+  ).join('');
+}
+function zoomOpen(idx){
+  zoomPaint(idx);
+  Z.el.classList.remove('hidden');
+  Z.el.setAttribute('aria-hidden','false');
+}
+function zoomClose(){
+  Z.el.classList.add('hidden');
+  Z.el.setAttribute('aria-hidden','true');
+}
+document.getElementById('pdpZoomClose')?.addEventListener('click', zoomClose);
+Z.el.querySelector('.lb-backdrop')?.addEventListener('click', zoomClose);
+
+// Click en la hero: si es zona, navega; si no, abre zoom
+document.querySelector('.pdp-hero')?.addEventListener('click', (e)=>{
+  if (e.target.closest('.g-prev')) { paint((i-1+images.length)%images.length); return; }
+  if (e.target.closest('.g-next')) { paint((i+1)%images.length); return; }
+  zoomOpen(i);
+});
+
+// Controles del zoom y thumbs en zoom
+document.getElementById('pdpZoomPrev')?.addEventListener('click', ()=> zoomPaint((Z.i - 1 + images.length) % images.length));
+document.getElementById('pdpZoomNext')?.addEventListener('click', ()=> zoomPaint((Z.i + 1) % images.length));
+Z.thumbs?.addEventListener('click', (e)=>{
+  const li = e.target.closest('li[data-i]'); if(!li) return;
+  zoomPaint(+li.dataset.i);
+});
+// Teclas ← → y ESC en el zoom
+document.addEventListener('keydown', (e)=>{
+  if (Z.el.classList.contains('hidden')) return;
+  if (e.key === 'ArrowLeft')  zoomPaint((Z.i - 1 + images.length) % images.length);
+  if (e.key === 'ArrowRight') zoomPaint((Z.i + 1) % images.length);
+  if (e.key === 'Escape')     zoomClose();
+});
+
+
 
       // 5) tallas y colores (opcionales)
-      const sizes  = prod.sizes  || [];
-      const colors = prod.colors || [];
-      if (sizes.length){
-        const grid = document.getElementById('sizeGrid');
-        grid.innerHTML = sizes.map(s=>`<button class="size" data-size="${s}">${s}</button>`).join('');
-        grid.addEventListener('click', (e)=>{
-          const b = e.target.closest('[data-size]'); if(!b) return;
-          grid.querySelectorAll('.size').forEach(x=>x.classList.remove('active'));
-          b.classList.add('active');
-          document.getElementById('pSizeSel').textContent = b.dataset.size;
-        });
-      }
-      if (colors.length){
-        const sw = document.getElementById('pColors');
-        sw.innerHTML = colors.map(c=>`<button class="sw" data-color="${c}" title="${c}"></button>`).join('');
-        sw.addEventListener('click', (e)=>{
-          const b = e.target.closest('[data-color]'); if(!b) return;
-          sw.querySelectorAll('.sw').forEach(x=>x.classList.remove('active'));
-          b.classList.add('active');
-        });
-      }
+// Datos (o usa los que ya obtienes del JSON)
+// Datos de ejemplo (usa los de tu JSON si existen)
+const sizes  = (prod.sizes  && prod.sizes.length)  ? prod.sizes  : ['S','M','L','XL'];
+const colors = (prod.colors && prod.colors.length) ? prod.colors : ['Natural','Negro'];
 
-      // 6) añadir al carrito
-      document.getElementById('buyForm')?.addEventListener('submit', (e)=>{
-        e.preventDefault();
-        const qty   = Math.max(1, +document.getElementById('qty').value || 1);
-        const size  = document.querySelector('#sizeGrid .size.active')?.dataset.size || '';
-        const color = document.querySelector('#pColors .sw.active')?.dataset.color || '';
-        window.ppAddToCart({
-          id:   prod.slug || prod.id,
-          title: prod.title,
-          price: +prod.price || 0,
-          img:   images[0],
-          size, color, qty
-        });
-      });
+const AD      = document.getElementById('attrDrawer');
+const adTitle = document.getElementById('adTitle');
+const adBody  = document.getElementById('adBody');
+
+let triggerEl = null;                         // enlace que abre el drawer
+let selected  = { size:null, color:null };    // estado
+
+function openDrawer(type, el){
+  triggerEl = el;
+  adTitle.textContent = (type === 'size') ? 'Talla' : 'Color';
+
+  if (type === 'size'){
+    adBody.innerHTML = `<div class="opts">` + sizes.map(s =>
+      `<button class="opt" data-type="size" data-value="${s}">${s}</button>`
+    ).join('') + `</div>`;
+  } else {
+    adBody.innerHTML = `<div class="opts">` + colors.map(c=>{
+      const name = typeof c === 'string' ? c : (c.name || c.title || 'Color');
+      const hex  = (typeof c === 'object' && c.hex) ? c.hex : null;
+      return `<button class="opt" data-type="color" data-value="${name}">
+                ${hex?`<span class="swatch" style="background:${hex}"></span>`:''}${name}
+              </button>`;
+    }).join('') + `</div>`;
+  }
+
+  AD.classList.remove('closing');
+  AD.classList.add('open');
+  AD.setAttribute('aria-hidden','false');
+  document.body.classList.add('drawer-open');
+}
+
+function closeDrawer(){
+  AD.classList.add('closing');
+  setTimeout(()=>{
+    AD.classList.remove('open','closing');
+    AD.setAttribute('aria-hidden','true');
+    document.body.classList.remove('drawer-open');
+  }, 220);
+}
+
+// abrir desde enlaces Talla/Color
+document.querySelectorAll('.attr-link[data-attr]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    openDrawer(a.dataset.attr, a);
+  });
+});
+
+// interactuar dentro del drawer
+AD.addEventListener('click', (e)=>{
+  if (e.target.closest('[data-ad-close]')) return closeDrawer();
+
+  const opt = e.target.closest('.opt[data-type][data-value]');
+  if (!opt) return;
+
+  const t = opt.dataset.type;
+  const v = opt.dataset.value;
+  selected[t] = v;
+
+  // marca activa
+  AD.querySelectorAll('.opt').forEach(o=>o.classList.remove('is-active'));
+  opt.classList.add('is-active');
+
+  // refleja selección en el enlace (sin spans)
+  if (triggerEl) triggerEl.dataset.selected = v;
+
+  // cerrar tras elegir (como hace Loewe)
+  setTimeout(closeDrawer, 120);
+});
+
+// ESC y click en backdrop
+document.addEventListener('keydown', e=>{
+  if (e.key === 'Escape' && AD.classList.contains('open')) closeDrawer();
+});
+AD.querySelector('.ad-backdrop').addEventListener('click', closeDrawer);
+
+      
     })();
   </script>
 <script id="pdpSchema" type="application/ld+json"></script>
@@ -256,6 +395,7 @@ setTimeout(() => {
   } catch(e){ console.warn('schema fail', e); }
 }, 200);
 </script>
+
 
 </body>
 </html>

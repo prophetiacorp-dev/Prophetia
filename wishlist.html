@@ -29,12 +29,41 @@
     </a>
   </div>
 </div>
-  <main class="wl-layout">
+<!-- ===== Wishlist Sub-Nav (Loewe-like) ===== -->
+<nav class="wl-nav" aria-label="Wishlist secciones">
+  <div class="container">
+    <ul class="wl-nav__list" role="tablist">
+      <li><a class="active" href="/wishlist.html" aria-current="page">Mi selección</a></li>
+      <li><a href="/camisetas.html">Puede que te guste</a></li>
+    </ul>
+  </div>
+</nav>
+
+ <main class="wl wl-layout">
+
     <!-- ====== HERO / TÍTULO ====== -->
-    <section class="wl-hero container">
-      <h1 class="wl-title">Mi selección</h1>
-      <p class="wl-sub">Tienes <span id="wlCount">0</span> productos en tu selección</p>
-    </section>
+   <section class="wl-hero container">
+  <h1 class="wl-title sr-only">Mi selección</h1>
+  <p class="wl-sub" aria-live="polite">
+    Tienes <span id="wlCount">0</span> productos en tu selección
+  </p>
+</section>
+<!-- ===== Estado vacío (como Loewe) ===== -->
+<section class="wl-empty" hidden>
+  <div class="wl-empty__wrap">
+    <div class="wl-empty__icon" aria-hidden="true">
+      <!-- icono simple “devices” -->
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="5" width="14" height="10" rx="1.5" stroke="currentColor"/>
+        <rect x="9" y="16" width="12" height="3" rx="0.8" stroke="currentColor"/>
+      </svg>
+    </div>
+    <h3>No pierdas tu selección</h3>
+    <p>Inicia sesión o crea una cuenta para guardar tus artículos favoritos y verlos en cualquier dispositivo.</p>
+    <a class="btn btn-dark" href="/login.html">Guardar mi selección</a>
+  </div>
+</section>
+
 
     <!-- ====== RESULTADOS ====== -->
     <section class="wl-results">
@@ -52,15 +81,8 @@
 
   <div id="footer"></div>
 
-  <!-- ====== SCRIPTS ====== -->
-  <!-- Tu init de parciales/header/footer, igual que en camisetas.html -->
-  <script src="assets/js/header-init.js" defer></script>
-  <script src="assets/js/script.js" defer></script>
 
-  <!-- Wishlist render mínimo -->
-  <!-- Inyección de parciales + init header + carrito -->
-   <!-- ====== CART: overlay + drawer ====== -->
-<div id="cartOverlay" class="cart-overlay" hidden></div>
+
 
 <aside id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Cesta">
   <div class="cart-head">
@@ -78,30 +100,104 @@
     <button class="cart-checkout" id="cartCheckout">Finalizar compra</button>
   </div>
 </aside>
-
 <script>
-  (async function injectHF(){
-    try {
-      const [H, F] = await Promise.all([
-        fetch('assets/partials/header.html').then(r=>r.text()),
-        fetch('assets/partials/footer.html').then(r=>r.text())
-      ]);
+(function(){
+  const KEY = 'pp_wishlist_v1';
+  const $  = (s,r=document)=> r.querySelector(s);
+  const $$ = (s,r=document)=> Array.from(r.querySelectorAll(s));
+  const load = ()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } };
+  const save = (l)=> localStorage.setItem(KEY, JSON.stringify(l));
+  const del  = (id)=> save(load().filter(p => String(p.id) !== String(id)));
 
-      const $H = document.getElementById('header');
-      const $F = document.getElementById('footer');
-      if ($H) $H.innerHTML = H;
-      if ($F) $F.innerHTML = F;
+  const grid  = $('#gridWishlist');
+  const empty = $('#wlEmpty');
+  const count = $('#wlCount');
 
-      // Inicializaciones que dependen del header inyectado:
-      if (window.ppInitHeader) window.ppInitHeader();
-      if (window.ppCartInit)   window.ppCartInit();
+  function card(p){
+    return `
+    <article class="product-card" data-id="${p.id}">
+      <div class="img-wrap">
+        <img src="${p.img}" alt="${p.title}" loading="lazy">
+        <!-- Corazón marcado para quitar -->
+        <button class="save-btn is-saved" type="button" aria-label="Quitar de guardados" data-remove data-id="${p.id}">
+          <svg class="icon-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12.1 20.1C11.8 20.1 4 14.7 3.2 9.6C2.8 6.8 4.9 4.5 7.5 4.5c1.7 0 3.2.9 4.1 2.3A5 5 0 0 1 19 4.5c2.6 0 4.7 2.3 4.3 5.1c-.8 5.1-8.6 10.5-9.1 10.5z"
+                  stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </button>
+      </div>
+      <div class="body">
+        <h4>${p.title}</h4>
+        <div class="price">${p.price} €</div>
+        <div style="margin-top:8px; display:flex; gap:8px">
+          <a class="btn btn--sm" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a>
+          <button class="btn btn--sm btn--ghost" data-remove data-id="${p.id}">Quitar</button>
+        </div>
+      </div>
+    </article>`;
+  }
 
-      window.dispatchEvent(new CustomEvent('partials:ready'));
-    } catch(err){
-      console.error('Error inyectando parciales:', err);
-    }
-  })();
+  function updateHeaderBadge(){
+    const a = document.getElementById('ppSavedBtn');
+    if (!a) return;
+    const n = load().length;
+    a.dataset.count = String(n);
+  }
+
+  function render(){
+    const items = load();
+    grid.innerHTML = items.map(card).join('');
+    empty.hidden   = items.length > 0;
+    if (count) count.textContent = String(items.length);
+    updateHeaderBadge();
+  }
+
+  // Quitar un item (delegación en el grid)
+  grid.addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-remove]');
+    if (!btn) return;
+    del(String(btn.dataset.id));
+    render();
+  });
+
+  // Vaciar con tecla "Clear" si algún día lo añades
+  // $('#wlClear')?.addEventListener('click', ()=>{ localStorage.setItem(KEY,'[]'); render(); });
+
+  // Render inicial
+  if (document.readyState !== 'loading') render();
+  else document.addEventListener('DOMContentLoaded', render);
+
+  // Si header/footer se inyectan asíncronos, repinta badge cuando terminen
+  window.addEventListener('partials:ready', updateHeaderBadge);
+})();
 </script>
+
+<!-- ======================================================
+     Inyección de parciales Prophetia (header + footer)
+     ====================================================== -->
+<script>
+(async function injectHF(){
+  const inject = async (sel, file) => {
+    const el = document.querySelector(sel);
+    if(!el) return;
+    try {
+      const res = await fetch(file);
+      if (!res.ok) { console.warn('No se pudo cargar:', file); return; }
+      el.outerHTML = await res.text();
+    } catch(err){
+      console.warn("Error cargando parcial:", file, err);
+    }
+  };
+   await inject('#header', 'assets/partials/header.html');
+  await inject('#footer', 'assets/partials/footer.html');
+
+  document.dispatchEvent(new CustomEvent('partials:ready'));
+})();
+</script>
+
+
+  
+
 <script src="assets/js/header-init.js" defer></script>
 <script src="assets/js/script.js" defer></script>
 <script src="assets/js/cart.js"></script>

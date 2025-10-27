@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+ 
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <!-- === Prophetia SEO / OG === -->
@@ -31,7 +33,7 @@
   <!-- Header inyectado -->
   <div id="header"></div>
 
-  <main>
+  <main id="swup">
 
     <!-- =======================================================
          HERO: vídeo full-bleed + logo flotante + texto
@@ -287,6 +289,50 @@
   </section>
 </div>
 <!-- ===== /Cookies ===== -->
+<script src="https://unpkg.com/swup@4"></script>
+<script>
+  // 1) Arranca Swup: sólo reemplaza el contenido dentro de #swup
+  const swup = new Swup({
+    containers: ['#swup'],
+    animateHistoryBrowsing: true,
+    linkSelector: 'a[href]:not([target="_blank"]):not([data-no-swup])'
+  });
+
+  // 2) Utilidad: aplica la clase de página al <body> leyendo data-page en #swup
+  function setBodyPageClass() {
+    // limpia cualquier clase "*-page" previa (p.e. camisetas-page)
+    document.body.className = document.body.className.replace(/\b[a-z-]+-page\b/g, '').trim();
+    const page = document.querySelector('#swup')?.dataset.page;
+    if (page) document.body.classList.add(`${page}-page`);
+  }
+
+  // 3) Player Spotify: inicializa UNA vez (está fuera de #swup)
+  window.ppInitAudio && window.ppInitAudio();
+
+  // 4) Primera carga (index): ajusta clase del body según data-page actual
+  setBodyPageClass();
+
+  // 5) En cada navegación SPA: re-inits de la vista nueva
+ // 5) En cada navegación SPA: re-inits de la vista nueva
+swup.hooks.on('content:replace', () => {
+  setBodyPageClass();
+
+  // Camisetas
+  if (document.querySelector('#gridCamisetas') && window.ppInitCatalog) {
+    window.ppInitCatalog({ target: '#gridCamisetas', category: 'camisetas' });
+  }
+
+  // Hoodies
+  if (document.querySelector('#gridHoodies') && window.ppInitCatalog) {
+    window.ppInitCatalog({ target: '#gridHoodies', category: 'hoodies' });
+  }
+
+  // Otras inits específicas de la vista (si las tienes)
+  window.ppInitHome && window.ppInitHome();
+});
+
+</script>
+
 
 
 </body>

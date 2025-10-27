@@ -266,66 +266,110 @@ dialog:not([open]){ display:none; }
    Spotify chip + panel (arrastrable)
    ============================================================ */
 /* --- Spotify Prophetia Chip --- */
-/* === Spotify Prophetia Circular Button === */
-.pp-audio-toggle {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5000;
+/* ===== PROPHETIA · Spotify Compact Dock ===== */
+/* ==================== PROPHETIA · Spotify (único) ==================== */
+:root{ --z-audio: 1300; --pp-spotify-scale: .82; }
 
-  /* aspecto */
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #111;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, .25);
-  cursor: pointer;
-  transition: all .25s ease;
-}
-
-.pp-audio-toggle:hover {
-  background: #C1A45F;
-  box-shadow: 0 6px 24px rgba(0,0,0,.3);
-}
-
-/* oculta el texto “Prophetia Playlist” dentro del chip */
-.pp-audio-toggle span {
-  display: none;
-}
-
-/* el icono SVG centrado y elegante */
-.pp-audio-toggle img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  filter: invert(75%) sepia(15%) saturate(300%) hue-rotate(15deg) brightness(95%) contrast(90%);
-}
-.pp-audio-toggle {
-  border: 1.5px solid #C1A45F;
-}
-.pp-audio-toggle:hover {
-  background: #C1A45F;
-  border-color: #111;
-}
-:root{
-  --z-audio: 99999; /* por encima de TODO */
-}
-
-/* Botón circular */
+/* Botón circular arrastrable */
+/* Chip circular — solo icono visible */
 .pp-audio-toggle{
-  position: fixed;
+  position: fixed; top: 10px; right: 15px;   /* ajusta si quieres */
   z-index: var(--z-audio);
+  width: 56px; height: 56px;
+  border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #111; border: 1.5px solid #C1A45F;
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  cursor: pointer;
 }
 
-/* Panel del reproductor */
-#ppAudioPanel{
-  position: fixed;
-  z-index: calc(var(--z-audio) - 1);
+/* el texto existe pero no se ve (a11y OK) */
+.pp-audio-toggle span{
+  position: absolute !important;
+  width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
+
+/* el logo llena el círculo */
+.pp-audio-toggle img{
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;       /* llena sin dejar huecos */
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* hover/active opcional */
+.pp-audio-toggle:hover{ background:#C1A45F; border-color:#111; }
+.pp-audio-toggle:active{ transform: translateY(1px) scale(.99); }
+
+
+/* Panel compacto y elegante (controlado por aria-hidden) */
+/* ===== Panel Spotify — Modo minimal (sin fondo ni borde) ===== */
+#ppAudioPanel{
+  position: fixed; right: 16px; top: 80px;
+  z-index: calc(var(--z-audio) - 1);
+  /* sin caja translúcida */
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+
+  /* animación de entrada */
+  transform: translateY(-8px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+#ppAudioPanel[aria-hidden="false"]{
+  opacity: 1; transform: translateY(0); pointer-events: auto;
+}
+
+/* El viewport ya NO recorta ni aporta bordes */
+#ppAudioPanel .pp-spotify-viewport{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+}
+
+/* El iframe manda: tamaño justo y bordes elegantes */
+#ppAudioPanel iframe{
+  display: block;
+  width: 360px;           /* compacto y elegante */
+  height: 352px;          /* relación ≈ 1.55 */
+  border: 0;
+  border-radius: 16px;    /* redondeo solo del embed */
+  box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    
+}
+
+/* Responsive */
+@media (max-width: 480px){
+  #ppAudioPanel{ right: 12px; top: 72px; }
+  #ppAudioPanel iframe{
+    width: min(92vw, 360px);
+    height: calc(min(92vw, 360px) * (232/360));
+  }
+}
+
+/* CTA opcional */
+#ppAudioPanel .pp-spotify-cta{
+  position: absolute; left: 0; right: 0; bottom: -32px;
+  text-align: center; font-size: 12px; opacity: .8;
+}
+
+/* Móvil: chip abajo centrado y panel más bajo */
+@media (max-width:640px){
+  .pp-audio-toggle{ top:auto !important; bottom:16px; left:50%; right:auto; transform:translateX(-50%); }
+  #ppAudioPanel{ right:12px; top:auto; bottom:92px; width:320px; height:240px; }
+}
+
+/* Respeta reduce-motion */
+@media (prefers-reduced-motion: reduce){
+  .pp-audio-toggle, #ppAudioPanel{ transition:none !important; }
+}
+
+
 
 
 /* ============================================================
@@ -342,11 +386,16 @@ dialog:not([open]){ display:none; }
   display:flex; flex-direction:column;
 }
 .product-card .img-wrap, .products-grid .card .img-wrap{
-  position:relative; aspect-ratio: 3 / 4; overflow:hidden; background:#f5f5f5;
+  display:block;                     /* ← clave para que el <a> tenga caja */
+  position:relative;
+  aspect-ratio: 3 / 4;
+  overflow:hidden;
+  background:#f5f5f5;
 }
 .product-card .img-wrap img, .products-grid .card .img-wrap img{
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:0 !important;
 }
+
 /* Posicionar el corazón arriba-dcha de la imagen */
 .product-card .img-wrap{ position: relative; }
 .product-card .img-wrap .icon-btn.save{
@@ -360,6 +409,15 @@ dialog:not([open]){ display:none; }
 }
 .product-card .meta, .products-grid .card .meta{ color:var(--muted); font-size:.92rem; }
 .product-card .price, .products-grid .card .price{ font-weight:700; }
+
+.product-card { position: relative; }
+.product-card .img-wrap { display:block; }
+.product-card .save-btn{
+  position:absolute; top:8px; right:8px; z-index:2;
+}
+.product-card .img-wrap, .product-card .img-wrap img{ pointer-events:auto; }
+.product-card::before{ pointer-events:none; } /* si usas overlays decorativos */
+
 
 /* ============================================================
    FILTROS (listados)
@@ -537,6 +595,12 @@ small, .muted{ color:var(--muted); }
   background: #fff;
   padding: 0;                       /* quita el padding superior/inferior */
   margin: 0;
+}
+.brand-band .container {
+  display: flex;
+  justify-content: flex-start;  /* logo a la izquierda */
+  align-items: center;
+  padding-left: var(--edge, 20px);
 }
 
 /* Logo SVG Prophetia */
@@ -840,15 +904,24 @@ transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
 }
 
 /* Evitar solapes si el logo/hero tiene pointer-events */
-.page-logo { pointer-events:auto; }
-/* ===== Toolbar de categoría (camisetas) ===== */
+.page-logo {
+  display: block;
+  line-height: 0;             /* elimina espacio bajo imagen */
+  text-align: center;
+}
 
+.page-logo img {
+  width: min(40vw, 820px);    /* tamaño fluido */
+  height: auto;
+  display: block;
+  margin: 0 auto;             /* centrado absoluto */
+  
+  filter: contrast(1.02) brightness(1.02);
+  transition: transform .3s ease;
+}
 
-.toolbar-left,
-.toolbar-right{
-  display:flex;
-  align-items:center;
-  gap: clamp(10px, 2vw, 22px);
+.page-logo img:hover {
+  transform: scale(1.02);
 }
 
 
@@ -1608,11 +1681,7 @@ box-shadow:
   0 0 20px rgba(255,215,128,.25);
 
   cursor: pointer;
-  box-shadow:
-    0 14px 30px rgba(0,0,0,.30),
-    0 0 0 1px rgba(193,164,95,.25),        /* filo dorado suave */
-    0 0 24px rgba(255,215,128,.22);        /* glow base */
-  position: fixed;
+
   overflow: visible;
   transition: box-shadow .25s ease, transform .2s ease, filter .25s ease;
 }
@@ -1673,109 +1742,7 @@ box-shadow:
 }
 
 
-/* ===================== AUTH MODAL — FIX ===================== */
 
-/* Centra el diálogo en la ventana */
-#ppAuthModal{
-  display:grid;
-  place-items:center;
-  padding:clamp(16px, 6vh, 48px);
-}
-
-/* Tarjeta del modal: centrada, ancho razonable y relativa para posicionar la X */
-#ppAuthModal .modal-card{
-  position: relative;
-  width: min(560px, 92vw);
-  margin: 0 auto;
-  background: #fff;
-  border: 1px solid var(--hair, #eee);
-  border-radius: 18px;
-  padding: 22px 22px 26px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.18);
-}
-
-/* Botón de cierre (X) fijo arriba-derecha de la tarjeta */
-#ppAuthModal .modal-close{
-  position: absolute !important;
-  top: 14px; 
-  right: 14px;
-  width: 36px; 
-  height: 36px;
-  border-radius: 999px;
-  border: 1px solid var(--line, #111);
-  background: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
-}
-
-/* Cabecera y tabs */
-#ppAuthModal #authTitle{
-  margin: 0 0 8px;
-  font-weight: 700;
-}
-#ppAuthModal .tabs{
-  display:flex; 
-  gap:10px; 
-  margin: 0 0 18px;
-}
-#ppAuthModal .tab{
-  appearance:none;
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid #111;
-  background:#fff; 
-  color:#111;
-  cursor:pointer; 
-  line-height:1;
-}
-#ppAuthModal .tab.active,
-#ppAuthModal .tab[aria-selected="true"]{
-  background:#111; 
-  color:#fff; 
-  border-color:#111;
-}
-
-/* Formulario CENTRADO en la tarjeta */
-#ppAuthModal .auth-form{
-  display:grid;
-  gap: 12px;
-  width: min(420px, 100%);
-  margin: 8px auto 0;   /* <- centra el bloque del form */
-}
-
-/* Etiquetas e inputs a ancho completo */
-#ppAuthModal .auth-form label{ 
-  display:block; 
-  font-weight:600; 
-}
-#ppAuthModal .auth-form input[type="email"],
-#ppAuthModal .auth-form input[type="password"]{
-  display:block;
-  width: 100%;
-  height: 44px;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px;
-  padding: 0 12px;
-  background:#fafafa;
-}
-
-/* Botón de enviar: full width y centrado visualmente */
-#ppAuthModal .auth-form button[type="submit"]{
-  width: 100%;
-  height: 46px;
-  border-radius: 12px;
-  font-weight: 700;
-}
-
-/* Pie/aviso dentro del modal: centrado */
-#ppAuthModal .auth-note{
-  margin-top: 8px;
-  text-align:center;
-  color: var(--muted, #666);
-  font-size: 13px;
-}
 
 
 /* ===== Microtransiciones Prophetia Silent Luxury ===== */
@@ -1798,4 +1765,1034 @@ a:hover, button:hover, .btn-primary:hover {
 [data-fade].visible {
   opacity: 1;
   transform: none;
+}
+
+/* ===== Brand band legal: siempre a la izquierda ===== */
+.brand-band--legal{
+  width: 100%;
+  padding-left: var(--edge, 24px);
+  text-align: left !important;        /* rompe centrado heredado */
+}
+
+.brand-band--legal .page-logo{
+  display: inline-block;
+}
+
+.brand-band--legal .brand-band__img{
+  display: block;
+  height: 120px;
+  width: auto;
+  margin: 0;                           /* quita centrado por margin:auto */
+  transform: translateY(12px);         /* ajuste óptico */
+}
+
+/* Por si algún container global fuerza centrado via flex */
+.brand-band--legal,
+.brand-band--legal *{
+  justify-content: flex-start !important;
+  align-items: center;
+}
+
+/* ===== Footer Emblem Prophetia ===== */
+.footer-emblem{
+  position: absolute;
+  right: 48px;
+  bottom: 48px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.footer-emblem img{
+  width: 70%;
+  height: auto;
+  filter: brightness(0) invert(1);   /* blanco sobre fondo oscuro */
+  opacity: 0.9;
+  transition: transform .3s ease, opacity .3s ease;
+}
+
+.footer-emblem:hover img{
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+/* Ajuste responsive */
+@media (max-width: 768px){
+  .footer-emblem{
+    right: 24px;
+    bottom: 24px;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* ===== Footer Prophetia — Fondo blanco ===== */
+.site-footer{
+  background: #fff !important;
+  color: #111 !important;
+}
+
+.site-footer a{
+  color: #111 !important;
+}
+
+.site-footer .footer-bottom{
+  border-top: 1px solid #ddd !important;
+  color: #555 !important;
+}
+
+
+/* ===== Footer con “recuadro” derecho para el emblema ===== */
+.site-footer .footer-inner{
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 320px; /* 5ª columna = cuadro derecho */
+  gap: 32px;
+  align-items: start;
+}
+
+/* Columna del emblema */
+.footer-art{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 220px;            /* altura del recuadro */
+  background: transparent;      /* “recuadro sin bordes” */
+}
+
+.footer-art img{
+  max-width: 260px;             /* tamaño del emblema dentro del cuadro */
+  width: 100%;
+  height: auto;
+  /* Si el fondo del footer es blanco, no inviertas el color: */
+  filter: none;
+  opacity: .9;
+}
+
+/* Responsive: en tablet/móvil ocultar o mover abajo */
+@media (max-width: 1024px){
+  .site-footer .footer-inner{
+    grid-template-columns: 1fr 1fr;  /* 2 columnas */
+  }
+  .footer-art{ grid-column: 1 / -1; justify-content: center; margin-top: 16px; }
+  .footer-art img{ max-width: 180px; opacity: .85; }
+}
+
+
+/* ===== Corazones / Guardados ===== */
+/* ===== Wishlist heart ===== */
+/* Mantén el posicionamiento original */
+.save-btn{
+  position: absolute;     /* ← importante para que no se desplace */
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line, #e9e9e9);
+}
+
+.save-btn:hover{ transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.10); }
+
+.save-btn .icon-heart path{
+  transition: fill .18s ease, stroke .18s ease;
+  fill: none;                 /* estado normal: vacío */
+  stroke: #111;               /* contorno negro fino */
+  stroke-width: 1.5;
+}
+
+/* ===== Animación de corazón Prophetia ===== */
+.save-btn.is-saved .icon-heart path {
+  fill: #E02424;
+  stroke: #E02424;
+  animation: ppHeartBeat 0.35s ease-in-out;
+  transform-origin: center;
+}
+
+@keyframes ppHeartBeat {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.3); }
+  50%  { transform: scale(0.9); }
+  75%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+
+/* ===== Top Toast (añadido a guardados) ===== */
+.pp-toast{
+  position: fixed;
+  top: 0; left: 50%;
+  transform: translate(-50%, -120%);   /* oculto hacia arriba */
+  z-index: 1400;
+  width: min(720px, 94vw);
+  transition: transform .28s ease, opacity .28s ease;
+  opacity: 0;
+}
+.pp-toast.show{
+  transform: translate(-50%, 12px);    /* baja 12px desde el borde */
+  opacity: 1;
+}
+.pp-toast__inner{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  background: #111; color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.pp-toast__cta{
+  font-weight: 600; text-decoration: underline; opacity: .96;
+}
+.pp-toast__cta:hover{ opacity: 1; }
+
+/* =============================
+   WISHLIST (scoped) — Clean
+   ============================= */
+.wl{
+  /* variables de diseño para wishlist */
+  --wl-max: 1160px;
+  --wl-pad: 24px;
+  --wl-gap: 32px;
+  --wl-card-radius: 16px;
+  --wl-card-border: rgba(0,0,0,.08);
+  --wl-card-shadow: 0 2px 8px rgba(0,0,0,.04);
+  --wl-card-shadow-hover: 0 6px 24px rgba(0,0,0,.08);
+  --wl-heart: #E0245E;
+}
+
+/* contenedor y respiros (solo wishlist) */
+.wl{ max-width: var(--wl-max); margin: 0 auto; padding: var(--wl-pad); }
+@media (min-width: 1200px){ .wl{ padding-top: 48px; } }
+
+/* grid limpio */
+.wl #wlGrid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: var(--wl-gap);
+}
+@media (max-width: 1100px){ .wl #wlGrid{ grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 640px){ .wl #wlGrid{ grid-template-columns: 1fr; gap: 20px; } }
+
+/* card minimal */
+.wl .product-card{
+  border: 1px solid var(--wl-card-border);
+  border-radius: var(--wl-card-radius);
+  background: #fff;
+  overflow: hidden;
+  box-shadow: var(--wl-card-shadow);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.wl .product-card:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--wl-card-shadow-hover);
+}
+
+/* imagen consistente */
+.wl .product-card .img-wrap{
+  position: relative;
+  background: #f6f6f6;
+  aspect-ratio: 4 / 5;
+}
+.wl .product-card .img-wrap img{
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+/* corazón discreto */
+.wl .save-btn{
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px; border-radius: 999px;
+  background: #fff; border: 1px solid rgba(0,0,0,.12);
+  color: #111; box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  transition: transform .15s ease, box-shadow .15s ease, color .2s ease;
+}
+.wl .save-btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 26px rgba(0,0,0,.12); }
+.wl .save-btn.is-saved{ color: var(--wl-heart); }
+.wl .save-btn.is-saved .icon-heart path{ fill: currentColor; }
+
+/* tipografía de la card */
+.wl .product-card .body{ padding: 12px 14px 16px; }
+.wl .product-card h4{ font-size: 16px; line-height: 1.3; margin: 2px 0 8px; font-weight: 600; }
+.wl .product-card .price{ font-size: 15px; font-weight: 600; }
+
+
+/* ===== Prophetia — Mobile-only safe overrides ===== */
+@media (max-width: 860px){
+
+  /* Header compacto SOLO en móvil */
+  .pp-topbar{
+    height: auto;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .pp-left{ gap: 18px; font-size: 15px; }
+  .pp-right{ gap: 10px; }
+
+  /* Logo SOLO en móvil: no arrastra ni empuja */
+  .brand-band__img{
+    height: clamp(70px, 18vw, 110px) !important;
+    margin-left: 0 !important;
+    transform: none !important;
+  }
+  .floating-logo img{
+    height: clamp(90px, 20vw, 120px) !important;
+    transform: none !important;
+  }
+
+  /* Hero respira mejor en pantallas pequeñas */
+  .hero{ padding-top: 16px; padding-bottom: 24px; }
+  .display{ font-size: clamp(26px, 7vw, 42px); }
+
+  /* Buscador: ancho controlado */
+  .search-inline .search-input{
+    width: clamp(140px, 45vw, 200px);
+  }
+
+  /* Menú mega: en columna, sin panel flotante */
+  .pp-left{ flex-wrap: wrap; justify-content: flex-start; }
+  .mega-panel{
+    position: static; display: block !important;
+    border: 0; box-shadow: none; padding: 0;
+  }
+
+  /* Spotify chip: baja para no tapar header */
+  .pp-audio-toggle{
+    top: auto !important;
+    bottom: 16px; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Último seguro: sin scroll lateral en móvil */
+  html, body{ overflow-x: hidden; }
+}
+
+/* ===== Wishlist: logo y alineación idénticos a Camisetas ===== */
+.wishlist-page .brand-band{
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: #fff;
+  text-align: left !important;              /* evita centrado heredado */
+}
+
+.wishlist-page .brand-band > .container{
+  max-width: 100% !important;               /* sin límite de ancho */
+  padding-inline: var(--edge, 30px) !important;
+  margin: 0 !important;
+  display: block !important;                /* sin flex-centering */
+  text-align: left !important;
+}
+
+/* Movimiento fino del logo (como en camisetas) */
+:root{
+  --wishlist-logo-maxw: 820px;              /* igual que camisetas */
+  --wishlist-logo-offset-y: -51px;          /* sube/baja el logo */
+  --edge: 30px;                             
+}
+.wishlist-page .page-logo{
+  display: inline-block;
+  line-height: 0;
+  margin: 0 !important;
+  transform: translate(-43px, var(--wishlist-logo-offset-y)) !important;
+}
+
+.wishlist-page .page-logo img{
+  width: min(40vw, var(--wishlist-logo-maxw)) !important;
+  height: auto !important;
+  margin: 0 !important;                     /* ¡nada de margin:auto! */
+  object-fit: contain;
+}
+
+/* Título “Mi selección”: mismo borde que el header/logo */
+.wishlist-page .wl-hero.container{
+  max-width: 1640px;
+  padding-inline: var(--edge) !important;
+  margin-top: clamp(8px, 1vw, 14px);        /* respiración bajo el logo */
+}
+/* =============================
+   Wishlist — Sub-Nav & Typography (Loewe-like)
+   ============================= */
+.wishlist-page .wl-nav{
+  position: sticky; top: 0; z-index: 60;
+  background: rgba(255,255,255,.78);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.wishlist-page .wl-nav .container{
+  max-width: 1640px; margin: 0 auto;
+  padding: 8px var(--edge, 30px);
+}
+.wishlist-page .wl-nav__list{
+  list-style: none; margin: 0; padding: 0;
+  display: flex; justify-content: center; gap: 24px;
+  font-size: 14px; letter-spacing: .02em;
+}
+.wishlist-page .wl-nav__list a{
+  display: inline-block; padding: 10px 0;
+  color: #111; text-decoration: none; opacity: .72;
+  transition: opacity .2s ease, border-color .2s ease;
+  border-bottom: 2px solid transparent;
+}
+.wishlist-page .wl-nav__list a:hover{ opacity: .9; }
+.wishlist-page .wl-nav__list a.active{ opacity: 1; border-bottom-color: #111; }
+
+/* Título y subtítulo centrados, tamaño editorial */
+.wishlist-page .wl-title{
+  text-align: center;
+  font-size: clamp(24px, 2.4vw, 32px);
+  letter-spacing: .01em; margin: 6px 0 0;
+}
+.wishlist-page .wl-sub{
+  text-align: center;
+  font-size: clamp(12px, 1.2vw, 14px);
+  opacity: .7; margin: 6px 0 0;
+}
+
+/* Grid y cards más sobrios (espaciado equilibrado) */
+.wishlist-page .wishlist-grid{
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+.wishlist-page .product-card .body{
+  padding: 12px 14px 16px;
+}
+.wishlist-page .product-card h4{
+  font-size: 16px; line-height: 1.28; margin: 2px 0 6px; font-weight: 600;
+}
+.wishlist-page .product-card .price{
+  font-size: 15px; font-weight: 600;
+}
+/* ========= Wishlist (Loewe-like) ========= */
+
+
+
+/* Sub-nav ya lo tienes; afinamos tipografía y subrayado sutil */
+.wishlist-page .wl-nav{ position: sticky; top: 0; z-index: 60; background: rgba(255,255,255,.85); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(0,0,0,.06); }
+.wishlist-page .wl-nav .container{ max-width: 1640px; padding: 8px var(--edge,30px); }
+.wishlist-page .wl-nav__list{ display:flex; gap:24px; justify-content:center; list-style:none; margin:0; padding:0; font-size:14px; letter-spacing:.02em; }
+.wishlist-page .wl-nav__list a{ display:inline-block; padding:10px 0; color:#111; text-decoration:none; opacity:.75; border-bottom:2px solid transparent; transition:opacity .2s, border-color .2s; }
+.wishlist-page .wl-nav__list a:hover{ opacity:.92; }
+.wishlist-page .wl-nav__list a.active{ opacity:1; border-bottom-color:#111; }
+
+/* Hero “editorial”: solo subtítulo centrado, tamaño sobrio */
+.wishlist-page .wl-hero{ padding: clamp(12px, 4vw, 28px) 0 10px; }
+.wishlist-page .wl-hero .wl-sub{
+  text-align:center;
+  font-size: clamp(13px, 1.2vw, 15px);
+  letter-spacing:.01em; opacity:.75; margin:0;
+}
+
+/* Estado vacío */
+.wishlist-page .wl-empty{ display:block; }
+.wishlist-page .wl-empty[hidden]{ display:none !important; }
+.wishlist-page .wl-empty__wrap{
+  max-width: 620px; margin: 28px auto 8px; text-align:center; padding: 18px 16px;
+}
+.wishlist-page .wl-empty__icon{ margin: 4px auto 8px; opacity:.6; }
+.wishlist-page .wl-empty h3{ font-size:15px; font-weight:700; margin: 8px 0 6px; }
+.wishlist-page .wl-empty p{ font-size:14px; opacity:.7; margin: 0 0 14px; }
+.wishlist-page .btn.btn-dark{
+  display:inline-block; padding: 12px 20px; background:#111; color:#fff; border-radius:6px;
+  text-decoration:none; font-weight:700; letter-spacing:.01em;
+}
+
+/* Grid y cards un poco más compactas (clean) */
+.wishlist-page .wishlist-grid{ gap: clamp(16px, 2vw, 28px); }
+.wishlist-page .product-card .body{ padding: 12px 14px 16px; }
+.wishlist-page .product-card h4{ font-size:16px; line-height:1.28; margin:4px 0 6px; font-weight:600; }
+.wishlist-page .product-card .price{ font-size:15px; font-weight:600; }
+/* ===== Wishlist — Fondo Prophetia ===== */
+
+
+.wishlist-page main,
+.wishlist-page header,
+.wishlist-page footer {
+  position: relative;
+  z-index: 1;
+}
+/* ===== FIX: Fondo visible en wishlist ===== */
+/* ===== PROPHETIA · Wishlist — Set canónico ===== */
+
+/* Fondo (un sólo sitio) */
+body.wishlist-page{
+  /* Usa la ruta relativa correcta desde /assets/css/style.css */
+  background: url("../img/textures/wislisht.png") center / cover no-repeat;
+  /* si tu archivo real se llama distinto, cámbialo aquí */
+  background-attachment: scroll; /* 'fixed' da problemas en iOS */
+  min-height: 100vh;
+  color: #111;
+}
+
+/* Velo opcional (descomenta si quieres suavizar la textura) */
+/*
+body.wishlist-page::before{
+  content:""; position: fixed; inset:0;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(2px);
+  pointer-events:none; z-index:0;
+}
+body.wishlist-page header,
+body.wishlist-page main,
+body.wishlist-page footer{ position:relative; z-index:1; }
+*/
+
+/* ===== Nav + tipografía (puedes mantener tu versión; aquí va unificado) */
+/* ===== Wishlist background PRO (fijo detrás de todo) ===== */
+/* ==== WISHLIST — textura global + paneles translúcidos ==== */
+html, body { height: 100%; }
+
+body.wishlist-page{
+  position: relative;
+  background: none; /* el fondo lo pone el ::before */
+}
+body.wishlist-page::before{
+  content: "";
+  position: fixed; inset: 0; z-index: -1;
+  background:
+    url("../img/textures/wislisht.png") center / cover no-repeat fixed;
+  /* opcional: leve corrección de contraste */
+  filter: brightness(1.02) contrast(1.08);
+}
+
+/* Header y brand band pueden quedar limpios (sin velo) o con velo suave */
+/* ==========================================================
+   Fix visual "escalón" entre header y brand-band en wishlist
+   ========================================================== */
+/* ===== Wishlist: unificar vela/blur entre header y franja ===== */
+:root{
+  --pp-veil-bg: rgba(255,255,255,.82);
+  --pp-veil-blur: 12px;
+  --pp-veil-sat: 160%;
+}
+
+body.wishlist-page .pp-header,
+body.wishlist-page .brand-band{
+  background: var(--pp-veil-bg) !important;
+  backdrop-filter: blur(var(--pp-veil-blur)) saturate(var(--pp-veil-sat)) !important;
+  -webkit-backdrop-filter: blur(var(--pp-veil-blur)) saturate(var(--pp-veil-sat)) !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* El interior NO debe repintar fondo: que “respire” la textura de detrás */
+body.wishlist-page .brand-band .container,
+body.wishlist-page .brand-band .page-logo{
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+
+/* Cápsulas del contenido */
+body.wishlist-page .wl-hero,
+body.wishlist-page .wl-results{
+  width: min(1200px, 94vw);
+  margin: 28px auto;
+  padding: 20px 20px;
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: blur(8px) saturate(150%);
+  border-radius: 18px;
+  box-shadow: 0 16px 50px rgba(0,0,0,.10);
+}
+/* ===== Wishlist: Footer transparente sobre textura ===== */
+/* ==========================================================
+   WISHLIST — Footer Silent Luxury (mismo look que header)
+   ========================================================== */
+body.wishlist-page #footer,
+body.wishlist-page footer,
+body.wishlist-page .footer,
+body.wishlist-page .site-footer,
+body.wishlist-page .pp-footer {
+  background: rgba(255, 255, 255, 0.82) !important; /* velo blanco elegante */
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  box-shadow: 0 -12px 40px rgba(0,0,0,.08) !important;
+  border-top: 1px solid rgba(0,0,0,0.05) !important;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Ajuste interno para dar aire y redondeo visual */
+body.wishlist-page #footer .footer-inner,
+body.wishlist-page .footer-inner {
+  background: transparent !important;
+  border-radius: 20px 20px 0 0;
+  padding: 40px 5vw;
+}
+
+/* El logo y los textos conservan contraste equilibrado */
+body.wishlist-page #footer,
+body.wishlist-page #footer p,
+body.wishlist-page #footer a,
+body.wishlist-page #footer h4 {
+  color: #111 !important;
+}
+
+/* Sutil hover de enlaces tipo Loewe */
+body.wishlist-page #footer a:hover {
+  color: #555 !important;
+  text-decoration: none;
+}
+
+
+
+/* ===== Prophetia Toast (versión Silent Luxury) ===== */
+.pp-toast {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -140%);
+  z-index: 1400;
+  width: min(600px, 92vw);
+  transition: transform .5s cubic-bezier(.25,.8,.25,1), opacity .5s ease;
+  opacity: 0;
+}
+
+.pp-toast.show {
+  transform: translate(-50%, 20px);
+  opacity: 1;
+}
+
+.pp-toast__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 22px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px) saturate(160%);
+  color: #111;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  letter-spacing: 0.3px;
+}
+
+.pp-toast__inner span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.pp-toast__cta {
+  font-weight: 600;
+  color: #111;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 999px;
+  padding: 4px 14px;
+  text-decoration: none;
+  transition: all .2s ease;
+}
+
+.pp-toast__cta:hover {
+  background: #111;
+  color: #fff;
+}
+:root{ --wl-heart: #E0245E; }              /* color global para el corazón guardado */
+.save-btn.is-saved{ color: var(--wl-heart, #E0245E); } /* fallback por si acaso */
+
+--------
+
+/* 1) Color del corazón cuando está guardado */
+.save-btn.is-saved{ color:#E02424; } /* currentColor → rojo */
+
+/* 2) Transiciones suaves */
+.save-btn .icon-heart,
+.save-btn .icon-heart path{
+  transition: fill .2s ease, stroke .2s ease, transform .2s ease;
+}
+
+/* 3) Forzar relleno tanto en <svg> como en <path> (vence a fill="none" inline) */
+.save-btn.is-saved .icon-heart{
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+.save-btn.is-saved .icon-heart path{
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+/* 4) Latido sutil del botón */
+.save-btn.is-saved{
+  animation: ppHeartBeat .35s ease-in-out;
+  transform-origin: center;
+}
+@keyframes ppHeartBeat{
+  0%{transform:scale(1)}
+  25%{transform:scale(1.25)}
+  50%{transform:scale(.92)}
+  75%{transform:scale(1.12)}
+  100%{transform:scale(1)}
+}
+
+/* 5) Relleno animado “de abajo arriba” usando una máscara sobre ::after */
+.save-btn::after{
+  content:"";
+  position:absolute; left:4px; right:4px; top:4px; bottom:4px; /* no cambia la posición del botón */
+  background: currentColor;             /* rojo cuando .is-saved */
+  pointer-events:none;
+
+  /* Máscara con la silueta del corazón (no toca el HTML) */
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 21s-6.3-4.13-9.02-7.36C.92 11.21 1.31 7.9 3.7 6.27 5.64 4.99 8.2 5.41 9.9 7.17L12 9.33l2.1-2.16c1.7-1.76 4.26-2.18 6.2-.9 2.39 1.63 2.78 4.94.72 7.37C18.3 16.87 12 21 12 21z'/></svg>") center/contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 21s-6.3-4.13-9.02-7.36C.92 11.21 1.31 7.9 3.7 6.27 5.64 4.99 8.2 5.41 9.9 7.17L12 9.33l2.1-2.16c1.7-1.76 4.26-2.18 6.2-.9 2.39 1.63 2.78 4.94.72 7.37C18.3 16.87 12 21 12 21z'/></svg>") center/contain no-repeat;
+
+  /* animación de “llenado” */
+  clip-path: inset(100% 0 0 0);  /* oculto (desde abajo) */
+  opacity: 0;
+  transition: clip-path .35s ease, opacity .2s ease;
+}
+.save-btn.is-saved::after{
+  clip-path: inset(0 0 0 0);     /* se destapa hacia arriba */
+  opacity: 1;
+}
+
+
+/* Estado base: corazón vacío con contorno */
+.save-btn .icon-heart path{
+  fill: none;
+  stroke: #111;
+  stroke-width: 1.5;
+  transition: fill .2s ease, stroke .2s ease, transform .2s ease;
+}
+
+/* >>> ESTADO GUARDADO (usa aria-pressed, NO clase) <<< */
+.save-btn[aria-pressed="true"]{
+  color: #E02424; /* currentColor = rojo para todo el botón */
+}
+
+/* Relleno sólido del propio path (por si falla la máscara) */
+.save-btn[aria-pressed="true"] .icon-heart,
+.save-btn[aria-pressed="true"] .icon-heart path{
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+/* Latido elegante */
+.save-btn[aria-pressed="true"]{
+  animation: ppHeartBeat .35s ease-in-out;
+  transform-origin: center;
+}
+@keyframes ppHeartBeat{
+  0%{transform:scale(1)}
+  25%{transform:scale(1.25)}
+  50%{transform:scale(.92)}
+  75%{transform:scale(1.12)}
+  100%{transform:scale(1)}
+}
+/* Capa de relleno animada, recortada con la silueta del corazón */
+.save-btn{
+  position: absolute;  /* mantiene tu posición top/right */
+  top:10px; right:10px;
+  width:36px; height:36px;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+
+.save-btn::after{
+  content:"";
+  position:absolute; left:4px; right:4px; top:4px; bottom:4px;
+  background: currentColor;
+  pointer-events:none;
+
+  /* máscara con forma de corazón */
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 21s-6.3-4.13-9.02-7.36C.92 11.21 1.31 7.9 3.7 6.27 5.64 4.99 8.2 5.41 9.9 7.17L12 9.33l2.1-2.16c1.7-1.76 4.26-2.18 6.2-.9 2.39 1.63 2.78 4.94.72 7.37C18.3 16.87 12 21 12 21z'/></svg>") center/contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 21s-6.3-4.13-9.02-7.36C.92 11.21 1.31 7.9 3.7 6.27 5.64 4.99 8.2 5.41 9.9 7.17L12 9.33l2.1-2.16c1.7-1.76 4.26-2.18 6.2-.9 2.39 1.63 2.78 4.94.72 7.37C18.3 16.87 12 21 12 21z'/></svg>") center/contain no-repeat;
+
+  /* empieza oculto desde abajo */
+  clip-path: inset(100% 0 0 0);
+  opacity: 0;
+  transition: clip-path .35s ease, opacity .2s ease;
+}
+
+/* al guardar, destapamos hacia arriba */
+.save-btn[aria-pressed="true"]::after{
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+}
+/* === FIX DEFINITIVO: corazón guardado rojo (gana a duplicados) === */
+.products-grid .product-card .img-wrap > .save-btn.is-saved .icon-heart,
+.products-grid .product-card .img-wrap > .save-btn.is-saved .icon-heart path{
+  fill: #E02424 !important;
+  stroke: #E02424 !important;
+}
+
+/* Micro-latido elegante al marcar */
+.products-grid .product-card .img-wrap > .save-btn.is-saved{
+  animation: ppHeartBeat .35s ease-in-out;
+  transform-origin: center;
+}
+@keyframes ppHeartBeat{
+  0%{transform:scale(1)}
+  25%{transform:scale(1.25)}
+  50%{transform:scale(.92)}
+  75%{transform:scale(1.12)}
+  100%{transform:scale(1)}
+}
+/* === FIX COLOR UNIFORME · WISHLIST HEADER/NAV === */
+body.wishlist-page .wl-nav {
+  background: var(--pp-veil-bg, rgba(255,255,255,.82)) !important;
+  backdrop-filter: blur(var(--pp-veil-blur, 12px)) saturate(var(--pp-veil-sat,160%)) !important;
+  -webkit-backdrop-filter: blur(var(--pp-veil-blur, 12px)) saturate(var(--pp-veil-sat,160%)) !important;
+  border-bottom: 1px solid rgba(0,0,0,.05) !important;
+  box-shadow: none !important;
+}
+body.wishlist-page .wl-nav {
+  background-attachment: fixed !important;
+  background: var(--pp-veil-bg, rgba(255,255,255,.82)) !important;
+}
+
+/* === WISHLIST · VELO CANÓNICO (header + brand + nav iguales) === */
+:root{
+  --pp-veil-bg: rgba(255,255,255,.82);
+  --pp-veil-blur: 12px;
+  --pp-veil-sat: 160%;
+}
+
+/* mata fondos/gradientes previos del subnav */
+body.wishlist-page .wl-nav{
+  background-image: none !important;
+}
+
+/* === FIX FINAL UNIFORME · Wishlist Header/Logo/Nav === */
+body.wishlist-page .pp-header,
+body.wishlist-page .brand-band,
+body.wishlist-page .wl-nav {
+  background: rgba(255,255,255,0.82) !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Elimina cualquier línea residual de los hijos internos */
+body.wishlist-page .pp-header *,
+body.wishlist-page .brand-band *,
+body.wishlist-page .wl-nav *,
+body.wishlist-page .wl-nav .container {
+  border: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Asegura continuidad del fondo (sin saltos de opacidad) */
+body.wishlist-page::before {
+  background-attachment: fixed;
+  filter: brightness(1.02) contrast(1.08);
+}
+
+/* =========================================================
+   PROPHETIA · HOODIES (scope por página)
+   ========================================================= */
+
+/* Usa la clase del <body> cuando entras directo
+   y el data-page de #swup cuando navegas con Swup */
+body.hoodies-page .brand-band,
+#swup[data-page="hoodies"] .brand-band{
+  background: var(--pp-veil-bg, rgba(255,255,255,.82));
+  backdrop-filter: blur(var(--pp-veil-blur, 12px)) saturate(var(--pp-veil-sat,160%));
+  -webkit-backdrop-filter: blur(var(--pp-veil-blur, 12px)) saturate(var(--pp-veil-sat,160%));
+  border: 0;
+  box-shadow: none;
+  margin: 0 0 8px 0;        /* aire inferior como en camisetas */
+}
+
+/* Hero/title de la categoría */
+body.hoodies-page .page-hero,
+#swup[data-page="hoodies"] .page-hero{
+  padding: 18px 0 8px;
+}
+body.hoodies-page .page-hero h1,
+#swup[data-page="hoodies"] .page-hero h1{
+  font-size: clamp(28px, 3.2vw, 38px);
+  letter-spacing: .02em;
+  margin: 0;
+}
+body.hoodies-page .page-hero .lede,
+#swup[data-page="hoodies"] .page-hero .lede{
+  color: #555;
+  margin-top: 6px;
+}
+
+/* Toolbar superior (filtros / ordenar / stock) */
+body.hoodies-page .cat-toolbar,
+#swup[data-page="hoodies"] .cat-toolbar{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 16px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+body.hoodies-page .cat-toolbar .pill,
+#swup[data-page="hoodies"] .cat-toolbar .pill{
+  margin-right: 8px;
+}
+
+/* Grid de productos (reusa .products-grid, solo ajustes) */
+body.hoodies-page #gridHoodies,
+#swup[data-page="hoodies"] #gridHoodies{
+  margin-top: 18px;
+}
+body.hoodies-page #gridHoodies .product-card .price,
+#swup[data-page="hoodies"] #gridHoodies .product-card .price{
+  font-weight: 600;
+}
+
+/* Drawer de filtros (si lo usas en hoodies con IDs propios) */
+body.hoodies-page #filtersDrawerHoodies,
+#swup[data-page="hoodies"] #filtersDrawerHoodies{
+  width: min(420px, 92vw);
+}
+body.hoodies-page #applyFiltersHoodies,
+#swup[data-page="hoodies"] #applyFiltersHoodies{
+  white-space: nowrap;
+}
+
+/* Toques responsive */
+@media (max-width: 768px){
+  body.hoodies-page .cat-toolbar,
+  #swup[data-page="hoodies"] .cat-toolbar{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  body.hoodies-page .page-hero,
+  #swup[data-page="hoodies"] .page-hero{
+    padding-top: 12px;
+  }
+}
+/* PRIORIDAD DE CLICS EN CATÁLOGO */
+.camisetas-page .brand-band,
+.camisetas-page .page-logo{
+  z-index: 0;               /* por debajo del contenido */
+  position: relative;
+}
+
+.camisetas-page #gridCamisetas{
+  position: relative;
+  z-index: 2;               /* por encima del logo/franja */
+}
+
+/* Si no necesitas que el logo sea clicable aquí: */
+.camisetas-page .page-logo { pointer-events: none; }
+/* (si quieres conservar el link del logo, quita esta línea) */
+/* Prioridad de clics en la página de camisetas */
+.camisetas-page .brand-band{ position:relative; z-index:0; }
+.camisetas-page #gridCamisetas{ position:relative; z-index:2; }
+
+/* Si no necesitas clicar el logo aquí, evita que “se coma” clics */
+.camisetas-page .page-logo{ pointer-events:none; }
+
+
+/* ===== PDP layout tipo editorial (galería izq. + panel derecha sticky) ===== */
+.product-wrap{
+  display:grid;
+  grid-template-columns: minmax(640px,1fr) minmax(420px,560px); /* galería | panel */
+  gap: clamp(48px, 6vw, 88px);
+  align-items:start;
+}
+.product-wrap.container{
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 3vw, 32px);
+}
+.pdp-panel{
+  position: sticky; top: 96px;
+  justify-self: end;                 /* ← pega el panel al borde dcho */
+  width: min(560px, 92vw);
+}
+
+
+/* === PDP: modal centrado con fade-in (tipo Loewe) === */
+/* === Drawer lateral (tipo Loewe) === */
+.ad{ position:fixed; inset:0; z-index:1500; display:none; }
+.ad.open{ display:block; }
+
+/* backdrop con fade */
+.ad-backdrop{
+  position:absolute; inset:0; background:rgba(0,0,0,.45);
+  opacity:0; animation: adBackdropIn .28s ease forwards;
+}
+
+/* panel pegado a la derecha con slide+fade */
+.ad-panel{
+  position:absolute; top:0; right:0; height:100%; width:min(560px, 92vw);
+  background:#fff; box-shadow:-24px 0 60px rgba(0,0,0,.18);
+  transform: translateX(100%); opacity:.96;
+  animation: adPanelIn .32s cubic-bezier(.2,.7,.2,1) forwards;
+  display:flex; flex-direction:column;
+}
+
+@keyframes adBackdropIn { from{opacity:0} to{opacity:1} }
+@keyframes adPanelIn { from{transform:translateX(100%)} to{transform:translateX(0)} }
+
+/* cierre con animación (opcional) */
+.ad.closing .ad-backdrop{ animation: adBackdropOut .22s ease forwards; }
+.ad.closing .ad-panel{ animation: adPanelOut .22s ease forwards; }
+@keyframes adBackdropOut { from{opacity:1} to{opacity:0} }
+@keyframes adPanelOut { from{transform:translateX(0)} to{transform:translateX(100%)} }
+
+.ad-head{ display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; border-bottom:1px solid #eee; }
+.ad-title{ font-size:18px; margin:0; }
+.ad-close{ all:unset; cursor:pointer; width:36px; height:36px; display:grid; place-items:center; font-size:22px; }
+.ad-body{ padding:18px 20px; overflow:auto; }
+
+/* grid de opciones */
+.ad .opts{ display:grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap:12px; }
+.ad .opt{ display:flex; align-items:center; justify-content:center; min-height:52px; padding:10px;
+  border:1px solid #ddd; background:#fff; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+.ad .opt:hover{ border-color:#111; box-shadow:0 0 0 2px #111 inset; }
+.ad .opt.is-active{ border-color:#111; }
+.ad .swatch{ width:18px; height:18px; border-radius:50%; margin-right:8px; border:1px solid #ccc; }
+
+/* evitar scroll del body */
+body.drawer-open{ overflow:hidden; }
+
+/* Enlaces del panel (Talla/Color) como línea de texto */
+.pdp-row{ padding:10px 0; border-top:1px solid rgba(0,0,0,.08); }
+.attr-link{ text-decoration:none; color:inherit; padding-bottom:2px; border-bottom:1px solid #ddd; }
+.attr-link:hover{ border-bottom-color:#111; }
+.attr-link::after{ content:" — " attr(data-selected); color:#777; margin-left:6px; }
+
+
+
+/* Evitar scroll del body cuando el modal está abierto */
+body.modal-open{ overflow:hidden; }
+
+/* PDP — fila de atributo (Talla/Color) como texto clicable */
+/* Fila tipo Loewe: solo la palabra como enlace */
+.pdp-row { padding: 10px 0; border-top: 1px solid rgba(0,0,0,.08); }
+.attr-link{
+  text-decoration: none;
+  color: inherit;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #ddd;   /* subrayado sutil */
+}
+.attr-link:hover{ border-bottom-color:#111; }
+
+/* El valor elegido se pinta SIN nodos extra usando data-selected */
+.attr-link::after{
+  content: " — " attr(data-selected);
+  color: #777;
+  margin-left: 6px;
+}
+
+
+/* PDP: panel pegado al borde derecho */
+body[data-page="pdp"] .product-wrap.container{
+  max-width: 100vw;       /* que ocupe todo el viewport */
+  padding-right: 0;       /* sin gutter a la derecha */
+  padding-left: clamp(16px, 3vw, 32px); /* deja algo de aire a la izq si quieres */
+}
+
+/* por si hubiera alguna herencia rara */
+body[data-page="pdp"] .pdp-panel{
+  justify-self: end;
+  margin-right: 0;
 }

@@ -67,6 +67,27 @@
   // Auto-sync al cargar la página
   document.addEventListener('DOMContentLoaded', updateBadges);
 })();
+/* ============================================================
+   PROPHETIA · Click universal de productos (camisetas, hoodies, etc.)
+   ============================================================ */
+document.addEventListener('click', (e) => {
+  // Evitar interferencias con botones (wishlist, carrito, etc.)
+  if (e.target.closest('.save-btn, .cart-add, button')) return;
+
+  // Detecta cualquier tarjeta de producto
+  const card = e.target.closest('.product-card');
+  if (!card) return;
+
+  // Obtiene el ID del producto
+  const id = card.dataset.id || card.getAttribute('data-id');
+  if (!id) return;
+
+  // Redirige a la página de producto
+  const url = `producto.html?id=${encodeURIComponent(id)}`;
+  e.preventDefault();
+  window.location.assign(url);
+});
+
 /* =========================================================
    PROPHETIA — Catálogo (render desde assets/data/catalog.json)
    ========================================================= */
@@ -77,23 +98,7 @@
     return await res.json();
   }
 
-  function cardHTML(p) {
-    // p: { id, slug, title, collection, category, price, images[] }
-    const href = `producto.html?slug=${encodeURIComponent(p.slug || p.id)}`;
-    const img  = (p.images && p.images[0]) || '/assets/img/Atlas/ATLASDEFINITIVO-IMPRES.png';
-    const price = (typeof p.price === 'number') ? window.ppCart.money(p.price) : (p.price || '—');
-    return `
-      <article class="card">
-        <a class="img-wrap" href="${href}">
-          <img src="${img}" alt="${p.title || 'Producto Prophetia'}">
-        </a>
-        <h4>${p.title || 'Producto Prophetia'}</h4>
-        ${p.collection ? `<p class="collection">${p.collection}</p>` : ''}
-        <span class="price">${price}</span>
-        <a href="${href}" class="btn-primary">Ver</a>
-      </article>
-    `.trim();
-  }
+
 
   async function ppInitCatalog({ target, category, query } = {}) {
     const grid = document.querySelector(target);
@@ -125,7 +130,7 @@
   }
 
   // Export global
-  window.ppInitCatalog = ppInitCatalog;
+  
 
 })();
 
@@ -681,3 +686,124 @@ const observer = new IntersectionObserver((entries)=>{
   });
 },{threshold:.2});
 document.querySelectorAll('[data-fade]').forEach(el=>observer.observe(el));
+
+/* =========================================================
+   WISHLIST Prophetia (hearts + toast + storage)
+   ========================================================= */
+(function () {
+  const $  = (s, r=document)=> r.querySelector(s);
+  const $$ = (s, r=document)=> Array.from(r.querySelectorAll(s));
+  const GRID_SEL = '#gridCamisetas';
+  const WISHLIST_KEY = 'pp_wishlist_v1';
+
+  const load = () => JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]');
+  const save = (list) => localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
+  const has  = (id) => load().some(p => String(p.id) === String(id));
+  const add  = (prod) => { const l = load(); if (!has(prod.id)) l.push(prod); save(l); };
+  const del  = (id) => { const l = load().filter(p => String(p.id) !== String(id)); save(l); };
+
+  const toastEl  = $('#ppToast');
+  const toastMsg = $('#ppToastMsg');
+  
+
+  function updateHeartState(){
+    $$('.save-btn[data-save]').forEach(btn=>{
+      const id = btn.dataset.id;
+      btn.classList.toggle('is-saved', has(id));
+    });
+  }
+
+ 
+
+  document.addEventListener('DOMContentLoaded', updateHeartState);
+})();
+
+(function(){
+  const KEY='pp_wishlist_v1';
+  const a = document.getElementById('ppSavedBtn');
+  if(!a) return;
+  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}};
+  function update(){ a.dataset.count = String(load().length); }
+  document.addEventListener('storage', update);
+  document.addEventListener('DOMContentLoaded', update);
+  update();
+})();
+/* ===== Wishlist UI sync (conteo + estado vacío) ===== */
+(function(){
+  const isWishlist = document.body.classList.contains('wishlist-page');
+  if (!isWishlist) return;
+
+  const $countSpan = document.getElementById('wlCount');
+  const $empty     = document.querySelector('.wl-empty');
+  const $grid      = document.querySelector('.wishlist-grid') || document.querySelector('.wl-results');
+
+  function getCountFromDOM(){
+    return document.querySelectorAll('.wishlist-grid .product-card').length;
+  }
+  function getCountFromStorage(){
+    try {
+      const ls = JSON.parse(localStorage.getItem('pp_wishlist') || '[]');
+      return Array.isArray(ls) ? ls.length : 0;
+    } catch(e){ return 0; }
+  }
+
+  function render(){
+    // coge el mayor (por si pintas por DOM o por LS)
+    const n = Math.max(getCountFromDOM(), getCountFromStorage());
+    const label = n === 1 ? 'producto' : 'productos';
+    if ($countSpan) $countSpan.textContent = n;
+
+    // muestra/oculta estado vacío
+    if ($empty && $grid){
+      if (n === 0){ $empty.hidden = false; $grid.style.display = 'none'; }
+      else        { $empty.hidden = true;  $grid.style.display = '';     }
+    }
+  }
+
+  // inicial y cada vez que pueda cambiar la lista
+  document.addEventListener('pp:wishlist:changed', render);
+  document.addEventListener('DOMContentLoaded', render);
+  render();
+})();
+// === Catálogo compartido (camisetas/hoodies) ===
+window.ppInitCatalog = async function ({ target, category }) {
+  const grid = document.querySelector(target);
+  if (!grid) return;
+
+  // Carga el JSON (misma ruta que usabas en camisetas)
+  const res  = await fetch('assets/data/catalog.json');
+  const data = await res.json();
+
+  // Filtro por categoría; si no llega categoría, pinto todo
+  const list = data.filter(p => {
+    if (!category) return true;
+    if (category === 'camisetas') return p.type === 'tshirt';
+    if (category === 'hoodies')   return p.type === 'hoodie';
+    return true;
+  });
+
+  // Plantilla mínima (reusa lo que ya tenías)
+  const card = (p) => {
+    const cover = p.cover || (Array.isArray(p.images) ? p.images[0] : '');
+    return `
+      <article class="product-card" data-id="${p.id}" data-sizes="${(p.sizes||[]).join(',')}">
+        <div class="img-wrap">
+          <img src="${cover}" alt="${p.title}" loading="lazy">
+          <button class="save-btn" type="button" aria-label="Guardar" data-save
+            data-id="${p.id}" data-title="${p.title}" data-price="${p.price}" data-img="${cover}">
+            <svg class="icon-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12.1 20.1C11.8 20.1 4 14.7 3.2 9.6C2.8 6.8 4.9 4.5 7.5 4.5c1.7 0 3.2.9 4.1 2.3A5 5 0 0 1 19 4.5c2.6 0 4.7 2.3 4.3 5.1c-.8 5.1-8.6 10.5-9.1 10.5z" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </div>
+        <div class="body">
+          <h4>${p.title}</h4>
+          <div class="price">${Number(p.price).toFixed(2)} €</div>
+        </div>
+      </article>`;
+  };
+
+  grid.innerHTML = list.map(card).join('');
+  
+  // (Opcional) aquí puedes reusar la lógica de wishlist/toast que ya usas en camisetas
+};

@@ -67,34 +67,38 @@
     ],
     "short": "Tipografía manuscrita con tono poético y gesto seguro. Declaración íntima."
   },
-  {
-    "id": "like-gods",
-    "type": "tshirt",
-    "title": "Like Gods by Prophetia",
-    "collection": "letters-from-the-soul",
-    "gender": "unisex",
-    "fit": "regular",
-    "price": 88,
-    "inStock": true,
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "images": [
-      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
-    ],
-    "short": "Carta interior en tinta editorial. Minimalismo con resonancia emocional."
-  },
-  {
-    "id": "letter-for-self",
-    "type": "tshirt",
-    "title": "Letter for Self",
-    "collection": "letters-from-the-soul",
-    "gender": "unisex",
-    "fit": "regular",
-    "price": 88,
-    "inStock": true,
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "images": [
-      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
-    ],
-    "short": "Carta interior en tinta editorial. Minimalismo con resonancia emocional."
-  }
+{
+  "id": "like-gods",
+  "type": "hoodie",
+  "title": "Like Gods by Prophetia",
+  "collection": "letters-from-the-soul",
+  "gender": "unisex",
+  "fit": "regular",
+  "price": 88,
+  "inStock": true,
+  "sizes": ["S", "M", "L", "XL", "XXL"],
+  "images": [
+    "assets/img/Hoodies/likegods-front.png",
+    "assets/img/Hoodies/likegods-back.png"
+  ],
+  "short": "Sudadera editorial Prophetia. Silencio, poder y elegancia mediterránea."
+},
+{
+  "id": "letter-for-self",
+  "type": "hoodie",
+  "title": "Letter for Self by Prophetia",
+  "collection": "letters-from-the-soul",
+  "gender": "unisex",
+  "fit": "regular",
+  "price": 88,
+  "inStock": true,
+  "cover": "assets/img/letterfromself/letter1.png",
+  "sizes": ["S", "M", "L", "XL", "XXL"],
+  "images": [
+    "assets/img/letterfromself/letter1.png",
+    "assets/img/letterfromself/letter2.png"
+  ],
+  "short": "Sudadera Prophetia — introspección y lujo silencioso."
+}
+
 ]

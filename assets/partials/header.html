@@ -72,29 +72,22 @@
 <!-- ===== Prophetia Spotify Player (embed correcto) ===== -->
 <div id="ppAudioChip" class="pp-audio-toggle">
   <img src="assets/icons/spo.svg" alt="Prophetia Playlist" height="20" />
-
   <span>Prophetia Playlist</span>
 </div>
 
-<div id="ppAudioPanel" class="hidden" aria-hidden="true">
-  <iframe
-    style="border-radius:12px"
-    src="https://open.spotify.com/embed/playlist/3saExGHgNBNz9ZDxlUyYn2"
-    width="100%" height="152" frameborder="0"
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-    sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
-    referrerpolicy="origin"
-    loading="lazy">
-  </iframe>
+<div id="ppAudioPanel" aria-hidden="true">
+  <div class="pp-spotify-viewport">
+    <iframe
+      style="border-radius:12px"
+      src="https://open.spotify.com/embed/playlist/3saExGHgNBNz9ZDxlUyYn2"
+      width="100%" height="152" frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
+      referrerpolicy="origin" loading="lazy">
+    </iframe>
+  </div>
 
-  <!-- Respaldo claro por si el usuario quiere abrir completo -->
-  <p style="margin:8px 0 0; text-align:center;">
-    <a href="https://open.spotify.com/playlist/3saExGHgNBNz9ZDxlUyYn2"
-       target="_blank" rel="noopener" style="font-weight:600; text-decoration:none;">
-      Abrir en Spotify ↗
-    </a>
-  </p>
-</div>
+
 
 
 <!-- ===================== /HEADER ===================== -->

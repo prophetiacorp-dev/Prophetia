@@ -38,6 +38,15 @@
   <div id="header"></div>
 
 <!-- ======================= FRANJA DEL LOGO ======================= -->
+
+<!-- =============================================================== -->
+
+
+  <!-- =========================================================
+       LAYOUT de categoría: filtros | resultados | categorías
+       ========================================================= -->
+  <main id="swup" class="cat-layout" data-page="camisetas">
+
 <div class="brand-band">
   <div class="container">
     <a class="page-logo" href="index.html" aria-label="Inicio Prophetia">
@@ -45,14 +54,6 @@
     </a>
   </div>
 </div>
-<!-- =============================================================== -->
-
-
-  <!-- =========================================================
-       LAYOUT de categoría: filtros | resultados | categorías
-       ========================================================= -->
-  <main class="cat-layout">
-
     <!-- ===================== Resultados (centro) ===================== -->
     <section class="cat-results">
 <!-- ======= TOOLBAR de categoría: Filtros + Tiro/Fit + Ordenar por + En stock ======= -->
@@ -222,7 +223,132 @@
 
   <!-- PARCIAL: footer -->
   <div id="footer"></div>
+<!-- === Catalog + Wishlist (define ppInitCatalog aquí) === -->
+<script>
+(function () {
+  const $  = (s, r=document)=> r.querySelector(s);
+  const $$ = (s, r=document)=> Array.from(r.querySelectorAll(s));
 
+  // ---- wishlist storage ----
+  const KEY = 'pp_wishlist_v1';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; } };
+  const save = (l) => localStorage.setItem(KEY, JSON.stringify(l));
+  const has  = (id)=> load().some(p=>String(p.id)===String(id));
+  const add  = (p)=>{ const l=load(); if(!has(p.id)) l.push(p); save(l); };
+  const del  = (id)=> save(load().filter(p=>String(p.id)!==String(id)));
+
+  // ---- toast (usa el que ya existe en camisetas.html) ----
+  const toastEl  = () => $('#ppToast');
+  const toastMsg = () => $('#ppToastMsg');
+  const toastAct = () => $('#ppToastAction');
+  let toastTimer = null;
+  function toast(msg, href='wishlist.html'){
+    const el = toastEl(); if(!el) return;
+    const m = toastMsg(); if (m) m.textContent = msg || 'Añadido a guardados';
+    const a = toastAct(); if (a) a.href = href;
+    el.hidden = false; el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{ el.classList.remove('show'); el.hidden = true; }, 1800);
+  }
+
+  // ---- plantilla con normalización (title/cover/images) ----
+ function cardTemplate(p){
+  const id    = p.id;
+  const href  = `producto.html?id=${encodeURIComponent(id)}`;
+  const cover = p.cover || (Array.isArray(p.images) ? p.images[0] : '') || '';
+  const price = Number(p.price).toFixed(2);
+
+  return `
+  <article class="product-card" data-id="${id}" data-sizes="${(p.sizes||[]).join(',')}">
+    <a class="img-wrap" href="${href}">
+      <img src="${cover}" alt="${p.title}" loading="lazy">
+    </a>
+
+    <button class="save-btn" type="button" aria-label="Guardar" data-save
+            data-id="${id}" data-title="${p.title}" data-price="${p.price}" data-img="${cover}">
+      <!-- icono corazón -->
+    </button>
+
+    <div class="body">
+      <h4><a href="${href}">${p.title}</a></h4>
+      <div class="price">${price} €</div>
+    </div>
+  </article>`;
+}
+
+
+
+  // ---- API que llama camisetas.html (¡debe existir antes del injectHF!) ----
+  window.ppInitCatalog = async function({ target, category }){
+    const grid = document.querySelector(target);
+    if (!grid) return;
+
+    // Ajusta si mueves el JSON: camisetas.html está esperando que exista ppInitCatalog y pinte el grid. :contentReference[oaicite:1]{index=1}
+    const res = await fetch('assets/data/catalog.json');
+    const data = await res.json();  // Claves: title, images, cover, etc. :contentReference[oaicite:2]{index=2}
+
+    // Si quisieras filtrar por categoría, aquí; de momento pintamos todo:
+    const list = data;
+
+    grid.innerHTML = list.map(cardTemplate).join('');
+
+    // Delegación: corazones
+   // Delegación: corazones
+// Delegación: corazones
+grid.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.save-btn[data-save]');
+  if (!btn) return;
+
+  const id = String(btn.dataset.id);
+  const wasSaved = has(id); // estado ANTES del click
+  const path = btn.querySelector('.icon-heart path');  // ← el corazón
+
+  if (wasSaved) {
+    del(id);
+    btn.classList.remove('is-saved');
+
+    // Visual: vuelve a contorno vacío
+    if (path){
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke','#111');
+      path.setAttribute('stroke-width','1.5');
+    }
+    toast('Quitado de guardados');
+  } else {
+    add({
+      id,
+      title: btn.dataset.title,
+      price: btn.dataset.price,
+      img: btn.dataset.img
+    });
+    btn.classList.add('is-saved');
+
+    // Visual: relleno rojo sólido ahora mismo
+    if (path){
+      // aseguramos color del botón por si usas currentColor en CSS
+      btn.style.color = '#E0245E';
+      path.setAttribute('fill','currentColor');
+      path.setAttribute('stroke','currentColor');
+      path.setAttribute('stroke-width','1.5');
+    }
+    toast('Añadido a guardados');
+  }
+});
+
+
+  };
+})();
+</script>
+
+<script>
+  // Clicks del catálogo → navegación dura (evita Swup u otros interceptores)
+  document.addEventListener('click', function (e) {
+    const a = e.target.closest('#gridCamisetas a[href*="producto.html"]');
+    if (!a) return;
+    e.preventDefault();
+    window.location.assign(a.href);
+  });
+</script>
 
 
   <!-- =========================================================
@@ -244,6 +370,7 @@
 
         // Inicializaciones del header (menú, auth, audio, etc.)
         if (window.ppInitHeader) window.ppInitHeader();
+            if (window.ppInitAudio) window.ppInitAudio();  // ← AÑADE ESTA
 
         // Carrito (si tienes ppCartInit)
         if (window.ppCartInit) window.ppCartInit();
@@ -432,6 +559,24 @@
 
     })();
   </script>
+  <script>
+  document.getElementById('gridCamisetas')?.addEventListener('click', (e) => {
+    // No navegar si clican el corazón u otros controles
+    if (e.target.closest('.save-btn')) return;
+
+    const card = e.target.closest('.product-card');
+    if (!card) return;
+
+    const id = card.dataset.id || card.getAttribute('data-id');
+    if (!id) return;
+
+    // Si tenías slug, adapta la clave (?slug=...) aquí
+    const url = `producto.html?id=${encodeURIComponent(id)}`;
+    e.preventDefault();
+    window.location.assign(url);
+  });
+</script>
+
   <!-- ====== CART: overlay + drawer ====== -->
 <div id="cartOverlay" class="cart-overlay" hidden></div>
 
