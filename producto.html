@@ -25,11 +25,13 @@
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-<body data-page="pdp">
+<body class="pdp" data-page="pdp">
   <div id="header"></div>
-
-   <main id="swup" data-page="pdp">
-    <div class="brand-band">
+<!-- =======================================================
+     BRAND BAND — Logo Prophetia (igual que en camisetas)
+     ======================================================= -->
+<!-- ===== FRANJA DEL LOGO (idéntica a camisetas) ===== -->
+<div class="brand-band">
   <div class="container">
     <a class="page-logo" href="index.html" aria-label="Inicio Prophetia">
       <img src="assets/img/logo/propnegro.png" alt="PROPHETIA">
@@ -37,7 +39,9 @@
   </div>
 </div>
 
-  <div class="product-wrap">
+
+  <div class="product-wrap container">
+
     <!-- Galería izquierda -->
    <section class="pdp-gallery">
   <div class="pdp-hero">
@@ -120,7 +124,7 @@
       </div>
     </div>
   </div>
-
+</main>
   <!-- Side panel atributos (Talla / Color) -->
   <!-- Modal atributos (centrado, fade-in) -->
 <div id="attrDrawer" class="ad" aria-hidden="true" role="dialog" aria-modal="true">
@@ -134,8 +138,27 @@
   </aside>
 </div>
 
-</main>
 
+
+<!-- ====== CART: overlay + drawer ====== -->
+<div id="cartOverlay" class="cart-overlay" hidden></div>
+
+<aside id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Cesta">
+  <div class="cart-head">
+    <strong>Cesta · <span id="cartCount">0</span></strong>
+    <button id="cartClose" class="cart-close" aria-label="Cerrar">✕</button>
+  </div>
+
+  <div class="cart-list" id="cartList"><!-- dinámico --></div>
+
+  <div class="cart-foot">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartSubtotal">0,00 €</strong>
+    </div>
+    <button class="cart-checkout" id="cartCheckout">Finalizar compra</button>
+  </div>
+</aside>
 
 
 
@@ -198,42 +221,28 @@ window.__pdp = prod;
       $('#pCrumb').textContent = prod.title || 'Product';
 
       // 4) Galería (dedupe + sin duplicar activa en thumbs + zoom completo)
+// 4) Galería — estilo Loewe: 2 mains lado-a-lado + thumbs + zoom
 const rawImages = (prod.images && prod.images.length) ? prod.images : ['assets/img/products/placeholder.jpg'];
-// Deduplicar por src
-const images = [...new Map(rawImages.map(src => [src, src])).values()];
+const images = [...new Map(rawImages.map(src => [src, src])).values()]; // dedupe
 
-const main   = document.querySelector('#pMain');
+const hero   = document.querySelector('.pdp-hero');
 const thumbs = document.querySelector('#pThumbs');
-let i = 0;
 
-// Pinta principal y rehace thumbs (excluye la activa)
-function paint(i0){
-  i = i0;
-  const current = images[i] || images[0];
-  main.src = current;
+// pinta 2 imágenes grandes (si solo hay una, pinta una)
+const mains = images.slice(0, 2);
+hero.innerHTML = mains.map((src, idx) => `
+  <button class="hero-cell" data-i="${idx}" aria-label="Ampliar">
+    <img class="hero-img" src="${src}" alt="">
+  </button>
+`).join('');
 
-  thumbs.innerHTML = images
-    .map((src, idx) => ({ src, idx }))
-    .filter(o => o.idx !== i)
-    .map(o => `<img class="pdp-thumb" data-i="${o.idx}" src="${o.src}" alt="">`)
-    .join('');
-}
+// pinta las miniaturas con el resto (a partir de la tercera)
+const startThumb = mains.length;
+thumbs.innerHTML = images.slice(startThumb).map((src, k) =>
+  `<img class="pdp-thumb" data-i="${k + startThumb}" src="${src}" alt="">`
+).join('');
 
-// Arrancar en "front" si existe, si no índice 0
-const frontIdx = images.findIndex(src => /front/i.test(src));
-paint(frontIdx >= 0 ? frontIdx : 0);
-
-// Click en thumbs (fuera del zoom)
-thumbs.addEventListener('click', (e)=>{
-  const t = e.target.closest('.pdp-thumb[data-i]'); if(!t) return;
-  paint(+t.dataset.i);
-});
-
-// Zonas invisibles de avance/retroceso en la hero
-document.querySelector('.g-prev')?.addEventListener('click', ()=> paint((i - 1 + images.length) % images.length));
-document.querySelector('.g-next')?.addEventListener('click', ()=> paint((i + 1) % images.length));
-
-// === Lightbox (zoom con todas las imágenes) ===
+// === Lightbox (aprovechamos tu zoom existente) ===
 const Z = {
   el     : document.getElementById('pdpZoom'),
   img    : document.getElementById('pdpZoomImg'),
@@ -244,19 +253,12 @@ const Z = {
 function zoomPaint(idx){
   Z.i = idx;
   Z.img.src = images[idx] || images[0];
-  Z.thumbs.innerHTML = images.map((src, k) =>
-    `<li class="${k===idx?'is-active':''}" data-i="${k}"><img src="${src}" alt=""></li>`
+  Z.thumbs.innerHTML = images.map((src, i) =>
+    `<li class="${i===idx?'is-active':''}" data-i="${i}"><img src="${src}" alt=""></li>`
   ).join('');
 }
-function zoomOpen(idx){
-  zoomPaint(idx);
-  Z.el.classList.remove('hidden');
-  Z.el.setAttribute('aria-hidden','false');
-}
-function zoomClose(){
-  Z.el.classList.add('hidden');
-  Z.el.setAttribute('aria-hidden','true');
-}
+function zoomOpen(idx){ zoomPaint(idx); Z.el.classList.remove('hidden'); Z.el.setAttribute('aria-hidden','false'); }
+function zoomClose(){ Z.el.classList.add('hidden'); Z.el.setAttribute('aria-hidden','true'); }
 document.getElementById('pdpZoomClose')?.addEventListener('click', zoomClose);
 Z.el.querySelector('.lb-backdrop')?.addEventListener('click', zoomClose);
 
@@ -281,6 +283,21 @@ document.addEventListener('keydown', (e)=>{
   if (e.key === 'ArrowRight') zoomPaint((Z.i + 1) % images.length);
   if (e.key === 'Escape')     zoomClose();
 });
+Z.thumbs?.addEventListener('click', e=>{
+  const li = e.target.closest('li[data-i]'); if(!li) return;
+  zoomPaint(+li.dataset.i);
+});
+
+// abrir zoom:
+hero.addEventListener('click', e=>{
+  const b = e.target.closest('.hero-cell[data-i]'); if(!b) return;
+  zoomOpen(+b.dataset.i);
+});
+thumbs.addEventListener('click', e=>{
+  const t = e.target.closest('.pdp-thumb[data-i]'); if(!t) return;
+  zoomOpen(+t.dataset.i);
+});
+
 
 
 
@@ -364,11 +381,45 @@ AD.addEventListener('click', (e)=>{
 document.addEventListener('keydown', e=>{
   if (e.key === 'Escape' && AD.classList.contains('open')) closeDrawer();
 });
-AD.querySelector('.ad-backdrop').addEventListener('click', closeDrawer);
+// --- 6) Añadir a la cesta ---
+const buyForm = document.getElementById('buyForm');
+const qtyInput = document.getElementById('qty');
 
-      
+buyForm?.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const p = window.__pdp || {};
+  const qty = Math.max(1, parseInt(qtyInput?.value || '1', 10));
+  const price = (typeof p.price === 'number')
+    ? p.price
+    : Number(String(p.price || '0')
+        .replace(/[^\d.,]/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.')) || 0;
+
+  const opts = {};
+  if (selected.size)  opts.size  = selected.size;
+  if (selected.color) opts.color = selected.color;
+
+  const img = Array.isArray(p.images) && p.images.length ? p.images[0] : '';
+
+  window.ppCart?.add({
+    id:   p.id || p.slug || p.title,
+    title:p.title || 'Producto',
+    price,
+    qty,
+    image: img,
+    options: opts
+  });
+
+  window.ppCart?.open?.();
+});
+
+AD.querySelector('.ad-backdrop').addEventListener('click', closeDrawer);
+   
     })();
   </script>
+  
 <script id="pdpSchema" type="application/ld+json"></script>
 
 <script>

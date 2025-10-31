@@ -2796,3 +2796,233 @@ body[data-page="pdp"] .pdp-panel{
   justify-self: end;
   margin-right: 0;
 }
+/* GALERÍA estilo Loewe */
+.pdp-gallery { margin: 24px 0; }
+
+.pdp-hero{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 32px;
+  align-items: start;
+}
+.pdp-hero .hero-cell{
+  all: unset;        /* resetea button */
+  cursor: zoom-in;
+  display: block;
+}
+.pdp-hero .hero-img{
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* tirita de miniaturas debajo */
+.pdp-thumbs{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.pdp-thumbs .pdp-thumb{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+/* móvil: apila */
+@media (max-width: 1024px){
+  .pdp-hero{ grid-template-columns: 1fr; }
+}
+
+
+
+
+
+
+/* ====== FIX · Clic logo en camisetas ====== */
+/* ===== FIX · Logo Prophetia clickeable en camisetas.html ===== */
+.camisetas-page .brand-band {
+  position: relative;
+  z-index: 999;                /* por encima del header */
+  pointer-events: auto;        /* habilita clics */
+}
+
+.camisetas-page #header {
+  position: relative;
+  z-index: 10;                 /* header queda detrás */
+}
+
+.camisetas-page .page-logo {
+  position: relative !important;
+  z-index: 1000 !important;    /* el enlace del logo encima de todo */
+  pointer-events: auto !important;
+}
+
+.camisetas-page .page-logo img {
+  pointer-events: none !important; /* evita interferencias de la imagen */
+}
+/* ==========================================================
+   PDP — Brand Band (idéntica proporción que camisetas.html)
+   ========================================================== */
+/* ==========================================================
+   PDP — Brand band y logo iguales a camisetas.html
+   (sin centrar contenedor, sin aire raro, con offset óptico)
+   ========================================================== */
+
+/* 1) La franja del logo NO centra nada */
+.pdp .brand-band{
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: #fff !important;
+  text-align: left !important;      /* por si hereda centrados */
+}
+
+/* 2) El contenedor NO se centra y ocupa todo el ancho del viewport */
+.pdp .brand-band > .container{
+  max-width: 100% !important;       /* fuera límite de ancho */
+  padding-inline: var(--edge, 30px) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  display: block !important;         /* nada de flex/justify */
+  text-align: left !important;
+  line-height: 0 !important;         /* elimina hueco “baseline” bajo <img> */
+}
+
+/* 3) Movimiento fino solo del enlace del logo (como camisetas) */
+:root{
+  --pdp-logo-maxw: 820px;            /* límite duro igual que catálogo */
+  --pdp-logo-offset-y: -51px;        /* sube(-) / baja(+) el logo */
+  --pdp-logo-offset-x: -43px;        /* a la izquierda(-) / derecha(+) */
+}
+.pdp .page-logo{
+  display: inline-block;
+  line-height: 0;
+  margin: 0 !important;
+  transform: translate(var(--pdp-logo-offset-x), var(--pdp-logo-offset-y)) !important;
+}
+
+/* 4) La imagen del logo no hereda centrados ni se deforma */
+.pdp .page-logo img{
+  width: min(40vw, var(--pdp-logo-maxw)) !important; /* ⇠ hazlo mayor subiendo 40→48vw o 820→900px */
+  height: auto !important;                            /* mantiene proporción */
+  margin: 0 !important;                               /* nada de margin:auto */
+  object-fit: contain;
+  aspect-ratio: auto;
+  filter: none !important;                             /* evita engorde de borde */
+}
+
+/* 5) (Opcional) Si quieres que la “toolbar/breadcrumbs” alinee igual */
+.pdp .pdp-hero,
+.pdp .cat-toolbar{
+  margin-top: clamp(8px, 1vw, 14px) !important;
+  padding-inline: var(--edge, 30px) !important;
+  background: transparent !important;
+}
+
+/* PDP — brand band como camisetas + nitidez del SVG */
+:root{
+  --pdp-logo-maxw: 820px;
+  --pdp-logo-offset-x: -43px;
+  --pdp-logo-offset-y: -51px;
+}
+
+.pdp .brand-band{
+  margin:0 !important; padding:0 !important; border:0 !important;
+  background:#fff !important; text-align:left !important;
+}
+.pdp .brand-band > .container{
+  max-width:100% !important; padding-inline: var(--edge,30px) !important;
+  margin:0 !important; display:block !important; line-height:0 !important;
+}
+.pdp .page-logo{
+  display:inline-block; line-height:0; margin:0 !important;
+  transform: translate(var(--pdp-logo-offset-x), var(--pdp-logo-offset-y)) !important;
+}
+.pdp .page-logo img{
+  width: min(40vw, var(--pdp-logo-maxw)) !important;
+  height:auto !important;
+  margin:0 !important;
+  object-fit: contain;
+  aspect-ratio: auto;
+
+  /* 🔹 nitidez / antialias */
+  image-rendering: optimizeQuality;            /* estándar */
+  image-rendering: -webkit-optimize-contrast;  /* WebKit legacy */
+  image-rendering: crisp-edges;                /* fallback */
+  -ms-interpolation-mode: bicubic;             /* IE legacy */
+  filter: none !important;                     /* evita engrosar bordes */
+}
+/* PDP: que .pdp-logo use el mismo look que .page-logo */
+.pdp .pdp-logo { 
+  display: inline-block;
+  line-height: 0;
+  margin: 0 !important;
+  /* si quieres moverlo como el PDP “bueno” */
+  transform: translate(var(--pdp-logo-offset-x, 0), var(--pdp-logo-offset-y, 0)) !important;
+}
+.pdp .pdp-logo__img{
+  width: min(40vw, var(--pdp-logo-maxw, 820px)) !important;
+  height: auto !important;
+  margin: 0 !important;
+  object-fit: contain;
+  aspect-ratio: auto;
+
+  /* nitidez / antialias equivalentes */
+  image-rendering: optimizeQuality;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: bicubic;
+  filter: none !important; /* evita “engorde” por filtros */
+}
+/* PDP — nitidez igual que Hoodies/Camisetas */
+.pdp .page-logo img{
+  image-rendering: auto !important;         /* quita el suavizado forzado */
+  -ms-interpolation-mode: auto !important;
+  filter: contrast(1.02) brightness(1.02);  /* iguala look del genérico */
+  transform: none !important;               /* evita zooms sutiles */
+}
+.pdp .page-logo img:hover{
+  transform: none !important;               /* no escalar 1.02 al pasar el ratón */
+}
+/* ===== FIX · Logo Prophetia clickeable en colecciones.html ===== */
+.colecciones-page .brand-band{
+  position: relative; z-index: 999; pointer-events: auto;
+}
+.colecciones-page #header{
+  position: relative; z-index: 10; /* header detrás de la franja */
+}
+.colecciones-page .page-logo{
+  position: relative !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+.colecciones-page .page-logo img{ pointer-events: none !important; }
+/* ===================== COLECCIONES ===================== */
+/* Hacer el logo clicable y por encima del header */
+.colecciones-page .brand-band{
+  position: relative;
+  z-index: 999;
+  pointer-events: auto;
+}
+.colecciones-page #header{
+  position: relative;
+  z-index: 10;
+}
+/* Posicionamiento seguro del enlace/logo */
+.colecciones-page .page-logo{
+  position: relative !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+.colecciones-page .page-logo img{
+  pointer-events: none !important;
+  height: auto;
+  width: auto;
+  /* opcional: iguala offsets si los usas en PDP */
+  transform: translate(var(--pdp-logo-offset-x, 0), var(--pdp-logo-offset-y, 0));
+  image-rendering: auto; /* nitidez como camisetas */
+}
