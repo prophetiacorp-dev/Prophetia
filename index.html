@@ -24,7 +24,7 @@
 <meta name="twitter:image" content="https://prophetia.es/assets/img/og-cover.jpg">
 
 
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=25">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -40,18 +40,19 @@
          ======================================================= -->
     <section class="hero" id="home_hero">
 
-      <!-- Logo flotante (clicable) -->
-      <a class="floating-logo" href="index.html" aria-label="Inicio Prophetia">
-        <img src="assets/img/logo/propblancovf.svg" alt="PROPHETIA">
-      </a>
+     <div class="hero-frame">
+    <!-- Logo flotante (clicable) -->
+    <a class="floating-logo" href="index.html" aria-label="Inicio Prophetia">
+      <img src="assets/img/logo/propblancovf.svg" alt="PROPHETIA">
+    </a>
 
-      <!-- Vídeo a ancho de viewport (full-bleed) -->
-      <div class="hero-video" aria-label="Vídeo promocional">
-        <!-- Opción YouTube -->
-        <video class="hero-video__media" playsinline autoplay muted loop>
-  <source src="assets/video/video3.mp4" type="video/mp4">
-</video>
-
+    <!-- Vídeo a ancho de viewport (full-bleed) -->
+    <div class="hero-video" aria-label="Vídeo promocional">
+      <video class="hero-video__media" playsinline autoplay muted loop>
+        <source src="assets/video/video3.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
 
         <!-- Si más adelante usas MP4 local, cambia por:
         <video class="hero-video__media" playsinline autoplay muted loop>
@@ -61,6 +62,14 @@
       </div>
 
       <!-- Texto del hero (debajo del vídeo) -->
+       
+       <div class="container editorial-strip" aria-hidden="true">
+  <span class="ed-kicker">PROPHETIA HOUSE</span>
+  <i class="ed-divider" aria-hidden="true"></i>
+  <span class="ed-caption">Colecciones · Drop limitado</span>
+</div>
+<div class="container"><div class="hairline" aria-hidden="true"></div></div>
+
       <div class="container hero-copy">
         <p class="eyebrow">SILENT LUXURY MEDITERRÁNEO</p>
         <h1 class="display">Mediterranean Mythology<br>meets Editorial Design</h1>
@@ -68,13 +77,29 @@
         <a href="colecciones.html" class="btn-primary">Explorar colección</a>
       </div>
     </section>
+<!-- ===== BLOQUE EDITORIAL TIPO LOEWE POST-HERO ===== -->
+<section class="pp-post-hero">
+  <div class="container">
+    <h2 class="pp-ph-title">Clásicos con alma artesanal</h2>
+    <p class="pp-ph-sub">
+      Piezas elaboradas con dedicación, donde la técnica y el alma se encuentran.
+    </p>
+
+    <div class="pp-ph-links">
+      <a href="camisetas-hombre.html" class="pp-ph-link">Todos los productos</a>
+      <a href="colecciones.html" class="pp-ph-link">Colecciones</a>
+    </div>
+
+    <div class="pp-ph-hairline"></div>
+  </div>
+</section>
 
     <!-- =======================================================
          ENTRADAS RÁPIDAS (Shop tiles)
          ======================================================= -->
-    <section class="section-gap">
+    <section class="section-gap" id="quick-tiles">
       <div class="tiles container" aria-label="Entradas rápidas">
-        <a class="tile tile--small" href="camisetas.html">
+        <a class="tile tile--small" href="camisetas-hombre.html">
           <div class="tile-body">
             <h3 class="tile-title">Shop T-Shirts</h3>
             <p class="tile-sub">Algodón premium. Gráfica DTG. Proporción y silencio.</p>
@@ -96,7 +121,7 @@
     <section class="section-gap">
       <div class="values container" aria-label="Filosofía de Prophetia">
         <div class="value">
-          <img src="assets/icons/symbolic.svg" alt="" class="value-icon" />
+          <img src="assets/icons/ojo.svg" alt="" class="value-icon" />
           <h4 class="value-title">Symbolic Design</h4>
           <p class="value-text">Gráficos con significado: arquetipos, mitos y tipografía con intención editorial.</p>
         </div>
@@ -120,28 +145,7 @@
   <!-- Footer inyectado -->
   <div id="footer"></div>
 
-  <!-- ====== CART: overlay + drawer ====== -->
-  <div id="cartOverlay" class="cart-overlay" hidden></div>
-
-  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Cesta">
-    <div class="cart-head">
-      <strong>Cesta · <span id="cartCount">0</span></strong>
-      <button id="cartClose" class="cart-close" aria-label="Cerrar">✕</button>
-    </div>
-
-    <div class="cart-list" id="cartList">
-      <!-- contenido dinámico; deja vacío -->
-    </div>
-
-    <div class="cart-foot">
-      <div class="cart-total">
-        <span>Subtotal</span>
-        <strong id="cartSubtotal">0,00 €</strong>
-      </div>
-      <button class="cart-checkout" id="cartCheckout">Finalizar compra</button>
-    </div>
-  </aside>
-
+ 
 
   <!-- Parciales + init -->
     <!-- Parciales + init -->
@@ -153,26 +157,7 @@
   <!-- CARGA cart.js ANTES de llamar a ppCartInit -->
   <script src="assets/js/cart.js"></script>
 
-  <script>
-    (async function injectHF(){
-      const H = await fetch('assets/partials/header.html').then(r=>r.text());
-      window.ppInitAudio && window.ppInitAudio();
-      const F = await fetch('assets/partials/footer.html').then(r=>r.text());
-      document.getElementById('header').innerHTML = H;
-      document.getElementById('footer').innerHTML = F;
-
-      // Inicializaciones que dependen del header inyectado:
-      window.ppInitHeader && window.ppInitHeader();
-      window.ppInitHome && window.ppInitHome();
-    window.ppInitAudio && window.ppInitAudio();
-      // 🔔 Ahora cart.js ya está cargado: podemos enganchar los listeners
-      if (window.ppCartInit) window.ppCartInit();
-
-      // Respaldo opcional:
-      window.dispatchEvent(new CustomEvent('partials:ready'));
-    })();
-  </script>
-
+ 
 <!-- … 5 líneas DESPUÉS del bloque … -->
 <!-- ===== Prophetia Tribe — Private Access (POPUP) ===== -->
 <div id="tribeModal" class="tribe-modal" aria-hidden="true">

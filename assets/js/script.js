@@ -1,3 +1,19 @@
+/* ====== PROPHETIA — Montador seguro de Catálogo (PLP) ====== */
+function ppMountCatalogSafe({ target, category }) {
+  const mount = document.querySelector(target);
+  if (!mount || !window.ppInitCatalog) return;  // no hay hueco o función base
+  window.ppInitCatalog({ target, category });
+}
+
+// Hook opcional tras carga parcial (Swup u otro)
+window.addEventListener('partials:ready', () => {
+  const grid = document.querySelector('#plp-grid');
+  if (grid) {
+    ppMountCatalogSafe({ target: '#plp-grid', category: grid.dataset.category || 'camisetas-hombre' });
+  }
+});
+
+
 /* =========================================================
    PROPHETIA — Compat Layer (IDs + helpers)
    ========================================================= */
@@ -71,68 +87,35 @@
    PROPHETIA · Click universal de productos (camisetas, hoodies, etc.)
    ============================================================ */
 document.addEventListener('click', (e) => {
-  // Evitar interferencias con botones (wishlist, carrito, etc.)
-  if (e.target.closest('.save-btn, .cart-add, button')) return;
+if (e.target.closest('.save-btn, .cart-add, [data-save], [data-cart-open], .nav, #loadMoreBtn, .card-wish')) return;
 
-  // Detecta cualquier tarjeta de producto
-  const card = e.target.closest('.product-card');
-  if (!card) return;
+const card = e.target.closest('.product-card, .card');
 
-  // Obtiene el ID del producto
-  const id = card.dataset.id || card.getAttribute('data-id');
-  if (!id) return;
+    if (!card) return;
+  const id = card.dataset.id || card.getAttribute('data-id');   
+    if (!id) return;
+   e.preventDefault();
+   window.location.assign(`producto.html?id=${encodeURIComponent(id)}`);
+ });
 
-  // Redirige a la página de producto
-  const url = `producto.html?id=${encodeURIComponent(id)}`;
-  e.preventDefault();
-  window.location.assign(url);
-});
+function matchesCategory(p, cat){
+  if (!cat) return true;
+  const c = String(cat).trim().toLowerCase();
+
+  // normaliza campos posibles
+  const fields = [
+    p.category && String(p.category).toLowerCase(),
+    p.type && String(p.type).toLowerCase(),
+    ...(Array.isArray(p.tags) ? p.tags.map(t => String(t).toLowerCase()) : [])
+  ].filter(Boolean);
+
+  return fields.includes(c);
+}
 
 /* =========================================================
    PROPHETIA — Catálogo (render desde assets/data/catalog.json)
    ========================================================= */
-(function () {
-  async function loadCatalog() {
-    const res = await fetch('assets/data/catalog.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error('No se pudo cargar catalog.json');
-    return await res.json();
-  }
 
-
-
-  async function ppInitCatalog({ target, category, query } = {}) {
-    const grid = document.querySelector(target);
-    if (!grid) return;
-
-    const all = await loadCatalog();
-
-    // Filtro por categoría si la hay (ej. "camisetas" o "hoodies")
-    // Filtro por categoría si la hay (acepta category o type del JSON)
-    let items = Array.isArray(all) ? all : (all.items || []);
-
-    function normCat(p){
-      const c = (p.category || '').toLowerCase();
-      const t = (p.type || '').toLowerCase(); // ej: 'tshirt', 'hoodie'
-      if (c) return c;
-      if (t === 'tshirt' || t === 'tee' || t === 'camiseta') return 'camisetas';
-      if (t === 'hoodie' || t === 'sudadera') return 'hoodies';
-      return '';
-    }
-    if (category){
-      const want = category.toLowerCase();
-      items = items.filter(p => normCat(p) === want);
-    }
-
-
-    grid.innerHTML = items.map(cardHTML).join('') || `<p class="muted">No hay productos que coincidan.</p>`;
-    // Actualiza contadores del carrito por si renderiza botones/acciones más adelante
-    window.ppCart.updateBadges();
-  }
-
-  // Export global
-  
-
-})();
 
 (function(){
   const KEY_PRIMARY   = 'pp_cart_v2';
@@ -146,10 +129,13 @@ document.addEventListener('click', (e) => {
     total   : document.getElementById('ppCartTotal'),
   };
 
-  if(!els.drawer || !els.overlay || !els.list || !els.total){
-    console.warn('[Cart] Faltan elementos del DOM (IDs). Revisa header.html');
-    return;
-  }
+if(!els.drawer || !els.overlay || !els.list || !els.total){
+  setTimeout(() => { 
+    try { window.ppCartInit && window.ppCartInit(); } catch(e){} 
+  }, 80);
+  return;
+}
+
 
   // --------- Storage helpers ----------
   function readRaw(){
@@ -175,37 +161,38 @@ document.addEventListener('click', (e) => {
       return;
     }
 
-    let html = '';
-    let subtotal = 0;
-    cart.forEach((it, i)=>{
-      const qty   = Number(it.qty||1);
-      const price = Number(it.price||0);
-      subtotal += price * qty;
+  let html = '';
+let subtotal = 0;
+cart.forEach((it, i)=>{
+  const qty   = Number(it.qty||1);
+  const price = Number(it.price||0);
+  subtotal += price * qty;
 
-      const img   = it.img || it.cover || (it.images && it.images[0]) || 'assets/img/placeholder.png';
-      const title = it.title || 'Producto';
-      const meta  = [it.color, it.size].filter(Boolean).join(' · ');
-      const metaHtml = meta ? `<div class="cart-item__meta">${meta}</div>` : '';
+  const img   = it.img || it.cover || (it.images && it.images[0]) || 'assets/img/placeholder.png';
+  const title = it.title || 'Producto';
+  const meta  = [it.color, it.size].filter(Boolean).join(' · ');
+  const metaHtml = meta ? `<div class="cart-item__meta">${meta}</div>` : '';
 
-      html  ` 
-        <article class="cart-item" data-i="${i}" style="display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eee;">
-          <div class="cart-item__thumb" style="width:72px;height:92px;border:1px solid #eee;border-radius:10px;overflow:hidden;background:#f7f7f7;">
-            <img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover;">
-          </div>
-          <div>
-            <div class="cart-item__title" style="font-weight:600;">${escapeHTML(title)}</div>
-            ${metaHtml}
-            <div class="cart-item__row" style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-              <button class="qbtn" data-op="-" aria-label="Restar" style="width:28px;height:28px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer;">−</button>
-              <span>${qty}</span>
-              <button class="qbtn" data-op="+" aria-label="Sumar" style="width:28px;height:28px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer;">+</button>
-              <button class="rm"   aria-label="Eliminar" style="margin-left:8px;font-size:12px;color:#666;cursor:pointer;">Eliminar</button>
-            </div>
-            <div class="muted" style="margin-top:8px;font-size:12px;">Entrega estimada: <strong>2–6 días hábiles</strong></div>
-          </div>
-          <div class="cart-item__price" style="font-weight:700;">${money(price*qty)}</div>
-        </article>`;
-    });
+  html += `
+    <article class="cart-item" data-i="${i}" style="display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eee;">
+      <div class="cart-item__thumb" style="width:72px;height:92px;border:1px solid #eee;border-radius:10px;overflow:hidden;background:#f7f7f7;">
+        <img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div>
+        <div class="cart-item__title" style="font-weight:600;">${escapeHTML(title)}</div>
+        ${metaHtml}
+        <div class="cart-item__row" style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+          <button class="qbtn" data-op="-" aria-label="Restar" style="width:28px;height:28px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer;">−</button>
+          <span>${qty}</span>
+          <button class="qbtn" data-op="+" aria-label="Sumar" style="width:28px;height:28px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;cursor:pointer;">+</button>
+          <button class="rm" aria-label="Eliminar" style="margin-left:8px;font-size:12px;color:#666;cursor:pointer;">Eliminar</button>
+        </div>
+        <div class="muted" style="margin-top:8px;font-size:12px;">Entrega estimada: <strong>2–6 días hábiles</strong></div>
+      </div>
+      <div class="cart-item__price" style="font-weight:700;">${money(price*qty)}</div>
+    </article>`;
+});
+
 
     els.list.innerHTML = html;
     els.total.textContent = money(subtotal);
@@ -275,7 +262,7 @@ document.addEventListener('click', (e) => {
     writeRaw(cart);
     render(); open();
   };
-
+try { window.ppCart.updateBadges(); } catch {}
   // Primera pintura
   document.addEventListener('DOMContentLoaded', render);
 
@@ -301,7 +288,7 @@ document.addEventListener('click', (e) => {
    PROPHETIA — Wishlist (guardar desde catálogo)
    ========================================================= */
 (function(){
-  const KEY = 'pp_wishlist';
+  const KEY = 'pp_wishlist_v1';
 
   const load = () => {
     try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
@@ -326,7 +313,8 @@ document.addEventListener('click', (e) => {
   document.addEventListener('click', (ev)=>{
     const btn = ev.target.closest('[data-save]');
     if(!btn) return;
-
+ // Evita duplicidad: si viene del grid PLP/teaser, lo maneja el otro bloque
+ if (btn.closest('#plp-grid, #gridCamisetas')) return;
     const item = {
       id    : btn.getAttribute('data-id'),
       title : btn.getAttribute('data-title') || 'Producto Prophetia',
@@ -347,6 +335,8 @@ document.addEventListener('click', (e) => {
 
     save(list);
     syncSavedState();
+  // Notifica a otras vistas (contador/empty state) que la wishlist cambió
+  document.dispatchEvent(new CustomEvent('pp:wishlist:changed'));
   });
 
   // Sincroniza cuando el catálogo se pinta o cambia
@@ -358,40 +348,13 @@ document.addEventListener('click', (e) => {
 })();
 
 
-(function addWishlistButtonsPostRender(){
-  function addButtons() {
-    const cards = document.querySelectorAll('#gridCamisetas .product-card');
-    cards.forEach(card=>{
-      if (card.querySelector('[data-save]')) return; // ya tiene botón
-      const id    = card.getAttribute('data-id') || crypto.randomUUID();
-      const title = card.querySelector('.product-card__title')?.textContent?.trim() || 'Producto Prophetia';
-      const img   = card.querySelector('img')?.getAttribute('src') || 'assets/img/placeholder.png';
-      const url   = card.querySelector('a')?.getAttribute('href') || 'producto.html';
-
-      const btn = document.createElement('button');
-      btn.className = 'icon-btn save';
-      btn.setAttribute('data-save','');
-      btn.setAttribute('data-id', id);
-      btn.setAttribute('data-title', title);
-      btn.setAttribute('data-image', img);
-      btn.setAttribute('data-url', url);
-      btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.35-9.33-8.05A5.5 5.5 0 1 1 12 6.2a5.5 5.5 0 1 1 9.33 6.75C19 16.65 12 21 12 21z" fill="currentColor"/></svg>';
-
-      (card.querySelector('.product-card__actions') || card).appendChild(btn);
-    });
-    // dispara sincronización si el handler A está cargado
-    window.dispatchEvent(new Event('partials:ready'));
-  }
-  document.addEventListener('DOMContentLoaded', addButtons);
-  const grid = document.getElementById('gridCamisetas');
-  if (grid) new MutationObserver(addButtons).observe(grid, { childList:true, subtree:true });
-})();
 
 
 /* ===== Wishlist: botón ❤️ por card + handler ===== */
 (function(){
-  const KEY = 'pp_wishlist';
-  const grid = document.getElementById('gridCamisetas');
+  const KEY = 'pp_wishlist_v1';
+
+
 
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; } };
   const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
@@ -402,7 +365,7 @@ document.addEventListener('click', (e) => {
     btn.className = 'icon-btn save';
     btn.setAttribute('data-save','');
     for (const [k,v] of Object.entries(data)) btn.setAttribute('data-'+k, v||'');
-    btn.innerHTML = btn.innerHTML = `
+    btn.innerHTML = `
 <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
      stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <path d="M3 10.5c0-2.6 2-4.5 4.5-4.5 1.6 0 3 .9 4 2 1-1.1 2.4-2 4-2 2.5 0 4.5 1.9 4.5 4.5 0 4.4-8.5 9.5-8.5 9.5S3 14.9 3 10.5Z"/>
@@ -411,28 +374,30 @@ document.addEventListener('click', (e) => {
     return btn;
   }
 
-  function injectButtons(){
-    if (!grid) return;
-    const cards = grid.querySelectorAll('.card');
+   function injectButtons(){
+    const grids = document.querySelectorAll('#plp-grid, #gridCamisetas');
+    if (!grids.length) return;
 
-    cards.forEach(card=>{
-      if (card.querySelector('[data-save]')) return;
+    grids.forEach(g=>{
+      const cards = g.querySelectorAll('.card');
+      cards.forEach(card=>{
+        if (card.querySelector('[data-save]')) return;
 
-      // Datos básicos desde la card
-      const id    = card.getAttribute('data-id') || crypto.randomUUID();
-      const title = card.querySelector('.product-card__title, h4')?.textContent?.trim() || 'Producto Prophetia';
-      const image = card.querySelector('img')?.getAttribute('src') || 'assets/img/placeholder.png';
-      const url   = card.querySelector('a')?.getAttribute('href') || 'producto.html';
+        const id    = card.getAttribute('data-id') || (window.crypto?.randomUUID?.() || Math.random().toString(36).slice(2));
+        const title = card.querySelector('.product-card__title, h4')?.textContent?.trim() || 'Producto Prophetia';
+        const image = card.querySelector('img')?.getAttribute('src') || 'assets/img/placeholder.png';
+        const url   = card.querySelector('a')?.getAttribute('href') || 'producto.html';
 
-      // asegura posicionamiento
-      if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+        if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
 
-      const btn = makeBtn({ id, title, image, url });
-      // si tienes .img-wrap, colócalo dentro para que quede sobre la imagen
-      (card.querySelector('.img-wrap') || card).appendChild(btn);
+        const btn = makeBtn({ id, title, image, url });
+        (card.querySelector('.img-wrap') || card).appendChild(btn);
+      });
     });
+
     syncState();
   }
+
 
   function syncState(){
     const list = load();
@@ -448,6 +413,8 @@ document.addEventListener('click', (e) => {
   document.addEventListener('click', (ev)=>{
     const btn = ev.target.closest('[data-save]');
     if (!btn) return;
+    const inPLP = btn.closest('#plp-grid, #gridCamisetas');
+  if (!inPLP) return; // ← Solo maneja el PLP; fuera lo gestiona el primer bloque
     const item = {
       id: btn.getAttribute('data-id'),
       title: btn.getAttribute('data-title') || 'Producto Prophetia',
@@ -458,16 +425,22 @@ document.addEventListener('click', (e) => {
     let list = load();
     if (exists(item.id, list)) list = list.filter(x => String(x.id) !== String(item.id));
     else list.push(item);
-    save(list);
+     save(list);
     syncState();
+    document.dispatchEvent(new CustomEvent('pp:wishlist:changed'));
   });
 
   // Observa cuando ppInitCatalog termine de inyectar
+
+
+  // Observa cuando ppInitCatalog termine de inyectar
   const obs = new MutationObserver(injectButtons);
-  if (grid) obs.observe(grid, { childList:true, subtree:true });
+  document.querySelectorAll('#plp-grid, #gridCamisetas')
+    .forEach(g => obs.observe(g, { childList:true, subtree:true }));
   document.addEventListener('DOMContentLoaded', injectButtons);
   window.addEventListener('partials:ready', injectButtons);
 })();
+
 /* ===== Prophetia — Toast helper ===== */
 (function(){
   const TOAST_TIME = 2600; // ms visible
@@ -687,36 +660,7 @@ const observer = new IntersectionObserver((entries)=>{
 },{threshold:.2});
 document.querySelectorAll('[data-fade]').forEach(el=>observer.observe(el));
 
-/* =========================================================
-   WISHLIST Prophetia (hearts + toast + storage)
-   ========================================================= */
-(function () {
-  const $  = (s, r=document)=> r.querySelector(s);
-  const $$ = (s, r=document)=> Array.from(r.querySelectorAll(s));
-  const GRID_SEL = '#gridCamisetas';
-  const WISHLIST_KEY = 'pp_wishlist_v1';
 
-  const load = () => JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]');
-  const save = (list) => localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
-  const has  = (id) => load().some(p => String(p.id) === String(id));
-  const add  = (prod) => { const l = load(); if (!has(prod.id)) l.push(prod); save(l); };
-  const del  = (id) => { const l = load().filter(p => String(p.id) !== String(id)); save(l); };
-
-  const toastEl  = $('#ppToast');
-  const toastMsg = $('#ppToastMsg');
-  
-
-  function updateHeartState(){
-    $$('.save-btn[data-save]').forEach(btn=>{
-      const id = btn.dataset.id;
-      btn.classList.toggle('is-saved', has(id));
-    });
-  }
-
- 
-
-  document.addEventListener('DOMContentLoaded', updateHeartState);
-})();
 
 (function(){
   const KEY='pp_wishlist_v1';
@@ -726,6 +670,7 @@ document.querySelectorAll('[data-fade]').forEach(el=>observer.observe(el));
   function update(){ a.dataset.count = String(load().length); }
   document.addEventListener('storage', update);
   document.addEventListener('DOMContentLoaded', update);
+  document.addEventListener('pp:wishlist:changed', update);
   update();
 })();
 /* ===== Wishlist UI sync (conteo + estado vacío) ===== */
@@ -736,14 +681,14 @@ document.querySelectorAll('[data-fade]').forEach(el=>observer.observe(el));
   const $countSpan = document.getElementById('wlCount');
   const $empty     = document.querySelector('.wl-empty');
   const $grid      = document.querySelector('.wishlist-grid') || document.querySelector('.wl-results');
+function getCountFromDOM(){
+  return document.querySelectorAll('.wishlist-grid .product-card, .wishlist-grid .card').length;
+}
 
-  function getCountFromDOM(){
-    return document.querySelectorAll('.wishlist-grid .product-card').length;
-  }
   function getCountFromStorage(){
     try {
-      const ls = JSON.parse(localStorage.getItem('pp_wishlist') || '[]');
-      return Array.isArray(ls) ? ls.length : 0;
+const ls = JSON.parse(localStorage.getItem('pp_wishlist_v1') || '[]');
+return Array.isArray(ls) ? ls.length : 0;
     } catch(e){ return 0; }
   }
 
@@ -765,45 +710,556 @@ document.querySelectorAll('[data-fade]').forEach(el=>observer.observe(el));
   document.addEventListener('DOMContentLoaded', render);
   render();
 })();
-// === Catálogo compartido (camisetas/hoodies) ===
-window.ppInitCatalog = async function ({ target, category }) {
-  const grid = document.querySelector(target);
-  if (!grid) return;
 
-  // Carga el JSON (misma ruta que usabas en camisetas)
-  const res  = await fetch('assets/data/catalog.json');
-  const data = await res.json();
 
-  // Filtro por categoría; si no llega categoría, pinto todo
-  const list = data.filter(p => {
-    if (!category) return true;
-    if (category === 'camisetas') return p.type === 'tshirt';
-    if (category === 'hoodies')   return p.type === 'hoodie';
-    return true;
-  });
 
-  // Plantilla mínima (reusa lo que ya tenías)
-  const card = (p) => {
-    const cover = p.cover || (Array.isArray(p.images) ? p.images[0] : '');
-    return `
-      <article class="product-card" data-id="${p.id}" data-sizes="${(p.sizes||[]).join(',')}">
-        <div class="img-wrap">
-          <img src="${cover}" alt="${p.title}" loading="lazy">
-          <button class="save-btn" type="button" aria-label="Guardar" data-save
-            data-id="${p.id}" data-title="${p.title}" data-price="${p.price}" data-img="${cover}">
-            <svg class="icon-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12.1 20.1C11.8 20.1 4 14.7 3.2 9.6C2.8 6.8 4.9 4.5 7.5 4.5c1.7 0 3.2.9 4.1 2.3A5 5 0 0 1 19 4.5c2.6 0 4.7 2.3 4.3 5.1c-.8 5.1-8.6 10.5-9.1 10.5z" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-          </button>
-        </div>
-        <div class="body">
-          <h4>${p.title}</h4>
-          <div class="price">${Number(p.price).toFixed(2)} €</div>
-        </div>
-      </article>`;
-  };
 
-  grid.innerHTML = list.map(card).join('');
   
   // (Opcional) aquí puedes reusar la lógica de wishlist/toast que ya usas en camisetas
-};
+
+// === Mostrar/Ocultar contraseña (delegación, funciona en todos los paneles) ===
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('.toggle-pass');
+  if (!btn) return;
+if (btn.closest('#ppAuthModal')) return; // ya lo gestiona el handler específico
+  const wrap = btn.closest('.sp-password');
+  const input = wrap && wrap.querySelector('input[type="password"], input[type="text"]');
+  if (!input) return;
+
+  const toText = input.type === 'password';
+  input.type = toText ? 'text' : 'password';
+
+  // Accesibilidad + estados
+  btn.setAttribute('aria-pressed', String(toText));
+  btn.setAttribute('aria-label', toText ? 'Ocultar contraseña' : 'Mostrar contraseña');
+});
+/* === Auth · Toggle mostrar/ocultar contraseña (login/register) === */
+document.addEventListener('click', (ev) => {
+  const btn = ev.target.closest('#ppAuthModal .toggle-pass');
+  if (!btn) return;
+
+  const wrap  = btn.closest('.sp-password');
+  const input = wrap ? wrap.querySelector('input[type="password"], input[type="text"]') : null;
+  if (!input) return;
+
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+
+  // Accesibilidad + feedback visual
+  btn.setAttribute('aria-pressed', String(!showing));
+  btn.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
+
+  // Cambia el icono si quieres
+  // btn.textContent = showing ? '👁' : '🙈';
+});
+document.addEventListener('mouseover', e=>{
+  const slider = e.target.closest('[data-slider]');
+  if(!slider) return;
+  const track = slider.querySelector('.slider-track');
+  const slides = track.children.length;
+  let idx = 0;
+  slider._hoverTimer = setInterval(()=>{
+    idx = (idx + 1) % slides;
+    track.style.transform = `translateX(-${idx*100}%)`;
+  }, 1200);
+});
+document.addEventListener('mouseout', e=>{
+  const slider = e.target.closest('[data-slider]');
+  if(!slider) return;
+  clearInterval(slider._hoverTimer);
+  slider.querySelector('.slider-track').style.transform = 'translateX(0%)';
+});
+
+/* === PP · PLP PROPHETIA-MODE (Catálogo profesional Prophetia) ========== */
+/* === Módulo seguro para renderizar catálogo solo en páginas válidas === */
+(async function PP_PLP_PROPHETIA_MODE(){
+  // ===== Protege ejecución: solo en páginas con #plp-grid =====
+ if (!document.querySelector('#plp-grid')) return;
+
+ // --------- Config ----------
+ const PAGE_SIZE = 12;
+
+  const SELECTORS = {
+    grid: '#plp-grid',
+    toolbar: '#plp-toolbar',
+    sort: '#sortSelect',
+    loadMore: '#loadMoreBtn',
+    quickCats: '#quickCats'
+  };
+
+  // --------- Helpers ----------
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+  const ensure = (html, sel, parent=document.body) => {
+    if (!$(sel)) parent.insertAdjacentHTML('beforeend', html);
+    return $(sel);
+  };
+  const fmtPrice = v => typeof v==='number' ? `${v.toFixed(0)}€` : v;
+  const imgOr = p => p.cover || (p.images && p.images[0]) || '';
+  const swatchesOf = p => Array.isArray(p.colors) && p.colors.length ? p.colors : [imgOr(p)];
+
+  // --------- Data load ----------
+  async function loadCatalog(){
+    const res = await fetch('assets/data/catalog.json', { cache:'no-store' });
+    if (!res.ok) throw new Error('No se pudo cargar catalog.json');
+    const data = await res.json();
+    // Filtramos CAMISETAS (tshirt) para “camisetas-hombre”; mantenemos unisex
+    return data.filter(p => String(p.type).toLowerCase()==='tshirt');
+  }
+
+  const all = await loadCatalog();
+  let state = {
+    raw: all.slice(),
+    items: all.slice(),
+    page: 1,
+    sort: 'relevance',
+    chips: {}
+  };
+
+  // --------- Sorting ----------
+  function sortItems(items, mode){
+    const arr = items.slice();
+    switch(mode){
+      case 'price_asc':  return arr.sort((a,b)=>(a.price??0)-(b.price??0));
+      case 'price_desc': return arr.sort((a,b)=>(b.price??0)-(a.price??0));
+      case 'newest':     return arr.sort((a,b)=> (b.createdAt??0)-(a.createdAt??0));
+      default:           return arr; // relevance: orden natural
+    }
+  }
+
+  // --------- Quick Categories (chips) ----------
+  function buildChips(items){
+    const fits = new Set(items.map(p => p.fit).filter(Boolean));
+    const colls = new Set(items.map(p => p.collection).filter(Boolean));
+    const qc = $(SELECTORS.quickCats);
+    const chip = (val, group) => `
+      <button class="chip" data-chip="${group}:${val}">
+        ${String(val).replace(/-/g,' ').replace(/\b\w/g,m=>m.toUpperCase())}
+      </button>`;
+
+    qc.innerHTML = `
+      <div class="chip-row" role="list">
+        <button class="chip chip--active" data-chip="clear:all">Todo</button>
+        ${[...fits].map(v=>chip(v,'fit')).join('')}
+        ${[...colls].map(v=>chip(v,'collection')).join('')}
+      </div>
+    `;
+
+    qc.addEventListener('click', e=>{
+      const btn = e.target.closest('.chip'); if(!btn) return;
+      $$('.chip', qc).forEach(b=>b.classList.remove('chip--active'));
+      btn.classList.add('chip--active');
+      const [group,val] = btn.dataset.chip.split(':');
+      if(group==='clear'){ state.items = state.raw.slice(); }
+      else {
+        state.items = state.raw.filter(p => String(p[group]||'')===val);
+      }
+      state.page = 1;
+      render();
+    });
+  }
+
+  // --------- Card builder ----------
+  function cardGtmData(p, idx){
+    return {
+      id: p.id, name: p.title, price: p.price, category: p.collection,
+      position: idx+1, brand: 'PROPHETIA', list: 'Camisetas Hombre'
+    };
+  }
+
+  function buildSwatches(p){
+    const sw = swatchesOf(p).slice(0,6);
+    return `
+      <div class="card-swatches" role="list">
+        ${sw.map((s,i)=>`
+          <button class="sw" role="listitem" aria-label="Variante ${i+1}" data-img="${s}"></button>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function buildCard(p, idx){
+    const img = imgOr(p);
+    const url = `producto.html?id=${encodeURIComponent(p.id)}`;
+    const price = fmtPrice(p.price);
+    const sizes = (p.sizes||[]).join(' · ');
+    const gtm = cardGtmData(p, idx);
+    const stock = p.inStock===false ? 'out' : 'in';
+    const badgeStock = `<span class="card-badge ${stock==='out'?'is-out':''}" aria-label="${stock==='out'?'Sin stock':'En stock'}">${stock==='out'?'OUT OF STOCK':'IN STOCK'}</span>`;
+    const badgeNew = p.isNew ? `<span class="card-badge is-new">NEW</span>` : '';
+
+    return `
+      <article class="card" data-gtm='${JSON.stringify(gtm)}'>
+        <a class="card-media" href="${url}" aria-label="${p.title}" data-id="${p.id}">
+          <img loading="lazy" src="${img}" alt="${p.title}">
+          <div class="card-badges">${badgeStock}${badgeNew}</div>
+          <button class="nav prev" aria-label="Imagen anterior" type="button">‹</button>
+          <button class="nav next" aria-label="Imagen siguiente" type="button">›</button>
+        </a>
+        <div class="card-body">
+          <h3 class="card-title"><a href="${url}" data-id="${p.id}">${p.title}</a></h3>
+          <p class="card-sub">${p.short||''}</p>
+          <div class="card-meta">
+            <span class="card-price">${price||''}</span>
+            <span class="card-sizes">${sizes}</span>
+          </div>
+          ${buildSwatches(p)}
+        </div>
+        <button class="card-wish" aria-label="Guardar en favoritos" aria-pressed="false" data-id="${p.id}">❤</button>
+      </article>
+    `;
+  }
+
+  // --------- JSON-LD (Breadcrumb + ItemList) ----------
+  function injectJSONLD(visible){
+    $$('script[data-pp-jsonld]').forEach(s=>s.remove());
+
+    const bc = {
+      '@context':'https://schema.org',
+      '@type':'BreadcrumbList',
+      itemListElement:[
+        { '@type':'ListItem','position':1,'name':'Hombre','item': location.origin+'/hombre.html' },
+        { '@type':'ListItem','position':2,'name':'Camisetas','item': location.href }
+      ]
+    };
+    const il = {
+      '@context':'https://schema.org',
+      '@type':'ItemList',
+      itemListElement: visible.map((p,i)=>({
+        '@type':'ListItem',
+        position: i+1,
+        item: {
+          '@type':'Product',
+          name: p.title,
+          image: imgOr(p),
+          url: `producto.html?id=${encodeURIComponent(p.id)}`
+        }
+      }))
+    };
+
+    for (const obj of [bc, il]){
+      const s = document.createElement('script');
+      s.type='application/ld+json'; s.dataset.ppJsonld='1';
+      s.textContent = JSON.stringify(obj);
+      document.head.appendChild(s);
+    }
+  }
+
+  // --------- Render ----------
+  function render(){
+    const grid = $(SELECTORS.grid);
+    const sorted = sortItems(state.items, state.sort);
+    const to = state.page * PAGE_SIZE;
+    const visible = sorted.slice(0, to);
+
+    grid.innerHTML = visible.map((p, i)=> buildCard(p, i)).join('');
+    injectJSONLD(visible);
+
+    const moreBtn = $(SELECTORS.loadMore);
+    moreBtn.hidden = visible.length >= sorted.length;
+
+    // dataLayer view_item_list
+    if (window.dataLayer){
+      window.dataLayer.push({
+        event: 'view_item_list',
+        items: visible.map((p,i)=>({
+          item_id: p.id, item_name: p.title, price: p.price,
+          item_category: p.collection, index: i+1
+        }))
+      });
+    }
+
+    // Wiring de interacciones tras pintar
+    wireInteractions(visible);
+  }
+
+  // --------- Interacciones (swatches, carrusel, wishlist, select_item) ----------
+  function wireInteractions(visible){
+    // Swatches → cambia imagen principal
+    $$('.card').forEach((card, idx)=>{
+      const media = $('.card-media', card);
+      const img = $('img', media);
+      const gtm = JSON.parse(card.dataset.gtm||'{}');
+      const p = visible[idx];
+      let currentIndex = 0;
+
+      card.querySelectorAll('.card-swatches .sw').forEach((swBtn, swIdx)=>{
+        swBtn.addEventListener('mouseenter', ()=>{ img.src = swBtn.dataset.img; });
+        swBtn.addEventListener('focus', ()=>{ img.src = swBtn.dataset.img; });
+      });
+
+      // Mini-carrusel por flechas (si hay varias imágenes)
+      const images = Array.isArray(p.images) && p.images.length ? p.images : [imgOr(p)];
+      const prev = $('.nav.prev', media);
+      const next = $('.nav.next', media);
+      const show = i => { currentIndex = (i+images.length)%images.length; img.src = images[currentIndex]; };
+
+      prev.addEventListener('click', (e)=>{ e.preventDefault(); show(currentIndex-1); });
+      next.addEventListener('click', (e)=>{ e.preventDefault(); show(currentIndex+1); });
+
+      // select_item (clic en tarjeta o título)
+      const selectFire = ()=>{
+        if (window.dataLayer){
+          window.dataLayer.push({
+            event: 'select_item',
+            items: [{
+              item_id: gtm.id, item_name: gtm.name, price: gtm.price,
+              item_category: gtm.category, index: gtm.position
+            }]
+          });
+        }
+      };
+      media.addEventListener('click', selectFire);
+      $('.card-title a', card)?.addEventListener('click', selectFire);
+
+      // wishlist
+      const wish = $('.card-wish', card);
+      wish.addEventListener('click', (e)=>{
+  e.preventDefault();
+  e.stopPropagation();
+
+        const pressed = wish.getAttribute('aria-pressed')==='true';
+        wish.setAttribute('aria-pressed', String(!pressed));
+        wish.classList.toggle('is-on', !pressed);
+        if (window.dataLayer){
+          window.dataLayer.push({
+            event: 'add_to_wishlist',
+            wishlist_status: !pressed ? 'added' : 'removed',
+            items: [{
+              item_id: gtm.id, item_name: gtm.name, price: gtm.price,
+              item_category: gtm.category, index: gtm.position
+            }]
+          });
+        }
+            document.dispatchEvent(new CustomEvent('pp:wishlist:changed'));
+
+      });
+    });
+  }
+
+
+  // --------- Listeners ----------
+  $(SELECTORS.sort).addEventListener('change', e=>{
+    state.sort = e.target.value; state.page = 1; render();
+  });
+  $(SELECTORS.loadMore).addEventListener('click', ()=>{
+    state.page++; render();
+  });
+
+  // --------- Init ----------
+  buildChips(state.raw);
+  render();
+
+  // --------- Minimal CSS extra ----------
+  const css = `
+  .plp-toolbar{display:grid;gap:16px;margin-block:24px}
+  .quickcats{overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+  .chip-row{display:flex;gap:8px}
+  .chip{white-space:nowrap;border:1px solid #ddd;border-radius:999px;padding:.4rem .8rem;background:#fff}
+  .chip--active{border-color:#000}
+
+  .plp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  @media(min-width:960px){.plp-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+  .card{display:flex;flex-direction:column;gap:10px;position:relative}
+  .card-media{position:relative;display:block}
+  .card-media img{width:100%;height:auto;display:block;aspect-ratio:3/4;object-fit:cover;border-radius:8px}
+  .card-badges{position:absolute;top:8px;left:8px;display:flex;gap:6px}
+  .card-badge{font-size:10px;letter-spacing:.02em;padding:.2rem .4rem;border-radius:999px;background:#fff;border:1px solid #111}
+  .card-badge.is-new{background:#111;color:#fff;border-color:#111}
+  .card-badge.is-out{background:#eee;color:#777;border-color:#ddd}
+
+  .nav{position:absolute;top:50%;transform:translateY(-50%);border:0;background:rgba(255,255,255,.85);padding:.2rem .5rem;border-radius:6px}
+  .nav.prev{left:8px} .nav.next{right:8px}
+
+  .card-title{font-size:14px;line-height:1.3;margin:0}
+  .card-sub{opacity:.7;margin:0}
+  .card-meta{display:flex;gap:12px;font-size:12px;opacity:.9}
+  .card-wish{align-self:flex-end;background:transparent;border:1px solid #111;border-radius:999px;font-size:16px;cursor:pointer;padding:.2rem .6rem}
+  .card-wish.is-on{background:#111;color:#fff}
+
+  .card-swatches{display:flex;gap:6px;margin-top:6px}
+  .card-swatches .sw{width:14px;height:14px;border-radius:999px;border:1px solid #ccc;background:#f2f2f2}`;
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+})();
+
+// ==== Fallback para garantizar que ppOpenCart y ppCloseCart existan ====
+window.addEventListener('partials:ready', () => {
+  // Espera a que el header se haya inyectado
+  if (!window.ppOpenCart) {
+    window.ppOpenCart = () => {
+      const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+      const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+      if (drawer && overlay) {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+      } else {
+        console.warn('[Prophetia] No se encontraron elementos del carrito');
+      }
+    };
+  }
+
+  if (!window.ppCloseCart) {
+    window.ppCloseCart = () => {
+      const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+      const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+      if (drawer && overlay) {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+      }
+    };
+  }
+});
+// ===== Prophetia · Cart init robusto (tras parciales) =====
+(function CartInitRobusto(){
+  function getEls(){
+    return {
+      drawer  : document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer'),
+      overlay : document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay'),
+      list    : document.getElementById('ppCartList')    || document.getElementById('cartList'),
+      total   : document.getElementById('ppCartTotal')   || document.getElementById('cartTotal'),
+    };
+  }
+
+  // API pública (abrir/cerrar) — siempre definida
+  window.ppOpenCart = function(){
+    const {drawer, overlay} = getEls();
+    if (!drawer || !overlay) { console.warn('[Prophetia] No se encontraron elementos del carrito'); return; }
+    drawer.classList.add('open');
+    overlay.classList.add('active');
+    document.body.classList.add('no-scroll');
+  };
+  window.ppCloseCart = function(){
+    const {drawer, overlay} = getEls();
+    if (!drawer || !overlay) return;
+    drawer.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  };
+
+  // Cableado de eventos (idempotente)
+  let wired = false;
+  window.ppCartInit = function(){
+    if (wired) return true;
+    const {drawer, overlay, list, total} = getEls();
+    if (!drawer || !overlay || !list || !total) return false;
+
+    // Abrir desde cualquier trigger
+    document.addEventListener('click', (e)=>{
+      if (e.target.closest('[data-cart-open], .js-open-cart, #ppCartBtn')) {
+        e.preventDefault();
+        try { if (typeof render === 'function') render(); } catch(_) {}
+        window.ppOpenCart();
+      }
+    });
+
+    // Cerrar por overlay / botón / ESC
+    overlay.addEventListener('click', window.ppCloseCart);
+    document.addEventListener('click', (e)=>{
+      if (e.target.closest('[data-close="cart"], .cart-close')) { e.preventDefault(); window.ppCloseCart(); }
+    });
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') window.ppCloseCart(); });
+
+    wired = true;
+    return true;
+  };
+
+  // Reintentos cortos hasta que el header exista
+  function tryWire(attempts=20){
+    if (window.ppCartInit()) return;
+    if (attempts <= 0) return;
+    setTimeout(()=>tryWire(attempts-1), 100);
+  }
+
+  // Lanza al cargar y tras parciales
+  document.addEventListener('DOMContentLoaded', tryWire);
+  window.addEventListener('partials:ready', tryWire);
+})();
+// ===== Prophetia · Ensure Cart DOM + Wiring =====
+(function ensureCartAndWire(){
+  function ensureCartDOM(){
+    let overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+    let drawer  = document.getElementById('ppCartDrawer')  || document.getElementById('cartDrawer');
+
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'cartOverlay';
+      overlay.className = 'cart-overlay';
+      document.body.appendChild(overlay);
+    }
+    if (!drawer) {
+      drawer = document.createElement('aside');
+      drawer.id = 'cartDrawer';
+      drawer.className = 'cart-drawer';
+      drawer.innerHTML = `
+        <div class="cart-head">
+          <strong>Cesta</strong>
+          <button class="cart-close" data-close="cart" aria-label="Cerrar">✕</button>
+        </div>
+        <div id="cartList" class="cart-list"></div>
+        <div class="cart-foot">
+          <div class="cart-total"><span>Total</span> <strong id="cartTotal">€0,00</strong></div>
+          <button class="cart-checkout">Finalizar compra</button>
+        </div>`;
+      document.body.appendChild(drawer);
+    }
+  }
+
+  // API abrir/cerrar (idempotente)
+  window.ppOpenCart = function(){
+    const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+    const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+    if (!drawer || !overlay) { console.warn('[Prophetia] No se encontraron elementos del carrito'); return; }
+    drawer.classList.add('open');
+    overlay.classList.add('active');
+    document.body.classList.add('no-scroll');
+  };
+  window.ppCloseCart = function(){
+    const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+    const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+    if (!drawer || !overlay) return;
+    drawer.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  };
+
+  // Wire universal (una única vez)
+  let wired = false;
+  function wire(){
+    if (wired) return;
+    const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+    const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+    const list    = document.getElementById('ppCartList')    || document.getElementById('cartList');
+    const total   = document.getElementById('ppCartTotal')   || document.getElementById('cartTotal');
+    if (!drawer || !overlay || !list || !total) return; // espera a que exista todo
+
+    document.addEventListener('click', (e)=>{
+      if (e.target.closest('[data-cart-open], .js-open-cart, #ppCartBtn')) { e.preventDefault(); window.ppOpenCart(); }
+      if (e.target.closest('[data-close="cart"], .cart-close'))           { e.preventDefault(); window.ppCloseCart(); }
+    });
+    overlay.addEventListener('click', window.ppCloseCart);
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') window.ppCloseCart(); });
+
+    wired = true;
+  }
+
+  function bootstrap(){
+    ensureCartDOM();
+    wire();
+  }
+
+  document.addEventListener('DOMContentLoaded', bootstrap);
+  window.addEventListener('partials:ready', bootstrap);
+
+  // reintentos cortos por si el header tarda
+  let tries = 25;
+  (function retry(){
+    if (wired) return;
+    bootstrap();
+    if (!wired && --tries > 0) setTimeout(retry, 120);
+  })();
+})();

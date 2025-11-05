@@ -1,295 +1,407 @@
-/* ============================================================
-   PROPHETIA — Interacciones de la cabecera
-   ============================================================ */
-(function () {
-  const $ = (sel, el = document) => el.querySelector(sel);
-  const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
+/* ==============================================================
+   PROPHETIA — Header interactions (mega, auth modal tipo LOEWE)
+   ==============================================================
+   Requisitos HTML esperados:
+   - Botón abrir modal (cualquiera de los dos):
+       #ppAuthLogoBtn   (logo redondo)
+       #ppAuthBtn       (otro botón opcional)
+   - <dialog id="ppAuthModal" class="modal">
+       <div class="modal-card"> ... </div>
+       Botones cerrar con [data-close="auth"]
+       Tabs: <button class="tab" data-auth-tab="login"    aria-selected="true"></button>
+             <button class="tab" data-auth-tab="register" aria-selected="false"></button>
+       Formularios:
+         <form id="ppLoginForm"    class="auth-form">...</form>
+         <form id="ppRegisterForm" class="auth-form hidden">...</form>
+       Inputs password con type="password"
+   ============================================================== */
 
-  /* ---------- Mega-menus: accesibles ---------- */
-  $$('.mega').forEach(m => {
-    const btn = $('.mega-toggle', m);
-    const panel = $('.mega-panel', m);
+(() => {
+  // Helpers
+  const $  = (sel, el = document) => el.querySelector(sel);
+  const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
 
-    // Abrir por hover (desktop)
-    m.addEventListener('mouseenter', () => {
-      panel.style.display = 'block';
-      btn.setAttribute('aria-expanded', 'true');
+  // --- Mega menus (accesibles, opcional) ---
+
+  // --- AUTH MODAL ---
+  let authBound = false;
+
+  function switchAuthTab(modal, which) {
+    const tabBtns = $$('[data-auth-tab]', modal);
+    const forms = {
+      login:    $('#ppLoginForm', modal),
+      register: $('#ppRegisterForm', modal)
+    };
+    const isLogin = which === 'login';
+
+    tabBtns.forEach(b => {
+      const val = b.getAttribute('data-auth-tab');
+      const active = val === which;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', String(active));
+      // A11y: foco al tab activo si vino por teclado
+      if (active && document.activeElement !== b) {
+        // no forzamos focus aquí para no robar foco a inputs
+      }
     });
-    m.addEventListener('mouseleave', () => {
-      panel.style.display = 'none';
-      btn.setAttribute('aria-expanded', 'false');
-    });
 
-    // Toggle por click (móviles/tablets)
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const open = panel.style.display === 'block';
-      panel.style.display = open ? 'none' : 'block';
-      btn.setAttribute('aria-expanded', String(!open));
-    });
-  });
+    if (forms.login)    forms.login.classList.toggle('hidden', !isLogin);
+    if (forms.register) forms.register.classList.toggle('hidden', isLogin);
+  }
 
-  /* ---------- Modal de cuenta ---------- */
-    /* ---------- Modal de cuenta (alineado a header.html) ---------- */
-    const btnAuthLogo = document.getElementById('ppAuthLogoBtn');
-btnAuthLogo?.addEventListener('click', openAuth);
-
-  const authModal    = $('#ppAuthModal');                 // <dialog id="ppAuthModal">
-  const btnAccount   = $('#ppAuthBtn');                   // botón abrir
-  const btnAuthClose = $('[data-close="auth"]');          // botón cerrar por data-attr
-  const formLogin    = $('#ppLoginForm');                 // <form id="ppLoginForm">
-  const formRegister = $('#ppRegisterForm');              // <form id="ppRegisterForm">
-  const tabLogin     = $('[data-auth-tab="login"]');      // botón pestaña Login
-  const tabRegister  = $('[data-auth-tab="register"]');   // botón pestaña Register
-  function switchAuthTab(which) {
-  const isLogin = which === 'login';
-
-  // pestañas
-  tabLogin?.classList.toggle('active', isLogin);
-  tabRegister?.classList.toggle('active', !isLogin);
-
-  // formularios
-  formLogin?.classList.toggle('hidden', !isLogin);
-  formRegister?.classList.toggle('hidden', isLogin);
-
-  tabLogin?.addEventListener('click', () => switchAuthTab('login'));
-tabRegister?.addEventListener('click', () => switchAuthTab('register'));
-
-}
-
-
-  function openAuth() {
-    if (!authModal) return;
-    // Si es <dialog>, usa API nativa; si no, usa clase 'hidden' como fallback.
-    if (typeof authModal.showModal === 'function') {
-      authModal.showModal();
-    } else {
-      authModal.classList.remove('hidden');
-      // Al abrir desde el logo, queremos ver "Registrarme"
-+  switchAuthTab('register');
-      authModal.setAttribute('aria-hidden', 'false');
+  function openAuth(modal, defaultTab = 'login') {
+    if (!modal) return;
+    if (typeof modal.showModal === 'function') modal.showModal();
+    else {
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden','false');
     }
     document.body.classList.add('no-scroll');
+    switchAuthTab(modal, defaultTab);
+
+    // Foco inicial a primer input o al primer botón
+    const focusable = modal.querySelector('input, button, [href], select, textarea, [tabindex]:not([tabindex="-1"])');
+    focusable && focusable.focus({ preventScroll: true });
   }
-  function closeAuth() {
-    if (!authModal) return;
-    if (typeof authModal.close === 'function') {
-      authModal.close();
-    } else {
-      authModal.classList.add('hidden');
-      authModal.setAttribute('aria-hidden', 'true');
+
+  function closeAuth(modal) {
+    if (!modal) return;
+    if (typeof modal.close === 'function') modal.close();
+    else {
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden','true');
     }
     document.body.classList.remove('no-scroll');
   }
 
-  btnAccount?.addEventListener('click', openAuth);
-  btnAuthClose?.addEventListener('click', closeAuth);
-  authModal?.addEventListener('click', (e) => {
-    // Cerrar si clicas sobre el backdrop del <dialog> (solo si no hay modal-card)
-    if (e.target === authModal) closeAuth();
-  });
+  function bindAuthModal(root = document) {
+    if (authBound) return; // evita doble binding si el header se reinserta
+    const modal       = $('#ppAuthModal', root) || document.getElementById('ppAuthModal');
+    const btnLogo     = $('#ppAuthLogoBtn', root) || document.getElementById('ppAuthLogoBtn');
+    const btnAccount  = $('#ppAuthBtn', root)     || document.getElementById('ppAuthBtn');
 
-  // Tabs login / register
-  tabLogin?.addEventListener('click', () => {
-    tabLogin.classList.add('active'); tabRegister.classList.remove('active');
-    formLogin.classList.remove('hidden'); formRegister.classList.add('hidden');
-    tabLogin.setAttribute('aria-selected', 'true');
-    tabRegister.setAttribute('aria-selected', 'false');
-  });
-  tabRegister?.addEventListener('click', () => {
-    tabRegister.classList.add('active'); tabLogin.classList.remove('active');
-    formRegister.classList.remove('hidden'); formLogin.classList.add('hidden');
-    tabRegister.setAttribute('aria-selected', 'true');
-    tabLogin.setAttribute('aria-selected', 'false');
-  });
+    if (!modal || (!btnLogo && !btnAccount)) return;
 
+    // Abrir desde logo -> pestaña 'register' por UX (como LOEWE)
+    btnLogo && btnLogo.addEventListener('click', () => openAuth(modal, 'register'));
+    // Abrir desde otro botón -> pestaña 'login'
+    btnAccount && btnAccount.addEventListener('click', () => openAuth(modal, 'login'));
 
-  // Submit fake
-  formLogin?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('¡Bienvenido de nuevo!');
-    closeAuth();
-  });
-  formRegister?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Cuenta creada (demo).');
-    closeAuth();
-  });
+    // Botones cerrar [data-close="auth"]
+    $$('[data-close="auth"]', modal).forEach(b => b.addEventListener('click', () => closeAuth(modal)));
 
-  /* ---------- Carrito (drawer) ---------- */
-    /* ---------- Carrito (drawer) — IDs pp… del parcial ---------- */
-  const cartOverlay  = $('#ppCartOverlay');
-  const cartDrawer   = $('#ppCartDrawer');
-  const btnCart      = $('#ppCartBtn');
-  const btnCartClose = $('[data-close="cart"]');
-
-  function openCart() {
-    cartOverlay?.classList.add('active');
-    cartDrawer?.classList.add('open');
-    document.body.classList.add('no-scroll');
-  }
-  function closeCart() {
-    cartOverlay?.classList.remove('active');
-    cartDrawer?.classList.remove('open');
-    document.body.classList.remove('no-scroll');
-  }
-
-  btnCart?.addEventListener('click', openCart);
-  btnCartClose?.addEventListener('click', closeCart);
-  cartOverlay?.addEventListener('click', closeCart);
-
-  // Escape para cerrar modal/cart (compatible dialog)
-  document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape') return;
-    // Si <dialog> está abierto → .open === true
-    if (authModal && (authModal.open || !authModal.classList.contains('hidden'))) closeAuth();
-    if (cartOverlay?.classList.contains('active')) closeCart();
-  });
+    // Cerrar con ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (!modal.open && modal.classList?.contains?.('hidden')) return;
+      closeAuth(modal);
+    });
+    // — Exponer binder de auth para poder llamarlo tras inyectar parciales
+window.ppBindAuth = () => {
+  try { bindAuthModal(document); } catch(e) { console.warn('[Auth] bind falló:', e); }
+};
 
 
-  /* ---------- Spotify: botón y arrastre robusto ---------- */
-const audioBtn = $('#ppAudioChip');     // coincide con header.html
-const audioPanel = $('#ppAudioPanel');
-
-
-  // Toggle panel
-  audioBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    audioPanel.classList.toggle('hidden');
-  });
-  document.addEventListener('click', (e) => {
-    // Cierra si se hace click fuera
-    if (!audioPanel.classList.contains('hidden')) {
-      if (!audioPanel.contains(e.target) && e.target !== audioBtn) {
-        audioPanel.classList.add('hidden');
-      }
-    }
-  });
-
-  // Drag del chip con Pointer Events + persistencia
-  (function enableDrag() {
-    if (!audioBtn) return;
-
-    // Restaura posición guardada
-    try {
-      const p = JSON.parse(localStorage.getItem('ppAudioPosV1') || 'null');
-      if (p && typeof p.x === 'number' && typeof p.y === 'number') {
-        audioBtn.style.position = 'fixed';
-        audioBtn.style.left = p.x + 'px';
-        audioBtn.style.top = p.y + 'px';
-        audioBtn.style.right = 'auto';
-      }
-    } catch {}
-
-    const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
-    let id = null, sx = 0, sy = 0, ox = 0, oy = 0, moved = false;
-
-    audioBtn.style.touchAction = 'none';
-
-    audioBtn.addEventListener('pointerdown', (e) => {
-      id = e.pointerId;
-      audioBtn.setPointerCapture(id);
-      const r = audioBtn.getBoundingClientRect();
-      sx = e.clientX; sy = e.clientY; ox = r.left; oy = r.top; moved = false;
-      audioBtn.classList.add('dragging');
+    // Cerrar click fuera (cuando se usa <dialog>)
+    modal.addEventListener('click', (e) => {
+      const card = $('.modal-card', modal) || modal.firstElementChild;
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const out = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      if (out) closeAuth(modal);
     });
 
-    audioBtn.addEventListener('pointermove', (e) => {
-      if (e.pointerId !== id) return;
-      const dx = e.clientX - sx, dy = e.clientY - sy;
-      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
-      const x = clamp(ox + dx, 6, window.innerWidth - audioBtn.offsetWidth - 6);
-      const y = clamp(oy + dy, 6, window.innerHeight - audioBtn.offsetHeight - 6);
-      audioBtn.style.position = 'fixed';
-      audioBtn.style.left = x + 'px';
-      audioBtn.style.top = y + 'px';
-      audioBtn.style.right = 'auto';
+    // Tabs
+    $$('[data-auth-tab]', modal).forEach(btn => {
+      btn.addEventListener('click', () => {
+        const which = btn.getAttribute('data-auth-tab');
+        switchAuthTab(modal, which);
+      });
     });
 
-    function up(e) {
-      if (e.pointerId !== id) return;
-      audioBtn.releasePointerCapture(id);
-      audioBtn.classList.remove('dragging');
-      id = null;
-      // Guarda posición
-      const r = audioBtn.getBoundingClientRect();
-      try {
-        localStorage.setItem('ppAudioPosV1', JSON.stringify({ x: r.left, y: r.top }));
-      } catch {}
-      if (moved) {
+    // Mostrar / ocultar contraseña (añade botón 👁 al lado de cada password)
+    $$('input[type="password"]', modal).forEach(input => {
+      // Evita duplicar
+      if (input.nextElementSibling?.classList?.contains('toggle-pass')) return;
+
+      const wrapper = input.parentElement;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'toggle-pass';
+      btn.setAttribute('aria-label', 'Mostrar contraseña');
+      btn.textContent = '👁';
+      input.insertAdjacentElement('afterend', btn);
+
+      btn.addEventListener('click', () => {
+        const showing = input.type === 'password';
+        input.type = showing ? 'text' : 'password';
+        btn.textContent = showing ? '🙈' : '👁';
+        btn.setAttribute('aria-label', showing ? 'Ocultar contraseña' : 'Mostrar contraseña');
+        input.focus({ preventScroll: true });
+      });
+    });
+
+    // Validación suave de formularios (visual + preventDefault)
+    $$('.auth-form', modal).forEach(form => {
+      form.addEventListener('submit', (e) => {
         e.preventDefault();
-        e.stopPropagation();
+        const required = $$('input[required], select[required], textarea[required]', form);
+        const allOk = required.every(i => i.value.trim() !== '');
+        if (!allOk) {
+          form.classList.add('shake');
+          setTimeout(() => form.classList.remove('shake'), 450);
+          // marca inputs vacíos
+          required.forEach(i => i.classList.toggle('is-invalid', i.value.trim() === ''));
+          (required.find(i => i.value.trim() === '') || required[0])?.focus({ preventScroll: true });
+          return;
+        }
+        // Aquí integrarías tu backend / fetch
+        // Demo:
+        console.info('✅ Auth OK:', form.id);
+        closeAuth(modal);
+      });
+    });
+
+    authBound = true;
+  }
+
+/* ===== Prophetia · Mega Menu controller (sticky + hover-intent) ===== */
+/* ===== Prophetia · Mega Menu controller — click only ===== */
+(() => {
+  const mega = document.querySelector('[data-prop-mega]');
+  if (!mega) return;
+
+  const toggles  = mega.querySelectorAll('.mega-toggle[role="tab"]');
+  const panel    = mega.querySelector('.mega-panel');
+  const sections = panel ? panel.querySelectorAll('.panel[role="tabpanel"]') : [];
+
+  let open = false;
+
+  function showPanel(id){
+    // 1) mostrar solo el panel objetivo
+    sections.forEach(sec => {
+      const active = sec.id === `panel-${id}`;
+      sec.classList.toggle('is-visible', active);
+      if (active) sec.removeAttribute('hidden');
+      else        sec.setAttribute('hidden','');
+    });
+
+    // 2) marcar pestañas
+    toggles.forEach(btn => {
+      const active = btn.dataset.panel === id;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', String(active));
+      btn.setAttribute('aria-expanded', String(active));
+    });
+
+    // 3) A11y del contenedor
+    if (panel){
+      const activeTab = mega.querySelector(`.mega-toggle[data-panel="${id}"]`);
+      if (activeTab){
+        if (!activeTab.id) activeTab.id = `tab-${id}`;
+        panel.setAttribute('aria-labelledby', activeTab.id);
       }
     }
-    audioBtn.addEventListener('pointerup', up);
-    audioBtn.addEventListener('pointercancel', up);
-  })();
 
-  /* ---------- Mejora: evitar que el buscador tape iconos (solo UI ya lo resuelve con CSS) ---------- */
-  // Sin lógica adicional necesaria: el CSS reducido la anchura con media-queries.
+    // 4) abrir panel (sin hover)
+    mega.classList.add('is-open');
+    panel.style.display = 'block';
+    requestAnimationFrame(() => {
+      panel.style.opacity = '1';
+      panel.style.transform = 'translateY(0)';
+    });
+    open = true;
+  }
+
+  function hidePanel(){
+    mega.classList.remove('is-open');
+    toggles.forEach(btn => btn.setAttribute('aria-expanded','false'));
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(8px)';
+    // esperar la transición CSS (~280ms) y ocultar
+    setTimeout(() => { if (!mega.classList.contains('is-open')) panel.style.display = 'none'; }, 300);
+    open = false;
+  }
+
+  // Click + teclado: único disparador permitido
+  toggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.panel;
+      if (!id) return;
+      if (open && btn.classList.contains('is-active')) hidePanel();
+      else showPanel(id);
+    });
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+      // accesibilidad: ← → para moverte entre tabs
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+        const arr = Array.from(toggles);
+        const i = arr.indexOf(btn);
+        const next = e.key === 'ArrowRight' ? (i+1) % arr.length : (i-1+arr.length)%arr.length;
+        arr[next].focus();
+      }
+    });
+  });
+
+  // Cerrar si haces click fuera del mega-panel
+  document.addEventListener('click', (e) => {
+    if (!open) return;
+    const inside = e.target.closest('[data-prop-mega]') || e.target.closest('.mega-panel');
+    if (!inside) hidePanel();
+  });
+
+  // ESC cierra
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) hidePanel(); });
+
+  // Estado inicial: muestra el primer tab activo del HTML (si lo hay) pero sin auto-abrir
+  const initial = mega.querySelector('.mega-toggle.is-active')?.dataset.panel;
+  if (initial) { sections.forEach(s => s.setAttribute('hidden','')); }
 })();
 
 
-document.addEventListener('click', (e)=>{
-  const btn = e.target.closest('#ppSavedBtn');
-  if(btn){ location.href = 'wishlist.html'; }
+
+// ===== Inyección de parciales (rutas CORRECTAS) =====
+// ===== Inyección de header y footer por fetch =====
+(async () => {
+  async function inject(id, url) {
+    const host = document.getElementById(id);
+    if (!host) return;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status} @ ${url}`);
+    host.innerHTML = await res.text();
+  }
+await inject('header', 'assets/partials/header.html');
+await inject('footer', 'assets/partials/footer.html');
+
+window.dispatchEvent(new CustomEvent('partials:ready'));
+document.documentElement.style.setProperty('--pp-header-h', '64px');
+})();
+// 🔥 Tras inyectar header/footer, inicializa carrito si existe
+window.addEventListener('partials:ready', () => {
+  try { window.ppCartInit && window.ppCartInit(); } catch(e){}
+    try { window.ppBindAuth && window.ppBindAuth(); } catch(e){}
 });
+// 🔒 Fallback robusto: abrir el modal de auth en cuanto exista
+window.addEventListener('partials:ready', () => {
+  document.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('#ppAuthLogoBtn');
+    if (!btn) return;
+    const modal = document.getElementById('ppAuthModal');
+    if (!modal) return;
+    try { modal.showModal(); } catch (e) { modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false'); }
+  }, { passive:true });
+});
+// ===== Auth + Cart · Cierres globales + Focus Return + Focus Trap =====
+(() => {
+  const $id = (x) => document.getElementById(x);
+  let lastFocus = null; // Para devolver foco
 
-// === header-init.js ===
-window.ppInitHeader = function() {
-  const dlg         = document.getElementById('ppAuthModal');
-  const openBtn     = document.getElementById('ppAuthLogoBtn');
-  const tabLogin    = document.querySelector('[data-auth-tab="login"]');
-  const tabRegister = document.querySelector('[data-auth-tab="register"]');
-  const formLogin   = document.getElementById('ppLoginForm');
-  const formReg     = document.getElementById('ppRegisterForm');
-  const closeBtn    = document.querySelector('#ppAuthModal .modal-close,[data-close="auth"]');
+  /* --- Helpers --- */
+  const disableScroll = () => document.body.classList.add('no-scroll');
+  const enableScroll  = () => document.body.classList.remove('no-scroll');
 
-  if (!dlg || !openBtn) return; // si el header aún no está inyectado
+  function openAuth(){
+    const m = $id('ppAuthModal');
+    if (!m) return;
 
-  function switchAuthTab(which){
-    const isLogin = which === 'login';
-    tabLogin && tabLogin.classList.toggle('active',  isLogin);
-    tabRegister && tabRegister.classList.toggle('active', !isLogin);
-    formLogin && formLogin.classList.toggle('hidden', !isLogin);
-    formReg   && formReg.classList.toggle('hidden',  isLogin);
+    lastFocus = document.activeElement;
+    
+    try { m.showModal(); } 
+    catch { m.classList.remove('hidden'); m.setAttribute('aria-hidden','false'); }
+    
+    disableScroll();
+
+    // Foco al primer campo
+    const first = m.querySelector('input, button, select, textarea');
+    first && first.focus();
+
+    trapFocus(m);
   }
 
-  function openAuthRegister(){
-    // Usa SIEMPRE el dialog del header inyectado
-    if (typeof dlg.showModal === 'function') dlg.showModal();
-    else dlg.classList.remove('hidden'); // fallback sin <dialog>
-    switchAuthTab('register');
+  function closeAuth(){
+    const m = $id('ppAuthModal');
+    if (!m) return;
+    try { m.close(); } 
+    catch { m.classList.add('hidden'); m.setAttribute('aria-hidden','true'); }
+
+    enableScroll();
+
+    // Devuelve el foco a quien abrió
+    lastFocus && lastFocus.focus();
   }
 
-  openBtn.addEventListener('click', openAuthRegister);
-  tabLogin    && tabLogin.addEventListener('click',    () => switchAuthTab('login'));
-  tabRegister && tabRegister.addEventListener('click', () => switchAuthTab('register'));
-  closeBtn    && closeBtn.addEventListener('click',    () => dlg.close ? dlg.close() : dlg.classList.add('hidden'));
-
-  dlg.addEventListener('cancel', (e)=>{ e.preventDefault(); dlg.close && dlg.close(); }); // tecla Esc
-};
-// Cerrar con suave fallback si <dialog> no soporta .close()
-function ppCloseDialog(dlg){
-  try { dlg.close(); } catch(e){ dlg.setAttribute('open',''); dlg.removeAttribute('open'); }
+function openCart(){
+  const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+  const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+  drawer && drawer.classList.add('open');     // clase que tu CSS usa
+  overlay && overlay.classList.add('active'); // idem
+  document.body.classList.add('no-scroll');
 }
 
-window.ppInitHeader = function () {
-  const dlg = document.getElementById('ppAuthModal');
-  const openBtn = document.getElementById('ppAuthLogoBtn');
-  // ... (tu código de tabs switchAuthTab etc.)
+function closeCart(){
+  const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+  const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+  drawer && drawer.classList.remove('open');
+  overlay && overlay.classList.remove('active');
+  document.body.classList.remove('no-scroll');
+}
 
-  if (openBtn && dlg) {
-    openBtn.addEventListener('click', () => {
-      dlg.showModal();
-      // si quieres que entre directamente en "Registrarme":
-      // switchAuthTab('register');
+  /* --- Focus Trap premium — versión Loewe™ --- */
+  function trapFocus(modal) {
+    const focusables = modal.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+    const first = focusables[0];
+    const last  = focusables[focusables.length - 1];
+
+    modal.addEventListener('keydown', e => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
     });
   }
 
-  const closeBtn = dlg?.querySelector('.modal-close,[data-close="auth"]');
-  closeBtn && closeBtn.addEventListener('click', () => ppCloseDialog(dlg));
+  /* --- Delegación global de clicks --- */
+  document.addEventListener('click', (ev) => {
+    // Abrir auth desde logo / botón
+    if (ev.target.closest('#ppAuthLogoBtn') || ev.target.closest('#ppAuthBtn')) {
+      ev.preventDefault();
+      openAuth();
+      return;
+    }
 
-  // Cerrar al pulsar ESC
-  dlg?.addEventListener('cancel', e => { e.preventDefault(); ppCloseDialog(dlg); });
-};
+    // Cerrar auth
+    if (ev.target.closest('[data-close="auth"]')) {
+      ev.preventDefault();
+      closeAuth();
+      return;
+    }
+
+    // Cerrar carrito
+    if (ev.target.closest('[data-close="cart"]') || ev.target === $id('cartOverlay')) {
+      ev.preventDefault();
+      closeCart();
+      return;
+    }
+
+    // Abrir carrito
+    if (ev.target.closest('.js-open-cart')) {
+      ev.preventDefault();
+      openCart();
+      return;
+    }
+  });
+
+  /* --- Escape maneja ambos --- */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAuth();
+      closeCart();
+    }
+  });
+})();
+
+  
+})();

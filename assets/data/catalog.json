@@ -8,6 +8,7 @@
     "fit": "oversized",
     "price": 59.0,
     "inStock": true,
+    "cover": "assets/img/Atlas/atlasdef.png",
     "sizes": ["S", "M", "L", "XL"],
     "short": "Composición editorial inspirada en Atlas. Silencio y fuerza.",
     "images": [
@@ -29,7 +30,7 @@
     "inStock": true,
     "cover": "assets/img/CalyrasEgo/CalyraFinal.png",
     "images": [
-      "assets/img/CalyrasEgo/oversized-faded-t-shirt-faded-black-back-68e3d44c27f24.png",
+      "assets/img/CalyrasEgo/cal1.png",
       "assets/img/CalyrasEgo/unisex-staple-tshirt-heather-natural-back-68e3d95145bdd.png",
       "assets/img/CalyrasEgo/unisex-staple-tshirt-heather-natural-front-68e3c2c176f4c.png",
       "assets/img/CalyrasEgo/oversized-faded-tshirt-faded-black-front-68e3d844c2783d.png"
@@ -46,9 +47,10 @@
     "fit": "regular",
     "price": 89,
     "inStock": true,
+    "cover": "assets/img/mascaras/covermask.png",
     "sizes": ["S", "M", "L", "XL", "XXL"],
     "images": [
-      "assets/img/Atlas/oversized-faded-t-shirt-faded-bone-front-68eec465daada.png"
+      "assets/img/mascaras/mask1.png"
     ],
     "short": "Iconografía mediterránea con contraste gráfico y textura editorial."
   },

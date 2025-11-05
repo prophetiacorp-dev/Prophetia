@@ -4,41 +4,129 @@
 
       <!-- IZQUIERDA: mega-menú -->
       <nav class="pp-left" aria-label="Primary">
-        <div class="mega">
-          <button class="mega-toggle" type="button">Mujer ▾</button>
-          <div class="mega-panel">
-            <div class="mega-col">
-              <a href="camisetas.html">Camisetas</a>
-              <a href="hoodies.html">Hoodies</a>
-             
-            </div>
-          </div>
-        </div>
+        <div class="mega" data-prop-mega>
+          <ul class="mega-tabs" role="tablist" aria-label="Navegación principal">
+            <li><button class="mega-toggle is-active" role="tab" aria-selected="true" aria-controls="panel-mujer" id="tab-mujer" data-panel="mujer">Mujer</button></li>
+            <li><button class="mega-toggle" role="tab" aria-selected="false" aria-controls="panel-hombre" id="tab-hombre" data-panel="hombre">Hombre</button></li>
+            <li><button class="mega-toggle" role="tab" aria-selected="false" aria-controls="panel-colecciones" id="tab-colecciones" data-panel="colecciones">Colecciones</button></li>
+            <li><button class="mega-toggle" role="tab" id="tab-house" data-panel="house" aria-selected="false">Prophetia House</button></li>
+          </ul>
 
-        <div class="mega">
-          <button class="mega-toggle" type="button">Hombre ▾</button>
-          <div class="mega-panel">
-            <div class="mega-col">
-              <a href="camisetas.html">Camisetas</a>
-              <a href="hoodies.html">Hoodies</a>
-              
-            </div>
-          </div>
-        </div>
+          <!-- Paneles -->
+          <div class="mega-panel" role="region" aria-labelledby="tab-hombre" data-mega>
+            <!-- MUJER -->
+            <section id="panel-mujer" class="panel is-visible" role="tabpanel" aria-labelledby="tab-mujer">
+              <div class="mega-grid" aria-label="Categorías Mujer">
+                <ul class="mega-col">
+                  <li><a href="camisetas-mujer.html">Camisetas</a></li>
+                  <li><a href="hoodies.html">Hoodies</a></li>
+                  <li><a href="sudaderas.html">Sudaderas de punto</a></li>
+                  <li><a href="colecciones.html">Ver todo</a></li>
+                </ul>
+                <ul class="mega-col">
+                  <li><a href="wishlist.html">Favoritos</a></li>
+                  <li><a href="novedades.html">Novedades</a></li>
+                </ul>
+                <ul class="mega-col">
+                  <li class="mega-card">
+                    <a href="colecciones.html#myth" class="mega-card__link" aria-label="Explorar Myth Series">
+                      <figure class="mega-card__figure">
+                        <img src="assets/img/mega/myth-thumb.jpg" alt="Myth Series · Prophetia" loading="lazy">
+                      </figure>
+                      <br>
+                      <figure class="mega-card__figure">
+                        <img src="assets/img/mega/myth-thumb.jpg" alt="Letters From The Soul · Prophetia" loading="lazy">
+                      </figure>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </section>
 
-        <div class="mega">
-          <button class="mega-toggle" type="button">Colecciones ▾</button>
-          <div class="mega-panel">
-            <div class="mega-col">
-              <a href="assets/collects/ms.html">Myth Series</a>
- <a href="assets/collects/lfts.html">Letters From The Soul</a>
-              
-            </div>
-          </div>
-        </div>
-      </nav>
+            <!-- HOMBRE -->
+            <section id="panel-hombre" class="panel" role="tabpanel" aria-labelledby="tab-hombre" hidden>
+              <div class="mega-grid" aria-label="Categorías Hombre">
+                <ul class="mega-col">
+                  <li><a href="camisetas-hombre.html">Camisetas</a></li>
+                  <li><a href="hoodies.html">Hoodies</a></li>
+                  <li><a href="sudaderas.html">Sudaderas de punto</a></li>
+                  <li><a href="colecciones.html">Ver todo</a></li>
+                </ul>
+                <ul class="mega-col">
+                  <li><a href="wishlist.html">Favoritos</a></li>
+                  <li><a href="novedades.html">Novedades</a></li>
+                </ul>
+                <ul class="mega-col">
+                  <li class="mega-card">
+                    <a href="colecciones.html#myth" class="mega-card__link" aria-label="Explorar Myth Series">
+                      <figure class="mega-card__figure">
+                        <img src="assets/img/mega/myth-thumb.jpg" alt="Myth Series · Prophetia" loading="lazy">
+                      </figure>
+                      <br>
+                      <figure class="mega-card__figure">
+                        <img src="assets/img/mega/myth-thumb.jpg" alt="Letters From The Soul · Prophetia" loading="lazy">
+                      </figure>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </section>
 
-      <!-- DERECHA: buscador + logo-auth + guardados + carrito -->
+            <!-- UNISEX -->
+            <section id="panel-unisex" class="panel" role="tabpanel" aria-labelledby="tab-unisex" hidden>
+              <div class="mega-grid">
+                <ul class="mega-col">
+                  <li><a href="camisetas-unisex.html?cat=unisex">Camisetas</a></li>
+                  <li><a href="hoodies.html?cat=unisex">Hoodies</a></li>
+                  <li><a href="sudaderas-punto.html?cat=unisex">Sudaderas de punto</a></li>
+                  <li><a href="colecciones.html">Ver todo</a></li>
+                </ul>
+                <ul class="mega-col">
+                  <li><a href="wishlist.html">Favoritos</a></li>
+                  <li><a href="novedades.html">Novedades</a></li>
+                </ul>
+                <ul class="mega-col">
+                  <li class="mega-card">
+                    <a href="colecciones.html#myth" class="mega-card__link" aria-label="Explorar Myth Series">
+                      <figure class="mega-card__figure">
+                        <img src="assets/img/mega/myth-thumb.jpg" alt="Myth Series · Prophetia" loading="lazy">
+                      </figure>
+                      <br>
+                      <figure class="mega-card__figure">
+                        <img src="assets/img/mega/myth-thumb.jpg" alt="Letters From The Soul · Prophetia" loading="lazy">
+                      </figure>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- COLECCIONES -->
+            <section id="panel-colecciones" class="panel" role="tabpanel" aria-labelledby="tab-colecciones" hidden>
+              <div class="mega-grid">
+                <ul class="mega-col">
+                  <li><a href="assets/collects/ms.html">Myth Series</a></li>
+                  <li><a href="assets/collects/lfts.html">Letters From The Soul</a></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- PROPHETIA HOUSE -->
+            <section id="panel-house" class="panel" role="tabpanel" aria-labelledby="tab-house" hidden>
+              <div class="mega-grid columns-1" aria-label="Prophetia House">
+                <ul class="mega-col">
+                  <li><a href="about.html">Prophetia House Esence</a></li>
+                  <li><a href="studio.html">Studio</a></li>
+                  <li><a href="music.html">Música</a></li>
+                  <li><a href="events.html">Eventos</a></li>
+                </ul>
+              </div>
+            </section>
+          </div> <!-- /.mega-panel -->
+        </div> <!-- /.mega -->
+      </nav> <!-- /.pp-left -->
+
+      <!-- DERECHA: buscador + auth + guardados + carrito -->
       <div class="pp-right">
         <form class="search-inline" role="search" action="colecciones.html" method="get">
           <label for="q" class="sr-only">Buscar</label>
@@ -51,30 +139,81 @@
         </button>
 
         <!-- guardados -->
-         <a id="ppSavedBtn" class="icon-btn" href="wishlist.html" title="Guardados" aria-label="Guardados">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor"/></svg>
-    </a>
+        <a id="ppSavedBtn" class="icon-btn" href="wishlist.html" title="Guardados" aria-label="Guardados">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-6-4-6 4V3z" stroke="currentColor"/></svg>
+        </a>
 
         <!-- carrito -->
-      <button id="cartOpen" class="icon-btn js-open-cart" aria-label="Abrir cesta">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M6 7h12l-1.2 12.5a2 2 0 0 1-2 1.5H9.2a2 2 0 0 1-2-1.5L6 7Z" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M9 7a3 3 0 1 1 6 0" stroke="currentColor" stroke-width="1.5"/>
-    </svg>
-  </button>
-        
+        <button id="cartOpen" class="icon-btn js-open-cart" aria-label="Abrir cesta" data-cart-open>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 7h12l-1.2 12.5a2 2 0 0 1-2 1.5H9.2a2 2 0 0 1-2-1.5L6 7Z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 7a3 3 0 1 1 6 0" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </button>
       </div>
 
     </div>
   </div>
 </header>
-<!-- ===== Prophetia Spotify Floating Button ===== -->
-<!-- ===== Prophetia Spotify Player (embed correcto) ===== -->
+
+<!-- ===== MODAL Auth Prophetia ===== -->
+<dialog id="ppAuthModal" class="modal" aria-modal="true" aria-labelledby="authTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div class="header-inner">
+        <h3 id="authTitle">Bienvenido/a</h3>
+        <button class="modal-close" data-close="auth" aria-label="Cerrar">✕</button>
+      </div>
+    </div>
+
+    <nav class="sp-tabs" aria-label="Autenticación">
+      <ol role="tablist" class="sp-tabs__list">
+        <li role="presentation"><button role="tab" class="sp-tab" data-auth-tab="login" aria-selected="true" aria-controls="ppLoginForm">Iniciar sesión</button></li>
+        <li role="presentation"><button role="tab" class="sp-tab" data-auth-tab="register" aria-selected="false" aria-controls="ppRegisterForm">Nuevos clientes</button></li>
+      </ol>
+    </nav>
+
+    <section class="modal-body" id="side-panel__content" aria-live="polite">
+      <form id="ppLoginForm" class="auth-form" novalidate>
+        <label for="ppLoginEmail">Correo electrónico *</label>
+        <input id="ppLoginEmail" type="email" required>
+        <div class="sp-password">
+          <label for="ppLoginPass">Contraseña *</label>
+          <input id="ppLoginPass" type="password" required>
+          <button type="button" class="toggle-pass" aria-label="Mostrar contraseña">👁</button>
+        </div>
+        <a class="sp-link" href="#forgot">¿Has olvidado tu contraseña?</a>
+        <button type="submit" class="sp-cta">Inicio de sesión</button>
+      </form>
+
+      <form id="ppRegisterForm" class="auth-form hidden" novalidate>
+        <label for="ppRegEmail">Correo electrónico *</label>
+        <input id="ppRegEmail" type="email" required>
+        <div class="sp-password">
+          <label for="ppRegPass">Contraseña *</label>
+          <input id="ppRegPass" type="password" required>
+          <button type="button" class="toggle-pass" aria-label="Mostrar contraseña">👁</button>
+        </div>
+        <button type="submit" class="sp-cta">Registrarme</button>
+      </form>
+    </section>
+
+    <footer class="modal-foot">
+      <h5>Regístrate en PROPHETIA y disfruta de las ventajas</h5>
+      <ul class="sp-benefits">
+        <li>🖤 Crea una lista de deseos y guarda los artículos</li>
+        <li>🏷️ Guarda tus direcciones de entrega</li>
+        <li>🎁 Gestiona tus pedidos y devoluciones</li>
+      </ul>
+    </footer>
+  </div>
+</dialog>
+
+<!-- ===== Prophetia Spotify Chip ===== -->
 <div id="ppAudioChip" class="pp-audio-toggle">
   <img src="assets/icons/spo.svg" alt="Prophetia Playlist" height="20" />
   <span>Prophetia Playlist</span>
 </div>
-
 <div id="ppAudioPanel" aria-hidden="true">
   <div class="pp-spotify-viewport">
     <iframe
@@ -86,78 +225,18 @@
       referrerpolicy="origin" loading="lazy">
     </iframe>
   </div>
+</div>
 
-
-
-
-<!-- ===================== /HEADER ===================== -->
-
-<!-- ====== MODAL Auth ====== -->
-<dialog id="ppAuthModal" class="modal" aria-modal="true" aria-labelledby="authTitle">
-  <div class="modal-card">
-    <button class="modal-close" data-close="auth" aria-label="Cerrar">✕</button>
-
-    <h3 id="authTitle" style="margin:0 0 6px;font-weight:700;">Bienvenido/a</h3>
-
-    <div class="tabs" role="tablist" aria-label="Acceso">
-      <button class="tab active" data-auth-tab="login" aria-selected="true" aria-controls="ppLoginForm">
-        Iniciar sesión
-      </button>
-      <button class="tab" data-auth-tab="register" aria-selected="false" aria-controls="ppRegisterForm">
-        Nuevos clientes
-      </button>
-    </div>
-
-    <!-- === LOGIN === -->
-    <form id="ppLoginForm" class="auth-form">
-      <div class="form-group">
-        <label for="authEmail">Dirección de correo electrónico *</label>
-        <input id="authEmail" name="email" type="email" autocomplete="email" required>
-      </div>
-      <div class="form-group">
-        <label for="authPass">Contraseña *</label>
-        <input id="authPass" name="password" type="password" autocomplete="current-password" required>
-      </div>
-      <p class="helper"><a href="#">¿Has olvidado tu contraseña?</a></p>
-      <button class="btn-primary" type="submit">Inicio de sesión</button>
-      <ul class="benefits">
-        <li>🖤 <span>Crea una lista de deseos y guarda los artículos</span></li>
-        <li>📦 <span>Gestiona tus pedidos y devoluciones</span></li>
-      </ul>
-    </form>
-
-    <!-- === REGISTRO === -->
-    <form id="ppRegisterForm" class="auth-form hidden">
-      <div class="form-group">
-        <label for="regEmail">Correo electrónico *</label>
-        <input id="regEmail" name="email" type="email" autocomplete="email" required>
-      </div>
-      <div class="form-group">
-        <label for="regPass">Contraseña *</label>
-        <input id="regPass" name="password" type="password" autocomplete="new-password" required>
-      </div>
-      <button class="btn-primary" type="submit">Registrarme</button>
-      <ul class="benefits">
-        <li>🌿 <span>Acceso a colecciones exclusivas Prophetia</span></li>
-        <li>💎 <span>Historial de pedidos y ventajas de miembro</span></li>
-      </ul>
-    </form>
-
-  </div> <!-- fin de modal-card -->
-</dialog>
-
-<!-- ====== Carrito (drawer) ====== -->
+<!-- ===== Carrito (drawer) ===== -->
 <div id="ppCartOverlay" class="cart-overlay"></div>
-<aside id="ppCartDrawer" class="cart-drawer" aria-labelledby="cartTitle" role="dialog" aria-modal="true">
+ <aside id="ppCartDrawer" class="cart-drawer">
   <div class="cart-head">
-    <strong id="cartTitle">Cesta</strong>
-    <button class="cart-close" data-close="cart" aria-label="Cerrar">✕</button>
+    <strong>Cesta</strong>
+    <button class="cart-close" data-close="cart">✕</button>
   </div>
-  <div id="ppCartList" class="cart-list">
-    <!-- Items se inyectan por JS -->
-  </div>
+
+<div id="ppCartList" class="cart-list"></div>
   <div class="cart-foot">
-    <div class="cart-total"><span>Total</span> <strong id="ppCartTotal">€0,00</strong></div>
-    <button class="cart-checkout">Finalizar compra</button>
+<div class="cart-total"><span>Total</span> <strong id="ppCartTotal">€0,00</strong></div>    <button class="cart-checkout">Finalizar compra</button>
   </div>
 </aside>

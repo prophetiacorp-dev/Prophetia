@@ -1,6 +1,17 @@
 /* ============================================================
    PROPHETIA — base CSS
    ============================================================ */
+   /* === PROPHETIA · Cinzel (regular) === */
+
+:root{
+  --panel-pad: clamp(16px, 3vw, 24px);
+}
+
+/* Usa Cinzel en toda la interfaz y en display */
+:root{
+  --font-display: "Cormorant Garamond", "Playfair Display", serif;
+  --font-ui: "Inter", sans-serif;
+}
 :root{
   /* Colores base */
   --bg: #ffffff;
@@ -75,8 +86,8 @@ dialog:not([open]){ display:none; }
 
 /* Fila única: IZQ (mega-menú)  ——  DCHA (acciones) */
 .pp-topbar{
-  height:90px;
-  display:flex; align-items:center; justify-content:space-between;
+  height:68px;
+  display:flex; align-items:center; justify-content:flex-start;
   gap:16px;
 }
 
@@ -89,14 +100,28 @@ dialog:not([open]){ display:none; }
 .mega-toggle{ display:inline-flex; align-items:center; gap:6px; padding:8px 0; }
 .mega-toggle:hover{ opacity:.75; }
 .mega-panel{
-  position:absolute; top:36px; left:0; display:none;
-  min-width:300px; background:#fff; border:1px solid var(--line);
-  border-radius:12px; padding:14px; box-shadow:var(--shadow-md);
+  position:absolute; top:42px; left:0;
+  /* display:none;  ← QUÍTALO */
+  min-width:300px; background:#fff; ...
+  transform: translateY(6px);
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
 }
-.mega:hover .mega-panel{ display:block; }
-.mega-panel .mega-col{ display:flex; flex-direction:column; gap:10px; padding:8px 12px; min-width:180px; }
-.mega-panel a{ color:var(--text); opacity:.85; }
+/* deja que la visibilidad la controle el bloque de abajo con .is-open */
+.mega:hover .mega-panel,
+.mega.is-open .mega-panel{
+  /* display:block; ← QUÍTALO TAMBIÉN */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mega-panel .mega-col{
+  display:flex; flex-direction:column; gap:10px; padding:8px 12px; min-width:180px;
+}
+.mega-panel a{ color:var(--text); opacity:.9; text-decoration:none; }
 .mega-panel a:hover{ opacity:1; }
+.pp-header{ position:sticky; top:0; z-index: 1500; }
+
 
 /* DERECHA — buscador + logo (abre auth) + guardados + carrito */
 .pp-right{ display:flex; align-items:center; gap:14px; }
@@ -149,13 +174,7 @@ dialog:not([open]){ display:none; }
   .search-inline .search-input{ width:150px; }
 }
 
-/* ============================================================
-   HERO
-   ============================================================ */
-.hero{
-  padding:39.5px 0 32px;
-  text-align:center;
-}
+
 .eyebrow{
   letter-spacing:.12em;
   text-transform:uppercase;
@@ -165,11 +184,13 @@ dialog:not([open]){ display:none; }
 }
 .display{
   font-family:var(--font-display);
-  font-weight:700;
-  font-size:clamp(36px, 5.2vw, 64px);
-  line-height:1.1;
-  margin:0 0 16px;
+  font-weight:500;
+  font-size: clamp(32px, 4.2vw, 52px);
+  line-height: 1.15;
+  letter-spacing: -0.2px;
+  margin: 0 0 12px;
 }
+
 .lede{
   max-width:820px;
   margin:0 auto 20px;
@@ -202,13 +223,7 @@ dialog:not([open]){ display:none; }
   padding:22px 22px 24px;
   position:relative;
 }
-.modal-close{
-  position:absolute; top:10px; right:10px;
-  width:36px; height:36px; border-radius:999px;
-  border:1px solid var(--line);
-  display:inline-flex; align-items:center; justify-content:center;
-  background:#fff;
-}
+
 .tabs{ display:flex; gap:8px; margin-bottom:10px; }
 .tab{ padding:8px 12px; border-radius:999px; border:1px solid var(--line); }
 .tab.active{ background:#111; color:#fff; border-color:#111; }
@@ -582,40 +597,7 @@ small, .muted{ color:var(--muted); }
 
 /* === LIMPIEZA VISUAL HEADER + BRAND === */
 
-/* Header: sin borde visible, integración con fondo */
-.pp-header{
-  background: #fff;
-  border-bottom: none;              /* ❌ elimina la línea */
-  box-shadow: none;                 /* por si hay sombra */
-}
 
-/* Banda Prophetia (logo grande): sin borde, sin espacio */
-.brand-band{
-  border: none !important;          /* ❌ elimina segunda línea */
-  background: #fff;
-  padding: 0;                       /* quita el padding superior/inferior */
-  margin: 0;
-}
-.brand-band .container {
-  display: flex;
-  justify-content: flex-start;  /* logo a la izquierda */
-  align-items: center;
-  padding-left: var(--edge, 20px);
-}
-
-/* Logo SVG Prophetia */
-.brand-band__img{
-  display: block;
-  height: 140px;
-  width: auto;
-  object-fit: contain;
- margin-left: var(--edge, 24px);
-transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
-  image-rendering: optimizeQuality;
-}
-
-/* El contenedor del hero “recibe” al logo */
-.hero, .promo, #home_hero { position:relative; }
 
 
 /* (Opcional) Si deseas mantener ajustes de móvil, adapta valores actuales: */
@@ -676,27 +658,6 @@ transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
   display: block;            /* evita gaps de inline */
   border: 0;                 /* por si es iframe */
 }
-
-
-
-/* === LOGO flotante Prophetia sobre el vídeo === */
-
-
-.floating-logo{ position:absolute; left:-1px; top:17px; z-index:20; line-height:0; }
-.floating-logo img{ height: clamp(120px, 4vw, 170px); width:auto; display:block; }
-
-
-/* Responsivo — se ajusta en móvil */
-@media (max-width: 900px) {
-  .floating-logo img {
-    width: 52vw;
-    transform: translateY(0);
-  }
-}
-:root{ --hero-gutter: clamp(16px, 3.5vw, 48px); }
-
-/* opcional: aplica márgenes laterales al bloque del hero */
-.hero { padding-inline: var(--hero-gutter); }
 
 
 
@@ -1346,22 +1307,6 @@ transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
 }
 
 
-/* ——— Quitar la “tarjeta” interna del modal (que crea el recuadro feo) ——— */
-#ppAuthModal .modal-card,
-#ppAuthModal .modal-content,
-#ppAuthModal .modal-inner,
-#ppAuthModal .card,
-#ppAuthModal .panel-card {
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
 /* Asegura que el panel es el propio dialog (sin margen ni sombra secundaria) */
 #ppAuthModal {
   margin: 0 !important;
@@ -1423,26 +1368,6 @@ transform: translateY(12px);      /* ligero ajuste vertical tipo Loewe */
    Imagen:      assets/img/textures/fondoform.png
    ========================================================= */
 
-/* Opción A) Fondo en TODO el panel lateral */
-#ppAuthModal{
-  /* Textura + velo blanco para legibilidad */
-  background:
-    linear-gradient(to bottom, rgba(255,255,255,.92), rgba(255,255,255,0.42)),
-    url("../img/textures/fondoform.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  /* Ajustes finos de “silent luxury” */
-  filter: brightness(1.02) contrast(3.92);
-}
-
-/* Acento de nitidez en pantallas grandes */
-@media (min-width: 992px){
-  #ppAuthModal{
-    filter: brightness(1.04) contrast(.9);
-  }
-}
 
 /* Respeta accesibilidad: reduce efectos si el usuario lo pide */
 @media (prefers-reduced-transparency: reduce){
@@ -3026,3 +2951,1686 @@ body[data-page="pdp"] .pdp-panel{
   transform: translate(var(--pdp-logo-offset-x, 0), var(--pdp-logo-offset-y, 0));
   image-rendering: auto; /* nitidez como camisetas */
 }
+/* ===== HEADER Prophetia · layout tipo Loewe (mínimo y final) ===== */
+:root{
+  --edge: 24px;   /* margen izquierdo maestro */
+  --hdr-h: 68px;  /* alto real del header */
+}
+
+/* Estructura base: contenedor solo marca el padding horizontal */
+.pp-header > .container{
+  max-width: 100%;
+  padding-inline: var(--edge) !important;
+}
+
+/* Barra interior: una sola línea, centrado vertical y sin space-between */
+.pp-topbar{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 28px;
+  height: var(--hdr-h);
+}
+
+/* IZQ: menú (Mujer/Hombre/Colecciones) — no ocupa todo */
+.pp-left{
+  display: flex !important;
+  align-items: center !important;
+  gap: 28px;
+  flex: 0 0 auto;
+}
+
+/* DCHA: buscador + iconos — empujados a la derecha */
+.pp-right{
+  margin-left: auto !important;        /* clave: empuja el grupo a la derecha */
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+/* Buscador estilo Loewe (línea inferior) */
+.search-inline{ display:flex; align-items:center; min-width: 0; }
+.search-inline .search-input{
+  width: 200px; max-width: 28vw;
+  background: transparent;
+  border: 0; border-bottom: 1px solid #000;
+  border-radius: 0;
+  padding: 4px 0 6px 0;
+  font: 400 14px/1.2 Inter, system-ui, sans-serif;
+  transition: border-color .2s ease, width .25s ease;
+}
+.search-inline .search-input:focus{
+  outline: none; border-bottom-width: 2px; width: 280px;
+}
+
+/* Floating logo + vídeo (sin tocar tu lógica actual) */
+.floating-logo{ position:absolute; left: var(--edge); top: calc(var(--hdr-h) + 6px); z-index:20; line-height:0; }
+.floating-logo img{ height:120px; width:auto; display:block; }
+.hero{ position:relative; padding:0; }
+.hero-video{ position:relative; width:100%; height: clamp(340px, 56vw, 760px); overflow:hidden; background:#000; }
+.hero-video__media{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+
+
+/* =========================
+   Diales globales (ajusta a gusto)
+   ========================= */
+:root{
+  --edge: 24px;          /* gutter L/R del header (y del hero) */
+  --hdr-h: 68px;         /* alto real de la franja del header   */
+
+  /* Diales de posición del floating logo (puedes sobreescribir por página) */
+  --logo-x: 0px;         /* + derecha / - izquierda */
+  --logo-y: 6px;         /* + abajo   / - arriba    */
+  --logo-scale: 1;       /* escala opcional (1 = 100%) */
+
+  /* Diales del hero */
+  --hero-min: 520px;     /* altura mínima */
+  --hero-vw: 56.25vw;    /* 16:9 ≈ 56.25vw */
+  --hero-max: 760px;     /* altura máxima */
+}
+
+/* =========================
+   Floating logo — control total
+   ========================= */
+.floating-logo{
+  position: absolute;
+  /* parte “base” alineada al borde maestro y bajo el header… */
+  left: var(--edge);
+  top:  calc(var(--hdr-h) - 96.55px);
+  z-index: 20;
+  line-height: 0;
+  /* …y microajustes con diales */
+  transform:
+    translate(var(--logo-x), var(--logo-y))
+    scale(var(--logo-scale));
+  transform-origin: top left;
+}
+.floating-logo img{
+  height: 120px; width: auto; display: block;
+}
+
+:root{
+  --edge: 24px;      /* mismo gutter que el header */
+  --hdr-h: 68px;     /* alto del header */
+  --hero-min: 520px; --hero-vw: 56.25vw; --hero-max: 760px;
+
+  /* diales del logo (puedes moverlo sin tocar el CSS) */
+  --logo-x: 0px;     /* + derecha / - izquierda */
+  --logo-y: 6px;     /* + abajo   / - arriba    */
+  --logo-scale: 1;
+}
+
+/* Altura del hero al estilo Loewe */
+.hero{ position:relative; height: clamp(var(--hero-min), var(--hero-vw), var(--hero-max)); }
+
+/* Marco interior con el mismo margen L/R que el header */
+.hero-frame{
+  position:absolute; inset:0;
+  width: calc(100% - (var(--edge) * 2));
+  height:100%;
+  left: var(--edge); right: var(--edge);
+  overflow:hidden; background:#000;
+}
+
+/* Vídeo a sangre dentro del marco */
+.hero-video{ position:absolute; inset:0; }
+.hero-video__media{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  display:block; border:0;
+}
+
+/* Floating logo con control en todos los ejes */
+.floating-logo{
+  position:absolute;
+  left: var(--edge);
+  top:  calc(var(--hdr-h) + 0px);
+  z-index:20; line-height:0;
+  transform: translate(var(--logo-x), var(--logo-y)) scale(var(--logo-scale));
+  transform-origin: top left;
+}
+.floating-logo img{ height:120px; width:auto; display:block; }
+
+@media (max-width: 900px){
+  :root{ --edge:16px; --hero-min:420px; --hero-max:640px; }
+  .floating-logo img{ height: clamp(84px, 16vw, 120px); }
+}
+/* ===== Floating logo manual positioning ===== */
+.floating-logo {
+  position: absolute;
+  top: -4.44vh;      /* mueve vertical */
+  left: -3.5%;     /* centro horizontal */
+  transform: translateX(-50%); /* centra respecto al ancho del logo */
+  z-index: 50;
+  pointer-events: auto;
+}
+
+.floating-logo img {
+  height: clamp(120px, 14vw, 160px);
+}
+.hero-frame {
+  padding-inline: calc(var(--edge) * 2);
+}
+/* Fix: Floating logo totalmente fijo, sin movimientos */
+.floating-logo,
+.floating-logo img {
+  transition: none !important;
+  transform: translate(var(--logo-x), var(--logo-y)) scale(var(--logo-scale)) !important;
+}
+
+.floating-logo:hover,
+.floating-logo img:hover {
+  transform: translate(var(--logo-x), var(--logo-y)) scale(var(--logo-scale)) !important;
+}
+/* ===== Hero escalable, centrado y sin desbordes ===== */
+:root{
+  --edge: 24px;          /* mismo gutter que el header */
+  --hero-offset-top: -28px;/* desplaza el hero hacia abajo (+) */
+  --hero-max-w: 1920px;  /* ancho máx. opcional del hero */
+  --hero-min-h: 1024px;   /* altura mínima */
+  --hero-max-h: 88svh;   /* altura máxima relativa a viewport */
+}
+
+/* el section no fija altura; deja que crezca con el frame */
+#home_hero.hero{
+  padding: 0;
+  margin-top: var(--hero-offset-top);
+}
+
+/* Marco del hero alineado a los márgenes del header */
+#home_hero .hero-frame{
+  box-sizing: border-box;
+  inline-size: min(var(--hero-max-w), calc(100% - 2*var(--edge)));
+  margin-inline: auto;
+  /* proporción 16:9 sin cálculos de vw */
+  aspect-ratio: 16 / 9;
+  /* límites de altura para escalabilidad */
+  min-block-size: var(--hero-min-h);
+  max-block-size: var(--hero-max-h);
+  overflow: clip;
+  background: #000;
+}
+
+/* Vídeo a sangre dentro del marco */
+#home_hero .hero-video{ position: relative; inset: 0; block-size: 100%; }
+#home_hero .hero-video__media{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block; border: 0;
+}
+
+/* seguridad extra: no permitir scroll horizontal accidental */
+html, body{ overflow-x: hidden; }
+
+/* móvil: reduce gutter y altura mínima si quieres */
+@media (max-width: 900px){
+  :root{ --edge: 16px; --hero-min-h: 360px; }
+}
+/* aire editorial bajo el hero */
+.hero{ margin-bottom: clamp(60px, 10vw, 200px); }
+
+
+.tiles{ margin-top: clamp(80px, 14vw, 260px); }
+
+
+
+/* ==========================================================
+   Prophetia — Auth Modal (tipo LOEWE)
+   ========================================================== */
+/* ==========================================================
+   Prophetia — Auth Panel · Elegance & Spacing Upgrade (LOEWE)
+   ========================================================== */
+
+/* 1) Base tipográfica del panel */
+dialog.modal {
+  font-size: 16px;                 /* cuerpo cómodo */
+  line-height: 1.5;                /* más aire */
+  font-family: var(--font-ui, 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+}
+/* === Dialog sane defaults === */
+dialog.modal { 
+  inset: 0; 
+  margin: auto; 
+  max-width: 520px;
+  width: min(92vw, 520px); 
+}
+dialog.modal:not([open]){ display: none; }  /* evita que se vea cerrado */
+dialog.modal[open]{ display: block; }       /* que el UA lo muestre al abrir */
+
+dialog.modal .modal-card h3#authTitle{
+  font-family: var(--font-display, 'Playfair Display', 'Cinzel', serif);
+  font-weight: 600;
+  letter-spacing: .2px;
+  margin: 8px 0 20px;              /* título más separado */
+}
+
+/* 2) Layout interior más espacioso */
+dialog.modal .modal-card{
+  padding: 32px 28px 28px;         /* + padding */
+}
+dialog.modal .auth-form{
+  display: grid;
+  gap: 14px;                        /* separación vertical limpia */
+  margin: 6px 0 18px;
+}
+
+/* 3) Tabs estilo pill más premium */
+dialog.modal .tabs{
+  display: flex;
+  gap: 12px;                        /* más separación entre pills */
+  margin: 6px 0 18px;
+}
+dialog.modal .tab{
+  display: inline-flex;
+  align-items: center;
+  height: 36px;                     /* pastilla alta */
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: #fff;
+  color: #111;
+  font-weight: 600;
+  letter-spacing: .2px;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+dialog.modal .tab:hover{ border-color:#000; }
+dialog.modal .tab.active{
+  background:#000; color:#fff; border-color:#000;
+}
+
+/* 4) Inputs altos y elegantes */
+dialog.modal .auth-form label{
+  font-size: 13.5px;
+  color: #111;
+  margin: 2px 0 6px;
+}
+dialog.modal .auth-form input{
+  appearance: none;
+  width: 100%;
+  height: 48px;                     /* altura LOEWE-like */
+  padding: 10px 14px;
+  border: 1px solid #CFCFCF;
+  border-radius: 6px;
+  background: #fff;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+dialog.modal .auth-form input:focus{
+  border-color: #111;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.06);
+}
+dialog.modal .auth-form input.is-invalid{
+  border-color: #c00;
+  box-shadow: 0 0 0 2px rgba(204,0,0,.08);
+}
+
+/* 5) Botón principal */
+dialog.modal .auth-form button[type="submit"]{
+  margin-top: 6px;
+  height: 46px;
+  border-radius: 8px;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+
+/* Si tu input de password no está en contenedor relative, fuerza: */
+dialog.modal input[type="password"]{
+  position: relative;
+}
+dialog.modal input[type="password"]  .toggle-pass{
+  /* el contenedor del input hereda el flujo; reforzamos stacking */
+  pointer-events: auto;
+}
+
+/* 7) Backdrop más lujo silencioso */
+dialog.modal::backdrop{
+  background: rgba(0,0,0,.42);
+  backdrop-filter: blur(2px);
+}
+
+/* 8) Responsive fino en desktop ancho */
+@media (min-width: 1120px){
+  dialog.modal{ width: 440px; }
+  dialog.modal .modal-card{ padding: 36px 32px 28px; }
+  dialog.modal .auth-form{ gap: 16px; }
+}
+/* ====== Prophetia · Side Panel LOEWE-mode ====== */
+:root{
+  --sp-space-300: 24px;
+  --sp-space-400: 32px;
+  --sp-space-500: 40px;
+  --sp-gutter: var(--sp-space-400);
+  --sp-col-33: calc((33.3333vw - var(--sp-gutter)) var(--sp-gutter));
+  --sp-radius: 10px;
+  --sp-font-ui: var(--font-ui, 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+  --sp-font-display: var(--font-display, 'Playfair Display','Cinzel', serif);
+}
+
+/* ancho tipo LOEWE + transición */
+dialog.modal{
+  width: clamp(360px, var(--sp-col-33), 520px);
+  transition: transform .5s ease-out, opacity .5s ease-out;
+  font-family: var(--sp-font-ui);
+  line-height: 1.55;
+}
+dialog.modal::backdrop{ background: rgba(0,0,0,.44); backdrop-filter: blur(2px); }
+
+/* layout interno */
+.modal-card{ padding: var(--sp-space-400) var(--sp-space-400) var(--sp-space-300); }
+
+/* header */
+
+.modal-close{ border:0; background:transparent; font-size:20px; cursor:pointer; opacity:.6; }
+.modal-close:hover{ opacity:1; }
+
+/* tabs (ol + li + button[role=tab]) */
+.sp-tabs{ margin-bottom: var(--sp-space-300); }
+.sp-tabs__list{ display:flex; gap:12px; list-style:none; padding:0; margin:0; }
+.sp-tab{
+  height:38px; padding:0 18px; border-radius:999px;
+  border:1px solid #111; background:#fff; color:#111; font-weight:600; letter-spacing:.2px;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.sp-tab:hover{ border-color:#000; }
+.sp-tab.active{ background:#000; color:#fff; border-color:#000; }
+
+/* body */
+.sp-body{ display:block; }
+
+/* forms espaciados */
+.auth-form{ display:grid; gap:16px; margin-bottom: var(--sp-space-400); }
+.auth-form label{ font-size:13.5px; color:#111; margin-bottom:6px; }
+
+/* inputs altos */
+.auth-form input{
+  width:100%; height:50px; padding:12px 14px;
+  border:1px solid #CFCFCF; border-radius:6px; background:#fff; outline:0;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.auth-form input:focus{ border-color:#111; box-shadow:0 0 0 2px rgba(0,0,0,.06); }
+.is-invalid{ border-color:#c00 !important; box-shadow:0 0 0 2px rgba(204,0,0,.08) !important; }
+
+/* ojo contraseña bien posicionado */
+.sp-password{ position:relative; display:grid; gap:6px; }
+.sp-password .toggle-pass{
+  position:absolute; top:50%; right:12px; transform:translateY(-16%); /* sutil arriba como LOEWE */
+  background:none; border:0; font-size:18px; cursor:pointer; opacity:.7;
+}
+.sp-password .toggle-pass:hover{ opacity:1; }
+
+/* CTA principal */
+.sp-cta{
+  height:48px; border:0; border-radius:8px; background:#000; color:#fff; font-weight:700; letter-spacing:.2px; cursor:pointer;
+}
+.sp-cta:hover{ filter:brightness(1.05); }
+
+/* links */
+.sp-link{ font-size:14px; text-decoration: none; color:#111; }
+.sp-link:hover{ text-decoration: underline; }
+
+/* footer/benefits */
+.sp-foot{ margin-top: var(--sp-space-300); }
+.sp-foot h5{ font: 400 14px/1.4 var(--sp-font-ui); margin:0 0 8px; }
+.sp-benefits{ margin:0; padding-left: 20px; display:grid; gap:10px; }
+
+/* responsive fino */
+@media (min-width: 1200px){
+  dialog.modal{ width: clamp(420px, var(--sp-col-33), 560px); }
+  .modal-card{ padding: var(--sp-space-500) var(--sp-space-500) var(--sp-space-400); }
+}
+
+
+/* ==========================================================
+   PROPHETIA — Spacing Refinement (LOEWE-like proportions)
+   ========================================================== */
+
+
+/* ==========================================================
+   PROPHETIA — Panel Width + Responsive Layout (LOEWE proportion)
+   ========================================================== */
+
+
+
+/* Asegura legibilidad de inputs sobre la textura */
+#ppAuthModal .auth-form input{
+  background: #fff;
+}
+/* === AUTH · Ensanchar campos y reducir margen derecho === */
+
+/* Menos padding a la derecha del panel */
+#ppAuthModal .modal-card{
+  /* top, right, bottom, left */
+  padding: clamp(56px,5vw,72px) clamp(18px,2.2vw,28px) clamp(40px,4vw,56px) clamp(48px,4vw,56px) !important;
+}
+
+/* Inputs ocupan todo el ancho disponible */
+#ppAuthModal .auth-form input,
+#ppAuthModal .sp-password input{
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Botón también a ancho completo para alinear visual */
+#ppAuthModal .auth-form .btn-primary,
+#ppAuthModal .sp-cta{
+  width: 100% !important;
+}
+
+/* Microajuste: labels un pelín más elegantes con Cinzel */
+#ppAuthModal .auth-form label{
+  font-family: var(--font-display, "Cinzel", serif);
+  letter-spacing: .2px;
+}
+
+/* En desktop ancho, un poco más de “empuje” a la derecha */
+@media (min-width: 1280px){
+  #ppAuthModal .modal-card{
+    padding-right: clamp(16px, 1.6vw, 24px) !important;
+  }
+}
+
+
+
+.side-panel-header .modal-close {
+  position: static;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #111;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+
+
+/* Tipografía Cinzel (ya tienes /assets/fonts/Cinzel-Regular.otf) */
+
+:root{
+  --panel-pad: clamp(16px, 3vw, 24px);
+  --pp-serif: "Cinzel", serif;
+  --z-modal: 1200;
+  /* …y el resto de vars que SI uses (bg, text, etc.) */
+}
+
+/* Dialog ancho + fondo en TODO el panel */
+
+#ppAuthModal .modal-card{
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding-inline: var(--panel-pad);   /* ↔ mismo margen que el header */
+  max-width: 520px;                    /* como Loewe */
+  margin: 0 auto;
+}
+/* HEADER: título + X, alineados y espaciados */
+
+#ppAuthModal .header-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+#ppAuthModal #authTitle{
+  font: 400 clamp(18px, 1.6vw, 22px)/1.25 var(--pp-serif);
+  letter-spacing: .02em;
+}
+#ppAuthModal .modal-close{
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity .2s ease;
+}
+#ppAuthModal .modal-close:hover{ opacity:.7; }
+
+/* TABS */
+#ppAuthModal .sp-tabs__list{
+  display: flex; gap: 12px; list-style: none; padding: 0; margin: 0;
+}
+#ppAuthModal .sp-tab{
+  border: 1px solid #111;
+  background: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font: 400 14px/1 var(--pp-serif);
+}
+#ppAuthModal .sp-tab[aria-selected="true"]{
+  background: #111; color: #fff;
+}
+
+/* BODY */
+#ppAuthModal .sp-body{
+  overflow: auto; padding-right: 2px; /* scroll suave */
+}
+#ppAuthModal .auth-form{
+  max-width: 640px;
+}
+#ppAuthModal label{
+  display:block;
+  margin: 18px 0 8px;
+  font: 400 13px/1 var(--pp-serif);
+  letter-spacing:.02em;
+}
+#ppAuthModal input[type="email"],
+#ppAuthModal input[type="password"]{
+  display:block; width: 100%;
+  height: 48px; border:1px solid #d9d9d9; border-radius:6px;
+  background:#fff; padding:0 14px;
+  font: 400 15px/1 var(--pp-serif);
+}
+#ppAuthModal .sp-link{
+  display:inline-block; margin: 10px 0 20px; text-decoration: underline;
+  font: 400 13px/1 var(--pp-serif);
+}
+#ppAuthModal .sp-cta{
+  display:block; width: min(100%, 640px);
+  height: 48px; border:0; border-radius:8px;
+  background:#111; color:#fff; font: 400 15px/1 var(--pp-serif);
+}
+
+/* FOOT */
+#ppAuthModal .sp-foot{
+  border-top: 1px solid rgba(0,0,0,.12);
+  padding-top: clamp(16px, 2vw, 20px);
+}
+#ppAuthModal .sp-foot h5{
+  font: 400 14px/1.4 var(--pp-serif); margin: 0 0 10px;
+}
+#ppAuthModal .sp-benefits{ margin:0; padding-left: 18px; }
+#ppAuthModal .sp-benefits li{ margin: 6px 0; font: 400 14px/1.4 var(--pp-serif); }
+
+/* Quita fondos parciales para evitar el “salto” de imagen */
+#ppAuthModal .sp-body,
+#ppAuthModal .auth-form{ background: transparent !important; }
+/* === AUTH · Header a sangre (sin padding lateral) === */
+#ppAuthModal .modal-card{
+  --panel-pad: clamp(24px, 2.5vw, 32px); /* coincide con tu padding actual */
+}
+
+/* Saca el header del padding con márgenes negativos y mantén altura */
+#ppAuthModal .side-panel-header{
+  position: sticky; top: 0; z-index: 3;
+  margin: calc(-1 * var(--panel-pad)) calc(-1 * var(--panel-pad)) 0;
+  padding: 16px var(--panel-pad);
+  display: flex; align-items: center; justify-content: space-between;
+  background: transparent; /* tu fondo ya lo da el dialog */
+}
+
+/* Asegura línea única: título izquierda + X derecha */
+
+#ppAuthModal h3#authTitle{ margin: 0; }
+#ppAuthModal .modal-close{ position: static; }
+/* 1) Quitar el espaciador fantasma de la tarjeta del panel */
+#ppAuthModal .modal-card::before{
+  content: none !important;
+  display: none !important;
+  height: 0 !important;
+}
+
+/* 2) Ajustar el padding superior real del panel (puedes bajar/subir este valor) */
+#ppAuthModal .modal-card{
+  --panel-pad: clamp(20px, 8.2vw, 28px);
+  padding-top: var(--panel-pad) !important;
+}
+
+/* 3) Header a sangre + título izq y X dcha en una sola línea */
+#ppAuthModal .side-panel-header{
+  position: sticky;     /* se queda arriba si hay scroll dentro del panel */
+  top: 0;
+  z-index: 3;
+  height: 72px;
+  padding-inline: var(--panel-pad);    /* ↔ misma sangría que el contenido */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;      /* título ←   → botón cerrar */
+  background: transparent;
+  box-sizing: border-box;
+}
+
+#ppAuthModal .side-panel-header .header-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+#authTitle{
+  font-family: var(--pp-serif);
+  font-size: 19px;
+  font-weight: 400;
+  margin: 0;
+  color: #111;
+  letter-spacing: .02em;
+}
+
+
+/* Botón cerrar: en el flujo, a la derecha */
+#ppAuthModal .side-panel-header .modal-close{
+  position: static !important;   /* clave: deja de estar ‘absolute’ */
+  inline-size: 32px;
+  block-size: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Todo lo que cuelga de modal-card respeta el mismo padding lateral */
+#ppAuthModal .modal-card > *:not(.side-panel-header){
+  padding-inline: var(--panel-pad);
+}
+/* AUTH — aire entre "Bienvenido/a" y las tabs */
+#ppAuthModal .side-panel-header{
+  margin-bottom: 50px;        /* espacio bajo el título */
+}
+
+#ppAuthModal .sp-tabs{
+  margin: 6px 0 22px;         /* pequeño margen arriba + abajo */
+  gap: 12px;                  /* separación entre pills */
+}
+/* ===== AUTH PANEL — Canon Prophetia (Loewe-like) ===== */
+:root{
+  --panel-pad: clamp(16px, 3vw, 24px);
+  --pp-serif: "Cinzel", serif;
+  --z-modal: 1200;
+  /* …y el resto de vars que SI uses (bg, text, etc.) */
+}
+
+/* El <dialog> ES el panel lateral (no modal centrado) */
+#ppAuthModal{
+  position: fixed;
+  inset: 0 0 0 auto;                    /* pegado a la derecha */
+  z-index: var(--z-modal, 1200);
+  width: clamp(420px,
+  calc((100vw - var(--edge)*2) / 3 + var(--edge)),560px);
+  height: 100dvh;
+  margin: 0; border: 0; border-radius: 0;
+   background:
+linear-gradient(rgba(255,255,255,.92), rgba(255,255,255,.42)),
+ url("../img/textures/fondoform.png") center/cover no-repeat !important;
+ background-blend-mode: normal !important;
+  filter: brightness(1.02) contrast(.92);
+  transition: transform .45s ease;
+  box-shadow: -18px 0 48px rgba(0,0,0,.08);
+}
+/* Hijos sin fondos extra: todo transparente */
+#ppAuthModal .modal-card,
+#ppAuthModal .modal-head,
+#ppAuthModal .sp-tabs,
+#ppAuthModal .modal-body,
+#ppAuthModal .modal-foot{
+  background: transparent !important;
+}
+
+#ppAuthModal[open]{ transform: translateX(0); }
+#ppAuthModal::backdrop{
+  background: rgba(0,0,0,.35);
+  backdrop-filter: saturate(120%) blur(2px);
+}
+
+/* La tarjeta interna vuelve a ser CONTENEDOR SÓLIDO (grid) */
+#ppAuthModal .modal-card{
+  display: grid;
+  grid-template-rows: auto  auto  1fr  auto;  /* head, tabs, body, foot */
+  width: 100%; height: 100%;
+  padding: 0; margin: 0; background: transparent;
+}
+
+/* Header sticky “a sangre” (ocupa todo el borde superior) */
+#ppAuthModal .modal-head{
+  position: sticky; top: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px;
+  padding: 0 var(--panel-pad);
+  margin: 0;                          /* sin sangrado extraño */
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+/* Tabs (fila propia, full width) */
+#ppAuthModal .sp-tabs{
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px var(--panel-pad) 8px;
+  background: transparent;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+#ppAuthModal .sp-tabs__list{
+  display: flex; gap: 10px; list-style: none; padding: 0; margin: 0;
+}
+#ppAuthModal .sp-tab{
+  appearance: none; cursor: pointer;
+  padding: 10px 14px; border-radius: 999px;
+  border: 1px solid #111; background: #fff; color: #111; line-height: 1;
+}
+#ppAuthModal .sp-tab[aria-selected="true"]{
+  background:#111; color:#fff; border-color:#111;
+}
+
+/* Body con scroll */
+#ppAuthModal .modal-body{
+  height: calc(100dvh - 72px - 54px); /* 72 head + ~54 tabs */
+  overflow: auto;
+  padding: 18px var(--panel-pad) 24px;
+  background: transparent;
+}
+
+/* Pie informativo (beneficios) */
+#ppAuthModal .modal-foot{
+  margin-top: auto;
+  padding: 14px var(--panel-pad) 18px;
+  border-top: 1px solid rgba(0,0,0,.08);
+  background: transparent !important; }
+
+#ppAuthModal .modal-foot h5{
+  font: 400 14px/1.4 var(--font-display, "Cinzel", serif);
+  margin: 0 0 10px;
+}
+#ppAuthModal .sp-benefits{ margin: 0; padding-left: 18px; }
+#ppAuthModal .sp-benefits li{ margin: 6px 0; font: 400 14px/1.4 var(--font-ui); }
+
+/* Campos y CTA (consistencia visual) */
+#ppAuthModal .auth-form{ display: grid; gap: 12px; }
+#ppAuthModal input[type="email"],
+#ppAuthModal input[type="password"],
+#ppAuthModal input[type="text"]{
+  width: 100%; height: 44px;
+  border: 1px solid #d9d9d9; border-radius: 6px;
+  padding: 10px 12px; background: transparent !important; 
+   outline: none;
+}
+#ppAuthModal input:focus{ border-color:#111; }
+#ppAuthModal .sp-cta{
+  height: 44px; border: 0; border-radius: 999px;
+  ; color:#fff; font-weight:600; cursor:pointer;
+}
+
+/* Botón cerrar en el header */
+#ppAuthModal .modal-close{
+  width: 36px; height: 36px; border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.1); background:#fff;
+  display: grid; place-items: center; font-size: 18px; line-height: 1;
+}
+/* === AUTH · Un solo plano: el del dialog (#ppAuthModal) === */
+#ppAuthModal .modal-card,
+#ppAuthModal .modal-card::before {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  
+}
+/* === AUTH · Header estilo Loewe: título izquierda + X derecha === */
+/* === AUTH · Header LOEWE: título izq + X dcha, a sangre === */
+#ppAuthModal .side-panel-header{
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  /* sin márgenes extra: pegado al borde superior del panel */
+  margin: 0 !important;
+  /* respiración mínima, como LOEWE */
+  padding: clamp(14px, 1.8vw, 18px) clamp(20px, 2.4vw, 28px) !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* título ←   → X */
+  background: transparent !important;
+  box-sizing: border-box;
+}
+
+/* Quita cualquier separación que lo baje */
+#ppAuthModal .side-panel-header{ margin-bottom: 0 !important; }
+
+/* Título: sin márgenes, tipografía limpia */
+#ppAuthModal .side-panel-header #authTitle{
+  margin: 0 !important;
+  letter-spacing: .02em;
+}
+
+/* Botón cerrar a la derecha, en flujo */
+#ppAuthModal .side-panel-header .modal-close{
+  position: static !important;
+  margin-left: auto;            /* empuja a la esquina derecha */
+  inline-size: 32px;
+  block-size: 32px;
+  border: 0;
+  background: transparent;
+  transform: none !important;   /* por si quedó un translateY */
+}
+
+/* El resto del contenido mantiene el padding lateral del panel */
+#ppAuthModal .modal-card > *:not(.side-panel-header){
+  padding-inline: var(--panel-pad);
+}
+
+/* Evita que el padding superior de la tarjeta empuje el header hacia abajo */
+#ppAuthModal .modal-card{
+  padding-top: 0 !important;
+}
+/* ===== AUTH header a sangre: título izq + X dcha (estilo Loewe) ===== */
+
+/* 0) Variables pequeñas para borde lateral */
+#ppAuthModal{ --panel-pad: clamp(20px, 2.6vw, 28px); }
+
+/* 1) El panel NO mete padding global; lo mete cada sección menos el header */
+#ppAuthModal .modal-card{
+  padding: 0 !important;
+}
+#ppAuthModal .modal-card > *:not(.side-panel-header){
+  padding-inline: var(--panel-pad) !important;
+}
+
+/* 2) Header pegado arriba, una sola línea, sin márgenes fantasma */
+#ppAuthModal .side-panel-header{
+  position: sticky; top: 0; z-index: 3;
+  margin: 0 !important;
+  padding: clamp(14px, 2.2vw, 20px) var(--panel-pad) 12px !important;
+  display: flex; align-items: center; justify-content: space-between;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+/* 3) Título exactamente a la izquierda */
+#ppAuthModal .side-panel-header #authTitle,
+#ppAuthModal .side-panel-header h3,
+#ppAuthModal .side-panel-header h4{
+  margin: 0 !important;
+  font: 200 clamp(162px,1.6vw,222px)/1.25 var(--pp-serif, "Cinzel", serif);
+  letter-spacing: .02em;
+}
+
+/* 4) Botón “X” al borde derecho, sin posición absoluta */
+#ppAuthModal .side-panel-header .modal-close{
+  position: static !important;   /* clave: no absolute */
+  margin-left: auto !important;  /* empuja a la derecha */
+  inline-size: 132px; block-size: 32px;
+  display: grid; place-items: center;
+  border: 0; background: transparent; border-radius: 999px; cursor: pointer;
+  transition: opacity .2s ease;
+}
+#ppAuthModal .side-panel-header .modal-close:hover{ opacity:.7; }
+
+/* 5) Quita cualquier separación bajo el header que lo empuje hacia abajo */
+#ppAuthModal .side-panel-header + .sp-tabs,
+#ppAuthModal .sp-tabs{
+  margin-top: 8px !important;
+}
+
+/* Contexto relativo para posicionar el botón */
+.sp-password { position: relative !important; }
+
+/* Ojo centrado verticalmente dentro del input */
+#ppAuthModal .sp-password .toggle-pass{
+  position: absolute !important;
+  top: 50% !important;
+  right: 14px !important;
+  transform: translateY(-50%) !important;
+  background: none !important;
+  border: 0 !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  opacity: .75 !important;
+}
+#ppAuthModal .sp-password .toggle-pass:hover{ opacity:1 !important; }
+/* ===== Post Hero Editorial Block (Loewe style) ===== */
+.pp-post-hero {
+  padding: clamp(40px, 10vw, 120px) 0 clamp(20px, 6vw, 80px);
+  text-align: left;
+}
+
+.pp-ph-title {
+  font-family: var(--sp-font-display);
+  font-size: clamp(26px, 4vw, 42px);
+  line-height: 1.2;
+  margin-bottom: .6rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.pp-ph-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: rgba(0,0,0,.65);
+  max-width: 540px;
+  margin-bottom: 1.6rem;
+}
+
+.pp-ph-links {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.pp-ph-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-family: var(--sp-font-ui);
+  text-decoration: none;
+  color: rgba(0,0,0,.85);
+  position: relative;
+  padding-right: 20px;
+}
+
+.pp-ph-link::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  position: absolute;
+  right: 0;
+}
+
+.pp-ph-hairline {
+  width: 100%;
+  height: 1px;
+  background: rgba(0,0,0,.10);
+  margin-top: clamp(28px, 6vw, 60px);
+}
+body {
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  margin-bottom: 0.4em;
+}
+
+p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+/* ===== Prophetia · Global Typography Lock (Loewe scale) ===== */
+
+/* Variables base */
+:root{
+  --font-display: "Playfair Display", "Cormorant Garamond", serif;
+  --font-ui: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Base sizing y reset de small caps */
+html{ font-size:16px; }               /* rem base */
+body{ font-family:var(--font-ui); line-height:1.55; }
+h1,h2,h3,h4,p{ text-transform:none; font-variant-caps:normal; }
+
+/* Headings y displays – estilo editorial */
+h1,h2,h3,h4,
+.display,
+[class*="heading"],
+.hero-title,.section-title,.page-title{
+  font-family:var(--font-display) !important;
+  font-weight:500;
+  line-height:1.15;
+  letter-spacing:-0.2px;
+}
+
+/* Escala Loewe-like */
+h1,.display,.hero-title,.page-title{ font-size:clamp(32px, 4.2vw, 52px) !important; }
+h2,.section-title{                   font-size:clamp(24px, 3vw, 40px) !important;  }
+h3{                                  font-size:clamp(20px, 2.2vw, 28px) !important;}
+h4{                                  font-size:clamp(18px, 1.8vw, 22px) !important;}
+
+/* Texto general y microtipos */
+p, li{ font-size:15px; line-height:1.6; }
+small,.caption,.micro{ font-size:12.5px; }
+
+/* Páginas que a veces no heredan (PDP/tiles) */
+.pdp h1,.product-title,.brand-band--pdp .page-logo,
+.tile-title,.tile-sub{
+  font-family:var(--font-display) !important;
+}
+
+/* UI coherente */
+button,input,select,textarea,label,.badge,.chip{
+  font-family:var(--font-ui) !important;
+  font-size:14px;
+}
+
+/* Opcional: si algo seguía gritando en mayúsculas sin querer */
+/* .force-normal-case{ text-transform:none !important; font-variant-caps:normal !important; } */
+/* ===== Prophetia – Loewe Typography Correction ===== */
+html { font-size: 100%; }
+body {
+  font-size: 13px !important;
+  line-height: 1.55;
+  font-family: var(--font-ui);
+  text-transform: none;
+}
+
+/* Escala Loewe-like */
+h1, .display, .hero-title, .page-title {
+  font-size: clamp(32px, 4.2vw, 52px) !important;
+  font-weight: 500;
+}
+h2 { font-size: clamp(24px, 3vw, 40px) !important; }
+h3 { font-size: clamp(20px, 2.2vw, 28px) !important; }
+h4 { font-size: clamp(18px, 1.8vw, 22px) !important; }
+p, li { font-size: 15px; }
+small { font-size: 12.5px; }
+/* ===== Prophetia · Mega Menu (Loewe-like) ===== */
+/* Tabs horizontales */
+.mega-tabs{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+.mega-toggle{ padding:8px 0; font:500 14px/1.4 var(--font-ui, Inter); }
+.mega-toggle.is-active{ font-weight:700; position:relative; }
+.mega-toggle.is-active::after{ content:""; position:absolute; left:0; right:0; bottom:-10px; height:2px; background: currentColor; }
+
+/* Panel compartido (ya tienes .mega-panel base) */
+.mega-panel{ min-width:600px; }
+.mega-panel.is-open{ /* ya controlado por JS: display/opacity/transform */ }
+
+/* Paneles internos */
+.panel[hidden]{ display:none; }
+
+/* Grid de columnas tipo LOEWE */
+.mega-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:18px; }
+.mega-col{ list-style:none; margin:0; padding:0; }
+.mega-col li + li{ margin-top:10px; }
+.mega-col a{ text-decoration:none; opacity:.9; }
+.mega-col a:hover{ opacity:1; text-decoration:underline; }
+
+
+/* ===== Prophetia · Mega menu (Loewe-mode) ===== */
+.mega { position: relative; }
+
+.mega-panel{
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(100% + 6px);
+  z-index: 1600; /* por encima del header (que suele estar en ~1500) */
+  display: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .28s ease, transform .28s ease;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: saturate(1.2) blur(6px);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.12);
+  padding: clamp(16px, 2vw, 28px);
+}
+
+/* Abierto por hover del contenedor (escritorio) */
+.mega:hover .mega-panel,
+.mega.is-open .mega-panel{
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Grid de columnas */
+.mega-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+
+/* Columna */
+.mega-col{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mega-title{
+  font: 600 14px/1.2 var(--font-ui, 'Inter', system-ui);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  opacity: .66;
+  margin: 0 0 10px;
+}
+.mega-col a{
+  display: block;
+  padding: 6px 0;
+  text-decoration: none;
+  line-height: 1.35;
+}
+.mega-col a:hover{ text-decoration: underline; }
+
+/* Tarjeta editorial (3ª columna) */
+.mega-card__figure{
+  margin: 0; border-radius: 12px; overflow: hidden;
+}
+.mega-card__figure img{
+  width: 100%; height: auto; display: block;
+}
+.mega-card__caption{
+  font: 500 13px/1.35 var(--font-ui, 'Inter', system-ui);
+  padding-top: 8px; opacity: .85;
+}
+
+/* Tabs activos (subrayado fino tipo Loewe) */
+.mega-toggle.is-active{
+  position: relative;
+}
+.mega-toggle.is-active::after{
+  content: "";
+  position: absolute; left: 10%; right: 10%; bottom: -8px;
+  height: 2px; border-radius: 2px;
+  background: currentColor;
+  opacity: .8;
+}
+
+/* Responsive: en <= 960px pasamos a 1-2 columnas */
+@media (max-width: 960px){
+  .mega-panel{
+    position: fixed;
+    top: var(--header-height, 64px);
+    left: 0; right: 0;
+    border-radius: 0;
+    padding: 18px 16px 28px;
+  }
+  .mega-grid{ grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+}
+@media (max-width: 640px){
+  .mega-grid{ grid-template-columns: 1fr; }
+}
+.catalog-shell{
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.catalog-filters{ position: sticky; top: 90px; }
+.catalog-results .product-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 1024px){
+  .catalog-shell{ grid-template-columns: 1fr; }
+  .catalog-filters{ position: static; }
+  .catalog-results .product-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px){
+  .catalog-results .product-grid{ grid-template-columns: 1fr; }
+}
+.catalog-results .product-grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: clamp(14px, 2.2vw, 24px);
+}
+@media (max-width: 1200px){
+  .catalog-results .product-grid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 900px){
+  .catalog-results .product-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+/* ====== Prophetia · Layout categoría (estilo LOEWE) ====== */
+.cat-wrap{
+  display:grid;
+  grid-template-columns: 1fr 280px;       /* resultados | sidebar */
+  gap: clamp(24px, 4vw, 48px);
+  align-items:start;
+  margin-top: clamp(8px, 2vw, 20px);
+}
+
+/* En móviles: sin sidebar */
+@media (max-width: 1024px){
+  .cat-wrap{ grid-template-columns: 1fr; }
+  .cat-sidebar{ display:none; }
+}
+
+/* Sidebar */
+.cat-sidebar{
+  position: sticky;
+  top: calc(var(--header-h, 72px) + 24px);
+}
+.cat-sidebar .eyebrow{
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-size:.86rem;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+.side-links{ list-style:none; padding:0; margin:0 0 18px; }
+.side-links li{ margin: 6px 0; }
+.side-links a{
+  display:block;
+  text-decoration:none;
+  color: var(--text);
+  opacity:.9;
+}
+.side-links a:hover{ opacity:1; }
+.side-links a.active{ font-weight:600; }
+
+/* “En stock” del sidebar */
+.side-filter .check{ display:flex; align-items:center; gap:8px; color:var(--text); }
+
+/* Resultados */
+.cat-results{
+  display:flex;
+  flex-direction:column;
+  gap: clamp(16px, 2vw, 24px);
+}
+
+/* Ajustes bajo logo para que pegue a la toolbar */
+.brand-band{ margin:0; padding:0; border:0; }
+.brand-band .container{
+  display:flex; align-items:flex-start; padding:0;
+}
+.camisetas-page .page-logo{
+  margin: var(--logo-gap, clamp(8px, 2vw, 24px)) 0 0 var(--edge, 30px);
+  line-height:0;
+}
+.cat-wrap{
+  display:grid;
+  grid-template-columns: 1fr 260px; /* resultados | sidebar */
+  gap: clamp(24px, 4vw, 48px);
+  align-items:start;
+  margin-top: clamp(16px, 4vw, 32px);
+}
+.cat-sidebar{
+  position:sticky;
+  top:calc(var(--header-h, 72px) + 24px);
+  align-self:start;
+}
+.side-links{ list-style:none; padding:0; margin:0; }
+.side-links li{ margin:8px 0; }
+.side-links a{
+  color:#111; text-decoration:none; opacity:.9;
+}
+.side-links a:hover{ opacity:1; }
+.side-links a.active{ font-weight:600; }
+.side-filter .check{ display:flex; align-items:center; gap:8px; margin-top:16px; }
+
+@media(max-width:1024px){
+  .cat-wrap{ grid-template-columns:1fr; }
+  .cat-sidebar{ display:none; }
+}
+
+/* Catálogo: resultados + rail derecho */
+.cat-results{
+  display:grid;
+  grid-template-columns: 1fr 280px; /* grid central + aside */
+  gap: 28px;
+  align-items:start;
+}
+
+/* Rail derecho */
+.cat-side{ position:sticky; top: calc(var(--hdr-h,68px) + 12px); }
+.cat-side h3{ margin:0 0 12px; font-weight:700; }
+.cat-side__list{ list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+.cat-side__list a{ opacity:.9; }
+.cat-side__list a:hover{ opacity:1; }
+@media (max-width: 1024px){
+  .cat-results{ grid-template-columns: 1fr; }
+  .cat-side{ position:static; order:2; }
+}
+.product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.product-tile{display:block;text-decoration:none;color:#111}
+.tile-media{position:relative;overflow:hidden;border-radius:12px;aspect-ratio:3/4;background:#f6f6f6}
+.tile-media img{width:100%;height:100%;object-fit:cover;display:block}
+.slider-track{display:flex;height:100%;transition:transform .45s ease}
+.slide{flex:0 0 100%}
+/* Hover “Loewe-like”: avanza a la 2ª imagen */
+.product-tile:hover .slider-track{transform:translateX(-100%)}
+/* Si quieres “loop” en móvil, podrás animarlo por JS */
+/* ===== Prophetia · Product slider (tipo Loewe) ===== */
+.products-grid .product-card{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.products-grid .product-card .img-wrap{
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  /* relación 3/4 similar a Loewe */
+  aspect-ratio: 3 / 4;
+  background: #f6f6f6;
+}
+
+.products-grid .product-card [data-slider] .slider-track{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform .5s ease;
+}
+
+.products-grid .product-card [data-slider] .slide{
+  min-width: 100%;
+  height: 100%;
+}
+
+.products-grid .product-card [data-slider] .slide img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Botón guardar ya existe en tu CSS, aseguramos posición top-right */
+.products-grid .product-card .save-btn{
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 3;
+}
+
+/* Tipos */
+.product-card__title{
+  font: 500 15px/1.35 var(--font-ui, "Inter", system-ui);
+  letter-spacing: .2px;
+}
+.product-card .price{
+  font: 500 14px/1 var(--font-ui, "Inter", system-ui);
+  opacity: .85;
+}
+.cat-toolbar{ gap: 18px; }
+.cat-toolbar .filters{ margin-right: auto; } /* “Filtros” a la izquierda */ 
+
+.pp-plp { min-height: 40vh; }
+
+
+/* ======= PLP · Brand band ======= */
+.brand-band--plp { border-bottom: 1px solid rgba(0,0,0,.08); }
+.brand-band--plp .container { padding: 20px 0 16px; }
+.page-logo__img { height: 22px; display: block; }
+
+/* ======= PLP · Quickbar (migas + quick menu) ======= */
+.pp-quickbar.container{
+  display: grid;
+  grid-template-columns: 1fr 540px; /* izq migas; dcha menú */
+  gap: 24px;
+  align-items: start;
+  padding-top: 16px;
+  padding-bottom: 8px;
+}
+.pp-breadcrumbs ol{
+  display: flex; gap: 10px; flex-wrap: wrap;
+  font: 400 12px/1.4 var(--font-ui, 'Inter', system-ui);
+  color: rgba(0,0,0,.70);
+}
+.pp-breadcrumbs ol li::after{ content: "›"; margin: 0 8px; opacity: .4; }
+.pp-breadcrumbs ol li:last-child::after{ content: none; }
+.pp-breadcrumbs a{ text-decoration: none; border-bottom: 1px solid transparent; }
+.pp-breadcrumbs a:hover{ border-bottom-color: currentColor; }
+.pp-quickbar-title{ margin-top: 6px; font: 400 18px/1.25 var(--font-ui, 'Inter'); }
+
+.pp-quickmenu{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px,1fr));
+  gap: 10px 24px;
+  justify-self: end;
+}
+.pp-quickmenu a{
+  font: 400 14px/1.4 var(--font-ui, 'Inter');
+  text-decoration: none;
+  color: #000;
+  border-bottom: 1px solid transparent;
+}
+.pp-quickmenu a:hover{ border-bottom-color: currentColor; }
+
+/* ======= PLP · Filtros como “barra” ======= */
+.pp-filters.container{
+  display: flex; gap: 24px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(0,0,0,.08);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  margin-top: 24px;       /* aire con el quickbar/hero */
+  margin-bottom: 32px;    /* aire con el grid */
+  position: sticky;
+  top: calc(var(--header-h, 72px) + 20px); /* queda bien con header inyectado */
+  background: #fff;
+  z-index: 3;
+}
+
+/* ======= PLP · Grid respirando ======= */
+.pp-plp.container{ padding-top: 0; } /* ya damos aire con .pp-filters */
+.pp-bottom-space{ height: 72px; }
+@media (max-width: 1024px){
+  .pp-quickbar.container{ grid-template-columns: 1fr; }
+  .pp-quickmenu{ justify-self: start; grid-template-columns: 1fr 1fr; }
+  .pp-filters.container{ position: static; }
+}
+/* ===== Brand band (logo bajo header) ===== */
+.brand-band--plp {
+  margin: 0;
+  padding: clamp(22px, 4vw, 40px) 0 0;
+  background: #fff;
+}
+.brand-band--plp .container{
+  max-width: 100%;
+  padding-inline: var(--edge, 24px);
+}
+.page-logo{ line-height: 0; display: inline-block; }
+.page-logo__img{
+  width: clamp(220px, 24vw, 480px);
+  height: auto;
+  display: block;
+}
+
+/* ===== Quickbar (breadcrumbs izquierda + menú rápido derecha) ===== */
+.pp-quickbar.container{
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 420px);
+  align-items: start;
+  gap: clamp(16px, 3vw, 48px);
+  padding-block: clamp(6px, 1vw, 12px);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  margin-bottom: clamp(18px, 3.2vw, 36px);
+}
+.pp-bc .pp-bc__list{
+  display: flex; gap: 8px; flex-wrap: wrap;
+  list-style: none; padding: 0; margin: 0 0 8px;
+  font: 400 12px/1.4 var(--font-ui, Inter, system-ui);
+  color: rgba(0,0,0,.66);
+}
+.pp-bc .pp-bc__list a{ color: currentColor; text-decoration: none; }
+.pp-bc .pp-bc__list a:hover{ text-decoration: underline; }
+.pp-qb-title{
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-weight: 500;
+  font-size: clamp(20px, 1.6vw, 22px);
+  margin: 0;
+}
+
+/* Menú rápido (derecha) */
+.pp-qb-menu{
+  display: grid;
+  gap: 8px 0;
+  justify-items: start;
+  align-content: start;
+}
+.pp-qb-menu a{
+  text-decoration: none;
+  font: 400 14px/1.4 var(--font-ui, Inter, system-ui);
+  color: rgba(0,0,0,.85);
+}
+.pp-qb-menu a:hover{ text-decoration: underline; }
+
+/* Responsive: esconder menú rápido en móvil y dejar solo breadcrumbs + título */
+@media (max-width: 960px){
+  .pp-quickbar.container{ grid-template-columns: 1fr; }
+  .pp-qb-menu{ display:none; }
+}
+
+/* ===== Subtítulo (hero pequeñito) ===== */
+.pp-collection-hero.container{
+  padding-top: clamp(8px, 1.2vw, 16px);
+  margin-bottom: clamp(10px, 2vw, 18px);
+}
+.pp-hero-sub{
+  max-width: 560px;
+  color: rgba(0,0,0,.66);
+  font-size: clamp(14px, 1.2vw, 16px);
+  margin: 0;
+}
+
+/* ===== Filtros con AIRE antes del grid ===== */
+.pp-filters.container{
+  display: flex; gap: clamp(12px, 1.8vw, 20px);
+  align-items: center;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  padding: 8px 0;
+  margin-bottom: clamp(20px, 4vw, 48px);  /* ← clave: separa del GRID */
+}
+.pp-filter-item{
+  font: 500 14px/1 var(--font-ui, Inter, system-ui);
+  padding: 6px 0;
+}
+
+/* Opcional: sticky como Loewe (se pega arriba al hacer scroll) */
+@media (min-width: 1024px){
+  .pp-filters.container{
+    position: sticky;
+    top: calc(var(--hdr-h, 68px) + 6px);
+    background: #fff;
+    z-index: 8;
+  }
+}
+
+/* ===== Grid (solo por si necesitas un pelín más de respiro global) ===== */
+.pp-plp.container{ margin-bottom: clamp(40px, 8vw, 120px); }
+.pp-bottom-space{ height: clamp(60px, 10vw, 160px); }
+/* ===== Prophetia PLP — Espaciados clave ===== */
+
+/* Espacio del logo gigante bajo el header */
+.brand-band--plp { 
+  margin-top: calc(var(--pp-header-h, 56px) + 12px);
+}
+
+/* Quickbar: breadcrumbs a la izquierda + menú rápido a la derecha */
+.pp-quickbar.container{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 12px;        /* separa del hero-sub */
+  margin-bottom: 8px;
+}
+.pp-breadcrumbs { flex: 1 1 auto; min-width: 320px; }
+.pp-quickmenu { flex: 0 0 auto; display: grid; gap: 8px; }
+
+/* Filtros: izquierda (Filtros/Ordenar) + derecha (En stock/Vista) */
+.pp-filters.container{
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 12px;
+  padding-bottom: 16px;
+  position: sticky;   /* como hace Loewe */
+  top: calc(var(--pp-header-h, 56px));
+  background: #fff;
+  z-index: 5;
+  border-top: 1px solid #eee; 
+  border-bottom: 1px solid #eee;
+}
+
+/* Por si quedó alguna toolbar antigua cerca del footer */
+#plp-toolbar, .plp-toolbar { display: none !important; }
+
+/* Ajuste seguro: evita dobles márgenes en el bottom-space */
+.pp-bottom-space{ height: 64px; }
+
+
+
+
+:root{ --pp-header-h: 64px; } /* si la seteas desde JS, sirve de fallback */
+
+body.camisetas-page .brand-band--plp{
+  margin-top: calc(var(--pp-header-h, 80px) + 24px);
+}
+.brand-band--plp .page-logo__img{
+  width: clamp(280px, 36vw, 520px);
+  height: auto; display:block; margin-left:0;
+}
+
+/* === Mega Menu · estabilidad hover === */
+.mega{ position:relative; }
+.mega .mega-panel{ pointer-events:auto; }
+
+/* Puente invisible entre tabs y panel para evitar "salto" del mouse */
+.mega::after{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  top:100%;           /* justo debajo de la barra de tabs */
+  height:14px;        /* zona muerta que mantiene el hover */
+}
+
+/* Estado abierto: asegura visibilidad y evita reflujo brusco */
+/* Estado abierto/cerrado definitivo */
+.mega .mega-panel{
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(4px);
+  pointer-events:none;               /* ← añade esto */
+}
+.mega.is-open .mega-panel{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+  transition: opacity .15s ease, transform .15s ease;
+  pointer-events:auto;               /* ← y esto */
+}
+.mega-panel{ z-index: 1600; }
+
+/* ===== FIX MEGA: visibilidad + pointer events + estabilidad ===== */
+.pp-header, .pp-topbar, .pp-left { overflow: visible; }  /* evita que lo corte algún contenedor */
+
+.mega { position: relative; }
+
+/* Estado base: cerrado */
+.mega .mega-panel{
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: auto;           /* por si alguna regla previa lo fijó a ambos lados */
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  z-index: 2000;         /* por encima del header y del hero */
+}
+
+/* Estado abierto: por hover y por clase .is-open (JS) */
+.mega:hover .mega-panel,
+.mega.is-open .mega-panel{
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+/* “Puente” anti-gap para que no se cierre si el ratón baja rápido */
+.mega::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 100%;
+  height: 14px;          /* aumenta si aún notas cortes */
+}
+
+/* Opcional: si algún bloque anterior metió backdrop/blur aquí, lo mantenemos */
+.mega .mega-panel{
+  background: rgba(255,255,255,.96);
+  backdrop-filter: saturate(1.2) blur(6px);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.12);
+  padding: clamp(16px, 2vw, 28px);
+}
+
+
+/* Mega: solo el panel activo es visible y clicable */
+.mega-panel .panel{ display:none; }
+.mega-panel .panel.is-visible{ display:block; }
+.mega-panel .panel[hidden]{ display:none !important; } /* cinturón y tirantes */
