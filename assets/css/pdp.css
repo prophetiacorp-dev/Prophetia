@@ -1,0 +1,55 @@
+/* =========================================================
+   PROPHETIA · PDP (detalle producto)
+   ========================================================= */
+.product-wrap{ display:grid; grid-template-columns: minmax(640px,1fr) minmax(420px,560px); gap: clamp(48px, 6vw, 88px); align-items:start; }
+.product-wrap.container{ max-width: 1400px; margin: 0 auto; padding-inline: clamp(16px, 3vw, 32px); }
+.pdp-panel{ position: sticky; top: 96px; justify-self:end; width: min(560px, 92vw); }
+body[data-page="pdp"] .product-wrap.container{ max-width: 100vw; padding-right: 0; padding-left: clamp(16px, 3vw, 32px); }
+body[data-page="pdp"] .pdp-panel{ justify-self:end; margin-right: 0; }
+
+/* Brand band y logo como camisetas */
+.pdp .brand-band{ margin:0 !important; padding:0 !important; border:0 !important; background:#fff !important; text-align:left !important; }
+.pdp .brand-band > .container{ max-width:100% !important; padding-inline: var(--edge,30px) !important; margin:0 !important; display:block !important; line-height:0 !important; }
+.pdp .page-logo{ display:inline-block; line-height:0; margin:0 !important; transform: translate(var(--pdp-logo-offset-x), var(--pdp-logo-offset-y)) !important; }
+.pdp .page-logo img{
+  width: min(40vw, var(--pdp-logo-maxw)) !important; height:auto !important; margin:0 !important; object-fit: contain; aspect-ratio: auto;
+  image-rendering: optimizeQuality; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; -ms-interpolation-mode: bicubic; filter: none !important;
+}
+.pdp .page-logo img:hover{ transform:none !important; }
+
+/* Galería Loewe-like */
+.pdp-gallery{ margin:24px 0; }
+.pdp-hero{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:32px; align-items:start; }
+.pdp-hero .hero-cell{ all: unset; cursor: zoom-in; display: block; }
+.pdp-hero .hero-img{ width:100%; height:auto; display:block; object-fit:cover; }
+.pdp-thumbs{ display:grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap:12px; margin-top:16px; }
+.pdp-thumbs .pdp-thumb{ width:100%; aspect-ratio:1/1; object-fit:cover; display:block; cursor:pointer; }
+@media (max-width: 1024px){ .pdp-hero{ grid-template-columns:1fr; } }
+
+/* Atributos como texto enlazable */
+.pdp-row{ padding:10px 0; border-top:1px solid rgba(0,0,0,.08); }
+.attr-link{ text-decoration:none; color:inherit; padding-bottom:2px; border-bottom:1px solid #ddd; }
+.attr-link:hover{ border-bottom-color:#111; }
+.attr-link::after{ content:" — " attr(data-selected); color:#777; margin-left:6px; }
+
+/* Drawer genérico */
+.ad{ position:fixed; inset:0; z-index:1500; display:none; }
+.ad.open{ display:block; }
+.ad-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); opacity:0; animation: adBackdropIn .28s ease forwards; }
+.ad-panel{ position:absolute; top:0; right:0; height:100%; width:min(560px, 92vw); background:#fff; box-shadow:-24px 0 60px rgba(0,0,0,.18); transform: translateX(100%); opacity:.96; animation: adPanelIn .32s cubic-bezier(.2,.7,.2,1) forwards; display:flex; flex-direction:column; }
+@keyframes adBackdropIn { from{opacity:0} to{opacity:1} }
+@keyframes adPanelIn { from{transform:translateX(100%)} to{transform:translateX(0)} }
+.ad.closing .ad-backdrop{ animation: adBackdropOut .22s ease forwards; }
+.ad.closing .ad-panel{ animation: adPanelOut .22s ease forwards; }
+@keyframes adBackdropOut { from{opacity:1} to{opacity:0} }
+@keyframes adPanelOut { from{transform:translateX(0)} to{transform:translateX(100%)} }
+.ad-head{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #eee; }
+.ad-title{ font-size:18px; margin:0; }
+.ad-close{ all:unset; cursor:pointer; width:36px; height:36px; display:grid; place-items:center; font-size:22px; }
+.ad-body{ padding:18px 20px; overflow:auto; }
+.ad .opts{ display:grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap:12px; }
+.ad .opt{ display:flex; align-items:center; justify-content:center; min-height:52px; padding:10px; border:1px solid #ddd; background:#fff; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+.ad .opt:hover{ border-color:#111; box-shadow:0 0 0 2px #111 inset; }
+.ad .opt.is-active{ border-color:#111; }
+.ad .swatch{ width:18px; height:18px; border-radius:50%; margin-right:8px; border:1px solid #ccc; }
+body.drawer-open, body.modal-open{ overflow:hidden; }

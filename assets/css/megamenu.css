@@ -1,0 +1,64 @@
+/* =========================================================
+   PROPHETIA · MEGA MENU (Loewe-mode)
+   ========================================================= */
+.mega { position: relative; }
+.mega-tabs{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+.mega-toggle{ padding:8px 0; font:500 14px/1.4 var(--font-ui, Inter); }
+.mega-toggle.is-active{ font-weight:700; position:relative; }
+.mega-toggle.is-active::after{ content:""; position:absolute; left:10%; right:10%; bottom:-8px; height:2px; background: currentColor; opacity:.8; border-radius:2px; }
+
+.mega .mega-panel{
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  z-index: 2000;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: saturate(1.2) blur(6px);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.12);
+  padding: clamp(16px, 2vw, 28px);
+}
+
+.mega:hover .mega-panel,
+.mega.is-open .mega-panel{
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.mega::after{ content:""; position:absolute; left:0; right:0; top:100%; height:14px; }
+
+.mega-grid{ display:grid; grid-template-columns: repeat(3, minmax(180px, 1fr)); gap: clamp(16px, 2vw, 28px); }
+.mega-col{ list-style:none; margin:0; padding:0; }
+.mega-title{ font:600 14px/1.2 var(--font-ui,'Inter'); letter-spacing:.02em; text-transform:uppercase; opacity:.66; margin:0 0 10px; }
+.mega-col a{ display:block; padding:6px 0; text-decoration:none; line-height:1.35; }
+.mega-col a:hover{ text-decoration: underline; }
+
+.mega-card__figure{ margin:0; border-radius:12px; overflow:hidden; }
+.mega-card__figure img{ width:100%; height:auto; display:block; }
+.mega-card__caption{ font:500 13px/1.35 var(--font-ui,'Inter'); padding-top:8px; opacity:.85; }
+
+@media (max-width: 960px){
+  .mega .mega-panel{ position: fixed; top: var(--hdr-h, 68px); left: 0; right: 0; border-radius: 0; padding: 18px 16px 28px; }
+  .mega-grid{ grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+}
+@media (max-width: 640px){ .mega-grid{ grid-template-columns: 1fr; } }
+/* ===== Enlaces del megamenú (color editorial) ===== */
+.mega-col a{
+  color: var(--text, #111);
+  text-decoration: none;
+}
+.mega-col a:visited{
+  color: var(--text, #111);
+}
+.mega-col a:hover{
+  color: var(--text, #111);
+  text-decoration: underline;
+}

@@ -1,0 +1,41 @@
+/* =========================================================
+   PROPHETIA · HOODIES (scoped)
+   ========================================================= */
+body.hoodies-page .brand-band,
+#swup[data-page="hoodies"] .brand-band{
+  background: var(--pp-veil-bg);
+  backdrop-filter: blur(var(--pp-veil-blur)) saturate(var(--pp-veil-sat));
+  -webkit-backdrop-filter: blur(var(--pp-veil-blur)) saturate(var(--pp-veil-sat));
+  border:0; box-shadow:none; margin:0 0 8px 0;
+}
+body.hoodies-page .page-hero,
+#swup[data-page="hoodies"] .page-hero{ padding: 18px 0 8px; }
+body.hoodies-page .page-hero h1,
+#swup[data-page="hoodies"] .page-hero h1{ font-size: clamp(28px, 3.2vw, 38px); letter-spacing: .02em; margin: 0; }
+body.hoodies-page .page-hero .lede,
+#swup[data-page="hoodies"] .page-hero .lede{ color: #555; margin-top: 6px; }
+
+body.hoodies-page .cat-toolbar,
+#swup[data-page="hoodies"] .cat-toolbar{
+  display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px;
+  padding:10px 0 16px; border-bottom:1px solid rgba(0,0,0,.06);
+}
+body.hoodies-page .cat-toolbar .pill,
+#swup[data-page="hoodies"] .cat-toolbar .pill{ margin-right:8px; }
+
+body.hoodies-page #gridHoodies,
+#swup[data-page="hoodies"] #gridHoodies{ margin-top:18px; }
+body.hoodies-page #gridHoodies .product-card .price,
+#swup[data-page="hoodies"] #gridHoodies .product-card .price{ font-weight:600; }
+
+body.hoodies-page #filtersDrawerHoodies,
+#swup[data-page="hoodies"] #filtersDrawerHoodies{ width: min(420px, 92vw); }
+body.hoodies-page #applyFiltersHoodies,
+#swup[data-page="hoodies"] #applyFiltersHoodies{ white-space: nowrap; }
+
+@media (max-width: 768px){
+  body.hoodies-page .cat-toolbar,
+  #swup[data-page="hoodies"] .cat-toolbar{ grid-template-columns:1fr; gap:10px; }
+  body.hoodies-page .page-hero,
+  #swup[data-page="hoodies"] .page-hero{ padding-top: 12px; }
+}

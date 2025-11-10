@@ -1,0 +1,86 @@
+/* =========================================================
+   PROPHETIA · LAYOUT
+   ========================================================= */
+.container{ max-width: 1440px; margin: 0 auto; padding-inline: var(--edge); }
+.hero{ position: relative; height: clamp(var(--hero-min), var(--hero-vw), var(--hero-max)); margin-bottom: clamp(60px, 10vw, 200px); }
+.hero-frame{
+  position:absolute; inset:0;
+  width: calc(100% - (var(--edge) * 2));
+  left: var(--edge); right: var(--edge);
+  height: 100%; overflow: clip; background: #000;
+}
+.hero-video{ position:absolute; inset:0; }
+.hero-video__media{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; border:0; }
+
+.floating-logo{
+  position:absolute;
+  left: var(--edge);
+  top:  calc(var(--hdr-h) + 0px);
+  z-index:20; line-height:0;
+  transform: translate(var(--logo-x), var(--logo-y)) scale(var(--logo-scale));
+  transform-origin: top left;
+}
+.floating-logo img{ height:120px; width:auto; display:block; transition: none !important; }
+
+@media (max-width: 900px){
+  :root{ --edge: 16px; --hero-min: 420px; --hero-max: 640px; }
+  .floating-logo img{ height: clamp(84px, 16vw, 120px); }
+}
+
+/* Post-hero editorial block */
+.pp-post-hero { padding: clamp(40px, 10vw, 120px) 0 clamp(20px, 6vw, 80px); text-align: left; }
+.pp-ph-title { font-family: var(--font-display); font-size: clamp(26px, 4vw, 42px); line-height: 1.2; margin-bottom: .6rem; font-weight: 600; letter-spacing: -0.5px; }
+.pp-ph-sub { font-size: clamp(15px, 2vw, 18px); color: rgba(0,0,0,.65); max-width: 540px; margin-bottom: 1.6rem; }
+.pp-ph-links { display: flex; gap: 24px; flex-wrap: wrap; }
+.pp-ph-link { display:flex; align-items:center; gap:6px; font-size:15px; text-decoration:none; color:rgba(0,0,0,.85); position:relative; padding-right:20px; }
+.pp-ph-link::after { content:""; width:6px; height:6px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg); position:absolute; right:0; }
+.pp-ph-hairline { width:100%; height:1px; background:rgba(0,0,0,.10); margin-top: clamp(28px, 6vw, 60px); }
+/* === SECTION GAP (valores) === */
+.section-gap .values.container{
+  max-width: var(--container, 1280px);
+  margin-inline: auto;
+  padding: clamp(24px, 4vw, 48px);
+}
+.section-gap .value{
+  display:grid; grid-template-columns: 32px 1fr; gap: 12px;
+  align-items:start;
+}
+.section-gap .value-title{ margin:0 }
+.section-gap .value-text{ margin:0 }
+/* =========================
+   Diales globales (ajusta a gusto)
+   ========================= */
+:root{
+  --edge: 24px;          /* gutter L/R del header (y del hero) */
+  --hdr-h: 68px;         /* alto real de la franja del header   */
+
+  /* Diales de posición del floating logo (puedes sobreescribir por página) */
+  --logo-x: -74px;         /* + derecha / - izquierda */
+  --logo-y: 34.3px;         /* + abajo   / - arriba    */
+  --logo-scale: 1;       /* escala opcional (1 = 100%) */
+
+  /* Diales del hero */
+  --hero-min: 520px;     /* altura mínima */
+  --hero-vw: 56.25vw;    /* 16:9 ≈ 56.25vw */
+  --hero-max: 760px;     /* altura máxima */
+}
+
+/* =========================
+   Floating logo — control total
+   ========================= */
+.floating-logo{
+  position: absolute;
+  /* parte “base” alineada al borde maestro y bajo el header… */
+  left: var(--edge);
+  top:  calc(var(--hdr-h) - 96.55px);
+  z-index: 20;
+  line-height: 0;
+  /* …y microajustes con diales */
+  transform:
+    translate(var(--logo-x), var(--logo-y))
+    scale(var(--logo-scale));
+  transform-origin: top left;
+}
+.floating-logo img{
+  height: 120px; width: auto; display: block;
+}

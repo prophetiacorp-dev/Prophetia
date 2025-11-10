@@ -1,0 +1,30 @@
+/* =========================================================
+   PROPHETIA · TOKENS
+   ========================================================= */
+:root{
+  --edge: 24px;
+  --hdr-h: 68px;
+  --pp-header-h: 64px;
+
+  --pp-veil-bg: rgba(255,255,255,.82);
+  --pp-veil-blur: 12px;
+  --pp-veil-sat: 160%;
+
+  --font-display: "Playfair Display", "Cormorant Garamond", serif;
+  --font-ui: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  --logo-x: 0px;
+  --logo-y: 6px;
+  --logo-scale: 1;
+
+  --hero-min: 520px;
+  --hero-vw: 56.25vw;
+  --hero-max: 760px;
+
+  --pdp-logo-maxw: 820px;
+  --pdp-logo-offset-y: -51px;
+  --pdp-logo-offset-x: -43px;
+
+  --z-modal: 1200;
+}
+html, body { overflow-x: hidden; }

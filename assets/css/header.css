@@ -1,0 +1,199 @@
+/* =========================================================
+   PROPHETIA · HEADER (Loewe-like) — v2025-11-10
+   Depende de: tokens.css / layout.css  (usa --edge y --hdr-h)
+   Objetivos:
+   - Rejilla estable: [left ········· right]
+   - Icon buttons accesibles (44×44) con icono 18×18
+   - Auth logo sin píldora ni blur (solo el emblema)
+   - Sticky con blur y sombra suave (alineado con megamenu)
+   ========================================================= */
+
+/* -----------------------------
+   Contenedor principal
+   ----------------------------- */
+.pp-header {                       /* banda fija superior */
+  position: sticky;
+  top: 0;
+  z-index: 1200;
+  background: #fff;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.pp-header > .container {          /* ancho y márgenes laterales */
+  max-width: 100%;
+  padding-inline: var(--edge);
+}
+
+/* Barra superior interna */
+.pp-topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 28px;
+  height: var(--hdr-h, 68px);
+  overflow: visible;
+}
+
+/* Columnas laterales */
+.pp-left  { display: flex !important; align-items: center !important; gap: 28px; flex: 0 0 auto; }
+.pp-right { margin-left: auto !important; display: flex !important; align-items: center !important; gap: 16px; flex: 0 0 auto; line-height: 0; }
+
+/* -----------------------------
+   Sticky + sombra coherente con mega
+   ----------------------------- */
+.site-header.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1500;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(6px) saturate(1.2);
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+}
+
+/* -----------------------------
+   Botones básicos del header (reset editorial)
+   ----------------------------- */
+.pp-header button,
+.pp-header .mega-toggle {
+  all: unset;                 /* quita look nativo */
+  cursor: pointer;
+  font: 500 14px/1.4 var(--font-ui, Inter, system-ui, sans-serif);
+  padding: 8px 0;
+  color: #111;
+}
+
+/* Estado activo del megamenú: subrayado editorial */
+.pp-header .mega-toggle.is-active {
+  position: relative;
+}
+.pp-header .mega-toggle.is-active::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -8px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: .85;
+}
+
+/* Asegura que cualquier botón en la barra tenga baseline consistente */
+.pp-header button { line-height: 0; }
+
+/* -----------------------------
+   Buscador inline
+   ----------------------------- */
+.search-inline { display: inline-flex; align-items: center; min-width: 0; }
+.search-inline .search-input{
+  width: 200px;
+  max-width: 28vw;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  padding: 4px 0 6px 0;
+  font: 400 14px/1.2 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  transition: border-color .2s ease, width .25s ease;
+}
+.search-inline .search-input:focus{
+  outline: none;
+  border-bottom-width: 2px;
+  width: 280px;
+}
+
+/* -----------------------------
+   Iconografía del lado derecho (CANÓNICO)
+   - Área clicable accesible 44×44
+   - Icono interno 18×18
+   ----------------------------- */
+.pp-header .pp-right .icon-btn,
+.pp-header .pp-right button,
+.pp-header .pp-right a{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;                 /* hit area accesible */
+  height: 44px;                /* hit area accesible */
+  padding: 0;
+  background: transparent;
+  border: 0;
+  line-height: 0;
+}
+
+/* Tamaño del icono (svg/img) uniforme */
+.pp-header .pp-right .icon-btn svg,
+.pp-header .pp-right img,
+.pp-header .pp-right svg{
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+
+/* -----------------------------
+   Brand compact (estilo píldora) — por si lo usas en otro contexto
+   En el header, el botón de AUTH se neutraliza más abajo.
+   ----------------------------- */
+.pp-header .brand-compact{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--line, #e9e9e9) 60%, transparent);
+  box-shadow: 0 6px 22px rgba(0,0,0,.10);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.pp-header .brand-compact:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.14);
+}
+
+/* -----------------------------
+   Auth logo (emblema) dentro de .pp-right
+   - SIN píldora ni blur; solo icono 18×18 dentro de caja 44×44
+   ----------------------------- */
+.pp-header .pp-right #ppAuthLogoBtn.brand-compact{
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  min-width: auto !important;
+  height: auto !important;
+  backdrop-filter: none !important;
+}
+
+/* Garantiza que la imagen del auth respete 18×18 */
+.pp-header .pp-right #ppAuthLogoBtn.brand-compact img{
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+
+/* -----------------------------
+   Utilidad de accesibilidad para labels invisibles
+   ----------------------------- */
+.sr-only{
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -----------------------------
+   Salvaguardas (evitan “rebotes” de otros resets)
+   ----------------------------- */
+.pp-header, .pp-topbar, .pp-left { overflow: visible; }
+.pp-header * { box-sizing: border-box; }

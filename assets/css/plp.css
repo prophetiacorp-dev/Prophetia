@@ -1,0 +1,42 @@
+/* =========================================================
+   PROPHETIA · PLP
+   ========================================================= */
+.pp-quickbar.container{
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 420px);
+  align-items: start;
+  gap: clamp(16px, 3vw, 48px);
+  padding-block: clamp(6px, 1vw, 12px);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  margin-bottom: clamp(18px, 3.2vw, 36px);
+}
+.pp-bc .pp-bc__list{
+  display:flex; gap:8px; flex-wrap:wrap; list-style:none; padding:0; margin:0 0 8px;
+  font: 400 12px/1.4 var(--font-ui, Inter);
+  color: rgba(0,0,0,.66);
+}
+.pp-bc .pp-bc__list a{ color: currentColor; text-decoration:none; }
+.pp-bc .pp-bc__list a:hover{ text-decoration: underline; }
+.pp-qb-title{ font-family: var(--font-display); font-weight:500; font-size: clamp(20px, 1.6vw, 22px); margin:0; }
+
+.pp-qb-menu{ display:grid; gap:8px 0; justify-items:start; align-content:start; }
+.pp-qb-menu a{ text-decoration:none; font: 400 14px/1.4 var(--font-ui, Inter); color: rgba(0,0,0,.85); }
+.pp-qb-menu a:hover{ text-decoration: underline; }
+
+/* Filtros barra */
+.pp-filters.container{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding-top:12px; padding-bottom:16px;
+  position: sticky; top: var(--pp-header-h, 64px);
+  background:#fff; z-index:5;
+  border-top:1px solid #eee; border-bottom:1px solid #eee;
+}
+.pp-plp.container{ margin-bottom: clamp(40px, 8vw, 120px); }
+.pp-bottom-space{ height: clamp(60px, 10vw, 160px); }
+.pp-plp { min-height: 40vh; }
+
+@media (max-width: 1024px){
+  .pp-quickbar.container{ grid-template-columns: 1fr; }
+  .pp-qb-menu{ display:none; }
+  .pp-filters.container{ position: static; }
+}

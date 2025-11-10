@@ -26,13 +26,47 @@
   <meta name="twitter:description" content="Silent Luxury inspirado en el Mediterráneo. Algodón premium. Arte en cada trazo." />
   <meta name="twitter:image" content="https://prophetia.es/assets/img/og/prophetia_hombre.jpg" />
 
-  <!-- ====== Preconnect + fuentes ====== -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+<!-- BASE -->
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/typography.css">
+<link rel="stylesheet" href="assets/css/layout.css">
 
-  <!-- ====== CSS principal ====== -->
-  <link rel="stylesheet" href="assets/css/style.css?v=25" />
+<!-- HEADER & NAV -->
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/megamenu.css">
+<link rel="stylesheet" href="assets/css/brand-band.css">
+
+<!-- HOME / HERO / TILES -->
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/tiles.css">
+
+<!-- CATÁLOGO / PRODUCTOS -->
+<link rel="stylesheet" href="assets/css/catalog.css">
+<link rel="stylesheet" href="assets/css/plp.css">
+<link rel="stylesheet" href="assets/css/products.css">
+<link rel="stylesheet" href="assets/css/pdp.css">
+
+<!-- SECCIONES ESPECÍFICAS -->
+<link rel="stylesheet" href="assets/css/camisetas.css">
+<link rel="stylesheet" href="assets/css/hoodies.css">
+<link rel="stylesheet" href="assets/css/collections.css">
+<link rel="stylesheet" href="assets/css/wishlist.css">
+
+<!-- PANEL, LOGIN Y CARRITO -->
+<link rel="stylesheet" href="assets/css/auth.css">
+<link rel="stylesheet" href="assets/css/cart.css">
+<link rel="stylesheet" href="assets/css/footer.css">
+<!-- UTILS & FIXES -->
+<link rel="stylesheet" href="assets/css/utilities.css">
+<link rel="stylesheet" href="assets/css/popup.css">
+<link rel="stylesheet" href="assets/css/cookies.css">
+<link rel="stylesheet" href="assets/css/overrides.css">
+
+<!-- FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body class="camisetas-page">
@@ -273,6 +307,34 @@
     .pp-quickbar{ grid-template-columns: 1fr; row-gap: 16px; }
   }
 </style>
-
+*** index.html (tail)
+@@
+ <!-- ===== Prophetia · Cart Drawer (global, estilo Loewe) ===== -->
+ <div id="ppCartDrawer" class="pp-cart-drawer">
+  <div class="pp-cart-header">
+     <h4>Cesta · <span id="ppCartCount">0</span></h4>
+     <button class="pp-cart-close" data-close="cart" aria-label="Cerrar">
+       <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.876 5.815 12 10.94l5.125-5.125 1.06 1.061L13.061 12l5.125 5.124-1.061 1.06L12 13.062l-5.124 5.125-1.061-1.06L10.94 12 5.815 6.877z"></path></svg>
+     </button>
+   </div>
+   <div class="pp-cart-body">
+<div class="pp-cart-empty">
+  <img class="pp-cart-empty__emblem" src="assets/img/logo/prophetia-emblem.png" alt="" />
+  <div class="pp-cart-empty__text">No hay artículos en tu cesta</div>
+</div>
+     <div class="pp-cart-actions">
+       <button class="pp-cart-btn">Plazo de entrega estimado <span>›</span></button>
+       <button class="pp-cart-btn">Envío y devolución gratuitos <span>›</span></button>
+       <button class="pp-cart-btn">Contáctanos <span>›</span></button>
+    </div>
+    <!-- Si tu script pinta líneas de productos, aquí dentro irá #ppCartList -->
+     <div id="ppCartList" class="cart-list" hidden></div>
+     <div class="cart-foot">
+       <div class="cart-total"><span>Total</span> <strong id="ppCartTotal">€0,00</strong></div>
+       <button class="cart-checkout">Finalizar compra</button>
+     </div>
+  </div>
+ </div>
+   <div id="ppCartOverlay" class="pp-cart-overlay"></div>
 </body>
 </html>

@@ -1,0 +1,24 @@
+/* =========================================================
+   PROPHETIA · CATALOG LAYOUT
+   ========================================================= */
+.cat-wrap{
+  display:grid;
+  grid-template-columns: 1fr 260px;
+  gap: clamp(24px, 4vw, 48px);
+  align-items:start;
+  margin-top: clamp(16px, 4vw, 32px);
+}
+.cat-sidebar{ position:sticky; top:calc(var(--hdr-h, 68px) + 24px); align-self:start; }
+.side-links{ list-style:none; padding:0; margin:0; }
+.side-links li{ margin:8px 0; }
+.side-links a{ color:#111; text-decoration:none; opacity:.9; }
+.side-links a:hover{ opacity:1; }
+.side-links a.active{ font-weight:600; }
+.side-filter .check{ display:flex; align-items:center; gap:8px; margin-top:16px; }
+
+.cat-results{ display:flex; flex-direction:column; gap: clamp(16px, 2vw, 24px); }
+
+@media(max-width:1024px){
+  .cat-wrap{ grid-template-columns:1fr; }
+  .cat-sidebar{ display:none; }
+}

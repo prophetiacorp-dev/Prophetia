@@ -1,0 +1,36 @@
+/* =========================================================
+   PROPHETIA · CART DRAWER
+   ========================================================= */
+:root { --pp-header-h: 64px; }
+.pp-cart-drawer{
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(420px, 92vw);
+  background: #fff;
+  box-shadow: -2px 0 24px rgba(0,0,0,.08);
+  transform: translateX(100%);
+  transition: transform .35s ease;
+  z-index: 1100;
+  top: var(--pp-header-h);
+  height: calc(100vh - var(--pp-header-h));
+  display: flex;
+  flex-direction: column;
+}
+.pp-cart-drawer.open { transform: translateX(0); }
+
+.pp-cart-overlay{ position: fixed; inset: 0; background: rgba(0,0,0,.38); opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 1099; }
+.pp-cart-overlay.active{ opacity: 1; pointer-events: auto; }
+
+.pp-cart-header{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #eee; }
+.pp-cart-header h4{ font-family: var(--font-display, 'Cinzel', serif); font-size: 18px; font-weight: 400; letter-spacing: .3px; margin:0; }
+.pp-cart-close svg{ width:20px; height:20px; cursor:pointer; transition: transform .2s ease; }
+.pp-cart-close:hover svg{ transform: rotate(90deg); }
+.pp-cart-body{ padding: 24px; flex:1; overflow-y:auto; }
+
+.pp-cart-btn{ all:unset; display:flex; justify-content:space-between; align-items:center; width:100%; padding:14px 0; font-family:'Inter', sans-serif; font-size:14px; cursor:pointer; border-bottom:1px solid #eee; transition: color .3s ease; }
+.pp-cart-btn:hover{ color:#444; }
+.pp-cart-btn span{ font-size:20px; line-height:0; }
+
+.pp-cart-empty{ display:grid; place-items:center; text-align:center; color:#111; padding:48px 16px 28px; min-height:59vh; }
+.pp-cart-empty__emblem{ width:190px; height:auto; opacity:.85; margin-bottom:16px; user-select:none; }
+.pp-cart-empty__text{ font-size:14px; opacity:.8; }

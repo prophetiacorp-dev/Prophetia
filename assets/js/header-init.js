@@ -1,407 +1,374 @@
 /* ==============================================================
-   PROPHETIA — Header interactions (mega, auth modal tipo LOEWE)
-   ==============================================================
-   Requisitos HTML esperados:
-   - Botón abrir modal (cualquiera de los dos):
-       #ppAuthLogoBtn   (logo redondo)
-       #ppAuthBtn       (otro botón opcional)
-   - <dialog id="ppAuthModal" class="modal">
-       <div class="modal-card"> ... </div>
-       Botones cerrar con [data-close="auth"]
-       Tabs: <button class="tab" data-auth-tab="login"    aria-selected="true"></button>
-             <button class="tab" data-auth-tab="register" aria-selected="false"></button>
-       Formularios:
-         <form id="ppLoginForm"    class="auth-form">...</form>
-         <form id="ppRegisterForm" class="auth-form hidden">...</form>
-       Inputs password con type="password"
+   PROPHETIA — header-init.js (Nov 2025)
+   - Parciales (header/footer) por fetch + evento 'partials:ready'
+   - Mega-menú (un solo .mega-panel con varias .panel[role="tabpanel"])
+   - Modal Auth (ppBindAuth)
+   - Cart helpers (ppOpenCart / ppCloseCart - fallback si no existen)
+   - Ajuste de --pp-header-h tras inyección
    ============================================================== */
 
 (() => {
-  // Helpers
+  /* =============== Utils =============== */
   const $  = (sel, el = document) => el.querySelector(sel);
   const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
 
-  // --- Mega menus (accesibles, opcional) ---
+  /* =============== Parciales (header/footer) =============== */
+  let partialsInjected = false;
 
-  // --- AUTH MODAL ---
-  let authBound = false;
-
-  function switchAuthTab(modal, which) {
-    const tabBtns = $$('[data-auth-tab]', modal);
-    const forms = {
-      login:    $('#ppLoginForm', modal),
-      register: $('#ppRegisterForm', modal)
-    };
-    const isLogin = which === 'login';
-
-    tabBtns.forEach(b => {
-      const val = b.getAttribute('data-auth-tab');
-      const active = val === which;
-      b.classList.toggle('active', active);
-      b.setAttribute('aria-selected', String(active));
-      // A11y: foco al tab activo si vino por teclado
-      if (active && document.activeElement !== b) {
-        // no forzamos focus aquí para no robar foco a inputs
-      }
-    });
-
-    if (forms.login)    forms.login.classList.toggle('hidden', !isLogin);
-    if (forms.register) forms.register.classList.toggle('hidden', isLogin);
-  }
-
-  function openAuth(modal, defaultTab = 'login') {
-    if (!modal) return;
-    if (typeof modal.showModal === 'function') modal.showModal();
-    else {
-      modal.classList.remove('hidden');
-      modal.setAttribute('aria-hidden','false');
-    }
-    document.body.classList.add('no-scroll');
-    switchAuthTab(modal, defaultTab);
-
-    // Foco inicial a primer input o al primer botón
-    const focusable = modal.querySelector('input, button, [href], select, textarea, [tabindex]:not([tabindex="-1"])');
-    focusable && focusable.focus({ preventScroll: true });
-  }
-
-  function closeAuth(modal) {
-    if (!modal) return;
-    if (typeof modal.close === 'function') modal.close();
-    else {
-      modal.classList.add('hidden');
-      modal.setAttribute('aria-hidden','true');
-    }
-    document.body.classList.remove('no-scroll');
-  }
-
-  function bindAuthModal(root = document) {
-    if (authBound) return; // evita doble binding si el header se reinserta
-    const modal       = $('#ppAuthModal', root) || document.getElementById('ppAuthModal');
-    const btnLogo     = $('#ppAuthLogoBtn', root) || document.getElementById('ppAuthLogoBtn');
-    const btnAccount  = $('#ppAuthBtn', root)     || document.getElementById('ppAuthBtn');
-
-    if (!modal || (!btnLogo && !btnAccount)) return;
-
-    // Abrir desde logo -> pestaña 'register' por UX (como LOEWE)
-    btnLogo && btnLogo.addEventListener('click', () => openAuth(modal, 'register'));
-    // Abrir desde otro botón -> pestaña 'login'
-    btnAccount && btnAccount.addEventListener('click', () => openAuth(modal, 'login'));
-
-    // Botones cerrar [data-close="auth"]
-    $$('[data-close="auth"]', modal).forEach(b => b.addEventListener('click', () => closeAuth(modal)));
-
-    // Cerrar con ESC
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape') return;
-      if (!modal.open && modal.classList?.contains?.('hidden')) return;
-      closeAuth(modal);
-    });
-    // — Exponer binder de auth para poder llamarlo tras inyectar parciales
-window.ppBindAuth = () => {
-  try { bindAuthModal(document); } catch(e) { console.warn('[Auth] bind falló:', e); }
-};
-
-
-    // Cerrar click fuera (cuando se usa <dialog>)
-    modal.addEventListener('click', (e) => {
-      const card = $('.modal-card', modal) || modal.firstElementChild;
-      if (!card) return;
-      const r = card.getBoundingClientRect();
-      const out = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
-      if (out) closeAuth(modal);
-    });
-
-    // Tabs
-    $$('[data-auth-tab]', modal).forEach(btn => {
-      btn.addEventListener('click', () => {
-        const which = btn.getAttribute('data-auth-tab');
-        switchAuthTab(modal, which);
-      });
-    });
-
-    // Mostrar / ocultar contraseña (añade botón 👁 al lado de cada password)
-    $$('input[type="password"]', modal).forEach(input => {
-      // Evita duplicar
-      if (input.nextElementSibling?.classList?.contains('toggle-pass')) return;
-
-      const wrapper = input.parentElement;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'toggle-pass';
-      btn.setAttribute('aria-label', 'Mostrar contraseña');
-      btn.textContent = '👁';
-      input.insertAdjacentElement('afterend', btn);
-
-      btn.addEventListener('click', () => {
-        const showing = input.type === 'password';
-        input.type = showing ? 'text' : 'password';
-        btn.textContent = showing ? '🙈' : '👁';
-        btn.setAttribute('aria-label', showing ? 'Ocultar contraseña' : 'Mostrar contraseña');
-        input.focus({ preventScroll: true });
-      });
-    });
-
-    // Validación suave de formularios (visual + preventDefault)
-    $$('.auth-form', modal).forEach(form => {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const required = $$('input[required], select[required], textarea[required]', form);
-        const allOk = required.every(i => i.value.trim() !== '');
-        if (!allOk) {
-          form.classList.add('shake');
-          setTimeout(() => form.classList.remove('shake'), 450);
-          // marca inputs vacíos
-          required.forEach(i => i.classList.toggle('is-invalid', i.value.trim() === ''));
-          (required.find(i => i.value.trim() === '') || required[0])?.focus({ preventScroll: true });
-          return;
-        }
-        // Aquí integrarías tu backend / fetch
-        // Demo:
-        console.info('✅ Auth OK:', form.id);
-        closeAuth(modal);
-      });
-    });
-
-    authBound = true;
-  }
-
-/* ===== Prophetia · Mega Menu controller (sticky + hover-intent) ===== */
-/* ===== Prophetia · Mega Menu controller — click only ===== */
-(() => {
-  const mega = document.querySelector('[data-prop-mega]');
-  if (!mega) return;
-
-  const toggles  = mega.querySelectorAll('.mega-toggle[role="tab"]');
-  const panel    = mega.querySelector('.mega-panel');
-  const sections = panel ? panel.querySelectorAll('.panel[role="tabpanel"]') : [];
-
-  let open = false;
-
-  function showPanel(id){
-    // 1) mostrar solo el panel objetivo
-    sections.forEach(sec => {
-      const active = sec.id === `panel-${id}`;
-      sec.classList.toggle('is-visible', active);
-      if (active) sec.removeAttribute('hidden');
-      else        sec.setAttribute('hidden','');
-    });
-
-    // 2) marcar pestañas
-    toggles.forEach(btn => {
-      const active = btn.dataset.panel === id;
-      btn.classList.toggle('is-active', active);
-      btn.setAttribute('aria-selected', String(active));
-      btn.setAttribute('aria-expanded', String(active));
-    });
-
-    // 3) A11y del contenedor
-    if (panel){
-      const activeTab = mega.querySelector(`.mega-toggle[data-panel="${id}"]`);
-      if (activeTab){
-        if (!activeTab.id) activeTab.id = `tab-${id}`;
-        panel.setAttribute('aria-labelledby', activeTab.id);
-      }
-    }
-
-    // 4) abrir panel (sin hover)
-    mega.classList.add('is-open');
-    panel.style.display = 'block';
-    requestAnimationFrame(() => {
-      panel.style.opacity = '1';
-      panel.style.transform = 'translateY(0)';
-    });
-    open = true;
-  }
-
-  function hidePanel(){
-    mega.classList.remove('is-open');
-    toggles.forEach(btn => btn.setAttribute('aria-expanded','false'));
-    panel.style.opacity = '0';
-    panel.style.transform = 'translateY(8px)';
-    // esperar la transición CSS (~280ms) y ocultar
-    setTimeout(() => { if (!mega.classList.contains('is-open')) panel.style.display = 'none'; }, 300);
-    open = false;
-  }
-
-  // Click + teclado: único disparador permitido
-  toggles.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.panel;
-      if (!id) return;
-      if (open && btn.classList.contains('is-active')) hidePanel();
-      else showPanel(id);
-    });
-    btn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
-      // accesibilidad: ← → para moverte entre tabs
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
-        const arr = Array.from(toggles);
-        const i = arr.indexOf(btn);
-        const next = e.key === 'ArrowRight' ? (i+1) % arr.length : (i-1+arr.length)%arr.length;
-        arr[next].focus();
-      }
-    });
-  });
-
-  // Cerrar si haces click fuera del mega-panel
-  document.addEventListener('click', (e) => {
-    if (!open) return;
-    const inside = e.target.closest('[data-prop-mega]') || e.target.closest('.mega-panel');
-    if (!inside) hidePanel();
-  });
-
-  // ESC cierra
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) hidePanel(); });
-
-  // Estado inicial: muestra el primer tab activo del HTML (si lo hay) pero sin auto-abrir
-  const initial = mega.querySelector('.mega-toggle.is-active')?.dataset.panel;
-  if (initial) { sections.forEach(s => s.setAttribute('hidden','')); }
-})();
-
-
-
-// ===== Inyección de parciales (rutas CORRECTAS) =====
-// ===== Inyección de header y footer por fetch =====
-(async () => {
-  async function inject(id, url) {
-    const host = document.getElementById(id);
+  async function injectPartial(hostId, url) {
+    const host = document.getElementById(hostId);
     if (!host) return;
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status} @ ${url}`);
     host.innerHTML = await res.text();
   }
-await inject('header', 'assets/partials/header.html');
-await inject('footer', 'assets/partials/footer.html');
 
-window.dispatchEvent(new CustomEvent('partials:ready'));
-document.documentElement.style.setProperty('--pp-header-h', '64px');
-})();
-// 🔥 Tras inyectar header/footer, inicializa carrito si existe
-window.addEventListener('partials:ready', () => {
-  try { window.ppCartInit && window.ppCartInit(); } catch(e){}
-    try { window.ppBindAuth && window.ppBindAuth(); } catch(e){}
-});
-// 🔒 Fallback robusto: abrir el modal de auth en cuanto exista
-window.addEventListener('partials:ready', () => {
-  document.addEventListener('click', (ev) => {
-    const btn = ev.target.closest('#ppAuthLogoBtn');
-    if (!btn) return;
-    const modal = document.getElementById('ppAuthModal');
-    if (!modal) return;
-    try { modal.showModal(); } catch (e) { modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false'); }
-  }, { passive:true });
-});
-// ===== Auth + Cart · Cierres globales + Focus Return + Focus Trap =====
-(() => {
-  const $id = (x) => document.getElementById(x);
-  let lastFocus = null; // Para devolver foco
-
-  /* --- Helpers --- */
-  const disableScroll = () => document.body.classList.add('no-scroll');
-  const enableScroll  = () => document.body.classList.remove('no-scroll');
-
-  function openAuth(){
-    const m = $id('ppAuthModal');
-    if (!m) return;
-
-    lastFocus = document.activeElement;
-    
-    try { m.showModal(); } 
-    catch { m.classList.remove('hidden'); m.setAttribute('aria-hidden','false'); }
-    
-    disableScroll();
-
-    // Foco al primer campo
-    const first = m.querySelector('input, button, select, textarea');
-    first && first.focus();
-
-    trapFocus(m);
+  async function injectHeaderFooter() {
+    if (partialsInjected) return;
+    await injectPartial('header', 'assets/partials/header.html');
+    await injectPartial('footer', 'assets/partials/footer.html');
+    partialsInjected = true;
+    window.dispatchEvent(new CustomEvent('partials:ready'));
   }
 
-  function closeAuth(){
-    const m = $id('ppAuthModal');
-    if (!m) return;
-    try { m.close(); } 
-    catch { m.classList.add('hidden'); m.setAttribute('aria-hidden','true'); }
-
-    enableScroll();
-
-    // Devuelve el foco a quien abrió
-    lastFocus && lastFocus.focus();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectHeaderFooter, { once: true });
+  } else {
+    injectHeaderFooter();
   }
 
-function openCart(){
-  const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
-  const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
-  drawer && drawer.classList.add('open');     // clase que tu CSS usa
-  overlay && overlay.classList.add('active'); // idem
-  document.body.classList.add('no-scroll');
-}
+ /* =============== Auth Modal =============== */
+(function defineAuthBinder(){
+  // Caché efímera (RAM) para no perder lo escrito
+  const authCache = {
+    login:    { email: '', pass: '' },
+    register: { email: '', pass: '' }
+  };
 
-function closeCart(){
-  const drawer  = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
-  const overlay = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
-  drawer && drawer.classList.remove('open');
-  overlay && overlay.classList.remove('active');
-  document.body.classList.remove('no-scroll');
-}
+  const q = (sel, root=document) => root.querySelector(sel);
 
-  /* --- Focus Trap premium — versión Loewe™ --- */
-  function trapFocus(modal) {
-    const focusables = modal.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
-    const first = focusables[0];
-    const last  = focusables[focusables.length - 1];
+  function switchAuthTab(modal, which) {
+    const tabs  = modal.querySelectorAll('[data-auth-tab]');
+    const login = q('#ppLoginForm', modal);
+    const reg   = q('#ppRegisterForm', modal);
+    const isLogin = which === 'login';
 
-    modal.addEventListener('keydown', e => {
-      if (e.key !== 'Tab') return;
+    tabs.forEach(b => {
+      const active = b.getAttribute('data-auth-tab') === which;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', String(active));
+    });
+    login && login.classList.toggle('hidden', !isLogin);
+    reg   && reg.classList.toggle('hidden',  isLogin);
+  }
 
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault(); last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault(); first.focus();
+  function restoreCachedValues(modal) {
+    const lg = q('#ppLoginForm', modal);
+    const rg = q('#ppRegisterForm', modal);
+    if (lg) {
+      const email = q('#ppLoginEmail', lg);
+      const pass  = q('#ppLoginPass', lg);
+      if (email) email.value = authCache.login.email ?? email.value ?? '';
+      if (pass)  pass.value  = authCache.login.pass  ?? pass.value  ?? '';
+    }
+    if (rg) {
+      const email = q('#ppRegEmail', rg);
+      const pass  = q('#ppRegPass', rg);
+      if (email) email.value = authCache.register.email ?? email.value ?? '';
+      if (pass)  pass.value  = authCache.register.pass  ?? pass.value  ?? '';
+    }
+  }
+
+  function bindInputsCache(modal){
+    const lg = q('#ppLoginForm', modal);
+    const rg = q('#ppRegisterForm', modal);
+    if (lg) {
+      const email = q('#ppLoginEmail', lg);
+      const pass  = q('#ppLoginPass', lg);
+      email && email.addEventListener('input', ()=> authCache.login.email = email.value);
+      pass  && pass.addEventListener('input',  ()=> authCache.login.pass  = pass.value);
+    }
+    if (rg) {
+      const email = q('#ppRegEmail', rg);
+      const pass  = q('#ppRegPass', rg);
+      email && email.addEventListener('input', ()=> authCache.register.email = email.value);
+      pass  && pass.addEventListener('input',  ()=> authCache.register.pass  = pass.value);
+    }
+  }
+
+  function attachPasswordToggles(modal){
+    modal.querySelectorAll('input[type="password"]').forEach(input => {
+      let btn = input.parentElement?.querySelector('.toggle-pass');
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'toggle-pass';
+        btn.setAttribute('aria-label','Mostrar contraseña');
+        btn.textContent = '👁';
+        input.insertAdjacentElement('afterend', btn);
       }
+      if (btn.__ppBound) return;
+      btn.__ppBound = true;
+      btn.addEventListener('click', () => {
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.textContent = show ? '🙈' : '👁';
+        btn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+        input.focus({ preventScroll: true });
+      });
     });
   }
 
-  /* --- Delegación global de clicks --- */
-  document.addEventListener('click', (ev) => {
-    // Abrir auth desde logo / botón
-    if (ev.target.closest('#ppAuthLogoBtn') || ev.target.closest('#ppAuthBtn')) {
-      ev.preventDefault();
-      openAuth();
+  function openAuth(defaultTab = 'login'){
+  const modal = document.getElementById('ppAuthModal') || document.querySelector('#ppAuthModal');
+  if (!modal) return;
+
+  // 🔑 SIEMPRE quita el oculto antes de intentar showModal
+  modal.classList.remove('hidden');
+  modal.removeAttribute('aria-hidden');
+
+  // Intenta abrir como <dialog>; si no, queda visible por CSS fallback
+  try { if (!modal.open) modal.showModal(); } catch {}
+
+  document.body.classList.add('no-scroll');
+
+  switchAuthTab(modal, defaultTab);
+  restoreCachedValues(modal);
+  attachPasswordToggles(modal);
+  bindInputsCache(modal);
+
+  const first = modal.querySelector('.auth-form:not(.hidden) input, .auth-form:not(.hidden) button');
+  first && first.focus({ preventScroll: true });
+}
+
+function closeAuth(){
+  const modal = document.getElementById('ppAuthModal') || document.querySelector('#ppAuthModal');
+  if (!modal) return;
+
+  // Cierra el <dialog> si está abierto
+  try { if (modal.open) modal.close(); } catch {}
+
+  // 🔒 Luego aplica el oculto (para el fallback visual)
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden','true');
+
+  document.body.classList.remove('no-scroll');
+  // (No reseteamos inputs para conservar lo escrito)
+}
+
+
+  // ===== Delegación GLOBAL (nunca se queda “tieso”) =====
+  document.addEventListener('click', (e) => {
+    // Abrir: logo o botón de cuenta
+    if (e.target.closest('#ppAuthLogoBtn') || e.target.closest('#ppAuthBtn')) {
+      e.preventDefault();
+      const isLogo = !!e.target.closest('#ppAuthLogoBtn');
+      openAuth(isLogo ? 'register' : 'login');
       return;
     }
-
-    // Cerrar auth
-    if (ev.target.closest('[data-close="auth"]')) {
-      ev.preventDefault();
+    // Cerrar: botones con data-close="auth"
+    if (e.target.closest('[data-close="auth"]')) {
+      e.preventDefault();
       closeAuth();
-      return;
-    }
-
-    // Cerrar carrito
-    if (ev.target.closest('[data-close="cart"]') || ev.target === $id('cartOverlay')) {
-      ev.preventDefault();
-      closeCart();
-      return;
-    }
-
-    // Abrir carrito
-    if (ev.target.closest('.js-open-cart')) {
-      ev.preventDefault();
-      openCart();
       return;
     }
   });
 
-  /* --- Escape maneja ambos --- */
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeAuth();
-      closeCart();
-    }
+  // Click fuera (cuando se usa <dialog>): escucha en el propio <dialog> si existe
+  document.addEventListener('click', (e) => {
+    const modal = document.getElementById('ppAuthModal');
+    if (!modal || e.target !== modal) return;
+    // Si el click cae sobre el backdrop del <dialog> (la propia caja), cierra
+    // (en muchos navegadores, el click “fuera” llega con target = dialog)
+    closeAuth();
   });
+
+  // ESC cierra
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAuth(); });
+
+  // Tabs login/register (delegado)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-auth-tab]');
+    if (!btn) return;
+    const modal = document.getElementById('ppAuthModal');
+    if (!modal) return;
+    e.preventDefault();
+    switchAuthTab(modal, btn.getAttribute('data-auth-tab'));
+    restoreCachedValues(modal);
+  });
+
+  // Envío demo (delegado)
+  document.addEventListener('submit', (e) => {
+    const form = e.target.closest('.auth-form');
+    if (!form) return;
+    e.preventDefault();
+    const required = form.querySelectorAll('input[required], select[required], textarea[required]');
+    const ok = Array.from(required).every(i => i.value.trim() !== '');
+    if (!ok) {
+      form.classList.add('shake');
+      setTimeout(() => form.classList.remove('shake'), 450);
+      (Array.from(required).find(i => i.value.trim()==='') || required[0])?.focus({ preventScroll: true });
+      return;
+    }
+    console.info('✅ Auth OK:', form.id);
+    closeAuth();
+  });
+
+  // Exponer helpers por si los usas en otros sitios
+  window.ppOpenAuth  = openAuth;
+  window.ppCloseAuth = closeAuth;
 })();
 
+
   
+  /* =============== Mega-menú (un solo contenedor con muchas panels) =============== */
+  (function defineMegaTabsBinder(){
+    let megaBound = false;
+
+    function bindMegaTabs(root = document) {
+      if (megaBound) return;
+
+      const scope = root.querySelector('#header') || root.getElementById?.('header') || document;
+      const mega  = scope.querySelector('.mega[data-prop-mega]');
+      if (!mega) { megaBound = true; return; }
+
+      const panelContainer = mega.querySelector('.mega-panel');
+      const tabs  = mega.querySelectorAll('.mega-toggle[role="tab"]');
+      const panes = panelContainer?.querySelectorAll('.panel[role="tabpanel"]') || [];
+
+      if (!tabs.length || !panes.length) { megaBound = true; return; }
+
+      function hideAll() {
+        tabs.forEach(t => {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected','false');
+          t.setAttribute('aria-expanded','false');
+        });
+        panes.forEach(p => {
+          p.setAttribute('hidden','');
+          p.classList.remove('is-visible');
+        });
+      }
+
+      function openTabById(id, tabBtn) {
+        const pane = id ? panelContainer.querySelector('#' + id) : null;
+        if (!pane) return;
+
+        hideAll();
+
+        tabBtn?.classList.add('is-active');
+        tabBtn?.setAttribute('aria-selected','true');
+        tabBtn?.setAttribute('aria-expanded','true');
+
+        pane.removeAttribute('hidden');
+        pane.classList.add('is-visible');
+
+        mega.classList.add('is-open');
+        panelContainer.style.display  = 'block';
+        panelContainer.style.opacity  = '1';
+        panelContainer.style.transform= 'translateY(0)';
+
+        if (tabBtn?.id) panelContainer.setAttribute('aria-labelledby', tabBtn.id);
+      }
+
+      function closeAll() {
+        hideAll();
+        mega.classList.remove('is-open');
+        panelContainer.style.opacity   = '0';
+        panelContainer.style.transform = 'translateY(8px)';
+        setTimeout(() => {
+          if (!mega.classList.contains('is-open')) panelContainer.style.display = 'none';
+        }, 250);
+      }
+
+      tabs.forEach(btn => {
+        const paneId = btn.getAttribute('aria-controls'); // ej: panel-hombre
+        btn.setAttribute('aria-expanded','false');
+
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const isActive = btn.classList.contains('is-active');
+          if (isActive) { closeAll(); return; }
+          openTabById(paneId, btn);
+        });
+
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+          if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            const arr = Array.from(tabs);
+            const i = arr.indexOf(btn);
+            const j = e.key === 'ArrowRight' ? (i + 1) % arr.length : (i - 1 + arr.length) % arr.length;
+            arr[j]?.focus();
+          }
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        const inside = e.target.closest('.mega') || e.target.closest('.mega-panel');
+        if (!inside) closeAll();
+      });
+
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+
+      // Inicial: respeta .is-active si existe; si no, abre la primera
+      const initialBtn = mega.querySelector('.mega-toggle.is-active') || tabs[0];
+      if (initialBtn) {
+        const paneId = initialBtn.getAttribute('aria-controls');
+        openTabById(paneId, initialBtn);
+      }
+
+      megaBound = true;
+    }
+
+    window.ppBindMegaMenus = () => { try { bindMegaTabs(document); } catch(e){ console.warn('[Mega] bind falló:', e);} };
+  })();
+
+  /* =============== Cart helpers (fallback) =============== */
+  (function defineCartHelpers(){
+    if (typeof window.ppOpenCart !== 'function') {
+      window.ppOpenCart = function(){
+        const d = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+        const o = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+        d && d.classList.add('open');
+        o && o.classList.add('active');
+        document.body.classList.add('no-scroll');
+      };
+    }
+    if (typeof window.ppCloseCart !== 'function') {
+      window.ppCloseCart = function(){
+        const d = document.getElementById('ppCartDrawer') || document.getElementById('cartDrawer');
+        const o = document.getElementById('ppCartOverlay') || document.getElementById('cartOverlay');
+        d && d.classList.remove('open');
+        o && o.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+      };
+    }
+
+    document.addEventListener('click', (ev) => {
+      if (ev.target.closest('[data-close="cart"]') || ev.target.id === 'cartOverlay' || ev.target.id === 'ppCartOverlay') {
+        ev.preventDefault(); window.ppCloseCart(); return;
+      }
+      if (ev.target.closest('.js-open-cart')) {
+        ev.preventDefault(); window.ppOpenCart(); return;
+      }
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.ppCloseCart(); });
+  })();
+
+  /* =============== Ajuste de --pp-header-h =============== */
+  function setHeaderHeightVar() {
+    const hd = document.getElementById('header');
+    const el = hd ? hd.firstElementChild : null;
+    const h  = (el?.getBoundingClientRect?.().height) || 64;
+    document.documentElement.style.setProperty('--pp-header-h', `${Math.round(h)}px`);
+  }
+  window.addEventListener('resize', () => setHeaderHeightVar());
+
+  /* =============== Re-bind tras inyección de parciales =============== */
+  window.addEventListener('partials:ready', () => {
+    try { window.ppBindAuth && window.ppBindAuth(); } catch(e){}
+    try { window.ppBindMegaMenus && window.ppBindMegaMenus(); } catch(e){}
+    setHeaderHeightVar();
+  });
+
 })();

@@ -1,0 +1,33 @@
+/* =========================================================
+   PROPHETIA · WISHLIST (scoped)
+   ========================================================= */
+body.wishlist-page .wl-nav {
+  background: var(--pp-veil-bg) !important;
+  backdrop-filter: blur(var(--pp-veil-blur)) saturate(var(--pp-veil-sat)) !important;
+  -webkit-backdrop-filter: blur(var(--pp-veil-blur)) saturate(var(--pp-veil-sat)) !important;
+  border-bottom: 1px solid rgba(0,0,0,.05) !important;
+  box-shadow: none !important;
+  background-attachment: fixed !important;
+  background-image: none !important;
+}
+body.wishlist-page .pp-header,
+body.wishlist-page .brand-band,
+body.wishlist-page .wl-nav {
+  background: rgba(255,255,255,0.82) !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+body.wishlist-page .pp-header *,
+body.wishlist-page .brand-band *,
+body.wishlist-page .wl-nav *,
+body.wishlist-page .wl-nav .container{
+  border: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+body.wishlist-page::before{
+  background-attachment: fixed;
+  filter: brightness(1.02) contrast(1.08);
+}

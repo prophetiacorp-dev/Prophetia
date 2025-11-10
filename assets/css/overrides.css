@@ -1,0 +1,66 @@
+/* =========================================================
+   PROPHETIA · OVERRIDES (cargar al final)
+   ========================================================= */
+/* Mega: visibilidad + pointer events + estabilidad extra */
+.mega-panel{ z-index: 1600; }
+.pp-header, .pp-topbar, .pp-left { overflow: visible; }
+
+/* Ajustes de brand-band para camisetas */
+.camisetas-page .brand-band--plp{ margin-top: calc(var(--pp-header-h, 80px) + 24px); }
+.brand-band--plp .page-logo__img{ width: clamp(280px, 36vw, 520px); height: auto; display:block; margin-left:0; }
+/* Evita que el vídeo tape el header cuando el navegador pinta raro */
+.hero { position: relative; z-index: 0; }
+.pp-header { z-index: 1200; }
+
+/* Normaliza tipografía UI en controles sueltos */
+button,input,select { font-family: var(--font-ui, Inter, system-ui, sans-serif); }
+
+/* ===== Prophetia · TRIBE REOPEN (botón flotante) ===== */
+:root{
+  --tribe-reopen: 56px;          /* diámetro del botón */
+  --tribe-reopen-img: 28px;      /* tamaño del logo dentro */
+}
+
+.tribe-reopen{
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  width: var(--tribe-reopen);
+  height: var(--tribe-reopen);
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, #000 10%, transparent);
+  box-shadow: 0 10px 28px rgba(0,0,0,.14);
+  cursor: pointer;
+  pointer-events: auto;      /* ← importante para que reciba el clic */
+  z-index: 5000;             /* ← por encima de hero, header y grids */
+}
+
+.tribe-reopen__img{
+  width: var(--tribe-reopen-img);
+  height: var(--tribe-reopen-img);
+  display: block;
+  object-fit: contain;       /* sin deformación del emblema */
+}
+/* ==== FIX TRIBE MODAL: no ocultar por display:none aunque tenga aria-hidden ==== */
+#tribeModal,
+#tribeModal[aria-hidden="true"] {
+  display: flex;                 /* vence a selectores genéricos por especificidad */
+  align-items: center;
+  justify-content: center;
+  position: fixed; inset: 0;
+}
+
+/* visibilidad la seguimos controlando por opacity/pointer-events */
+#tribeModal[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+#tribeModal.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}

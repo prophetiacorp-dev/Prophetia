@@ -80,3 +80,53 @@
   };
 })();
 document.dispatchEvent(new CustomEvent('pp_cookies_decided'));
+/* === Prophetia · Cookies (sin OneTrust) =============================== */
+(() => {
+  // Si algún día cargas OneTrust real, no duplicar lógica:
+  if (window.OneTrust || window.Optanon) return;
+
+  const $ = (s) => document.querySelector(s);
+  const banner = $('#onetrust-banner-sdk, .cc-banner');
+  const modal  = $('.cc-modal');
+
+  const btnAccept = $('#onetrust-accept-btn-handler');
+  const btnReject =  $('#onetrust-reject-all-handler');
+  const btnPrefs  =  $('#onetrust-pc-btn-handler');
+  const btnClose  =  document.querySelector('.cc-close');
+
+  const CONSENT_COOKIE = 'pp_cc';
+  const COOKIE_OPTS = '; Max-Age=31536000; Path=/; SameSite=Lax';
+
+  function saveConsent(mode){
+    const payload = {
+      ts: Date.now(),
+      mode, // "all" | "reject"
+      categories: mode === 'all'
+        ? { necessary:true, analytics:true, marketing:true }
+        : { necessary:true }
+    };
+    document.cookie = CONSENT_COOKIE + '=' + encodeURIComponent(JSON.stringify(payload)) + COOKIE_OPTS;
+    if (banner) banner.setAttribute('hidden','');
+    if (modal)  modal.setAttribute('hidden','');
+    document.dispatchEvent(new CustomEvent('pp:consent', { detail: payload }));
+  }
+
+  function readConsent(){
+    const m = document.cookie.match(new RegExp('(?:^|; )' + CONSENT_COOKIE + '=([^;]*)'));
+    return m ? JSON.parse(decodeURIComponent(m[1])) : null;
+  }
+
+  function showBannerIfNeeded(){
+    if (!banner) return;
+    if (readConsent()) banner.setAttribute('hidden','');
+    else banner.removeAttribute('hidden');
+  }
+
+  btnAccept && btnAccept.addEventListener('click', () => saveConsent('all'));
+  btnReject  && btnReject.addEventListener('click', () => saveConsent('reject'));
+  btnPrefs   && modal && btnPrefs.addEventListener('click', () => modal.removeAttribute('hidden'));
+  btnClose   && modal && btnClose.addEventListener('click', () => modal.setAttribute('hidden',''));
+
+  document.readyState !== 'loading' ? showBannerIfNeeded()
+                                    : document.addEventListener('DOMContentLoaded', showBannerIfNeeded);
+})();
