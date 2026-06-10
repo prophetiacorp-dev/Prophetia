@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Libro de direcciones — PROPHETIA</title>
+  <meta name="description" content="Gestiona tus direcciones de envío dentro de tu cuenta Prophetia." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#f7f4ee" />
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+<!-- CUENTA / DIRECCIONES -->
+<link rel="stylesheet" href="assets/css/account.css">
+<link rel="stylesheet" href="assets/css/addresses.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="account-page addresses-page" data-page="addresses">
+
+  <div id="header"></div>
+
+  <main id="swup" class="account-layout" tabindex="-1">
+
+    <!-- LOGO / BRAND BAND -->
+    <section class="account-brand" aria-label="PROPHETIA">
+      <div class="container">
+        <a class="account-brand__logo" href="/home" aria-label="Inicio Prophetia">
+          <img src="/assets/img/logo/propnegrovf.svg" alt="PROPHETIA">
+        </a>
+      </div>
+    </section>
+
+    <!-- NAV CUENTA -->
+    <nav class="account-nav" aria-label="Área de cliente">
+      <div class="container account-nav__inner">
+        <div class="account-nav__links">
+          <a href="/my-content">Mi contenido</a>
+          <a href="/drop-calendar">Mi calendario</a>
+          <a href="/pedidos">Pedidos</a>
+          <a href="/reservas">Reservas</a>
+          <a href="/wishlist">Lista de deseos</a>
+          <a href="/account">Cuenta</a>
+          <a href="/addresses" aria-current="page">Libro de direcciones</a>
+          <a href="/my-services">Mis servicios</a>
+        </div>
+
+        <button class="account-nav__logout" type="button" data-pp-logout>
+          Cerrar sesión
+        </button>
+      </div>
+    </nav>
+
+      <!-- MAIN DIRECCIONES -->
+    <section class="addresses-main">
+      <div class="container addresses-shell">
+
+        <header class="addresses-title">
+          <p class="account-kicker">PROPHETIA ACCOUNT</p>
+
+          <h1 class="account-title">
+            Libro de direcciones
+          </h1>
+
+          <p class="account-lede">
+            Guarda tus direcciones para que el checkout sea más rápido, limpio y sin repetir
+            datos cada vez que quieras añadir una nueva pieza a tu archivo.
+          </p>
+        </header>
+
+        <!-- BLOQUE INVITADO -->
+        <section class="account-section" data-pp-addresses-guest hidden>
+          <h2 class="account-section__title">Acceso seguro</h2>
+
+          <div class="account-section__content">
+            <div class="account-guest-box">
+              <p class="account-kicker">PROPHETIA ACCOUNT</p>
+
+              <h3>Inicia sesión para ver tus direcciones</h3>
+
+              <p class="account-note">
+                Para gestionar tus direcciones de envío, primero necesitas acceder con tu cuenta Prophetia.
+              </p>
+
+              <div class="account-actions">
+                <button class="account-btn" type="button" data-pp-open-login>
+                  Iniciar sesión
+                </button>
+
+                <button class="account-btn account-btn--ghost" type="button" data-pp-open-register>
+                  Crear cuenta
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- BLOQUE LOGADO -->
+        <section class="addresses-section" data-pp-addresses-logged hidden>
+          <div class="addresses-section__head">
+            <h2>Todas las direcciones</h2>
+
+            <button class="addresses-add" type="button" data-address-open>
+              Añadir nueva dirección
+            </button>
+          </div>
+
+          <div class="addresses-list" data-address-list></div>
+
+          <p class="address-empty" data-address-empty hidden>
+            Aún no tienes direcciones guardadas.
+          </p>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- PANEL LATERAL DIRECCIÓN -->
+    <dialog class="address-panel" id="addressPanel" aria-labelledby="addressPanelTitle">
+      <form class="address-form" id="addressForm">
+        <button class="address-panel__close" type="button" data-address-close aria-label="Cerrar">
+          ×
+        </button>
+
+        <p class="account-kicker">PROPHETIA ADDRESS</p>
+
+        <h2 class="address-panel__title" id="addressPanelTitle">
+          Nueva dirección
+        </h2>
+
+        <input type="hidden" name="addressId">
+
+        <label>
+          Alias
+          <input name="alias" type="text" placeholder="Casa, trabajo, Madrid..." required>
+        </label>
+
+        <label>
+          Nombre completo
+          <input name="name" type="text" required>
+        </label>
+
+        <label>
+          Teléfono
+          <input name="phone" type="tel" placeholder="+34..." required>
+        </label>
+
+        <label>
+          Dirección
+          <input name="line1" type="text" placeholder="Calle, número, piso..." required>
+        </label>
+
+        <div class="address-form__grid">
+          <label>
+            Ciudad
+            <input name="city" type="text" required>
+          </label>
+
+          <label>
+            Código postal
+            <input name="postcode" type="text" required>
+          </label>
+        </div>
+
+        <label>
+          Provincia
+          <input name="province" type="text" required>
+        </label>
+
+        <label>
+          País
+          <input name="country" type="text" value="España" required>
+        </label>
+
+        <label class="address-check">
+          <input name="isDefault" type="checkbox">
+          <span>Usar como dirección predeterminada</span>
+        </label>
+
+        <div class="address-form__actions">
+          <button class="account-btn" type="submit">
+            Guardar dirección
+          </button>
+
+          <button class="account-btn account-btn--ghost" type="button" data-address-close>
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+  </main>
+
+  <div id="footer"></div>
+  <div id="popup-area"></div>
+
+  <script type="module" src="/assets/js/firebase-init.js"></script>
+  <script type="module" src="/assets/js/firebase-auth.js"></script>
+  <script defer src="/assets/js/header-init.js"></script>
+
+  <script src="/assets/js/cart.js" defer></script>
+  <script src="/assets/js/script.js" defer></script>
+  <script src="/assets/js/popup.js" defer></script>
+  <script src="/assets/js/cookies.js" defer></script>
+
+  <script type="module" src="/assets/js/addresses-page.js"></script>
+</body>
+</html>

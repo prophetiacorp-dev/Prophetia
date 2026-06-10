@@ -1,0 +1,93 @@
+/* ===== PROPHETIA · COOKIE BANNER — Versión mínima estable ===== */
+:root{
+  --cc-edge: 24px;
+  --cc-width: 382px;
+  --cc-radius: 16px;
+  --cc-shadow: 0 18px 60px rgba(0,0,0,.16);
+  --cc-ui: var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+}
+
+/* Estado base: presente pero oculto (transición) */
+#cc-banner{
+  position: fixed;
+  right: var(--cc-edge);
+  left: auto;
+  bottom: var(--cc-edge);
+  z-index: 1200;
+
+  width: min(var(--cc-width), 92vw);
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: var(--cc-radius);
+  box-shadow: var(--cc-shadow);
+  padding: 16px;
+
+  opacity: 0;
+  transform: translateY(12px);
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .45s ease, transform .45s ease, visibility 0s linear .45s;
+}
+
+/* Estructura interna */
+#cc-banner .cc-inner{ display: grid; gap: 12px; }
+#cc-banner .cc-text{ font: 400 14.5px/1.55 var(--cc-ui); color:#111; }
+#cc-banner .cc-actions{ display: grid; gap: 10px; }
+
+/* Botones */
+#onetrust-accept-btn-handler,
+#onetrust-reject-all-handler,
+#onetrust-pc-btn-handler,
+#cc-banner .cc-actions .cc-btn{
+  width: 100%;
+  min-height: 44px;
+  border-radius: 6px;
+  border: 0;
+  font: 600 14px/1 var(--cc-ui);
+  cursor: pointer;
+}
+
+/* Estilos de acción */
+#onetrust-accept-btn-handler{ background:#111; color:#fff; }
+#onetrust-reject-all-handler{ background:#f2f2f2; color:#111; border:1px solid rgba(0,0,0,.12); }
+#onetrust-pc-btn-handler{ background: transparent; color:#111; text-decoration: underline; }
+
+/* VISIBILIDAD: sólo cuando .is-visible y SIN data-cc-prehide */
+html:not([data-cc-prehide]) #cc-banner.is-visible{
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ocultar si [hidden] se deja por HTML accidentalmente */
+#cc-banner[hidden]{ display:none; }
+
+/* Responsive */
+@media (max-width: 520px){
+  #cc-banner{ right:12px; left:12px; bottom:12px; width:auto; }
+}
+
+
+/* Links dentro del banner */
+#cc-banner .cc-link,
+#cc-banner a {
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Estado focus accesible */
+#cc-banner button:focus-visible,
+#cc-banner a:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+/* Evita que el banner tape demasiado en móvil */
+@media (max-width: 520px) {
+  #cc-banner {
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+  }
+}

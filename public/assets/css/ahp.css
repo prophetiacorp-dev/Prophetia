@@ -1,0 +1,742 @@
+/* =========================================================
+   PROPHETIA · AFTERHOUR PROPHETIA (AHP)
+   Página: /assets/collects/ahp
+   Estilo: noche editorial, neón controlado, lujo silencioso
+   ========================================================= */
+/* ===========================
+   AHP · Raven
+   =========================== */
+/* ===========================
+   AHP · Raven (FIX real)
+   =========================== */
+
+@font-face{
+  font-family: "Raven";
+  src: url("../fonts/RavenItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+
+
+
+body.ahp-page{
+  --ahp-bg-top: #07070a;
+  --ahp-bg-mid: #05060b;
+  --ahp-bg-bottom:#020205;
+
+  --ahp-ink: #f3f1ea;
+  --ahp-muted: rgba(243,241,234,.74);
+
+  --ahp-line: rgba(255,255,255,.10);
+
+  /* acentos “afterhour”: neón elegante, nada discoteca barata */
+  --ahp-violet: #b8a7ff;
+  --ahp-cyan: #7fe7ff;
+  --ahp-rose: #ff9bd4;
+
+  background:
+    radial-gradient(circle at 12% 0%, rgba(184,167,255,.14), transparent 55%),
+    radial-gradient(circle at 88% 8%, rgba(127,231,255,.12), transparent 58%),
+    radial-gradient(circle at 50% 110%, rgba(255,155,212,.10), transparent 60%),
+    linear-gradient(to bottom, var(--ahp-bg-top), var(--ahp-bg-mid) 40%, var(--ahp-bg-bottom) 100%);
+  color: var(--ahp-ink);
+   --font-ui: "Raven", Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Raven", "Cinzel", "Playfair Display", serif;
+
+  /* Alias internos */
+  --ahp-font-heading: var(--font-display);
+  --ahp-font-ui: var(--font-ui);
+
+  /* Rave accents (controlados) */
+  --rave-violet: #b78cff;
+  --rave-lime: #b7ff3c;
+  --rave-acid: #f6ff4d;
+
+  /* Glows (capados) */
+  --glow-violet: 0 0 18px rgba(183,140,255,.22), 0 0 42px rgba(183,140,255,.12);
+  --glow-lime:   0 0 16px rgba(183,255,60,.18),  0 0 36px rgba(183,255,60,.10);
+  --glow-acid:   0 0 16px rgba(246,255,77,.16),  0 0 34px rgba(246,255,77,.09);
+}
+
+body.ahp-page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(circle at 50% 60%, rgba(0,0,0,.28), transparent 65%);
+}
+
+/* =========================================================
+   HEADER / TOPBAR · MODO AFTERHOUR
+   ========================================================= */
+
+body.ahp-page .pp-header,
+body.ahp-page .pp-topbar{
+  background:
+    radial-gradient(circle at 0 0, rgba(184,167,255,.10), transparent 55%),
+    linear-gradient(to right, #05050a, #0a0a12, #05050a);
+  color: var(--ahp-ink);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 14px 34px rgba(0,0,0,.70);
+}
+
+body.ahp-page .pp-header nav a,
+body.ahp-page .pp-header .mega-toggle{
+  color: var(--ahp-ink);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-size: .75rem;
+}
+body.ahp-page .pp-header nav a,
+body.ahp-page .pp-header .mega-toggle,
+body.ahp-page .mega a{
+  font-style: italic;
+}
+
+body.ahp-page .pp-header nav a:hover,
+body.ahp-page .pp-header .mega-toggle:hover{
+  color: var(--ahp-cyan);
+}
+
+body.ahp-page .pp-header .icon-btn,
+body.ahp-page .pp-header .icon-btn svg{
+  color: var(--ahp-ink);
+  stroke: currentColor;
+}
+
+body.ahp-page .pp-header .icon-btn svg path,
+body.ahp-page .pp-header .icon-btn svg circle,
+body.ahp-page .pp-header .icon-btn svg rect{
+  stroke: currentColor;
+  fill: none;
+}
+
+/* =========================================================
+   BRAND BAND
+   ========================================================= */
+
+.ahp-page .brand-band{
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+
+.ahp-page .brand-band .container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: 40px;
+  box-sizing: border-box;
+}
+
+.ahp-page .brand-band .page-logo img{
+  height: 110px;
+  width: auto;
+  display: block;
+  margin-left: -60px; /* same “editorial push” que MS */
+}
+
+/* =========================================================
+   HERO · AFTERHOUR
+   ========================================================= */
+
+.ahp-page .pp-hero.hero--ahp{
+  position: relative;
+  padding: 70px 0 50px;
+}
+
+.ahp-page .hero-inner{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 40px;
+  align-items: start;
+}
+
+.ahp-page .pp-hero.hero--ahp::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(127,231,255,.16), transparent 60%),
+    radial-gradient(circle at 75% 18%, rgba(184,167,255,.14), transparent 62%);
+  opacity: .95;
+}
+
+.ahp-page .hero-main{ position: relative; z-index: 1; max-width: 680px; }
+
+.ahp-page .ahp-hero-sub,
+.ahp-page .ahp-story-text,
+.ahp-page .tiles--ahp .tile-title,
+.ahp-page .tiles--ahp .tile-sub,
+.ahp-page .ahp-cta-btn{
+  font-family: var(--ahp-font-ui);
+}
+
+.ahp-page .ahp-hero-sub{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: .98rem;
+  line-height: 1.9;
+  color: var(--ahp-muted);
+  max-width: 540px;
+}
+
+/* Badge “Afterhour” */
+.ahp-page .hero-side{ position: relative; z-index: 1; display:flex; justify-content:flex-end; }
+.ahp-page .ahp-badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.22);
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ahp-ink);
+  background:
+    radial-gradient(circle at 0 0, rgba(127,231,255,.12), transparent 70%),
+    radial-gradient(circle at 100% 0, rgba(184,167,255,.12), transparent 70%);
+  backdrop-filter: blur(10px);
+}
+
+/* =========================================================
+   STORY BLOCK
+   ========================================================= */
+
+.ahp-page .ahp-story{
+  padding: 40px 0 10px;
+}
+
+.ahp-page .ahp-story .container.narrow{
+  max-width: 820px;
+  margin: 0 auto;
+  padding-inline: 40px;
+}
+
+.ahp-page .ahp-story-title{
+  font-family: "Playfair Display", var(--font-heading, serif);
+  font-weight: 500;
+  font-size: 1.75rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 26px;
+}
+
+.ahp-page .ahp-story-text{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: .98rem;
+  line-height: 1.9;
+  color: var(--ahp-muted);
+  margin: 0 0 18px;
+  text-align: center;
+}
+
+/* =========================================================
+   TILES · AHP
+   ========================================================= */
+
+.ahp-page .ahp-tiles{ padding: 40px 0 30px; }
+
+.ahp-page .tiles--ahp{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(26px, 3vw, 34px);
+}
+
+.ahp-page .tiles--ahp .tile{
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-radius: 24px;
+  overflow: hidden;
+  text-decoration: none;
+
+  background:
+    radial-gradient(circle at 50% 0, rgba(255,255,255,.10), transparent 60%),
+    rgba(10,10,16,.92);
+
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 20px 52px rgba(0,0,0,.70);
+
+  color: var(--ahp-ink);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.ahp-page .tiles--ahp .tile:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 26px 74px rgba(0,0,0,.85);
+  border-color: rgba(127,231,255,.18);
+}
+
+/* Imagen (sección superior del tile) */
+.ahp-page .tiles--ahp .tile-img{
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.ahp-page .tiles--ahp .tile-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display:block;
+}
+
+/* Body */
+.ahp-page .tiles--ahp .tile-body{ padding: 18px 20px 20px; }
+
+.ahp-page .tiles--ahp .tile-title{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-weight: 500;
+  font-size: .94rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.ahp-page .tiles--ahp .tile-sub{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: .82rem;
+  line-height: 1.7;
+  color: var(--ahp-muted);
+}
+
+/* =========================================================
+   CTA
+   ========================================================= */
+
+.ahp-page .ahp-cta{ padding: 40px 0 80px; }
+
+.ahp-page .ahp-cta .container.narrow.center{
+  max-width: 640px;
+  margin: 0 auto;
+  padding-inline: 40px;
+  text-align: center;
+}
+
+.ahp-page .ahp-cta-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.26);
+  text-decoration: none;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: .78rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ahp-ink);
+  background:
+    radial-gradient(circle at 0 0, rgba(127,231,255,.12), transparent 70%),
+    radial-gradient(circle at 100% 0, rgba(184,167,255,.12), transparent 70%);
+  transition: background .22s ease, transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.ahp-page .ahp-cta-btn:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(127,231,255,.34);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 44px rgba(0,0,0,.70);
+}
+
+/* =========================================================
+   FOOTER · MODO AFTERHOUR
+   ========================================================= */
+
+body.ahp-page .site-footer,
+body.ahp-page .footer-inner,
+body.ahp-page .footer-bottom{
+  background:
+    radial-gradient(circle at 100% 0, rgba(127,231,255,.10), transparent 60%),
+    linear-gradient(to top, #05060b, #090a14);
+  color: var(--ahp-ink);
+}
+
+body.ahp-page .site-footer a{ color: rgba(243,241,234,.82); text-decoration: none; }
+body.ahp-page .site-footer a:hover{ color: var(--ahp-rose); }
+
+body.ahp-page .site-footer h5{
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ahp-ink);
+}
+
+body.ahp-page .site-footer .footer-art img{
+  filter: brightness(0) invert(1);
+  opacity: .9;
+  mix-blend-mode: normal;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 960px){
+  .ahp-page .hero-inner{
+    grid-template-columns: 1fr;
+    gap: 26px;
+    padding-inline: 24px;
+  }
+  .ahp-page .ahp-story .container.narrow,
+  .ahp-page .tiles--ahp,
+  .ahp-page .ahp-cta .container.narrow.center{
+    padding-inline: 24px;
+  }
+}
+
+@media (max-width: 640px){
+  .ahp-page .tiles--ahp{
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* =========================================================
+   AHP · TILE con 2 imágenes (duo grid)
+   ========================================================= */
+
+.ahp-page .tiles--ahp .tile-img--duo{
+  aspect-ratio: 4 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.ahp-page .tiles--ahp .tile-img--duo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Separador sutil entre las 2 imágenes */
+.ahp-page .tiles--ahp .tile-img--duo img:first-child{
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+
+/* Placeholder elegante (para tiles sin imagen aún) */
+.ahp-page .tiles--ahp .tile-img--placeholder{
+  aspect-ratio: 4 / 3;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(127,231,255,.12), transparent 60%),
+    radial-gradient(circle at 70% 20%, rgba(184,167,255,.10), transparent 62%),
+    linear-gradient(to bottom, rgba(255,255,255,.06), rgba(0,0,0,0));
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+/* Header: una línea de luz muy fina + halo suave */
+body.ahp-page .pp-header,
+body.ahp-page .pp-topbar{
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.70),
+    0 1px 0 rgba(183,140,255,.16);
+}
+
+/* Links hover: cian/violeta con glow mínimo */
+body.ahp-page .pp-header nav a:hover,
+body.ahp-page .pp-header .mega-toggle:hover{
+  color: var(--rave-lime);
+  text-shadow: var(--glow-lime);
+}
+
+/* Badge: “capsule” con glow editorial */
+.ahp-page .ahp-badge{
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.55),
+    var(--glow-violet);
+  border-color: rgba(183,140,255,.26);
+}
+
+/* Tiles: hover con borde + glow dual */
+.ahp-page .tiles--ahp .tile:hover{
+  border-color: rgba(183,255,60,.22);
+  box-shadow:
+    0 26px 74px rgba(0,0,0,.85),
+    var(--glow-violet),
+    var(--glow-lime);
+}
+
+/* CTA: hover con glow ácido (muy sutil) */
+.ahp-page .ahp-cta-btn:hover{
+  border-color: rgba(246,255,77,.28);
+  box-shadow:
+    0 16px 44px rgba(0,0,0,.70),
+    var(--glow-acid);
+}
+  /* =========================================================
+   AHP · SINGLE SOURCE OF TRUTH (GLOBAL)
+   Pegar AL FINAL de ahp.css
+   ========================================================= */
+
+/* 1) Tokens globales para que typography.css herede bien */
+body.ahp-page{
+  --font-ui: "Raven", Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Raven", "Playfair Display", serif;
+
+
+  /* 2) Base de página */
+  font-family: var(--font-ui);
+  font-style: italic;      /* RavenItalic necesita italic */
+  font-synthesis: none;    /* evita “fake bold/italic” */
+}
+
+/* 3) Asegura que el contenido principal no se quede en Inter por reglas sueltas */
+body.ahp-page main,
+body.ahp-page section,
+body.ahp-page .pp-hero,
+body.ahp-page .brand-band,
+body.ahp-page .container{
+  font-family: inherit;
+}
+/* =========================================================
+   AHP · MEGA MENU DARK (fix blanco)
+   ========================================================= */
+
+body.ahp-page .mega-panel,
+body.ahp-page .mega-panel *{
+  background-color: transparent;
+}
+
+/* El contenedor real del panel */
+body.ahp-page .mega-panel{
+  background: rgba(6, 7, 12, .96) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 24px 80px rgba(0,0,0,.70) !important;
+}
+
+/* Si el blanco viene del grid/columnas/paneles */
+body.ahp-page .mega,
+body.ahp-page .mega-grid,
+body.ahp-page .mega-col,
+body.ahp-page .panel,
+body.ahp-page section.panel{
+  background: transparent !important;
+}
+
+/* Links legibles */
+body.ahp-page .mega a{
+  color: rgba(243,241,234,.88) !important;
+}
+body.ahp-page .mega a:hover{
+  color: var(--rave-lime) !important;
+  text-shadow: var(--glow-lime);
+}
+/* =========================================================
+   AHP · HEADER RIGHT (SEARCH + ACCOUNT) · DARK FIX
+   Pegar AL FINAL de ahp.css
+   ========================================================= */
+
+body.ahp-page .pp-right,
+body.ahp-page .pp-right *{
+  color: var(--ahp-ink);
+}
+
+/* SEARCH: texto, placeholder y underline en blanco */
+body.ahp-page .pp-right .search-inline .search-input{
+  color: var(--ahp-ink) !important;
+  border-bottom: 1px solid rgba(243,241,234,.72) !important;
+  background: transparent !important;
+}
+
+body.ahp-page .pp-right .search-inline .search-input::placeholder{
+  color: rgba(243,241,234,.55) !important;
+}
+
+body.ahp-page .pp-right .search-inline .search-input:focus{
+  border-bottom-color: rgba(183,255,60,.80) !important; /* rave-lime controlado */
+}
+
+/* ACCOUNT: emblema (img/svg externo) en blanco */
+body.ahp-page #ppAuthLogoBtn img,
+body.ahp-page #ppProfileChip img{
+  filter: brightness(0) invert(1);
+  opacity: .95;
+}
+
+/* Opcional: un pelín de “halo” para lectura en fondos con blur */
+body.ahp-page #ppAuthLogoBtn img,
+body.ahp-page #ppProfileChip img{
+  filter: brightness(0) invert(1) drop-shadow(0 8px 18px rgba(0,0,0,.55));
+  opacity: .95;
+}
+
+/* =========================================================
+   AHP · Refinamiento narrativo AfterHour
+   ========================================================= */
+
+/* Raven solo como acento potente, no para cansar la lectura */
+body.ahp-page .ahp-hero-sub,
+body.ahp-page .ahp-story-text,
+body.ahp-page .ahp-story-step p,
+body.ahp-page .tiles--ahp .tile-sub {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-style: normal;
+}
+
+/* Kicker del hero: hora + escena */
+.ahp-page .ahp-hero-kicker {
+  margin: 0 0 18px;
+
+  font-family: var(--ahp-font-ui);
+  font-size: .72rem;
+  line-height: 1.2;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-style: italic;
+
+  color: rgba(183,255,60,.82);
+  text-shadow: var(--glow-lime);
+}
+
+/* Hero más editorial y menos bloque plano */
+.ahp-page .pp-hero.hero--ahp {
+  padding: clamp(78px, 8vw, 126px) 0 clamp(58px, 6vw, 86px);
+}
+
+.ahp-page .ahp-hero-title {
+  margin: 0 0 24px;
+
+  font-family: var(--ahp-font-heading);
+  font-size: clamp(2.6rem, 6vw, 6.8rem);
+  line-height: .86;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+  font-style: italic;
+
+  color: var(--ahp-ink);
+  text-shadow:
+    0 0 28px rgba(183,140,255,.18),
+    0 0 52px rgba(127,231,255,.10);
+}
+
+.ahp-page .ahp-hero-sub {
+  max-width: 610px;
+  font-size: clamp(.98rem, 1.1vw, 1.08rem);
+  line-height: 1.85;
+  color: rgba(243,241,234,.76);
+}
+
+/* Badge más nocturno */
+.ahp-page .ahp-badge {
+  font-size: .68rem;
+  letter-spacing: .24em;
+  color: rgba(243,241,234,.92);
+}
+
+/* Story convertido en secuencia */
+.ahp-page .ahp-story {
+  padding: clamp(56px, 7vw, 96px) 0 clamp(34px, 5vw, 64px);
+}
+
+.ahp-page .ahp-story-title {
+  max-width: 760px;
+  margin-inline: auto;
+  margin-bottom: clamp(38px, 5vw, 62px);
+
+  font-family: var(--ahp-font-heading);
+  font-size: clamp(1.7rem, 3.6vw, 3.8rem);
+  line-height: .95;
+  letter-spacing: .08em;
+  font-style: italic;
+}
+
+.ahp-page .ahp-story-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 3vw, 32px);
+
+  margin-bottom: clamp(38px, 5vw, 58px);
+}
+
+.ahp-page .ahp-story-step {
+  position: relative;
+
+  padding: 24px 22px 26px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 22px;
+
+  background:
+    radial-gradient(circle at 0 0, rgba(183,255,60,.07), transparent 55%),
+    radial-gradient(circle at 100% 0, rgba(183,140,255,.09), transparent 60%),
+    rgba(8,9,15,.56);
+
+  box-shadow: 0 18px 46px rgba(0,0,0,.42);
+}
+
+.ahp-page .ahp-story-step span {
+  display: block;
+  margin-bottom: 26px;
+
+  font-family: var(--ahp-font-ui);
+  font-size: .68rem;
+  letter-spacing: .22em;
+  color: rgba(183,255,60,.76);
+  text-shadow: var(--glow-lime);
+}
+
+.ahp-page .ahp-story-step h3 {
+  margin: 0 0 12px;
+
+  font-family: var(--ahp-font-ui);
+  font-size: .9rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-style: italic;
+
+  color: var(--ahp-ink);
+}
+
+.ahp-page .ahp-story-step p {
+  margin: 0;
+
+  font-size: .92rem;
+  line-height: 1.75;
+  color: rgba(243,241,234,.68);
+}
+
+.ahp-page .ahp-story-text--final {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+
+  font-size: 1rem;
+  line-height: 1.9;
+  color: rgba(243,241,234,.78);
+}
+
+/* Tiles: títulos placeholder más cápsula, menos “en construcción” */
+.ahp-page .tiles--ahp .tile-title {
+  font-size: .86rem;
+  letter-spacing: .2em;
+}
+
+.ahp-page .tiles--ahp .tile-sub {
+  color: rgba(243,241,234,.68);
+}
+
+/* CTA con tono AfterHour */
+.ahp-page .ahp-cta-btn {
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ahp-page .ahp-story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ahp-page .ahp-story-step {
+    padding: 22px 20px 24px;
+  }
+}

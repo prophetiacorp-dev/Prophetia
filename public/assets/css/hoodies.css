@@ -1,0 +1,2123 @@
+/* =========================================================
+   PROPHETIA · HOODIES HOMBRE (urbano / nocturno)
+   Página: hoodies.html
+   Estilo: Silent Luxury urbano (LEDs controlados + drawer oculto)
+   ========================================================= */
+
+body.hoodies-page{
+  --pp-edge-hood: 40px;
+
+  --font-heading: "TheUrbanWayItalic", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-urban: "TheUrbanWayItalic", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* ===== Texto / contraste sobre graphite ===== */
+--street-ink: #F5F5EF;                 /* blanco hueso (legible y premium) */
+--street-muted: rgba(245,245,239,0.76);
+--street-line: rgba(245,245,239,0.12);
+
+/* ===== Superficies ===== */
+--hood-shell: rgba(5,6,10,0.92);       /* drawer/footer sólido */
+--hood-shell-soft: rgba(10,11,14,0.88);
+
+/* NUEVO: header “glass” */
+--hood-header-glass: rgba(5,6,10,0.34);
+--hood-header-glass-strong: rgba(5,6,10,0.48);
+
+
+  /* ===== Acentos Prophetia ===== */
+  --hood-brass: #C9A56B;                  /* metal lujo */
+  --hood-led: rgba(160,120,255,0.55);     /* línea LED (amatista) */
+  --hood-led-soft: rgba(160,120,255,0.22);
+  --hood-led-faint: rgba(160,120,255,0.12);
+
+
+
+  --street-accent: var(--hood-brass);
+
+  /* ✅ TU BACKGROUND (NO SE TOCA) */
+  background: url("../img/backgrounds/hoodies.png") center top / cover no-repeat fixed;
+  color: var(--street-ink);
+}
+
+/* Velo suave para legibilidad (sin matar textura) */
+body.hoodies-page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.20), rgba(0,0,0,0.34));
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* =========================================================
+   HEADER / TOPBAR (fix colores + LED inferior)
+   ========================================================= */
+
+body.hoodies-page .pp-topbar,
+body.hoodies-page .pp-header{
+  background: linear-gradient(
+    to bottom,
+    var(--hood-header-glass-strong),
+    var(--hood-header-glass)
+  );
+  backdrop-filter: blur(10px) saturate(125%);
+  -webkit-backdrop-filter: blur(10px) saturate(125%);
+  color: var(--street-ink);
+  border-bottom: 1px solid rgba(243, 243, 239, 0.884);
+  box-shadow: 0 10px 28px rgba(253, 249, 249, 0.45);
+  position: relative;
+}
+
+
+
+
+/* Texto/iconos del header: SIEMPRE legibles */
+body.hoodies-page .pp-header .pp-left,
+body.hoodies-page .pp-header .pp-right,
+body.hoodies-page .pp-header a,
+body.hoodies-page .pp-header button,
+body.hoodies-page .pp-topbar a,
+body.hoodies-page .pp-topbar button{
+  color: var(--street-ink);
+  text-shadow: 0 1px 1px rgba(10, 10, 10, 0.24);
+}
+
+/* Mega toggles */
+body.hoodies-page .pp-header .mega-toggle{
+  color: var(--street-ink);
+  opacity: 0.92;
+}
+body.hoodies-page .pp-header .mega-toggle:hover{
+  opacity: 1;
+  color: var(--hood-brass);
+}
+
+/* SVG icons */
+body.hoodies-page .pp-header svg{
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* LED bajo el header (se queda) */
+body.hoodies-page .pp-header::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-1px;
+  height:1px;
+  background: var(--hood-led);
+  box-shadow:
+    0 6px 12px var(--hood-led-soft),
+    0 14px 22px var(--hood-led-faint);
+  pointer-events:none;
+}
+
+body.hoodies-page .pp-header .container,
+body.hoodies-page .pp-topbar{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-hood);
+  box-sizing: border-box;
+}
+
+body.hoodies-page .search-inline input{
+  background: rgba(255, 243, 243, 0.1);
+  border-color: rgba(245,245,239,0.40);
+  color: var(--street-ink);
+}
+body.hoodies-page .search-inline input::placeholder{
+  color: rgba(245,245,239,0.65);
+}
+/* HOODIES · Mega panel (dropdown blanco) -> links negros */
+body.hoodies-page .pp-header .mega-panel,
+body.hoodies-page .pp-header .mega-panel a{
+  color: #111;
+  text-shadow: none;
+}
+
+body.hoodies-page .pp-header .mega-panel a:hover{
+  color: #000;
+  opacity: .90;
+}
+
+body.hoodies-page .pp-header .mega-panel a:visited{
+  color: #111;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+body.hoodies-page .pp-hero.hero--two-cols{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 42px var(--pp-edge-hood) 26px;
+  min-height: 260px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+body.hoodies-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+
+
+body.hoodies-page .pp-hero__side{
+  align-self: flex-end;
+  max-width: 360px;
+  text-align: left;
+}
+
+
+
+/* =========================================================
+   HOODIES · Hero side = mismo estilo que STREETWEAR
+   ========================================================= */
+
+body.hoodies-page .pp-hero__side{
+  align-self: flex-end;
+  max-width: 360px;
+  text-align: left;
+}
+
+/* Título tipo STREETWEAR (Inter, no urbana) */
+body.hoodies-page .pp-hero__title{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 12px;
+  letter-spacing: 0.30em;
+  color: var(--street-ink);
+  margin: 0 0 6px;
+  text-transform: none;
+}
+
+/* Nav como streetwear */
+body.hoodies-page .pp-hero__nav{
+  padding-top: 8px;
+  margin-top: 0;
+}
+
+body.hoodies-page .pp-hero__list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+/* Fuerza tipografía Inter como streetwear */
+body.hoodies-page .pp-hero__side,
+body.hoodies-page .pp-hero__side *{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+}
+
+/* =========================================================
+   HOODIES · Hero list = mismo estilo que STREETWEAR
+   ========================================================= */
+body.hoodies-page{
+  --sw-mega-link: 11px;
+}
+
+body.hoodies-page .pp-hero__list a{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: var(--sw-mega-link);
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  color: var(--street-muted);
+  padding-block: 1px;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+body.hoodies-page .pp-hero__list a:hover{
+  opacity: 0.85;
+  color: var(--street-ink);
+  border-bottom-color: var(--street-ink);
+  transform: translateX(2px);
+}
+
+body.hoodies-page .pp-hero__list a[aria-current="page"]{
+  color: var(--street-ink);
+}
+
+
+
+
+body.hoodies-page .bb-spacer{
+  height: clamp(40px, 6vw, 90px);
+}
+
+/* =========================================================
+   SUBHERO
+   ========================================================= */
+
+body.hoodies-page .pp-collection-hero.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-hood);
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+body.hoodies-page .pp-hero-title{
+  font-family: var(--font-urban);
+  font-size: 0.9rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--street-ink);
+  margin: 0 0 6px;
+}
+
+body.hoodies-page .pp-hero-sub{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.86rem;
+  color: var(--street-muted);
+  max-width: 520px;
+}
+
+/* =========================================================
+   TOOLBAR · FILTROS (LED superior e inferior)
+   ========================================================= */
+
+body.hoodies-page .pp-filters.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-hood);
+  padding-block: 10px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: var(--pp-header-h, 72px);
+  z-index: 20;
+
+  background: var(--hood-shell-soft);
+  border-top: 1px solid rgba(245, 245, 239, 0.911);
+     box-shadow: 0 -14px 34px rgba(243, 230, 230, 0.918);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.986);
+    box-shadow: 0 -14px 34px rgba(243, 230, 230, 0.918);
+
+
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--street-muted);
+}
+
+body.hoodies-page .pp-filters.container::before,
+body.hoodies-page .pp-filters.container::after{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  height:1px;
+  background: var(--hood-led);
+  pointer-events:none;
+}
+
+body.hoodies-page .pp-filters.container::before{
+  top:0;
+  box-shadow: 0 -6px 12px var(--hood-led-soft), 0 -14px 22px var(--hood-led-faint);
+}
+
+body.hoodies-page .pp-filters.container::after{
+  bottom:0;
+  box-shadow: 0 6px 12px var(--hood-led-soft), 0 14px 22px var(--hood-led-faint);
+}
+
+body.hoodies-page .pp-filter-left,
+body.hoodies-page .pp-filter-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+body.hoodies-page .pp-btn{
+  border:none;
+  background:transparent;
+  padding:2px 0;
+  cursor:pointer;
+  font:inherit;
+  color: var(--street-ink);
+}
+
+body.hoodies-page .pp-btn:hover{ opacity: 0.85; }
+
+body.hoodies-page .pp-check{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+body.hoodies-page .pp-check span{
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--street-muted);
+}
+
+body.hoodies-page .pp-check input[type="checkbox"]{
+  width:14px;
+  height:14px;
+  border-radius:3px;
+  border:1px solid rgba(255,255,255,0.6);
+  accent-color:#ffffff;
+  background:transparent;
+}
+
+/* =========================================================
+   DRAWER / OVERLAY (OCULTO POR DEFECTO ✅)
+   ========================================================= */
+
+body.hoodies-page #menFiltersOverlay.men-filters-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .22s ease, visibility 0s linear .22s;
+}
+
+body.hoodies-page #menFiltersOverlay.men-filters-overlay.is-open{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .22s ease;
+}
+
+body.hoodies-page #menFiltersDrawer.men-filters-drawer{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(360px, 92vw);
+  z-index: 9999;
+
+  background: var(--hood-shell);
+  color: var(--street-ink);
+
+  transform: translateX(110%);
+  visibility: hidden;
+  pointer-events: none;
+
+  border-left: 1px solid rgba(245,245,239,0.10);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.65);
+
+  transition: transform .26s ease, visibility 0s linear .26s;
+  overflow-y: auto;
+}
+
+body.hoodies-page #menFiltersDrawer.men-filters-drawer.is-open{
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform .26s ease;
+}
+
+/* LED en el borde izquierdo del drawer */
+body.hoodies-page #menFiltersDrawer.men-filters-drawer::before{
+  content:"";
+  position:absolute;
+  top:0; bottom:0; left:0;
+  width:1px;
+  background: var(--hood-led);
+  box-shadow: -6px 0 14px var(--hood-led-soft), -14px 0 24px var(--hood-led-faint);
+  pointer-events:none;
+}
+
+body.hoodies-page .men-filters-head{
+  border-bottom: 1px solid rgba(245,245,239,0.14);
+}
+
+body.hoodies-page .men-filters-title{
+  font-family: var(--font-urban);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--street-ink);
+}
+
+body.hoodies-page .men-filters-tab{
+  font-family: var(--font-urban);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--street-ink);
+  cursor: pointer;
+  opacity: .55;
+  border-bottom: 2px solid transparent;
+  transition: opacity .18s ease-out, transform .18s ease-out, border-color .18s ease-out;
+}
+
+body.hoodies-page .men-filters-tab.is-active{
+  opacity: 1;
+  transform: translateY(-1px);
+  border-bottom-color: var(--hood-brass);
+}
+
+body.hoodies-page .men-filters-panel{ display:none; }
+
+body.hoodies-page .men-filters-panel.is-active{
+  display:block;
+  animation: hoodMenPanelIn .18s ease-out;
+}
+
+@keyframes hoodMenPanelIn{
+  from{ opacity:0; transform: translateX(10px); }
+  to{ opacity:1; transform: translateX(0); }
+}
+
+body.hoodies-page .men-swatch-label{ color: var(--street-muted); }
+
+body.hoodies-page .men-filters-foot{
+  border-top: 0.5px solid rgba(245, 245, 239, 0.918);
+  padding-block: 12px;
+}
+
+body.hoodies-page .men-filters-foot-inner{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:12px;
+  max-width: 480px;
+  margin-left:auto;
+}
+
+body.hoodies-page .men-filters-clear,
+body.hoodies-page .men-filters-cta{
+  width:auto;
+  min-width:0;
+  height:auto;
+  padding:10px 18px;
+  border-radius:999px;
+  font-family: var(--font-urban);
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-align:center;
+  box-sizing:border-box;
+}
+
+body.hoodies-page .men-filters-clear{
+  background: transparent;
+  border: 1px solid rgba(245,245,239,0.60);
+  color: var(--street-ink);
+}
+
+body.hoodies-page .men-filters-cta{
+  background: var(--street-ink);
+  color: #000;
+  border: none;
+}
+
+/* =========================================================
+   PLP GRID · HOODIES COMO CAMISETAS, PERO NOCTURNO
+   Single source of truth
+   ========================================================= */
+
+body.hoodies-page .pp-plp.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+
+  padding-inline: var(--pp-edge-hood);
+  padding-top: 26px;
+  padding-bottom: 80px;
+
+  box-sizing: border-box;
+}
+
+/* Grid igual que camisetas */
+body.hoodies-page #plp-grid.plp-grid,
+body.hoodies-page .pp-plp .plp-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+
+  column-gap: clamp(24px, 3vw, 48px);
+  row-gap: clamp(42px, 5vw, 68px);
+
+  width: 100%;
+  padding: 0;
+  margin: 0;
+
+  align-items: flex-start;
+}
+
+/* 4 columnas editoriales igual que camisetas */
+@media (min-width: 1440px){
+  body.hoodies-page #plp-grid.plp-grid,
+  body.hoodies-page .pp-plp .plp-grid{
+    grid-template-columns: repeat(4, minmax(230px, 1fr));
+  }
+}
+
+/* Card */
+body.hoodies-page #plp-grid .card,
+body.hoodies-page .pp-plp .card,
+body.hoodies-page #plp-grid .product-card,
+body.hoodies-page .pp-plp .product-card{
+  min-width: 0;
+  max-width: none;
+  max-inline-size: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  background: transparent;
+  color: var(--street-ink);
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+}
+
+/* Imagen: mismo ratio que camisetas */
+body.hoodies-page #plp-grid .card-media,
+body.hoodies-page .pp-plp .card-media{
+  display: block;
+  width: 100%;
+  inline-size: 100%;
+
+  aspect-ratio: 3 / 4;
+
+  overflow: hidden;
+  position: relative;
+
+  border: 1px solid rgba(245,245,239,0.18);
+
+  background:
+    radial-gradient(circle at 50% 42%, rgba(245,245,239,0.08), transparent 46%),
+    linear-gradient(180deg, rgba(13,14,18,0.92), rgba(3,4,7,0.98));
+}
+
+/* Imagen contenida */
+body.hoodies-page #plp-grid .card-media img,
+body.hoodies-page .pp-plp .card-media img{
+  display: block;
+
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+
+  object-fit: cover;
+
+  transition: transform .6s cubic-bezier(.25,.15,.25,1);
+}
+
+/* Hover */
+body.hoodies-page #plp-grid .card:hover .card-media img,
+body.hoodies-page .pp-plp .card:hover .card-media img{
+  transform: scale(1.02);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1024px){
+  body.hoodies-page .pp-hero.hero--two-cols{ padding-inline: 24px; }
+  body.hoodies-page .pp-collection-hero.container,
+  body.hoodies-page .pp-filters.container,
+  body.hoodies-page .pp-plp.container{ padding-inline: 24px; }
+}
+
+@media (max-width: 640px){
+  body.hoodies-page .pp-filters.container{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  body.hoodies-page .pp-filter-right{ align-self: flex-end; }
+  body.hoodies-page .plp-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+}
+/* HOODIES · Emblema (emblem.svg) -> blanco */
+body.hoodies-page .pp-header img[src$="emblem.svg"],
+body.hoodies-page .pp-header img[src*="emblem.svg"]{
+  filter: brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,0.55));
+  opacity: .98;
+}
+/* =========================================================
+   FOOTER · HOODIES (Silent Luxury urbano, sin morados raros)
+   ========================================================= */
+
+body.hoodies-page #footer,
+body.hoodies-page .site-footer{
+  background: var(--hood-shell);
+  color: var(--street-ink);
+
+  /* ✅ border-top neutro (no morado) */
+  border-top: 1px solid var(--street-line);
+
+  /* ✅ shadow con contraste (negro premium, no “mancha”) */
+  box-shadow: 0 -26px 64px rgba(243, 240, 240, 0.7);
+
+  position: relative;
+}
+
+/* LED superior (fino y controlado) */
+body.hoodies-page #footer::before,
+body.hoodies-page .site-footer::before{
+  content:"";
+  position:absolute;
+  left:0; right:0; top:0;
+  height:1px;
+  background: var(--hood-led);
+  box-shadow:
+    0 -6px 12px var(--hood-led-soft),
+    0 -14px 22px var(--hood-led-faint);
+  pointer-events:none;
+}
+
+/* Asegura que los “separadores” del footer NO hereden morados */
+body.hoodies-page #footer .footer-inner,
+body.hoodies-page #footer .footer-bottom,
+body.hoodies-page #footer hr,
+body.hoodies-page .site-footer .footer-inner,
+body.hoodies-page .site-footer .footer-bottom,
+body.hoodies-page .site-footer hr{
+  border-top-color: var(--street-line);
+  border-bottom-color: var(--street-line);
+}
+
+/* Si existe franja inferior (footer-bottom), la separamos elegante */
+body.hoodies-page #footer .footer-bottom,
+body.hoodies-page .site-footer .footer-bottom{
+  border-top: 1px solid rgba(228, 74, 228, 0.918);
+  box-shadow: 0 -14px 34px rgba(243, 230, 230, 0.918);
+  background: transparent;
+}
+
+/* Links del footer */
+body.hoodies-page #footer a,
+body.hoodies-page .site-footer a{
+  color: var(--street-muted);
+  text-decoration: none;
+}
+body.hoodies-page #footer a:hover,
+body.hoodies-page .site-footer a:hover{
+  color: var(--street-ink);
+}
+
+/* Logo del footer: emblemblanco.png */
+body.hoodies-page #footer img[src*="emblemblanco.png"],
+body.hoodies-page .site-footer img[src*="emblemblanco.png"]{
+  height: 28px;
+  width: auto;
+  opacity: .98;
+  filter: drop-shadow(0 10px 26px rgba(212, 205, 205, 0.6));
+}
+
+/* Fallback: si aún queda emblem.svg en el footer, lo forzamos a blanco */
+body.hoodies-page #footer img[src*="emblem.svg"],
+body.hoodies-page .site-footer img[src*="emblem.svg"]{
+  filter: brightness(0) invert(1) drop-shadow(0 10px 26px rgba(116, 83, 194, 0.863));
+  opacity: .98;
+}
+/* HOODIES · Forzar texto del footer a blanco (pisa footer.css) */
+body.hoodies-page #footer .footer-bottom.container{
+  color: var(--street-ink);
+}
+
+body.hoodies-page #footer .footer-bottom.container span,
+body.hoodies-page #footer .footer-bottom.container .legal{
+  color: inherit;
+}
+
+/* Links del footer (si quieres más “silent luxury” = un pelín más tenue) */
+body.hoodies-page #footer .footer-bottom.container a{
+  color: var(--street-muted);
+}
+body.hoodies-page #footer .footer-bottom.container a:hover{
+  color: var(--street-ink);
+}
+/* =========================================================
+   HOODIES · Breadcrumb hero en blanco (igual que STREETWEAR)
+   ========================================================= */
+body.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero{
+  align-self: flex-end;
+  text-align: right;
+  background: transparent !important;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 1px 10px rgba(0,0,0,.55);
+  font-size: 12px;
+  letter-spacing: .08em;
+}
+
+body.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link{
+  color: rgba(255,255,255,.92) !important;
+  text-decoration: none;
+}
+
+body.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+body.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__sep{
+  color: rgba(255,255,255,.72) !important;
+}
+
+body.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__current{
+  color: rgba(255,255,255,.92) !important;
+  text-shadow: 0 1px 10px rgba(0,0,0,.55);
+}
+
+
+/* =========================================================
+   HOODIES · Diales X/Y para breadcrumb hero
+   ========================================================= */
+body.hoodies-page{
+  --hood-bc-x: 0px;    /* + derecha / - izquierda */
+  --hood-bc-y: -160px;    /* + abajo   / - arriba */
+}
+
+body.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero{
+  transform: translate(var(--hood-bc-x), var(--hood-bc-y));
+  will-change: transform;
+}
+
+
+/* =========================================================
+   HOODIES · Diales X/Y para hero side (menú derecho)
+   ========================================================= */
+body.hoodies-page{
+  --hood-side-x: 0px;
+  --hood-side-y: 0px;
+}
+
+body.hoodies-page .pp-hero__side{
+  transform: translate(var(--hood-side-x), var(--hood-side-y));
+  will-change: transform;
+}
+
+
+body.hoodies-page{
+  background:
+    /* Glow superior */
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.10), transparent 55%),
+
+    /* Glow inferior */
+    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.06), transparent 60%),
+
+    /* Viñeta lateral */
+    radial-gradient(ellipse at 0% 50%, rgba(0,0,0,0.45), transparent 60%),
+    radial-gradient(ellipse at 100% 50%, rgba(0,0,0,0.45), transparent 60%),
+
+    /* Gradiente vertical */
+    linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65)),
+
+    /* Imagen base */
+    url("../img/backgrounds/hoodies.png");
+
+  background-size:
+    100% 420px,
+    100% 420px,
+    600px 100%,
+    600px 100%,
+    100% 100%,
+    cover;
+
+  background-repeat: no-repeat;
+  background-position:
+    top center,
+    bottom center,
+    left center,
+    right center,
+    center,
+    center;
+
+  background-attachment: fixed;
+}
+
+/* =========================================================
+   HOODIES · FLOATING LOGO RESTORE
+   Mismo sistema que camisetas.css
+   ========================================================= */
+
+body.hoodies-page{
+  --hdr-h: var(--pp-header-h, 72px);
+
+  --hood-logo-x: -81px;
+  --hood-logo-y: -118px;
+  --hood-logo-size: 160px;
+}
+
+body.hoodies-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+body.hoodies-page .pp-hero__media .floating-logo{
+  position: absolute;
+  left: var(--hood-logo-x);
+  top: calc(var(--hdr-h) + var(--hood-logo-y));
+  transform: none !important;
+  display: inline-block;
+  line-height: 0;
+}
+
+body.hoodies-page .pp-hero__media .floating-logo img{
+  height: var(--hood-logo-size);
+  width: auto;
+  display: block;
+  object-fit: contain;
+  max-width: none;
+  filter: drop-shadow(0 14px 30px rgba(0,0,0,0.55));
+}
+
+/* =========================================================
+   HOODIES · Sort dropdown real
+   ========================================================= */
+
+body.hoodies-page .pp-sort {
+  position: relative;
+  display: inline-block;
+}
+
+body.hoodies-page .pp-sort-trigger {
+  list-style: none;
+  cursor: pointer;
+
+  font: 600 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--street-ink);
+}
+
+body.hoodies-page .pp-sort-trigger::-webkit-details-marker {
+  display: none;
+}
+
+body.hoodies-page .pp-sort-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 120;
+
+  min-width: 190px;
+  padding: 8px 0;
+
+  background: rgba(8,9,12,.96);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 18px 48px rgba(0,0,0,.45);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+
+body.hoodies-page .pp-sort-option {
+  width: 100%;
+  display: block;
+
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.82);
+}
+
+body.hoodies-page .pp-sort-option:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+
+/* =========================================================
+   HOODIES HOMBRE · Filters drawer final authority
+   Corrige estructura, espaciado, footer y apertura
+   ========================================================= */
+
+body.hoodies-page #menFiltersOverlay.men-filters-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2600;
+
+  background: rgba(0,0,0,.42);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity .22s ease,
+    visibility 0s linear .22s;
+}
+
+body.hoodies-page #menFiltersOverlay.men-filters-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .22s ease;
+}
+
+body.hoodies-page #menFiltersDrawer.men-filters-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  width: min(540px, 100%);
+  max-width: 100vw;
+  height: 100dvh;
+
+  z-index: 2700;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-inline: clamp(22px, 4vw, 48px);
+
+  background:
+    linear-gradient(180deg, rgba(13,14,18,.98), rgba(7,8,12,.98));
+  color: var(--street-ink, #f5f5ef);
+
+  border-left: 1px solid rgba(255,255,255,.10);
+  box-shadow: -18px 0 48px rgba(0,0,0,.62);
+
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    transform .26s cubic-bezier(.16,.84,.44,1),
+    visibility 0s linear .26s;
+
+  overflow: hidden;
+}
+
+body.hoodies-page #menFiltersDrawer.men-filters-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform .26s cubic-bezier(.16,.84,.44,1);
+}
+
+/* Línea ritual lateral */
+body.hoodies-page #menFiltersDrawer.men-filters-drawer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 1px;
+  background: rgba(255,255,255,.32);
+  box-shadow:
+    -6px 0 14px rgba(255,255,255,.10),
+    -14px 0 24px rgba(160,120,255,.12);
+
+  pointer-events: none;
+}
+
+/* Header */
+body.hoodies-page #menFiltersDrawer .men-filters-head {
+  flex: 0 0 auto;
+  padding: 32px 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-title {
+  margin: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: .04em;
+  text-transform: none;
+
+  color: rgba(255,255,255,.94);
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-close {
+  width: 34px;
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+
+  color: rgba(255,255,255,.92);
+  font-size: 22px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-close:hover {
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.22);
+  transform: rotate(90deg);
+}
+
+/* Tabs */
+body.hoodies-page #menFiltersDrawer .men-filters-tabs {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  margin-top: 18px;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-tab {
+  position: relative;
+
+  border: 0;
+  background: transparent;
+  padding: 6px 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.56);
+  cursor: pointer;
+
+  opacity: 1;
+  transition:
+    color .18s ease,
+    transform .18s ease;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+
+  height: 1px;
+  background: transparent;
+
+  transition: background .18s ease, box-shadow .18s ease;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-tab.is-active {
+  color: rgba(255,255,255,.94);
+  transform: translateY(-1px);
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-tab.is-active::after {
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 0 16px rgba(255,255,255,.20);
+}
+
+/* Body */
+body.hoodies-page #menFiltersDrawer .men-filters-body {
+  flex: 1 1 auto;
+
+  padding: 24px 0 18px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: block;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-panel {
+  display: none;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-panel.is-active {
+  display: block;
+  animation: hoodDrawerPanelIn .18s ease-out;
+}
+
+@keyframes hoodDrawerPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Lista colores */
+body.hoodies-page #menFiltersDrawer .men-swatch-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 34px;
+}
+
+body.hoodies-page #menFiltersDrawer .men-swatch {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 28px;
+
+  cursor: pointer;
+}
+
+body.hoodies-page #menFiltersDrawer .men-swatch-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+body.hoodies-page #menFiltersDrawer .men-swatch-label,
+body.hoodies-page #menFiltersDrawer .men-check {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.3;
+  color: rgba(255,255,255,.78);
+}
+
+body.hoodies-page #menFiltersDrawer .men-swatch-dot {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.28);
+}
+
+body.hoodies-page #menFiltersDrawer .men-swatch-input:checked + .men-swatch-dot {
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.92),
+    0 0 18px rgba(255,255,255,.14);
+}
+
+/* Tallas */
+body.hoodies-page #menFiltersDrawer .men-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+/* Footer */
+body.hoodies-page #menFiltersDrawer .men-filters-foot {
+  flex: 0 0 auto;
+
+  position: sticky;
+  bottom: 0;
+
+  padding: 16px 0 24px;
+
+  border-top: 1px solid rgba(255,255,255,.10);
+  background:
+    linear-gradient(180deg, rgba(7,8,12,0), rgba(7,8,12,.96) 36%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-foot-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-clear,
+body.hoodies-page #menFiltersDrawer .men-filters-cta {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 16px;
+  border-radius: 999px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-clear {
+  border: 1px solid rgba(255,255,255,.22);
+  background: transparent;
+  color: rgba(255,255,255,.82);
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-cta {
+  margin-left: auto;
+
+  border: 1px solid rgba(255,255,255,.92);
+  background: rgba(255,255,255,.92);
+  color: #08090c;
+}
+
+@media (max-width: 640px) {
+  body.hoodies-page #menFiltersDrawer.men-filters-drawer {
+    width: 100%;
+    padding-inline: 20px;
+  }
+
+  body.hoodies-page #menFiltersDrawer .men-swatch-list {
+    grid-template-columns: 1fr;
+  }
+
+  body.hoodies-page #menFiltersDrawer .men-filters-foot-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.hoodies-page #menFiltersDrawer .men-filters-clear,
+  body.hoodies-page #menFiltersDrawer .men-filters-cta {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   HOODIES HOMBRE · Drawer micro-fix final
+   Centrado X + separación CTA "Ver resultados"
+   ========================================================= */
+
+body.hoodies-page #menFiltersDrawer .men-filters-close {
+  position: relative;
+  display: grid !important;
+  place-items: center !important;
+
+  width: 34px;
+  height: 34px;
+  padding: 0 !important;
+
+  font-size: 0 !important;
+  line-height: 1 !important;
+  text-align: center;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-close::before {
+  content: "×";
+  display: block;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+
+  transform: translateY(-1px);
+  color: rgba(255,255,255,.92);
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-cta {
+  gap: 8px;
+  white-space: nowrap;
+}
+
+body.hoodies-page #menFiltersDrawer .men-filters-cta span,
+body.hoodies-page #menFiltersDrawer .men-filters-cta [id*="ResultsCount"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 1ch;
+  margin-inline: 2px;
+
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+/* =========================================================
+   PROPHETIA · HOODIES · Y2K LUX LED BOOST
+   Añadir AL FINAL de hoodies.css
+   No toca floating-logo ni breadcrumbs.
+   ========================================================= */
+
+body.hoodies-page{
+  --hood-y2k-led-core: rgba(245,245,239,.92);
+  --hood-y2k-led-warm: rgba(255,214,158,.46);
+  --hood-y2k-led-violet: rgba(160,120,255,.62);
+  --hood-y2k-led-violet-soft: rgba(160,120,255,.28);
+  --hood-y2k-led-violet-faint: rgba(160,120,255,.13);
+  --hood-y2k-panel: rgba(5,6,10,.78);
+  --hood-y2k-panel-strong: rgba(5,6,10,.92);
+}
+
+/* HEADER: LED visible, urbano, pero más fino que el blanco quemado */
+body.hoodies-page .pp-topbar,
+body.hoodies-page .pp-header{
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(5,6,10,.64),
+      rgba(5,6,10,.40)
+    );
+
+  border-bottom: 1px solid rgba(245,245,239,.34);
+
+  box-shadow:
+    0 8px 18px rgba(245,245,239,.16),
+    0 18px 42px rgba(0,0,0,.48),
+    inset 0 -1px 0 rgba(160,120,255,.22);
+
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+}
+
+/* Línea LED header: más “tubo de luz Y2K”, no borde plano */
+body.hoodies-page .pp-header::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--hood-y2k-led-violet) 18%,
+      var(--hood-y2k-led-core) 48%,
+      var(--hood-y2k-led-warm) 58%,
+      var(--hood-y2k-led-violet) 82%,
+      transparent 100%
+    );
+
+  box-shadow:
+    0 0 8px rgba(245,245,239,.48),
+    0 0 18px var(--hood-y2k-led-violet-soft),
+    0 12px 32px var(--hood-y2k-led-violet-faint);
+
+  opacity: .95;
+  pointer-events:none;
+}
+
+/* Buscador: Y2K glass, no caja gris */
+body.hoodies-page .search-inline input{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
+
+  border: 1px solid rgba(245,245,239,.36);
+  color: var(--street-ink);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 0 18px rgba(160,120,255,.08);
+}
+
+body.hoodies-page .search-inline input:focus{
+  outline: none;
+  border-color: rgba(245,245,239,.72);
+
+  box-shadow:
+    0 0 0 1px rgba(160,120,255,.28),
+    0 0 22px rgba(160,120,255,.22),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+/* TOOLBAR FILTROS: mantener LED potente pero más premium */
+body.hoodies-page .pp-filters.container{
+  background:
+    linear-gradient(180deg, rgba(8,9,13,.86), rgba(4,5,8,.94));
+
+  border-top: 1px solid rgba(245,245,239,.36);
+  border-bottom: 1px solid rgba(245,245,239,.42);
+
+  box-shadow:
+    0 -6px 18px rgba(245,245,239,.12),
+    0 8px 24px rgba(160,120,255,.14),
+    0 24px 52px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(160,120,255,.18);
+}
+
+/* LED superior/inferior de toolbar: visible y Y2K */
+body.hoodies-page .pp-filters.container::before,
+body.hoodies-page .pp-filters.container::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  height:2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--hood-y2k-led-violet) 15%,
+      var(--hood-y2k-led-core) 50%,
+      var(--hood-y2k-led-warm) 62%,
+      var(--hood-y2k-led-violet) 85%,
+      transparent 100%
+    );
+
+  pointer-events:none;
+}
+
+body.hoodies-page .pp-filters.container::before{
+  top:0;
+  box-shadow:
+    0 -2px 10px rgba(245,245,239,.36),
+    0 -10px 26px var(--hood-y2k-led-violet-soft);
+}
+
+body.hoodies-page .pp-filters.container::after{
+  bottom:0;
+  box-shadow:
+    0 2px 10px rgba(245,245,239,.36),
+    0 12px 30px var(--hood-y2k-led-violet-soft);
+}
+
+/* Botones filtro: más “streetwear premium” */
+body.hoodies-page .pp-btn{
+  position: relative;
+  color: var(--street-ink);
+  opacity: .96;
+  transition:
+    color .18s ease,
+    opacity .18s ease,
+    text-shadow .18s ease,
+    transform .18s ease;
+}
+
+body.hoodies-page .pp-btn:hover{
+  color: #fff;
+  opacity: 1;
+  transform: translateY(-1px);
+  text-shadow:
+    0 0 10px rgba(245,245,239,.32),
+    0 0 18px rgba(160,120,255,.26);
+}
+
+/* Checkbox in stock: que parezca parte del sistema LED */
+body.hoodies-page .pp-check input[type="checkbox"]{
+  border-color: rgba(245,245,239,.72);
+  box-shadow:
+    0 0 10px rgba(160,120,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+body.hoodies-page .pp-check input[type="checkbox"]:checked{
+  accent-color: #f5f5ef;
+  box-shadow:
+    0 0 12px rgba(245,245,239,.34),
+    0 0 22px rgba(160,120,255,.22);
+}
+
+/* CARDS: streetwear Y2K sin tocar grid */
+body.hoodies-page #plp-grid .card-media,
+body.hoodies-page .pp-plp .card-media{
+  border: 1px solid rgba(245,245,239,.18);
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(245,245,239,.08), transparent 42%),
+    radial-gradient(circle at 100% 100%, rgba(160,120,255,.07), transparent 38%),
+    rgba(0,0,0,.18);
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 0 0 1px rgba(160,120,255,.035);
+
+  transition:
+    border-color .24s ease,
+    box-shadow .24s ease,
+    transform .24s ease,
+    background .24s ease;
+}
+
+body.hoodies-page #plp-grid .card:hover .card-media,
+body.hoodies-page .pp-plp .card:hover .card-media{
+  border-color: rgba(245,245,239,.36);
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(245,245,239,.11), transparent 44%),
+    radial-gradient(circle at 100% 100%, rgba(160,120,255,.12), transparent 40%),
+    rgba(0,0,0,.22);
+
+  box-shadow:
+    0 24px 56px rgba(0,0,0,.58),
+    0 0 22px rgba(245,245,239,.10),
+    0 0 34px rgba(160,120,255,.13),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  transform: translateY(-2px);
+}
+
+/* Imagen con microcontraste editorial */
+body.hoodies-page #plp-grid .card:hover .card-media img,
+body.hoodies-page .pp-plp .card:hover .card-media img{
+  transform: scale(1.025);
+  filter:
+    contrast(1.04)
+    brightness(1.03)
+    saturate(1.02);
+}
+
+/* Texto card: más claro y premium */
+body.hoodies-page #plp-grid .card-title,
+body.hoodies-page .pp-plp .card-title,
+body.hoodies-page #plp-grid .card__title,
+body.hoodies-page .pp-plp .card__title,
+body.hoodies-page #plp-grid .product-card__title,
+body.hoodies-page .pp-plp .product-card__title{
+  color: rgba(245,245,239,.96);
+  letter-spacing: .035em;
+}
+
+body.hoodies-page #plp-grid .card-price,
+body.hoodies-page .pp-plp .card-price,
+body.hoodies-page #plp-grid .card__price,
+body.hoodies-page .pp-plp .card__price,
+body.hoodies-page #plp-grid .product-card__price,
+body.hoodies-page .pp-plp .product-card__price{
+  color: rgba(201,165,107,.92);
+  letter-spacing: .08em;
+}
+
+/* Wishlist button: blanco Y2K con glow */
+body.hoodies-page #plp-grid .save-btn,
+body.hoodies-page .pp-plp .save-btn{
+  background: rgba(245,245,239,.96);
+  color: #07080b;
+
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.42),
+    0 0 18px rgba(245,245,239,.16),
+    0 0 24px rgba(160,120,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.54);
+}
+
+body.hoodies-page #plp-grid .save-btn:hover,
+body.hoodies-page .pp-plp .save-btn:hover{
+  background: #fff;
+  transform: scale(1.055);
+
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.48),
+    0 0 22px rgba(245,245,239,.28),
+    0 0 34px rgba(160,120,255,.22);
+}
+
+/* FOOTER: corregir luz sin matar el LED */
+body.hoodies-page #footer,
+body.hoodies-page .site-footer{
+  border-top: 1px solid rgba(245,245,239,.24);
+
+  box-shadow:
+    0 -8px 20px rgba(245,245,239,.08),
+    0 -24px 58px rgba(0,0,0,.62);
+}
+
+body.hoodies-page #footer::before,
+body.hoodies-page .site-footer::before{
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--hood-y2k-led-violet) 16%,
+      var(--hood-y2k-led-core) 50%,
+      var(--hood-y2k-led-warm) 62%,
+      var(--hood-y2k-led-violet) 84%,
+      transparent 100%
+    );
+
+  box-shadow:
+    0 -2px 10px rgba(245,245,239,.32),
+    0 -12px 30px var(--hood-y2k-led-violet-soft);
+}
+
+/* Footer bottom: quitar rosa chillón pero mantener glow */
+body.hoodies-page #footer .footer-bottom,
+body.hoodies-page .site-footer .footer-bottom{
+  border-top: 1px solid rgba(245,245,239,.18);
+
+  box-shadow:
+    0 -4px 14px rgba(245,245,239,.08),
+    0 -16px 34px rgba(160,120,255,.10);
+}
+
+/* =========================================================
+   HOODIES · FIX TEXTO CARD GRID
+   Hace visibles título, descripción y precio del producto
+   ========================================================= */
+
+body.hoodies-page #plp-grid .card-body,
+body.hoodies-page .pp-plp .card-body{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  padding-top: 12px;
+  min-height: auto;
+
+  background: transparent !important;
+  color: var(--street-ink) !important;
+}
+
+/* Título producto */
+body.hoodies-page #plp-grid .card-title,
+body.hoodies-page .pp-plp .card-title,
+body.hoodies-page #plp-grid .card-body h3,
+body.hoodies-page .pp-plp .card-body h3{
+  margin: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.25;
+
+  letter-spacing: 0.035em;
+  color: rgba(245,245,239,0.96) !important;
+}
+
+/* Descripción / subtítulo */
+body.hoodies-page #plp-grid .card-sub,
+body.hoodies-page .pp-plp .card-sub,
+body.hoodies-page #plp-grid .card-body p,
+body.hoodies-page .pp-plp .card-body p{
+  margin: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.76rem;
+  font-weight: 400;
+  line-height: 1.45;
+
+  letter-spacing: 0.015em;
+  color: rgba(245,245,239,0.68) !important;
+
+  max-width: 30ch;
+}
+
+/* Precio / meta */
+body.hoodies-page #plp-grid .card-meta,
+body.hoodies-page .pp-plp .card-meta{
+  margin-top: 4px;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.2;
+
+  letter-spacing: 0.07em;
+  color: rgba(201,165,107,0.94) !important;
+}
+
+/* Enlaces dentro de la card */
+body.hoodies-page #plp-grid .card-body a,
+body.hoodies-page .pp-plp .card-body a{
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Hover editorial */
+body.hoodies-page #plp-grid .card:hover .card-title,
+body.hoodies-page .pp-plp .card:hover .card-title{
+  color: #fff !important;
+}
+
+body.hoodies-page #plp-grid .card:hover .card-sub,
+body.hoodies-page .pp-plp .card:hover .card-sub{
+  color: rgba(245,245,239,0.82) !important;
+}
+
+/* =========================================================
+   HOODIES · FOOTER BOTTOM CLEAN FIX
+   Quita el marco falso sin tocar logo ni estructura superior
+   ========================================================= */
+
+body.hoodies-page #footer .footer-bottom,
+body.hoodies-page .site-footer .footer-bottom,
+body.hoodies-page #footer .footer-bottom.container,
+body.hoodies-page .site-footer .footer-bottom.container{
+  background: transparent !important;
+
+  box-shadow: none !important;
+
+  border-top: 1px solid rgba(245,245,239,0.12) !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+
+  color: var(--street-ink) !important;
+}
+
+/* Mantener el footer-bottom centrado pero sin parecer caja */
+body.hoodies-page #footer .footer-bottom.container,
+body.hoodies-page .site-footer .footer-bottom.container{
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+
+  padding: 22px var(--pp-edge-hood) 28px !important;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  text-align: center;
+}
+
+/* Links legales centrados */
+body.hoodies-page #footer .footer-bottom .legal,
+body.hoodies-page .site-footer .footer-bottom .legal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  width: 100%;
+}
+
+/* Quitar cualquier pseudo marco heredado */
+body.hoodies-page #footer .footer-bottom::before,
+body.hoodies-page #footer .footer-bottom::after,
+body.hoodies-page .site-footer .footer-bottom::before,
+body.hoodies-page .site-footer .footer-bottom::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* =========================================================
+   HOODIES · FOOTER BOTTOM X DIAL
+   Mueve solo el bloque inferior del footer en eje X
+   ========================================================= */
+
+body.hoodies-page{
+  --hood-footer-bottom-x: 150px; /* + derecha / - izquierda */
+}
+
+body.hoodies-page #footer .footer-bottom.container,
+body.hoodies-page .site-footer .footer-bottom.container{
+  transform: translateX(var(--hood-footer-bottom-x));
+  will-change: transform;
+}
+
+/* =========================================================
+   HOODIES · FOOTER LEGAL POSITION DIAL
+   Mueve solo el div.legal dentro del footer-bottom
+   ========================================================= */
+
+body.hoodies-page{
+  --hood-footer-legal-x: -70px;  /* + derecha / - izquierda */
+  --hood-footer-legal-y: 0px;  /* + abajo / - arriba */
+}
+
+body.hoodies-page #footer .footer-bottom .legal,
+body.hoodies-page .site-footer .footer-bottom .legal{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  width: 100%;
+  gap: 16px;
+
+  margin-top: 4px;
+
+  transform: translate(
+    var(--hood-footer-legal-x),
+    var(--hood-footer-legal-y)
+  );
+
+  will-change: transform;
+}
+
+/* =========================================================
+   HOODIES · PP-HERO-TITLE ZONE BLEND
+   Rellena la franja del h3 vacío sin tocar grid ni fondo hoodies.png
+   ========================================================= */
+
+/* No tocar .pp-collection-page: puede afectar al grid */
+body.hoodies-page .pp-collection-page{
+  display: block !important;
+  background: transparent !important;
+}
+
+/* Solo la franja vacía bajo el hero */
+body.hoodies-page .pp-collection-hero.container{
+  max-width: none !important;
+  width: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  min-height: 34px; /* ajusta aquí el alto de esa zona */
+
+  box-sizing: border-box;
+
+  /* Similar al ambiente del hero/hoodies, sin tapar hoodies.png */
+  background:
+    radial-gradient(circle at 18% 0%, rgba(160,120,255,0.055), transparent 40%),
+    radial-gradient(circle at 72% 0%, rgba(245,245,239,0.045), transparent 42%),
+    radial-gradient(circle at 48% 100%, rgba(255,214,158,0.040), transparent 54%),
+    rgba(5,6,10,0.16) !important;
+}
+
+/* El h3 está vacío: que no añada margen ni altura extra */
+body.hoodies-page .pp-collection-hero #pp-hero-title,
+body.hoodies-page .pp-collection-hero .pp-hero-title{
+  margin: 0 !important;
+  padding: 0 !important;
+
+  height: 0 !important;
+  min-height: 0 !important;
+
+  font-size: 0 !important;
+  line-height: 0 !important;
+
+  overflow: hidden !important;
+}
+
+/* =========================================================
+   HOODIES · Y2K NIGHT LAYER
+   Añade estética Y2K sin tapar hoodies.png
+   ========================================================= */
+
+body.hoodies-page{
+  --hood-y2k-pink: rgba(245,138,216,0.18);
+  --hood-y2k-violet: rgba(160,120,255,0.24);
+  --hood-y2k-blue: rgba(83,168,255,0.16);
+  --hood-y2k-white: rgba(245,245,239,0.78);
+}
+
+/* Hero: capa de luz transparente, NO tapa el png */
+body.hoodies-page .pp-hero.hero--two-cols{
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Glow Y2K sobre el hero */
+body.hoodies-page .pp-hero.hero--two-cols::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 14% 20%, var(--hood-y2k-pink), transparent 32%),
+    radial-gradient(circle at 82% 22%, var(--hood-y2k-blue), transparent 36%),
+    radial-gradient(circle at 52% 95%, var(--hood-y2k-violet), transparent 46%),
+    linear-gradient(
+      180deg,
+      rgba(5,6,10,0.00) 0%,
+      rgba(5,6,10,0.10) 60%,
+      rgba(5,6,10,0.24) 100%
+    );
+
+  mix-blend-mode: screen;
+  opacity: 0.72;
+}
+
+/* Estrella Y2K junto al título HOODIES */
+body.hoodies-page .pp-hero__title::after{
+  content: "✦";
+  margin-left: 12px;
+
+  color: rgba(245,138,216,0.82);
+  text-shadow:
+    0 0 10px rgba(245,138,216,0.42),
+    0 0 22px rgba(160,120,255,0.32);
+
+  opacity: 0.9;
+}
+
+/* Menú lateral con glow fino */
+body.hoodies-page .pp-hero__list a{
+  text-shadow:
+    0 0 10px rgba(160,120,255,0.14),
+    0 0 18px rgba(83,168,255,0.08);
+}
+
+body.hoodies-page .pp-hero__list a:hover,
+body.hoodies-page .pp-hero__list a[aria-current="page"]{
+  color: #fff !important;
+  border-bottom-color: rgba(245,138,216,0.62) !important;
+
+  text-shadow:
+    0 0 10px rgba(245,138,216,0.32),
+    0 0 20px rgba(160,120,255,0.26);
+}
+
+/* Zona del h3 vacío: mantener textura pero con ambiente Y2K */
+body.hoodies-page .pp-collection-hero.container{
+  background:
+    radial-gradient(circle at 16% 0%, rgba(245,138,216,0.055), transparent 40%),
+    radial-gradient(circle at 74% 0%, rgba(83,168,255,0.055), transparent 42%),
+    radial-gradient(circle at 48% 100%, rgba(160,120,255,0.075), transparent 54%),
+    rgba(5,6,10,0.10) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(245,245,239,0.04),
+    inset 0 -1px 0 rgba(245,138,216,0.08);
+}
+
+/* Toolbar: más Y2K, menos blanco quemado */
+body.hoodies-page .pp-filters.container{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(8,9,13,0.74),
+      rgba(4,5,8,0.90)
+    ) !important;
+
+  border-top: 1px solid rgba(245,245,239,0.34) !important;
+  border-bottom: 1px solid rgba(245,245,239,0.42) !important;
+
+  box-shadow:
+    0 -6px 18px rgba(245,245,239,0.10),
+    0 8px 24px rgba(160,120,255,0.18),
+    0 18px 42px rgba(245,138,216,0.08),
+    0 24px 52px rgba(0,0,0,0.48),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -1px 0 rgba(245,138,216,0.16) !important;
+}
+
+/* Línea LED con violeta + rosa + azul hielo */
+body.hoodies-page .pp-filters.container::before,
+body.hoodies-page .pp-filters.container::after{
+  height: 2px !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(245,138,216,0.42) 14%,
+      rgba(160,120,255,0.62) 32%,
+      rgba(245,245,239,0.92) 50%,
+      rgba(83,168,255,0.42) 68%,
+      rgba(160,120,255,0.58) 84%,
+      transparent 100%
+    ) !important;
+}
+
+/* Cards: un toque chrome/Y2K más visible */
+body.hoodies-page #plp-grid .card-media,
+body.hoodies-page .pp-plp .card-media{
+  border-color: rgba(245,245,239,0.20) !important;
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,0.50),
+    0 0 0 1px rgba(160,120,255,0.045),
+    inset 0 1px 0 rgba(255,255,255,0.055) !important;
+}
+
+body.hoodies-page #plp-grid .card:hover .card-media,
+body.hoodies-page .pp-plp .card:hover .card-media{
+  border-color: rgba(245,138,216,0.36) !important;
+
+  box-shadow:
+    0 24px 56px rgba(0,0,0,0.58),
+    0 0 22px rgba(245,245,239,0.12),
+    0 0 34px rgba(160,120,255,0.16),
+    0 0 38px rgba(245,138,216,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+/* Precio con acento más urbano */
+body.hoodies-page #plp-grid .card-meta,
+body.hoodies-page .pp-plp .card-meta{
+  color: rgba(245,138,216,0.88) !important;
+  text-shadow: 0 0 14px rgba(245,138,216,0.14);
+}
+
+/* =========================================================
+   HOODIES · MERGE BB-SPACER INTO HERO
+   Igual que Streetwear: el espacio vive dentro del hero
+   sin tapar hoodies.png ni tocar floating logo/breadcrumbs
+   ========================================================= */
+
+body.hoodies-page{
+  --hood-hero-base-h: 260px;
+  --hood-hero-extra-space: clamp(40px, 6vw, 90px);
+}
+
+/* El hero ocupa también el espacio que antes ocupaba bb-spacer */
+body.hoodies-page .pp-hero.hero--two-cols{
+  min-height: calc(
+    var(--hood-hero-base-h) + var(--hood-hero-extra-space)
+  ) !important;
+
+  margin-bottom: 0 !important;
+
+  /* Importante: no pintar fondo para no tapar hoodies.png */
+  background: transparent !important;
+}
+
+/* El spacer desaparece, pero su altura ya vive dentro del hero */
+body.hoodies-page .bb-spacer{
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+}
+
+/* Toolbar justo después del hero */
+body.hoodies-page .pp-filters.container{
+  margin-top: 0 !important;
+}

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+Disallow: /checkout
+Disallow: /checkout-success
+Disallow: /my-content
+Disallow: /pedidos
+Disallow: /reservas
+Disallow: /wishlist
+Disallow: /account
+Disallow: /addresses
+Disallow: /my-services
+
+Sitemap: https://prophetia.es/sitemap.xml

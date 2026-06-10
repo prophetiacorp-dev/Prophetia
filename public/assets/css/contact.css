@@ -1,0 +1,152 @@
+/* =========================================================
+   PROPHETIA · Contact Page
+   Página: contact.html
+   Estilo: Silent Luxury editorial
+   ========================================================= */
+
+body.contact-page {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(214, 198, 170, .18), transparent 34%),
+    linear-gradient(135deg, #fdfaf6 0%, #fff 48%, #f4efe7 100%);
+}
+
+/* Evita que el logo quede demasiado pegado al header */
+body.contact-page .legal-shell {
+  width: min(1040px, calc(100% - 32px));
+  padding-top: clamp(58px, 7vw, 112px);
+}
+
+/* Logo más editorial y centrado en Contact */
+body.contact-page .legal-logo {
+  display: block;
+  width: fit-content;
+  margin: 0 auto clamp(42px, 6vw, 72px);
+
+  font-size: clamp(52px, 8vw, 96px);
+  text-align: center;
+}
+
+/* Card más premium, menos “caja de formulario” */
+body.contact-page .legal-card {
+  max-width: 980px;
+  margin: 0 auto;
+  background: rgba(255,255,255,.76);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: clamp(22px, 2vw, 34px);
+  box-shadow:
+    0 40px 110px rgba(0,0,0,.07),
+    inset 0 1px 0 rgba(255,255,255,.72);
+}
+
+/* Titular más equilibrado */
+body.contact-page .legal-card h1 {
+  max-width: 720px;
+  margin-bottom: clamp(34px, 5vw, 54px);
+}
+
+/* Secciones más respiradas */
+body.contact-page .legal-card section {
+  display: grid;
+  gap: 14px;
+  padding: clamp(30px, 4vw, 44px) 0;
+}
+
+/* Texto más cómodo */
+body.contact-page .legal-card p {
+  max-width: 760px;
+}
+
+/* Botonera editorial */
+body.contact-page .legal-actions {
+  gap: 14px;
+  margin-top: 8px;
+}
+
+/* Botones de contacto: finos, centrados y legibles */
+body.contact-page .legal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 168px;
+  min-height: 46px;
+  padding: 0 24px;
+
+  border-radius: 999px;
+  text-decoration: none;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+
+  transition:
+    transform 220ms cubic-bezier(.22,.61,.36,1),
+    background-color 220ms cubic-bezier(.22,.61,.36,1),
+    color 220ms cubic-bezier(.22,.61,.36,1),
+    border-color 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+body.contact-page .legal-btn--dark {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+body.contact-page .legal-btn--ghost {
+  background: rgba(255,255,255,.42);
+  border-color: rgba(0,0,0,.22);
+  color: #111;
+}
+
+body.contact-page .legal-btn:hover,
+body.contact-page .legal-btn:focus-visible {
+  transform: translateY(-1px);
+}
+
+body.contact-page .legal-btn--dark:hover,
+body.contact-page .legal-btn--dark:focus-visible {
+  background: #2a2a2a;
+  border-color: #2a2a2a;
+  color: #fff;
+}
+
+body.contact-page .legal-btn--ghost:hover,
+body.contact-page .legal-btn--ghost:focus-visible {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+/* Defensa por si el drawer del carrito no recibe bien su CSS global */
+body.contact-page #ppCartDrawer[aria-hidden="true"],
+body.contact-page .pp-cart-drawer[aria-hidden="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  body.contact-page .legal-shell {
+    width: min(100% - 24px, 720px);
+    padding-top: 38px;
+  }
+
+  body.contact-page .legal-logo {
+    margin-bottom: 34px;
+  }
+
+  body.contact-page .legal-actions {
+    align-items: stretch;
+  }
+
+  body.contact-page .legal-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

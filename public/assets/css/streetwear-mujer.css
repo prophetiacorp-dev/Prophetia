@@ -1,0 +1,1429 @@
+  /* =========================================================
+    PROPHETIA · STREETWEAR MUJER (scope único)
+    Objetivo: LED luxury + continuidad total (sin escalones)
+    Scope: body.women-page.streetwear-page
+    ========================================================= */
+
+  /* Carga de fuente (SÍ se queda) */
+  @font-face{
+    font-family: "Mistral";
+    src: url("../fonts/MISTRAL.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* 1) Header/topbar SIEMPRE UI */
+  body.women-page.streetwear-page .pp-header,
+  body.women-page.streetwear-page .pp-topbar{
+    font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  /* 2) Contenido (todo menos header) -> Mistral */
+  body.women-page.streetwear-page main{
+    font-family: "Mistral", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 22px;      /* sube aquí de verdad */
+    line-height: 1.55;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Tipografía real (pisa typography.css)
+    - typography.css fuerza p{15px}; aquí lo anulamos solo en esta página
+    ========================================================= */
+
+  body.women-page.streetwear-page main :where(p, li){
+    font-size: 1em;      /* vuelve a heredar el tamaño del main (22px) */
+    line-height: inherit;
+  }
+
+  /* Ajuste fino opcional por zonas */
+  /* NO escalar tipografía dentro de PLP cards */
+  body.women-page.streetwear-page #plp-grid :where(p, li){
+    font-size: revert;
+    line-height: revert;
+  }
+
+
+  /* 3) Si dentro del main tienes inputs/botones que deben seguir en UI */
+  body.women-page.streetwear-page main button,
+  body.women-page.streetwear-page main input,
+  body.women-page.streetwear-page main select,
+  body.women-page.streetwear-page main textarea{
+    font-family: var(--font-ui, Inter, system-ui, sans-serif);
+    font-size: 14px;
+  }
+
+  body.women-page.streetwear-page{
+    /* =============================
+      Layout
+      ============================= */
+    --pp-edge-sw: 40px;
+
+    /* Ajustes finos (panel y logo) */
+    --hero-side-x-sw: 210px;
+    --hero-side-y-sw: 170px;
+
+    --logo-x-sw: -30px;
+    --logo-y-sw: -100px;
+
+    /* =============================
+      Color / Glass
+      ============================= */
+    --sw-ink: rgba(255,255,255,.92);
+    --sw-muted: rgba(255,255,255,.70);
+
+    --sw-glass: rgba(6,7,10,.42);
+    --sw-glass-strong: rgba(6,7,10,.62);
+
+    /* Nav icon (carrusel) */
+    --pp-nav-size: 44px;
+    --pp-nav-icon: url("/assets/img/logo/emblemblancovf.svg");
+    --pp-nav-icon-size: 22px;
+    --pp-nav-bg: rgba(6,7,10,.58);
+    --pp-nav-border: rgba(255,255,255,.18);
+    --pp-nav-blur: 10px;
+
+    /* Fondo zebra/grain */
+    --sw-bg: #050607;
+    --sw-zebra-opacity: .07;
+    --sw-grain-opacity: .10;
+    --sw-zebra-scale: 720px;
+    --sw-grain-scale: 180px;
+
+    background: var(--sw-bg);
+    min-height: 100vh;
+    position: relative;
+    isolation: isolate;
+  }
+
+
+
+  /* Gutter responsive */
+  @media (max-width: 1024px){
+    body.women-page.streetwear-page{ --pp-edge-sw: 24px; }
+    
+  }
+
+  /* ===== Carriles a ancho completo, sin “cajas” ===== */
+  body.women-page.streetwear-page .pp-hero.hero--two-cols,
+  body.women-page.streetwear-page .pp-plp{
+    font-family: "Mistral", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 22px;
+    line-height: 1.55;
+  }
+
+  /* =========================================================
+    STREETWEAR MUJER · “STREETWEAR” en Mistral blanco
+    (typography.css fuerza h2 con font-display !important)
+    ========================================================= */
+  body.women-page.streetwear-page .pp-hero__title{
+    font-family: "Mistral", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
+    color: #fff; /* blanco */
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: .02em;
+    text-shadow: 0 1px 14px rgba(0,0,0,.55);
+  }
+
+
+  /* ===== HEADER/TOPBAR: continuidad (sin escalón) ===== */
+  body.women-page.streetwear-page .pp-topbar,
+  body.women-page.streetwear-page .pp-header{
+    background: linear-gradient(to bottom, var(--sw-glass-strong), var(--sw-glass));
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+
+    /* Importante: no “borde”, solo halo integrado */
+    border: 0;
+    box-shadow:
+      0 10px 30px rgba(0,0,0,.55),                 /* profundidad */
+      inset 0 -1px 0 rgba(255,255,255,.06),        /* línea editorial inferior */
+      inset 0 1px 0 rgba(255,255,255,.04);         /* línea editorial superior */
+
+  }
+
+  /* Links/icons blancos */
+  body.women-page.streetwear-page .pp-header a,
+  body.women-page.streetwear-page .pp-header button,
+  body.women-page.streetwear-page .pp-topbar a,
+  body.women-page.streetwear-page .pp-topbar button{
+    color: var(--sw-ink);
+    text-shadow: 0 1px 10px rgba(0,0,0,.55);
+  }
+
+  /* ===== HERO: sin cajas, solo atmósfera ===== */
+  body.women-page.streetwear-page .pp-hero.hero--two-cols{
+    background: transparent;
+    padding-top: 42px;
+    padding-bottom: 26px;
+  }
+
+
+
+  /* Header/topbar mantienen la tipografía UI del sistema */
+  body.women-page.streetwear-page .pp-header,
+  body.women-page.streetwear-page .pp-topbar{
+    font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  body.women-page.streetwear-page .pp-header *,
+  body.women-page.streetwear-page .pp-topbar *{
+    font-family: inherit;
+  }
+
+
+  /* Links */
+  body.women-page.streetwear-page .pp-hero__list a{
+    color: var(--sw-muted);
+  }
+  body.women-page.streetwear-page .pp-hero__list a:hover{
+    color: var(--sw-ink);
+  }
+
+
+
+  /* =========================================================
+    STREETWEAR MUJER · Filters bar (luxury glass)
+    ========================================================= */
+
+  /* Tokens solo para filtros (no ensuciamos el resto) */
+  body.women-page.streetwear-page{
+    --sw-filters-radius: 16px;
+    --sw-filters-hairline: rgba(255,255,255,.10);
+    --sw-filters-hairline-soft: rgba(255,255,255,.06);
+    --sw-filters-bg-top: rgba(10,12,16,.62);
+    --sw-filters-bg-bot: rgba(6,7,10,.44);
+    --sw-filters-shadow: 0 18px 55px rgba(0,0,0,.55);
+    --sw-filters-pad-y: 12px;
+    --sw-filters-pad-x: 14px;
+    --sw-filters-gap: 10px;
+  }
+
+  /* Barra sticky glass */
+  /* =========================
+    STREETWEAR · TOOLBAR (FILTROS)
+    - Estilo HOODIES adaptado (editorial, sin cajas)
+    ========================= */
+  body.women-page.streetwear-page .pp-filters.container{
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 10px var(--pp-edge-sw);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    position: sticky;
+    top: var(--pp-header-h, 64px);
+    z-index: 50;
+
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  body.women-page.streetwear-page .pp-filter-left,
+  body.women-page.streetwear-page .pp-filter-right{
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+
+  /* Botones: editorial (sin cápsulas, sin fondo) */
+  body.women-page.streetwear-page .pp-filters .pp-btn{
+    background: transparent;
+    border: 0;
+    padding: 2px 0;
+    border-radius: 0;
+    cursor: pointer;
+    font: inherit;
+    color: var(--sw-ink);
+    text-shadow: 0 1px 10px rgba(0,0,0,.55);
+  }
+
+  body.women-page.streetwear-page .pp-filters .pp-btn:hover{
+    opacity: .75;
+  }
+
+  /* Checks */
+  body.women-page.streetwear-page .pp-filters .pp-check span{
+    color: var(--sw-ink);
+  }
+  /* Micro-línea editorial para separar toolbar del contenido (no caja) */
+  body.women-page.streetwear-page .pp-filters.container{
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+
+  /* Un pelín más de aire en desktop */
+  @media (min-width: 1025px){
+    body.women-page.streetwear-page .pp-filters.container{
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+  }
+
+
+  body.women-page.streetwear-page .pp-filters .pp-btn:hover{
+    background: rgba(255,255,255,.085);
+    border-color: rgba(255,255,255,.14);
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.08),
+      0 14px 34px rgba(0,0,0,.42);
+  }
+
+  body.women-page.streetwear-page .pp-filters .pp-btn:active{
+    transform: translateY(0px);
+    opacity: .92;
+  }
+
+  /* Si tu botón “Filtros” es el principal, le damos un toque más “call-to-action” pero sin gritar */
+  body.women-page.streetwear-page .pp-filters .pp-btn[aria-controls]{
+    background: rgba(255,255,255,.10);
+    border-color: rgba(255,255,255,.16);
+  }
+
+  /* Accesibilidad: focus visible limpio */
+  body.women-page.streetwear-page .pp-filters .pp-btn:focus-visible{
+    outline: 2px solid rgba(255,255,255,.55);
+    outline-offset: 3px;
+  }
+
+  /* ---------------------------------------------------------
+    Responsive: compactar sin perder lujo
+    --------------------------------------------------------- */
+  @media (max-width: 720px){
+    body.women-page.streetwear-page .pp-filters.container{
+      top: calc(var(--pp-header-h, 64px) + 8px);
+      padding: 10px 10px;
+      border-radius: 14px;
+    }
+
+    body.women-page.streetwear-page .pp-filter-left,
+    body.women-page.streetwear-page .pp-filter-right{
+      gap: 8px;
+    }
+
+    body.women-page.streetwear-page .pp-filters .pp-btn{
+      padding: 9px 10px;
+      font-size: 12px;
+    }
+  }
+
+
+  /* ===== PLP: separación inferior correcta ===== */
+  body.women-page.streetwear-page .pp-plp.container{
+    margin-bottom: clamp(40px, 8vw, 120px);
+  }
+
+  /* ===== Drawer filtros (mujer) — si vienes de woman.css, esto es refuerzo ===== */
+  body.women-page.streetwear-page .women-filters-overlay{
+    z-index: 2600;
+  }
+  body.women-page.streetwear-page .women-filters-drawer{
+    z-index: 2700;
+  }
+
+  /* ===== Carrusel NAV: usa la base de plp.css por variables =====
+    (No duplicamos reglas: solo aseguramos que el hover no lo apaga por error) */
+  body.women-page.streetwear-page .card.has-carousel:hover .card-media .nav-prev,
+  body.women-page.streetwear-page .card.has-carousel:hover .card-media .nav-next{
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Collection hero (sin escalón)
+    ========================================================= */
+  body.women-page.streetwear-page .pp-collection-hero{
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 10px var(--pp-edge-sw) 18px;
+    box-sizing: border-box;
+
+    color: var(--sw-ink);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  body.women-page.streetwear-page .pp-hero-title{
+    color: var(--sw-ink);
+    letter-spacing: .06em;
+  }
+
+  body.women-page.streetwear-page .pp-hero-sub{
+    color: var(--sw-muted);
+  }
+
+  /* =========================================================
+    STREETWEAR MUJER · PLP cards (glass nocturno coherente)
+    - Solo si quieres que TODA la página vaya en modo noche
+    ========================================================= */
+  body.women-page.streetwear-page #plp-grid .card{
+    background: linear-gradient(to bottom, rgba(6,7,10,.62), rgba(6,7,10,.34));
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow:
+      0 18px 60px rgba(0,0,0,.55),
+      0 0 26px rgba(255,255,255,.05);
+  }
+
+
+
+  /* =========================================================
+    STREETWEAR MUJER · Filters drawer (women-*) — nocturno
+    ========================================================= */
+  body.women-page.streetwear-page .women-filters-overlay{
+    background: rgba(0,0,0,.22);
+    backdrop-filter: blur(3px);
+  }
+
+  body.women-page.streetwear-page .women-filters-drawer{
+    background: rgba(6,7,10,.92);
+    color: var(--sw-ink);
+    border-left: 1px solid rgba(255,255,255,.10);
+    box-shadow: -18px 0 60px rgba(0,0,0,.55);
+  }
+
+  body.women-page.streetwear-page .women-filters-title,
+  body.women-page.streetwear-page .women-filters-subtitle{
+    color: var(--sw-ink);
+  }
+
+  body.women-page.streetwear-page .women-filters-tab{
+    color: rgba(255,255,255,.72);
+  }
+  body.women-page.streetwear-page .women-filters-tab.is-active{
+    color: #fff;
+  }
+  body.women-page.streetwear-page .women-filters-tab.is-active::after{
+    background: rgba(255,255,255,.85);
+  }
+
+  body.women-page.streetwear-page .women-swatch-label,
+  body.women-page.streetwear-page .women-check{
+    color: rgba(255,255,255,.88);
+  }
+
+  body.women-page.streetwear-page .women-swatch-dot{
+    border-color: rgba(255,255,255,.22);
+  }
+
+  body.women-page.streetwear-page .women-filters-foot{
+    border-top: 1px solid rgba(255,255,255,.10);
+  }
+
+  body.women-page.streetwear-page .women-filters-clear{
+    background: transparent;
+    color: rgba(255,255,255,.82);
+    border-right: 1px solid rgba(255,255,255,.10);
+  }
+
+  body.women-page.streetwear-page .women-filters-cta{
+    background: rgba(255,255,255,.92);
+    color: rgba(10,10,12,.92);
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Drawer base FUNCIONAL
+    - Oculto por defecto
+    - Visible con .is-open (lo que usa tu JS)
+    ========================================================= */
+
+  body.women-page.streetwear-page .women-filters-overlay{
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease;
+    z-index: 2600; /* ya lo tenías, lo reforzamos */
+  }
+
+  body.women-page.streetwear-page .women-filters-overlay.is-open{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+
+
+  /* scroll lock (tu JS usa no-scroll) */
+  body.no-scroll{
+    overflow: hidden;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Tabs panels (solo women)
+    ========================================================= */
+  body.women-page.streetwear-page .women-filters-panel{ display: none; }
+  body.women-page.streetwear-page .women-filters-panel.is-active{ display: block; }
+
+
+
+
+  /* Asegura contexto */
+  body.women-page.streetwear-page .pp-hero__media{ position: relative; }
+
+  /* Tokens (ajústalos aquí) */
+  body.women-page.streetwear-page{
+    --logo-x-sw: -10px;   /* X: + derecha / - izquierda */
+    --logo-y-sw: -100px;  /* Y: + abajo / - arriba */
+  }
+
+  /* Posicionamiento */
+  body.women-page.streetwear-page .pp-hero__media{
+    position: relative;
+  }
+
+  body.women-page.streetwear-page .pp-hero__media .floating-logo{
+    position: absolute;
+
+    /* base + offset */
+    left: calc(0px + var(--logo-x-sw));
+    top: calc(var(--pp-header-h, 64px) + var(--logo-y-sw));
+
+    transform: none;
+    z-index: 2;
+  }
+
+body.women-page.streetwear-page{
+  --logo-x-sw: -78px;       /* + derecha / - izquierda */
+  --logo-y-sw: -123px;      /* + abajo / - arriba */
+  --logo-size-sw: 920px;    /* ancho real del logo */
+}
+
+body.women-page.streetwear-page .pp-hero__media{
+  position: relative;
+  overflow: visible;
+}
+
+body.women-page.streetwear-page .pp-hero__media .floating-logo{
+  position: absolute;
+  left: var(--logo-x-sw);
+  top: calc(var(--pp-header-h, 64px) + var(--logo-y-sw));
+  transform: none;
+  z-index: 2;
+}
+
+body.women-page.streetwear-page .pp-hero__media .floating-logo img{
+  width: var(--logo-size-sw) !important;
+  height: auto !important;
+  max-width: none !important;
+  display: block;
+  object-fit: contain;
+}
+
+
+
+  /* =========================================================
+    STREETWEAR MUJER · Fondo UNIFORME + Zebra Flames (optional)
+    - Sin radiales visibles
+    - Zebra flames como watermark ultra sutil (no molesta al texto blanco)
+    ========================================================= */
+
+
+
+  /* Base uniforme + micro “lift” editorial SIN radiales */
+  body.women-page.streetwear-page::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+      /* leve “editorial lift” superior (muy sutil, uniforme) */
+      linear-gradient(180deg,
+        rgba(255,255,255,.020) 0%,
+        rgba(255,255,255,0) 26%,
+        rgba(0,0,0,.18) 100%
+      ),
+      var(--sw-bg);
+
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  /* Overlay: Zebra flames (watermark) + grano fino */
+  body.women-page.streetwear-page::after{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    /* 1) Zebra flames (procedural SVG)  2) Grain */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720'%3E%3Cfilter id='z'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='9'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0 0 0 0 0 0 0 1 1 1 1'/%3E%3CfeFuncG type='table' tableValues='0 0 0 0 0 0 0 1 1 1 1'/%3E%3CfeFuncB type='table' tableValues='0 0 0 0 0 0 0 1 1 1 1'/%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 .55 .75 1 1'/%3E%3C/feComponentTransfer%3E%3CfeGaussianBlur stdDeviation='0.45'/%3E%3C/filter%3E%3Crect width='720' height='720' filter='url(%23z)' fill='white' opacity='1'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+
+    background-repeat: repeat, repeat;
+    background-size: var(--sw-zebra-scale) var(--sw-zebra-scale), var(--sw-grain-scale) var(--sw-grain-scale);
+    background-position: 0 0, 0 0;
+
+    /* Blend “luxury”: integra el patrón sin convertirlo en estampado agresivo */
+    mix-blend-mode: soft-light;
+
+    /* Opacidades combinadas (zebra + grain) */
+    opacity: 1;
+
+    /* Control real por canal: usamos “filter: opacity()” para modular sin tocar el blend */
+    filter:
+      opacity(1)
+      saturate(105%)
+      contrast(105%);
+  }
+
+  /* Moduladores reales (para no tocar la capa entera) */
+  body.women-page.streetwear-page{
+    /* Truco: definimos la intensidad final con estos dos valores */
+  }
+  body.women-page.streetwear-page::after{
+    /* Zebra + grain se controlan con estas dos opacidades */
+    /* (se aplica como mezcla: zebra es dominante por escala) */
+    opacity: calc(var(--sw-zebra-opacity) + var(--sw-grain-opacity));
+  }
+
+  /* Si algún wrapper te tapaba el fondo */
+  body.women-page.streetwear-page main,
+  body.women-page.streetwear-page .pp-page,
+  body.women-page.streetwear-page .pp-wrap{
+    background: transparent;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Search input en blanco
+    ========================================================= */
+
+  body.women-page.streetwear-page .pp-header .search-input{
+    color: rgba(255,255,255,.92);
+    caret-color: rgba(255,255,255,.92);
+  }
+  body.women-page.streetwear-page .pp-header .search-input::placeholder{
+    color: rgba(255,255,255,.70);
+    opacity: 1;
+  }
+
+  body.women-page.streetwear-page .pp-account{
+    color: rgba(255,255,255,.92);
+  }
+  body.women-page.streetwear-page .pp-account svg{
+    fill: currentColor;
+    stroke: currentColor;
+  }
+  body.women-page.streetwear-page .pp-account img{
+    filter: brightness(0) invert(1);
+  }
+
+  body.women-page.streetwear-page .pp-right,
+  body.women-page.streetwear-page .pp-right a,
+  body.women-page.streetwear-page .pp-right button{
+    color: rgba(255,255,255,.92);
+  }
+
+  body.women-page.streetwear-page .pp-right svg{
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  body.women-page.streetwear-page .pp-right img{
+    filter: brightness(0) invert(1);
+  }
+  /* =========================================================
+    STREETWEAR MUJER · PLP GRID FIX
+    - Evita imágenes gigantes
+    - Grid responsive + media con ratio fijo
+    ========================================================= */
+
+
+
+  /* =========================================================
+    STREETWEAR MUJER · PLP GRID (auto-fit = rellena siempre)
+    ========================================================= */
+
+
+
+  /* Card layout (estable, editorial) */
+  body.women-page.streetwear-page #plp-grid .card{
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  /* Imagen siempre dentro del marco */
+  body.women-page.streetwear-page #plp-grid .card-media img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;                /* cover = look premium */
+    display: block;
+    transform: translateZ(0);
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Card refinements (Silent Luxury)
+    ========================================================= */
+
+  /* Aire y jerarquía */
+  body.women-page.streetwear-page #plp-grid .card-body{
+    padding-top: 12px;
+    display: grid;
+    gap: 6px;
+  }
+
+  /* Título: Mistral legible (sin uppercase) */
+  body.women-page.streetwear-page #plp-grid .card-title{
+    font-size: clamp(15px, 1vw, 17px);
+    letter-spacing: .02em;
+    line-height: 1.2;
+  }
+
+
+
+
+  /* Precio (silent luxury: sutil, no protagonista) */
+  body.women-page.streetwear-page #plp-grid .price{
+    font-size: clamp(12px, .75vw, 13px);
+    letter-spacing: .06em;
+    font-weight: 500;
+    opacity: .78;
+    line-height: 1.15;
+  }
+
+
+  /* Hover: lift mínimo + micro-zoom que ya tienes */
+  @media (hover:hover){
+    body.women-page.streetwear-page #plp-grid .card{
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    body.women-page.streetwear-page #plp-grid .card:hover{
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Badges: más finos */
+  body.women-page.streetwear-page #plp-grid .card-badge{
+    border-color: rgba(255,255,255,.22);
+    background: rgba(6,7,10,.55);
+    color: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  body.women-page.streetwear-page #plp-grid .card-badge.is-new{
+    background: rgba(255,255,255,.92);
+    color: rgba(10,10,12,.92);
+    border-color: rgba(255,255,255,.35);
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Carrusel NAV (logo blanco)
+    - Tus botones son .nav.prev y .nav.next
+    - Fondo negro/transparent para que se vea emblemblancovf.svg
+    ========================================================= */
+
+  body.women-page.streetwear-page .card.has-carousel .card-media{
+    position: relative; /* asegura contexto absoluto */
+  }
+
+  body.women-page.streetwear-page .card.has-carousel .card-media .nav{
+    appearance: none;
+    -webkit-appearance: none;
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 8;
+
+    width: var(--pp-nav-size, 44px);
+    height: var(--pp-nav-size, 44px);
+    border-radius: 999px;
+
+    display: grid;
+    place-items: center;
+
+    /* Fondo “dark glass” para icono blanco */
+    background-color: rgba(0,0,0,.52);                 /* negro/transparente */
+    border: 1px solid rgba(255,255,255,.18);
+    backdrop-filter: blur(var(--pp-nav-blur, 10px)) saturate(120%);
+    -webkit-backdrop-filter: blur(var(--pp-nav-blur, 10px)) saturate(120%);
+
+    /* Icono central */
+    background-image: var(--pp-nav-icon, none);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: var(--pp-nav-icon-size, 22px) var(--pp-nav-icon-size, 22px);
+
+    /* anula cualquier texto/icono previo */
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+
+  body.women-page.streetwear-page .card.has-carousel .card-media .nav.prev{ left: 10px; }
+  body.women-page.streetwear-page .card.has-carousel .card-media .nav.next{ right: 10px; }
+
+  body.women-page.streetwear-page .card.has-carousel:hover .card-media .nav{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Mobile: visibles */
+  @media (hover:none){
+    body.women-page.streetwear-page .card.has-carousel .card-media .nav{
+      opacity: .92;
+      pointer-events: auto;
+    }
+  }
+
+  /* Hover micro-lux */
+  @media (hover:hover){
+    body.women-page.streetwear-page .card.has-carousel .card-media .nav:hover{
+      background-color: rgba(0,0,0,.62);
+      border-color: rgba(255,255,255,.26);
+      box-shadow: 0 14px 34px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+  }
+  /* =========================================================
+    STREETWEAR MUJER · PLP cards media fill
+    - Elimina huecos: la imagen manda
+    ========================================================= */
+
+  /* La card no debe forzar alturas heredadas */
+  body.women-page.streetwear-page #plp-grid .card{
+    height: auto;
+    min-height: 0;
+  }
+
+
+
+  /* La imagen SIEMPRE rellena el frame (por si otra CSS la pisa) */
+  body.women-page.streetwear-page #plp-grid .card-media img{
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover !important;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · FIX tamaño filtros (no heredar 22px del main)
+    ========================================================= */
+  body.women-page.streetwear-page .pp-filters.container{
+    font-family: var(--font-ui, Inter, system-ui, sans-serif);
+    font-size: 14px;          /* <- clave */
+    line-height: 1.25;
+  }
+
+  /* Asegura que los controles hereden ese tamaño */
+  body.women-page.streetwear-page .pp-filters.container .pp-btn,
+  body.women-page.streetwear-page .pp-filters.container label,
+  body.women-page.streetwear-page .pp-filters.container span{
+    font-size: 1em;
+    line-height: inherit;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · card-media fill HARD (sin huecos)
+    ========================================================= */
+  body.women-page.streetwear-page #plp-grid .card-media{
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  body.women-page.streetwear-page #plp-grid .card-media > img{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+    display: block;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · PLP container FULL WIDTH (mata el max-width de .container)
+    ========================================================= */
+  body.women-page.streetwear-page .pp-plp.container{
+    max-width: none;          /* <- clave */
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+
+    /* Gutter editorial consistente */
+    padding-left: var(--pp-edge-sw);
+    padding-right: var(--pp-edge-sw);
+    box-sizing: border-box;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · PLP grid: alineación dura (no centrar, no huecos raros)
+    ========================================================= */
+  body.women-page.streetwear-page #plp-grid.plp-grid{
+    justify-content: start;
+    justify-items: stretch;
+    align-content: start;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · PLP GRID (control de ancho real)
+    - Evita cards gigantes: máximo por columna
+    - Más columnas en desktop sin estirar 1fr
+    ========================================================= */
+  body.women-page.streetwear-page .pp-plp.container{
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding-left: var(--pp-edge-sw);
+    padding-right: var(--pp-edge-sw);
+    box-sizing: border-box;
+  }
+
+  /* =========================================================
+    STREETWEAR MUJER · PLP GRID (auto-fill robusto)
+    ========================================================= */
+  body.women-page.streetwear-page #plp-grid.plp-grid,
+  body.women-page.streetwear-page .pp-plp .plp-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
+    gap: clamp(14px, 2vw, 22px);
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+  }
+
+
+  /* Card estable */
+  body.women-page.streetwear-page #plp-grid .card{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+  }
+
+  /* Media: frame fijo y la imagen manda */
+  body.women-page.streetwear-page #plp-grid .card-media{
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 16px;
+  }
+
+  body.women-page.streetwear-page #plp-grid .card-media > img{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · CARD BODY (UI font + texto blanco)
+    - Card media: Mistral OK (hero / vibe)
+    - Card body: UI para legibilidad y lujo
+    ========================================================= */
+  body.women-page.streetwear-page #plp-grid .card-body{
+    font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+    color: rgba(255,255,255,.92);
+  }
+
+  /* Título / subtítulo / precio en blanco (jerarquía) */
+  body.women-page.streetwear-page #plp-grid .card-title{
+    font-family: inherit;
+    color: rgba(255,255,255,.95);
+  }
+
+  body.women-page.streetwear-page #plp-grid .card-sub{
+    font-size: clamp(12px, .85vw, 13px);
+    line-height: 1.35;
+    opacity: .70;
+  }
+  body.women-page.streetwear-page #plp-grid .price{
+    font-family: inherit;
+    color: rgba(255,255,255,.90);
+  }
+
+  /* Links dentro del body */
+  body.women-page.streetwear-page #plp-grid .card-body a{
+    color: inherit;
+    text-decoration: none;
+  }
+  body.women-page.streetwear-page #plp-grid .card-body a:hover{
+    text-decoration: underline;
+  }
+
+  body.women-page.streetwear-page #plp-grid .card-meta{
+    font-size: 12px;
+    line-height: 1.25;
+    opacity: .72;
+  }
+
+  /* =========================================================
+    STREETWEAR MUJER · MEGA PANEL negro (alto contraste)
+    ========================================================= */
+
+  /* Fondo del panel (la caja grande desplegable) */
+  body.women-page.streetwear-page .mega .mega-panel{
+    background: rgba(0,0,0,.92);
+    color: rgba(255,255,255,.92);
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 26px 90px rgba(0,0,0,.70);
+    backdrop-filter: blur(10px) saturate(110%);
+    -webkit-backdrop-filter: blur(10px) saturate(110%);
+  }
+
+  /* Si tu HTML usa .mega-panel__inner o similares, lo forzamos también */
+  body.women-page.streetwear-page .mega .mega-panel *{
+    color: inherit;
+  }
+
+  /* Links dentro del panel */
+  body.women-page.streetwear-page .mega .mega-panel a{
+    color: rgba(255,255,255,.90);
+    text-decoration: none;
+  }
+  body.women-page.streetwear-page .mega .mega-panel a:hover{
+    color: rgba(255,255,255,.98);
+    text-decoration: underline;
+  }
+
+  /* Muted dentro del panel (subtítulos/labels) */
+  body.women-page.streetwear-page .mega .mega-panel :where(.muted,.meta,.hint,small){
+    color: rgba(255,255,255,.65);
+  }
+  /* =========================================================
+    STREETWEAR MUJER · HERO SIDE en UI (Inter) — SOLO ASIDE
+    - Header + Mega panel se quedan como están
+    ========================================================= */
+  body.women-page.streetwear-page{
+    --sw-header-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  }
+
+  body.women-page.streetwear-page .pp-hero__side,
+  body.women-page.streetwear-page .pp-hero__side *{
+    font-family: var(--sw-header-font) !important;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · HERO SIDE = mismo tamaño que HOMBRE
+    (solo panel derecho, no toca header/mega)
+    ========================================================= */
+  body.women-page.streetwear-page{
+    --sw-mega-link: 11px; /* igual que streetwear.css */
+  }
+
+  /* Links del panel derecho (categorías) */
+  body.women-page.streetwear-page .pp-hero__side .pp-hero__list a{
+    font-size: var(--sw-mega-link) !important;
+    line-height: 1.35;
+  }
+
+  /* Si tienes meta/mini textos dentro del side (por si acaso) */
+  body.women-page.streetwear-page .pp-hero__side{
+    font-size: var(--sw-mega-link) !important;
+  }
+  /* =========================================================
+    STREETWEAR MUJER · Wishlist heart (igual que HOMBRE)
+    - Compat: .icon-btn.save (cards antiguas) y .save-btn (product-card)
+    ========================================================= */
+
+  /* Asegura contexto absoluto dentro del media */
+  body.women-page.streetwear-page #plp-grid .card-media,
+  body.women-page.streetwear-page #plp-grid .img-wrap{
+    position: relative;
+  }
+
+  /* Heart button */
+  body.women-page.streetwear-page #plp-grid .icon-btn.save,
+  body.women-page.streetwear-page #plp-grid .save-btn{
+    position: absolute;
+    right: 14px;
+    top: 14px;                 /* en MUJER mejor arriba (más estándar) */
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(0,0,0,0.55);
+    color: rgba(255,255,255,0.92);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9;
+    transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+  }
+
+  body.women-page.streetwear-page #plp-grid .icon-btn.save:hover,
+  body.women-page.streetwear-page #plp-grid .save-btn:hover{
+    transform: translateY(-1px);
+    border-color: rgba(255,255,255,0.30);
+    background: rgba(0,0,0,0.62);
+  }
+
+  /* Estado guardado */
+  body.women-page.streetwear-page #plp-grid .icon-btn.save.is-saved,
+  body.women-page.streetwear-page #plp-grid .save-btn.is-saved{
+    background: rgba(255,255,255,.92);
+    color: rgba(10,10,12,.92);
+    border-color: rgba(255,255,255,.35);
+  }
+
+  /* =========================================================
+    STREETWEAR MUJER · HERO layout (breadcrumb arriba, side debajo y a la derecha)
+    ========================================================= */
+  body.women-page.streetwear-page .pp-hero.hero--two-cols{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* el logo/media vive a la izquierda */
+    gap: 14px;
+  }
+
+  /* Breadcrumb: blanco, limpio, a la derecha */
+  body.women-page.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero{
+    align-self: flex-end;
+    text-align: right;
+    background: transparent !important;
+    color: rgba(255,255,255,.92);
+    text-shadow: 0 1px 10px rgba(0,0,0,.55);
+  }
+
+  /* Links/separador del breadcrumb en blanco */
+  body.women-page.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link{
+    color: rgba(255,255,255,.92) !important;
+    text-decoration: none;
+  }
+  body.women-page.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link:hover{
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  body.women-page.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__sep{
+    color: rgba(255,255,255,.72) !important;
+  }
+
+  /* Side: debajo del breadcrumb y alineado a la derecha */
+  body.women-page.streetwear-page .pp-hero__side{
+    align-self: flex-end;
+    max-width: 360px;
+    text-align: left;
+
+    transform: translateY(var(--hero-side-translate-y, 110px)) !important;
+
+    will-change: transform;
+    font-family: var(--sw-header-font) !important;
+  }
+
+
+  body.women-page.streetwear-page .pp-hero__side *{
+    font-family: var(--sw-header-font) !important;
+  }
+/* =========================================================
+   STREETWEAR MUJER · Sort dropdown real
+   ========================================================= */
+
+body.women-page.streetwear-page .pp-sort {
+  position: relative;
+  display: inline-block;
+}
+
+body.women-page.streetwear-page .pp-sort-trigger {
+  list-style: none;
+  cursor: pointer;
+
+  font: 600 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.88);
+}
+
+body.women-page.streetwear-page .pp-sort-trigger::-webkit-details-marker {
+  display: none;
+}
+
+body.women-page.streetwear-page .pp-sort-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 120;
+
+  min-width: 190px;
+  padding: 8px 0;
+
+  background: rgba(8,9,12,.96);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 18px 48px rgba(0,0,0,.45);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+
+body.women-page.streetwear-page .pp-sort-option {
+  width: 100%;
+  display: block;
+
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.82);
+}
+
+body.women-page.streetwear-page .pp-sort-option:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+
+/* =========================================================
+   STREETWEAR MUJER · Carousel nav final size/icon
+   Botón más pequeño + logo negro Prophetia centrado
+   ========================================================= */
+
+body.women-page.streetwear-page {
+  --pp-nav-size: 30px;
+  --pp-nav-icon-size: 15px;
+  --pp-nav-icon: url("/assets/img/logo/propnegrovf.svg");
+}
+
+body.women-page.streetwear-page .card.has-carousel .card-media .nav {
+  width: var(--pp-nav-size) !important;
+  height: var(--pp-nav-size) !important;
+
+  background: rgba(255,255,255,.88) !important;
+  border: 1px solid rgba(0,0,0,.10) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.16) !important;
+}
+
+body.women-page.streetwear-page .card.has-carousel .card-media .nav::before {
+  width: var(--pp-nav-icon-size) !important;
+  height: var(--pp-nav-icon-size) !important;
+  background-image: var(--pp-nav-icon) !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+body.women-page.streetwear-page .card.has-carousel .card-media .nav.prev {
+  left: 8px;
+}
+
+body.women-page.streetwear-page .card.has-carousel .card-media .nav.next {
+  right: 8px;
+}
+
+
+/* =========================================================
+   STREETWEAR MUJER · Urban drop grid final
+   Inspiración NoEmotions · Prophetia night edition
+   ========================================================= */
+
+body.women-page.streetwear-page .pp-plp.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: 0;
+  padding-top: 0;
+  padding-bottom: clamp(72px, 8vw, 120px);
+}
+
+body.women-page.streetwear-page #plp-grid.plp-grid,
+body.women-page.streetwear-page .pp-plp .plp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  width: 100%;
+
+  background: rgba(255,255,255,.10);
+  border-top: 1px solid rgba(255,255,255,.10);
+  border-left: 1px solid rgba(255,255,255,.10);
+}
+
+body.women-page.streetwear-page #plp-grid .card {
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  overflow: hidden;
+
+  background: rgba(10,10,12,.96);
+  color: rgba(255,255,255,.92);
+}
+
+body.women-page.streetwear-page #plp-grid .card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 0;
+  overflow: hidden;
+  background: #111;
+}
+
+body.women-page.streetwear-page #plp-grid .card-media > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+body.women-page.streetwear-page #plp-grid .card-body {
+  padding: 12px 14px 16px;
+  display: grid;
+  gap: 5px;
+
+  background: rgba(8,8,10,.98);
+  color: rgba(255,255,255,.92);
+}
+
+body.women-page.streetwear-page #plp-grid .card-title {
+  margin: 0;
+  font: 600 13px/1.15 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .01em;
+  color: rgba(255,255,255,.94);
+}
+
+body.women-page.streetwear-page #plp-grid .card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+body.women-page.streetwear-page #plp-grid .card-sub {
+  margin: 0;
+  max-width: 30ch;
+
+  font: 400 12px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0;
+  color: rgba(255,255,255,.58);
+}
+
+body.women-page.streetwear-page #plp-grid .card-meta,
+body.women-page.streetwear-page #plp-grid .price {
+  margin-top: 4px;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .04em;
+  color: rgba(255,255,255,.76);
+}
+
+body.women-page.streetwear-page #plp-grid .icon-btn.save {
+  top: 12px;
+  right: 12px;
+  bottom: auto;
+
+  width: 32px;
+  height: 32px;
+
+  background: rgba(0,0,0,.74);
+  border: 1px solid rgba(255,255,255,.20);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(0,0,0,.22);
+}
+
+@media (hover:hover) {
+  body.women-page.streetwear-page #plp-grid .card-media > img {
+    transition: transform .28s ease, opacity .28s ease;
+  }
+
+  body.women-page.streetwear-page #plp-grid .card:hover .card-media > img {
+    transform: scale(1.018);
+  }
+}
+
+@media (max-width: 1180px) {
+  body.women-page.streetwear-page #plp-grid.plp-grid,
+  body.women-page.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  body.women-page.streetwear-page #plp-grid.plp-grid,
+  body.women-page.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.women-page.streetwear-page #plp-grid .card-body {
+    padding: 10px 10px 14px;
+  }
+
+  body.women-page.streetwear-page #plp-grid .card-title {
+    font-size: 12px !important;
+  }
+
+  body.women-page.streetwear-page #plp-grid .card-sub {
+    font-size: 11px !important;
+    line-height: 1.35;
+  }
+}
+
+@media (max-width: 420px) {
+  body.women-page.streetwear-page #plp-grid.plp-grid,
+  body.women-page.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   STREETWEAR MUJER · Grid size refinement final
+   Reduce tamaño de cards sin perder estética drop
+   ========================================================= */
+
+body.women-page.streetwear-page .pp-plp.container {
+  padding-inline: var(--pp-edge-sw, 40px);
+}
+
+/* Desktop: cards más controladas */
+body.women-page.streetwear-page #plp-grid.plp-grid,
+body.women-page.streetwear-page .pp-plp .plp-grid {
+  grid-template-columns: repeat(4, minmax(220px, 300px));
+  justify-content: start;
+  gap: 1px;
+}
+
+/* Imagen algo menos alta */
+body.women-page.streetwear-page #plp-grid .card-media {
+  aspect-ratio: 1 / 1.18;
+}
+
+/* Texto más compacto */
+body.women-page.streetwear-page #plp-grid .card-body {
+  padding: 10px 12px 14px;
+}
+
+body.women-page.streetwear-page #plp-grid .card-title {
+  font-size: 12px !important;
+}
+
+body.women-page.streetwear-page #plp-grid .card-sub {
+  font-size: 11px !important;
+  line-height: 1.35;
+}
+
+body.women-page.streetwear-page #plp-grid .card-meta,
+body.women-page.streetwear-page #plp-grid .price {
+  font-size: 10.5px !important;
+}
+
+/* Tablet */
+@media (max-width: 1180px) {
+  body.women-page.streetwear-page #plp-grid.plp-grid,
+  body.women-page.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+  }
+}
+
+/* Móvil */
+@media (max-width: 760px) {
+  body.women-page.streetwear-page #plp-grid.plp-grid,
+  body.women-page.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 420px) {
+  body.women-page.streetwear-page #plp-grid.plp-grid,
+  body.women-page.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: 1fr;
+  }
+}

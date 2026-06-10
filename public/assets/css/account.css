@@ -1,0 +1,406 @@
+/* =========================================================
+   PROPHETIA · ACCOUNT
+   Página: account.html
+   Estilo: Silent Luxury editorial
+   ========================================================= */
+
+body.account-page {
+  background:
+    linear-gradient(rgba(255,255,255,.90), rgba(255,255,255,.96)),
+    url("../img/textures/fondoform.png") center top / cover fixed no-repeat;
+  color: #111;
+}
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.account-brand {
+  padding: clamp(34px, 5vw, 72px) 0 clamp(48px, 6vw, 92px);
+}
+
+.account-brand__logo {
+  display: inline-block;
+  line-height: 0;
+  transform: translateX(-18px);
+}
+
+.account-brand__logo img {
+  width: clamp(320px, 44vw, 780px);
+  height: auto;
+  display: block;
+}
+
+/* =========================================================
+   NAV CUENTA
+   ========================================================= */
+
+.account-nav {
+  border-top: 1px solid rgba(0,0,0,.08);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  background: rgba(255,255,255,.74);
+  backdrop-filter: blur(10px);
+}
+
+.account-nav__inner {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.account-nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 34px);
+  flex-wrap: wrap;
+}
+
+.account-nav__links a,
+.account-nav__logout {
+  position: relative;
+  color: #111;
+  text-decoration: none;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+
+.account-nav__links a::after,
+.account-nav__logout::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+.account-nav__links a:hover::after,
+.account-nav__links a:focus-visible::after,
+.account-nav__links a[aria-current="page"]::after,
+.account-nav__logout:hover::after,
+.account-nav__logout:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.account-nav__logout {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   ACCOUNT MAIN
+   ========================================================= */
+
+.account-main {
+  padding: clamp(54px, 6vw, 96px) 0 clamp(90px, 9vw, 150px);
+}
+
+.account-page-title {
+  margin: 0 0 clamp(54px, 7vw, 110px);
+}
+
+.account-kicker {
+  margin: 0 0 18px;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.55);
+}
+
+.account-title {
+  margin: 0;
+  max-width: 780px;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(54px, 7vw, 118px);
+  line-height: .92;
+  font-weight: 500;
+  letter-spacing: -.045em;
+}
+
+.account-lede {
+  max-width: 620px;
+  margin: 30px 0 0;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.75;
+  color: rgba(0,0,0,.68);
+}
+
+/* =========================================================
+   SECCIONES TIPO Prophetia
+   ========================================================= */
+
+.account-section {
+  display: grid;
+  grid-template-columns: minmax(180px, 300px) minmax(0, 1fr);
+  gap: clamp(32px, 7vw, 130px);
+  padding: clamp(30px, 4vw, 54px) 0;
+  border-top: 1px solid rgba(0,0,0,.42);
+}
+
+.account-section:last-of-type {
+  border-bottom: 1px solid rgba(0,0,0,.16);
+}
+
+.account-section__title {
+  margin: 0;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+
+.account-section__content {
+  position: relative;
+  display: grid;
+  gap: 14px;
+}
+
+.account-edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.account-data {
+  display: grid;
+  gap: 13px;
+  padding-right: 90px;
+}
+
+.account-data__row {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: baseline;
+}
+
+.account-data__label,
+.account-data__value {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.account-data__label {
+  color: #111;
+}
+
+.account-data__value {
+  color: rgba(0,0,0,.82);
+  word-break: break-word;
+}
+
+/* Preferencia género / exploración */
+.account-pref {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.account-pref button {
+  appearance: none;
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  color: #111;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.account-pref button:hover,
+.account-pref button:focus-visible,
+.account-pref button.is-active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.account-note {
+  margin: 8px 0 0;
+  max-width: 560px;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(0,0,0,.58);
+}
+
+/* Invitado */
+.account-guest-box {
+  max-width: 620px;
+  padding: 28px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.72);
+}
+
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.account-btn {
+  appearance: none;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  padding: 10px 22px;
+  cursor: pointer;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.account-btn--ghost {
+  background: transparent;
+  color: #111;
+  border-color: rgba(0,0,0,.24);
+}
+
+.account-btn--ghost:hover {
+  border-color: #111;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .account-brand__logo {
+    transform: none;
+  }
+
+  .account-nav__inner {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-block: 18px;
+  }
+
+  .account-section {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .account-edit {
+    position: static;
+    justify-self: start;
+    margin-bottom: 10px;
+  }
+
+  .account-data {
+    padding-right: 0;
+  }
+
+  .account-data__row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* =========================================================
+   ACCOUNT · Estado de carga auth
+   Evita que se vea invitado mientras Firebase comprueba sesión
+   ========================================================= */
+
+body.pp-account-loading [data-pp-account-guest],
+body.pp-account-loading [data-pp-account-logged] {
+  display: none !important;
+}
+
+
+/* =========================================================
+   ACCOUNT · Logo Prophetia account brand
+   Control X/Y + tamaño solo para cuenta
+   ========================================================= */
+
+body[data-page="account"] {
+  --account-page-logo-x: 355px;       /* + derecha / - izquierda */
+  --account-page-logo-y: 0px;       /* + abajo / - arriba */
+  --account-page-logo-size: 90px;  /* altura del logo */
+}
+
+body[data-page="account"] .account-brand__logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  text-decoration: none;
+
+  transform: translate(
+    var(--account-page-logo-x),
+    var(--account-page-logo-y)
+  );
+}
+
+body[data-page="account"] .account-brand__logo img {
+  height: var(--account-page-logo-size);
+  width: auto;
+  max-width: min(760px, 92vw);
+  display: block;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  body[data-page="account"] {
+    --account-page-logo-x: 0px;
+    --account-page-logo-y: 0px;
+    --account-page-logo-size: clamp(72px, 16vw, 110px);
+  }
+
+  body[data-page="account"] .account-brand__logo img {
+    max-width: 86vw;
+  }
+}
+
+/* =========================================================
+   ACCOUNT · Auth visibility guard
+   Evita que bloques hidden aparezcan por reglas globales
+   ========================================================= */
+
+body.account-page [hidden] {
+  display: none !important;
+}
+
+body.account-page.pp-auth-logged [data-pp-account-guest] {
+  display: none !important;
+}
+
+body.account-page.pp-auth-guest [data-pp-account-logged] {
+  display: none !important;
+}

@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout — PROPHETIA</title>
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- FOOTER + UTILS -->
+  <link rel="stylesheet" href="assets/css/footer.css">
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- CHECKOUT -->
+  <link rel="stylesheet" href="assets/css/checkout.css">
+</head>
+
+<body class="checkout-page" data-page="checkout">
+
+  <main class="ck">
+    <!-- HEADER CHECKOUT (logo centrado) -->
+    <header class="lw-header-checkoutnc" role="banner">
+      <div class="capds-checkoutnc-header-container">
+        <a class="capds-checkoutnc-header-logo" href="/home" title="Inicio Prophetia" aria-label="Inicio">
+          <img src="assets/img/logo/propnegrovf.svg" alt="PROPHETIA" class="img-logo">
+        </a>
+
+        <button id="goBack" class="capds-checkoutnc-header-back" type="button" aria-label="Volver">
+          <span><i class="left"></i></span>
+        </button>
+      </div>
+    </header>
+<div class="ck-shell">
+  <div class="ck-grid">
+
+    <!-- CONTENT (2 columnas) -->
+  
+
+      <!-- LEFT -->
+      <section class="checkoutnc-left-col" aria-label="Proceso de compra">
+        <div class="row no-gutter checkoutnc-items-tabs">
+          <div class="col capds-form--sigin">
+            <div class="capds-form--sigin">
+
+              <!-- NAV TABS -->
+             <nav class="capds-panel-nav" aria-label="Pasos del checkout">
+  <div id="nav-tab" class="nav nav-tabs" role="tablist">
+    <a class="nav-item nav-link active"
+       id="nav-js-basket-checkoutnc-tab"
+       data-toggle="tab"
+       href="#nav-js-basket-checkoutnc"
+       role="tab"
+       aria-controls="nav-js-basket-checkoutnc"
+       aria-selected="true"
+       aria-disabled="false">1 Cesta</a>
+
+    <a class="nav-item nav-link"
+       id="nav-js-details-checkoutnc-tab"
+       data-toggle="tab"
+       href="#nav-js-details-checkoutnc"
+       role="tab"
+       aria-controls="nav-js-details-checkoutnc"
+       aria-selected="false"
+       aria-disabled="false">2 Detalles</a>
+
+    <a class="nav-item nav-link disabled" id="nav-js-shipping-checkoutnc-tab" data-toggle="tab" href="#nav-js-shipping-checkoutnc" role="tab" aria-controls="nav-js-shipping-checkoutnc" aria-selected="false" aria-disabled="true" tabindex="-1">3 Envío</a>
+    <a class="nav-item nav-link disabled" id="nav-js-payment-checkoutnc-tab" data-toggle="tab" href="#nav-js-payment-checkoutnc" role="tab" aria-controls="nav-js-payment-checkoutnc" aria-selected="false" aria-disabled="true" tabindex="-1">4 Pago</a>
+  </div>
+</nav>
+
+
+               <!-- TAB CONTENT -->
+              <div class="tab-content" id="nav-tabContent">
+
+                <!-- 1) CESTA -->
+             <div class="tab-pane fade active"
+     id="nav-js-basket-checkoutnc"
+     role="tabpanel"
+     aria-labelledby="nav-js-basket-checkoutnc-tab">
+
+
+                             <div class="capds-minicartnc__container">
+
+                    <!-- LISTA (items desde JS) -->
+                    <div class="capds-minicartnc__list" id="ckCartList" aria-live="polite"></div>
+
+                    <!-- BOTTOM (totales + CTA) -->
+                    <div class="capds-panel__bottom">
+                      <div class="capds-minicartnc__actions">
+
+                        <div class="capds-minicartnc__taxsubtotal">
+                          <div>
+                            <div>
+                              <span>Subtotal</span>
+                              <span class="float-right" id="ckSubtotal">—</span>
+                            </div>
+
+                            <div class="capds-minicartnc__taxsubtotal--tax">
+                              <div>
+                                <span>Impuestos y tasas</span>
+                                <span class="float-right">Incluido</span>
+                              </div>
+                              <div>
+                                <span>Envío</span>
+                                <span class="float-right" id="ckShippingCost">Gratis</span>
+                              </div>
+
+                              <div class="capds-minicartnc__totalprice">
+                                <span>Total</span>
+                                <div class="capds-minicartnc__totalprice--price">
+                                  <p class="float-right capds-body-medium capds-minicartnc__totalprice--adjustedPrice" id="ckTotal">—</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <button id="ckContinueFromBasket" class="capds-checkout-button" type="button">
+                            <span>Finalizar compra</span>
+                          </button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /tab-pane #nav-js-basket-checkoutnc -->
+                <!-- 2) DETALLES -->
+                <div class="tab-pane fade"
+                     id="nav-js-details-checkoutnc"
+                     role="tabpanel"
+                     aria-labelledby="nav-js-details-checkoutnc-tab">
+
+                  <div class="ck-box ck-details">
+                    <div class="ck-details__head">
+                      <h3 class="ck-h">Detalles de inicio de sesión</h3>
+                      <button id="ckLogout" class="ck-link ck-link--muted" type="button">
+                        Cerrar sesión
+                      </button>
+
+                    </div>
+                    <!-- Resumen Detalles (cuando ya hay sesión) -->
+                    <div id="ckDetailsSummary" class="d-none" aria-hidden="true"></div>
+
+<form id="ckDetailsForm" class="ck-form">
+  <label class="ck-label" for="ckEmail">Email</label>
+  <input id="ckEmail" name="email" type="email" required autocomplete="email"
+         inputmode="email" placeholder="tu@email.com">
+
+  <label class="ck-label" for="ckPass">Contraseña</label>
+  <input id="ckPass" name="password" type="password" autocomplete="current-password"
+         placeholder="••••••••" required>
+
+  <button class="ck-primary" type="submit">INICIAR SESIÓN Y CONTINUAR</button>
+
+  <p class="ck-muted" style="margin-top:10px">
+    Si no tienes cuenta, inicia sesión desde el panel “Mi cuenta” o crea una cuenta antes de comprar.
+  </p>
+</form>
+
+
+                    <p class="ck-muted ck-details__hint">
+                      Usaremos este email para enviarte la confirmación del pedido.
+                    </p>
+                  </div>
+                </div>
+
+
+
+                <!-- 3) ENVÍO -->
+                <div class="tab-pane fade"
+                     id="nav-js-shipping-checkoutnc"
+                     role="tabpanel"
+                     aria-labelledby="nav-js-shipping-checkoutnc-tab">
+
+                  <div class="ck-box">
+                    <h3 class="ck-h">Elige dónde deseas recibir tu paquete</h3>
+                    
+  <!-- Login summary (Prophetia-like) arriba del paso 3 -->
+  <div id="ckShippingLoginSummary"></div>
+
+    <form id="ckShippingForm" class="ck-form" novalidate>
+
+  <label class="ck-radio">
+    <input type="radio" name="shipping" value="home">
+    <span>Entrega a domicilio</span>
+  </label>
+
+  <label class="ck-radio">
+    <input type="radio" name="shipping" value="store">
+    <span>Recogida en tienda</span>
+  </label>
+
+  <!-- PANEL DOMICILIO (cerrado por defecto) -->
+ <div id="js-shipToMe-checkoutnc" class="d-none" aria-hidden="true">
+  <div class="capds-form">
+    <fieldset>
+
+   
+
+   
+
+      <fieldset>
+
+        <div class="capds-form__input--group capds-span2">
+         <select class="capds-form__input capds-form__input--arrow" name="ship_addressList" required>
+  <option value="" disabled selected hidden></option>
+  <option value="new">Crear una nueva dirección de envío</option>
+</select>
+
+          <label>Seleccionar de la dirección guardada *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <select class="capds-form__input capds-form__input--arrow" name="ship_gender" required>
+            <option value="" disabled selected hidden></option>
+            <option value="1">Hombre</option>
+            <option value="2">Mujer</option>
+            <option value="3">No binario</option>
+            <option value="4">Prefiero no indicarlo</option>
+          </select>
+          <label>Género *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="ship_firstName" maxlength="36" required placeholder=" ">
+          <label>Nombre *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="ship_lastName" maxlength="51" required placeholder=" ">
+          <label>Apellidos *</label>
+        </div>
+
+        <div class="capds-form__input--group capds-span2">
+          <input class="capds-form__input" type="text" name="ship_address1" maxlength="60" required placeholder=" ">
+          <label>Dirección 1 *</label>
+        </div>
+
+        <div class="capds-form__input--group capds-span2">
+          <input class="capds-form__input" type="text" name="ship_address2" maxlength="60" placeholder=" ">
+          <label>Dirección 2</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="ship_postal" inputmode="numeric" required placeholder=" ">
+          <label>Código postal *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+  <select class="capds-form__input capds-form__input--arrow" name="ship_state" required>
+    <option value="" disabled selected hidden></option>
+  </select>
+  <label>Estado/provincia *</label>
+</div>
+
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="ship_city" required placeholder=" ">
+          <label>Ciudad *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <select class="capds-form__input capds-form__input--arrow" name="ship_country" required>
+            <option value="es" selected>España</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">Francia</option>
+          </select>
+          <label>País/región *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <select class="capds-form__input capds-form__input--arrow" name="ship_phoneCode" required>
+            <option value="es" selected>España +34</option>
+            <option value="pt">Portugal +351</option>
+            <option value="fr">Francia +33</option>
+          </select>
+          <label>Código de teléfono *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="ship_phone" inputmode="tel" required placeholder=" ">
+          <label>Teléfono *</label>
+        </div>
+
+         </fieldset>
+    </div><!-- /.capds-form -->
+  </div><!-- /#js-shipToMe-checkoutnc -->
+
+  
+<!-- BILLING TOGGLE -->
+<div class="capds-span2">
+  <div class="pp-checkRow">
+    <input class="capds-checkbox sr-only"
+           type="checkbox"
+           id="ppBillingDifferent"
+           name="billingDifferent">
+    <label class="pp-checkLabel" for="ppBillingDifferent">
+      <span>La dirección de facturación es diferente</span>
+    </label>
+  </div>
+</div>
+
+<!-- BILLING PANEL (hidden by default) -->
+<div id="ppBillingPanel" class="capds-span2 d-none" aria-hidden="true">
+  <div class="capds-checkoutnc-billingaddress">
+    <p class="capds-checkoutnc-billingaddress-text">Introduce tu dirección de facturación</p>
+    <p class="capds-checkoutnc-billingaddress-required float-right">*Campos obligatorios</p>
+
+    <div class="capds-form">
+
+      <fieldset class="pp-billingGrid">
+
+        <div class="capds-form__input--group capds-span2">
+          <select class="capds-form__input capds-form__input--arrow" name="bill_addressList" required>
+            <option value="" disabled selected hidden></option>
+            <option value="madrid">Madrid · Estación de Chamartín · 28036</option>
+            <option value="new">Crear una nueva dirección de facturación</option>
+          </select>
+          <label>Seleccionar de la dirección guardada *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <select class="capds-form__input capds-form__input--arrow" name="bill_gender" required>
+            <option value="" disabled selected hidden></option>
+            <option value="1">Hombre</option>
+            <option value="2">Mujer</option>
+            <option value="3">No binario</option>
+            <option value="4">Prefiero no indicarlo</option>
+          </select>
+          <label>Género *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="bill_firstName" required placeholder=" ">
+          <label>Nombre *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="bill_lastName" required placeholder=" ">
+          <label>Apellidos *</label>
+        </div>
+
+        <div class="capds-form__input--group capds-span2">
+          <input class="capds-form__input" type="text" name="bill_address1" required placeholder=" ">
+          <label>Dirección 1 *</label>
+        </div>
+
+        <div class="capds-form__input--group capds-span2">
+          <input class="capds-form__input" type="text" name="bill_address2" placeholder=" ">
+          <label>Dirección 2</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="bill_postal" required placeholder=" ">
+          <label>Código postal *</label>
+        </div>
+
+    <div class="capds-form__input--group">
+  <select class="capds-form__input capds-form__input--arrow" name="bill_state" required>
+    <option value="" disabled selected hidden></option>
+  </select>
+  <label>Estado/provincia *</label>
+</div>
+
+
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="bill_city" required placeholder=" ">
+          <label>Ciudad *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <select class="capds-form__input capds-form__input--arrow" name="bill_country" required>
+            <option value="es" selected>España</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">Francia</option>
+          </select>
+          <label>País/región *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <select class="capds-form__input capds-form__input--arrow" name="bill_phoneCode" required>
+            <option value="es" selected>España +34</option>
+            <option value="pt">Portugal +351</option>
+            <option value="fr">Francia +33</option>
+          </select>
+          <label>Código de teléfono *</label>
+        </div>
+
+        <div class="capds-form__input--group">
+          <input class="capds-form__input" type="text" name="bill_phone" required placeholder=" ">
+          <label>Teléfono *</label>
+        </div>
+
+      </fieldset>
+    </div>
+  </div>
+</div>
+<!-- GIFT -->
+<div class="capds-span2">
+  <div class="pp-checkRow pp-checkRow--gift">
+    <input class="capds-checkbox sr-only"
+           type="checkbox"
+           id="ppIsGift"
+           name="isGift">
+    <label class="pp-checkLabel pp-checkLabel--gift" for="ppIsGift">
+      <svg class="pp-giftIcon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+  <rect x="3" y="8" width="18" height="4" rx="1"></rect>
+  <path d="M12 8v13"></path>
+  <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"></path>
+  <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"></path>
+</svg>
+
+      <span class="pp-checkText">¿Es un regalo? Añade un mensaje personalizado.</span>
+      <span class="pp-giftThumb" aria-hidden="true"></span>
+    </label>
+  </div>
+</div>
+
+<div id="ppGiftMessage" class="capds-span2 d-none" aria-hidden="true">
+  <div class="capds-form__input--group">
+    <textarea class="capds-form__input capds-form__input--textarea"
+              name="giftMessage"
+              maxlength="250"
+              placeholder=" "></textarea>
+    <label>250 caracteres</label>
+  </div>
+  <p class="ck-muted" style="margin: 6px 0 0;">
+    No se permiten emoticonos.
+  </p>
+</div>
+<!-- INVOICE / TAX -->
+<div class="capds-span2">
+  <div class="pp-checkRow pp-checkRow--invoice">
+    <input class="capds-checkbox sr-only"
+           type="checkbox"
+           id="ppInvoiceWanted"
+           name="invoiceWanted">
+    <label class="pp-checkLabel pp-checkLabel--invoice" for="ppInvoiceWanted">
+      <span class="pp-checkText">Información fiscal/de facturación obligatoria</span>
+      <span class="pp-invoiceIcon" aria-hidden="true"></span>
+    </label>
+  </div>
+</div>
+
+<div id="ppInvoicePanel" class="capds-span2 d-none" aria-hidden="true">
+  <div class="capds-form__input--group">
+    <input class="capds-form__input" type="text" name="vatNumber" maxlength="32" placeholder=" ">
+    <label>DNI / NIF / Nº fiscal</label>
+  </div>
+
+  <div class="capds-form__input--group">
+    <input class="capds-form__input" type="text" name="companyName" maxlength="64" placeholder=" ">
+    <label>Nombre de la empresa (no es obligatorio)</label>
+  </div>
+</div>
+
+
+
+
+
+
+  <!-- PANEL TIENDA (cerrado por defecto) -->
+<div id="js-shipToStore-checkoutnc" class="d-none LOE_EUR" aria-hidden="true">
+    <div class="capds-checkoutnc-shiptome">
+      <p class="capds-checkoutnc-shiptome-text">Elige tienda para recogida</p>
+      <p class="capds-checkoutnc-shiptome-required float-right">*Campos obligatorios</p>
+
+      <div class="ck-form">
+        <label class="ck-label" for="ckStore">Tienda</label>
+        <select id="ckStore" name="store">
+          <option value="" disabled selected hidden>Selecciona una tienda</option>
+          <option value="sevilla-centro">Sevilla Centro</option>
+          <option value="sevilla-nervion">Sevilla Nervión</option>
+          <option value="dos-hermanas">Dos Hermanas</option>
+        </select>
+
+        <p class="ck-muted" style="margin: 0;">
+          Te avisaremos por email cuando esté listo para recoger.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <button class="ck-primary" type="submit" id="ckShippingSubmit">CONTINUAR</button>
+</form>
+
+<!-- Resumen Paso 3 (oculto hasta continuar) -->
+<div id="js-shipping-summary-container"
+     class="capds-checkoutnc-shipping-summary d-none"
+     aria-hidden="true"></div>
+                  </div>
+                </div>
+                <!-- 4) PAGO -->
+              <div class="tab-pane fade"
+     id="nav-js-payment-checkoutnc"
+     role="tabpanel"
+     aria-labelledby="nav-js-payment-checkoutnc-tab">
+
+  <div class="ck-box">
+    <h3 class="ck-h">Pago seguro</h3>
+    <p class="ck-muted" style="margin-top:-6px">Elige tu método de pago</p>
+
+    <form id="ckPaymentForm" class="ck-payForm" novalidate>
+
+    <!-- PAGO SEGURO EXTERNO -->
+<label class="ck-payRow">
+  <input class="ck-payRadio" type="radio" name="payMethod" value="stripe_checkout" checked>
+  <span class="ck-payLabel">
+    <strong>Pago seguro con tarjeta</strong>
+    <span class="ck-payBadge">Visa · Mastercard · Apple Pay · Google Pay</span>
+  </span>
+</label>
+
+<div class="ck-paymentNotice">
+  <p>
+    El pago se completará en una pasarela segura externa. Prophetia no almacena ni procesa directamente los datos de tu tarjeta.
+  </p>
+</div>
+
+<button type="submit" class="ck-confirmPay" id="ckConfirmPay">
+  CONTINUAR AL PAGO SEGURO
+</button>
+
+      <label class="ck-legal ck-legal--accept">
+  <input id="ckAcceptTerms" name="acceptTerms" type="checkbox" required>
+  <span>
+    Confirmo que he leído y acepto las
+<a href="/terms" target="_blank" rel="noopener">Condiciones de venta</a>
+<a href="/devoluciones" target="_blank" rel="noopener">Política de devoluciones</a>
+<a href="/shipping" target="_blank" rel="noopener">Política de envíos</a>
+<a href="/privacy" target="_blank" rel="noopener">Política de privacidad</a>
+  </span>
+</label>
+
+      <!-- Detalles de envío -->
+      <div class="ck-shipDetails">
+        <h4 class="ck-shipH">Detalles de envío</h4>
+        <div class="ck-shipCard" id="ckShipDetailsCard">
+          <!-- Lo rellenamos por JS con lo que ya guardas en LS_SHIP_DETAILS -->
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+              </div><!-- /tab-content -->
+
+            </div><!-- /capds-form--sigin -->
+          </div><!-- /col -->
+        </div><!-- /row -->
+      </section>
+
+      <!-- RIGHT (Resumen “siempre visible” en desktop) -->
+   <aside class="checkoutnc-right-col" aria-label="Resumen de pedido">
+  <div class="checkoutnc-right-content">
+    <!-- Mini cart (esquívalo en la columna derecha) -->
+    <div class="checkoutnc-minibasket-top-content">
+      <div class="capds-minicartnc--container">
+        <div class="capds-minicartnc__list" id="ckSidebarCartList" aria-live="polite"></div>
+        <div class="ck-tribeDiscount" id="ckTribeDiscountBox">
+  <label class="ck-tribeDiscount__label" for="ckTribeCode">
+    Prophetia Tribe
+  </label>
+
+  <div class="ck-tribeDiscount__row">
+    <input id="ckTribeCode"
+           class="ck-tribeDiscount__input"
+           type="text"
+           inputmode="text"
+           autocomplete="off"
+           placeholder="Código privado">
+
+    <button id="ckApplyTribeCode"
+            class="ck-tribeDiscount__btn"
+            type="button">
+      Aplicar
+    </button>
+  </div>
+
+  <p id="ckTribeDiscountMsg" class="ck-tribeDiscount__msg" aria-live="polite"></p>
+</div>
+
+        <!-- Totales y CTA -->
+        <div class="capds-panel__bottom">
+          <div class="capds-minicartnc__actions">
+            <div class="capds-minicartnc__taxsubtotal">
+              <div>
+                <div>
+                  <span>Subtotal</span>
+                  <span class="float-right" id="ckSidebarSubtotal">—</span>
+                </div>
+                <div class="capds-minicartnc__taxsubtotal--tax">
+                  <div>
+                    <span>Impuestos y tasas</span>
+                    <span class="float-right">Incluido</span>
+                  </div>
+                  <div>
+                    <span>Envío</span>
+                    <span class="float-right" id="ckSidebarShipping">Gratis</span>
+                  </div>
+                  <div class="capds-minicartnc__totalprice">
+                    <span>Total</span>
+                    <div class="capds-minicartnc__totalprice--price">
+                      <p class="float-right capds-body-medium capds-minicartnc__totalprice--adjustedPrice" id="ckSidebarTotal">—</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM: bloques informativos Prophetia-like -->
+    <div class="checkoutnc-minibasket-bottom-content">
+
+      <section class="pp-rightSection">
+<h4 class="pp-rightTitle">Envío gratis desde 40 €</h4>
+<p class="pp-rightText">
+  Entrega según transportista disponible · Devoluciones online en 14 días naturales · Cambio en tienda gratuito 30 días
+</p>
+<p class="pp-rightText">
+  <a class="pp-rightLink" href="/devoluciones" target="_blank" rel="noopener">
+    Ver política de devoluciones
+  </a>
+</p>
+      </section>
+
+      <section class="pp-rightSection">
+        <h3 class="pp-rightTitle">¿Necesitas ayuda?</h3>
+        <p class="pp-rightText">+34 911 538 181</p>
+        <p class="pp-rightText">Lunes a sábado · 10:00–19:00 (hora Madrid)</p>
+        <p class="pp-rightText"><a class="pp-rightLink" href="mailto:clientservices@prophetia.com">clientservices@prophetia.com</a></p>
+      </section>
+
+      <section class="pp-rightSection">
+        <h3 class="pp-rightTitle">Pago seguro</h3>
+        <div class="pp-payLogos" aria-label="Métodos de pago">
+          <span class="pp-payChip">VISA</span>
+          <span class="pp-payChip">MC</span>
+          <span class="pp-payChip">AMEX</span>
+          <span class="pp-payChip">Apple Pay</span>
+          <span class="pp-payChip">Klarna</span>
+          <span class="pp-payChip">PayPal</span>
+        </div>
+      </section>
+
+      <section class="pp-rightSection pp-rightSection--media">
+        <div>
+          <h3 class="pp-rightTitle">Empaquetado de regalo</h3>
+          <p class="pp-rightText">Tus compras llegan con presentación Prophetia. Puedes añadir mensaje personalizado al finalizar.</p>
+        </div>
+        <div class="pp-packThumb" aria-hidden="true"></div>
+      </section>
+
+    </div>
+  </div>
+</aside>
+
+
+  </div> <!-- /.ck-grid -->
+</div>   <!-- /.ck-shell -->
+
+  </main>
+
+
+  <!-- Otros scripts -->
+  <script src="assets/js/header-init.js" defer></script>
+  <script src="assets/js/script.js" defer></script>
+
+  <!-- Auth modular REAL (tu archivo) -->
+  <script src="assets/js/firebase-auth.js" type="module" defer></script>
+<script>
+  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+    key: "AIzaSyAYDsbNfsJ-9v3CRzYVhR54Mja5E580R9o",
+    v: "weekly",
+    // opcional, recomendado si restringes por referrer
+    authReferrerPolicy: "origin"
+  });
+</script>
+
+  <!-- Checkout (depende de auth) -->
+  <script src="assets/js/checkout.js" type="module" defer></script>
+</body>
+
+</html>

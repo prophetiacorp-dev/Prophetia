@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Mi calendario — PROPHETIA</title>
+  <meta name="description" content="Calendario privado de PROPHETIA: próximos lanzamientos, accesos anticipados y fechas personales vinculadas a tu wishlist." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#f7f4ee" />
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/assets/img/logo/propnegrovf.svg" type="image/svg+xml">
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- CUENTA / CALENDARIO -->
+  <link rel="stylesheet" href="assets/css/account-content.css">
+  <link rel="stylesheet" href="assets/css/drop-calendar.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="account-page drop-calendar-page" data-page="drop-calendar">
+
+  <div id="header"></div>
+
+  <main id="swup" class="account-layout drop-calendar-layout" tabindex="-1">
+
+    <!-- LOGO / BRAND BAND -->
+    <section class="account-brand" aria-label="PROPHETIA">
+      <div class="container">
+        <a class="account-brand__logo" href="/home" aria-label="Inicio Prophetia">
+          <img src="/assets/img/logo/propnegrovf.svg" alt="PROPHETIA">
+        </a>
+      </div>
+    </section>
+
+    <!-- NAV CUENTA -->
+    <nav class="account-nav" aria-label="Área de cliente">
+      <div class="container account-nav__inner">
+     <div class="account-nav__links">
+          <a href="/my-content">Mi contenido</a>
+          <a href="/drop-calendar">Mi calendario</a>
+          <a href="/vault">Vault</a>
+          <a href="/pedidos">Pedidos</a>
+          <a href="/reservas">Reservas</a>
+          <a href="/wishlist">Lista de deseos</a>
+          <a href="/account">Cuenta</a>
+          <a href="/addresses" aria-current="page">Libro de direcciones</a>
+          <a href="/my-services">Mis servicios</a>
+        </div>
+        <button class="account-nav__logout" type="button" data-pp-logout>
+          Cerrar sesión
+        </button>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="drop-hero">
+      <div class="container drop-hero__grid">
+        <div class="drop-hero__copy">
+          <p class="account-kicker">PRIVATE CALENDAR</p>
+
+          <h1 class="account-title">
+            Mi calendario
+          </h1>
+
+          <p class="account-lede">
+            Consulta próximos lanzamientos, accesos anticipados y fechas personales.
+            Guarda cumpleaños, momentos de regalo y recordatorios vinculados a tu universo Prophetia.
+          </p>
+        </div>
+
+        <aside class="drop-hero__panel" aria-label="Resumen del calendario">
+          <p class="drop-panel__eyebrow">Prophetia Calendar</p>
+          <h2>Próximos movimientos</h2>
+          <p data-calendar-summary>
+            Cargando calendario privado...
+          </p>
+
+          <button class="drop-panel__btn" type="button" data-open-calendar-form>
+            Añadir fecha personal
+          </button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- CALENDARIO -->
+    <section class="drop-calendar-main">
+      <div class="container drop-calendar-shell">
+
+        <header class="drop-calendar-toolbar">
+          <div>
+            <p class="account-kicker">ARCHIVE DATES</p>
+            <h2 data-calendar-month-label>Calendario</h2>
+          </div>
+
+          <div class="drop-calendar-controls" aria-label="Controles del calendario">
+            <button type="button" data-calendar-prev aria-label="Mes anterior">←</button>
+            <button type="button" data-calendar-today>Hoy</button>
+            <button type="button" data-calendar-next aria-label="Mes siguiente">→</button>
+          </div>
+        </header>
+
+        <div class="drop-calendar-grid" data-calendar-grid aria-label="Calendario mensual"></div>
+
+        <section class="drop-events">
+          <div class="drop-events__head">
+            <div>
+              <p class="account-kicker">SELECTED DATE</p>
+              <h2 data-selected-date-label>Selecciona un día</h2>
+            </div>
+          </div>
+
+          <div class="drop-events__list" data-events-list>
+            <p class="drop-empty">Selecciona una fecha para ver lanzamientos o recordatorios.</p>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL FECHA PERSONAL -->
+  <div class="drop-modal" data-calendar-modal aria-hidden="true">
+    <div class="drop-modal__backdrop" data-close-calendar-form></div>
+
+    <section class="drop-modal__card" role="dialog" aria-modal="true" aria-labelledby="calendarFormTitle">
+      <button class="drop-modal__close" type="button" data-close-calendar-form aria-label="Cerrar">
+        ×
+      </button>
+
+      <p class="account-kicker">PRIVATE REMINDER</p>
+      <h2 id="calendarFormTitle">Añadir fecha personal</h2>
+
+      <form class="drop-form" data-calendar-form>
+        <label>
+          <span>Nombre de la fecha</span>
+          <input type="text" name="title" placeholder="Cumpleaños de..." required>
+        </label>
+
+        <label>
+          <span>Fecha</span>
+          <input type="date" name="date" required>
+        </label>
+
+        <label>
+          <span>Tipo</span>
+          <select name="type">
+            <option value="birthday">Cumpleaños</option>
+            <option value="gift">Fecha de regalo</option>
+            <option value="anniversary">Aniversario</option>
+            <option value="personal">Recordatorio personal</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Nota</span>
+          <textarea name="note" rows="4" placeholder="Ej: mirar wishlist, preparar regalo, revisar talla..."></textarea>
+        </label>
+<label class="drop-form__check">
+  <input type="checkbox" name="remind" value="1">
+  <span>Recordarme al entrar en la web</span>
+</label>
+
+<label>
+  <span>Aviso previo</span>
+  <select name="remindDays">
+    <option value="0">El mismo día</option>
+    <option value="1">1 día antes</option>
+    <option value="3" selected>3 días antes</option>
+    <option value="7">7 días antes</option>
+  </select>
+</label>
+        <button class="drop-form__submit" type="submit">
+          Guardar fecha
+        </button>
+      </form>
+    </section>
+  </div>
+
+  <div id="footer"></div>
+  <div id="popup-area"></div>
+
+  <script type="module" src="/assets/js/firebase-init.js"></script>
+  <script type="module" src="/assets/js/firebase-auth.js"></script>
+  <script defer src="/assets/js/header-init.js"></script>
+
+  <script src="/assets/js/cart.js" defer></script>
+  <script src="/assets/js/script.js" defer></script>
+  <script src="/assets/js/popup.js" defer></script>
+  <script src="/assets/js/cookies.js" defer></script>
+  <script src="/assets/js/drop-calendar.js" defer></script>
+</body>
+</html>

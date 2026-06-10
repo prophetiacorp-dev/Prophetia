@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Vault — PROPHETIA</title>
+  <meta name="description" content="Vault privado de PROPHETIA. Archivo de piezas, accesos y contenidos desbloqueados por rango Prophetia Tribe." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#f7f4ee" />
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/assets/img/logo/propnegrovf.svg" type="image/svg+xml">
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- CUENTA / VAULT -->
+  <link rel="stylesheet" href="assets/css/account-content.css">
+  <link rel="stylesheet" href="assets/css/vault.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="account-page vault-page" data-page="vault">
+
+  <div id="header"></div>
+
+  <main id="swup" class="account-layout vault-layout" tabindex="-1">
+
+    <!-- LOGO / BRAND BAND -->
+    <section class="account-brand" aria-label="PROPHETIA">
+      <div class="container">
+        <a class="account-brand__logo" href="/home" aria-label="Inicio Prophetia">
+          <img src="/assets/img/logo/propnegrovf.svg" alt="PROPHETIA">
+        </a>
+      </div>
+    </section>
+
+    <!-- NAV CUENTA -->
+    <nav class="account-nav" aria-label="Área de cliente">
+      <div class="container account-nav__inner">
+        <div class="account-nav__links">
+          <a href="/my-content">Mi contenido</a>
+          <a href="/drop-calendar">Mi calendario</a>
+          <a href="/vault" aria-current="page">Vault</a>
+          <a href="/pedidos">Pedidos</a>
+          <a href="/reservas">Reservas</a>
+          <a href="/wishlist">Lista de deseos</a>
+          <a href="/account">Cuenta</a>
+          <a href="/addresses">Libro de direcciones</a>
+          <a href="/my-services">Mis servicios</a>
+        </div>
+
+        <button class="account-nav__logout" type="button" data-pp-logout>
+          Cerrar sesión
+        </button>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="vault-hero">
+      <div class="container vault-hero__grid">
+        <div class="vault-hero__copy">
+          <p class="account-kicker">PRIVATE VAULT</p>
+
+          <h1 class="account-title">
+            Vault
+          </h1>
+
+          <p class="account-lede">
+            Archivo privado de accesos, piezas y contenidos desbloqueados por tu rango
+            dentro de Prophetia Tribe. Algunas puertas se abren con LP; otras con tiempo.
+          </p>
+        </div>
+
+        <aside class="vault-hero__panel" aria-label="Estado Vault">
+          <p class="vault-panel__eyebrow">Vault Status</p>
+
+          <h2 data-vault-rank>
+            Consultando archivo
+          </h2>
+
+          <p data-vault-summary>
+            Cargando tus accesos privados...
+          </p>
+
+          <div class="vault-panel__meta">
+            <p>
+              <span>Legacy Points</span>
+              <strong data-vault-points>—</strong>
+            </p>
+
+            <p>
+              <span>Early Access</span>
+              <strong data-vault-early>—</strong>
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <!-- VAULT CONTENT -->
+    <section class="vault-main">
+      <div class="container vault-shell">
+
+        <header class="vault-section-head">
+          <p class="account-kicker">PRIVATE ACCESS</p>
+          <h2>Tu archivo desbloqueado</h2>
+          <p data-vault-status-text>
+            Aquí aparecen los accesos disponibles según tu rango Prophetia Tribe.
+          </p>
+        </header>
+
+        <section class="vault-summary" aria-label="Resumen Vault">
+          <article>
+            <span>Disponible ahora</span>
+            <strong data-vault-available-count>—</strong>
+          </article>
+
+          <article>
+            <span>Próximos accesos</span>
+            <strong data-vault-locked-count>—</strong>
+          </article>
+
+          <article>
+            <span>Siguiente desbloqueo</span>
+            <strong data-vault-next-rank>—</strong>
+          </article>
+        </section>
+
+        <section class="vault-group vault-group--unlocked" aria-labelledby="vaultUnlockedTitle">
+          <div class="vault-group__head">
+            <div>
+              <p class="account-kicker">AVAILABLE NOW</p>
+              <h3 id="vaultUnlockedTitle">Disponible ahora</h3>
+            </div>
+
+            <p data-vault-unlocked-note>
+              Accesos activos para tu rango actual.
+            </p>
+          </div>
+
+          <div class="vault-grid" data-vault-unlocked-grid>
+            <article class="vault-loading">
+              Cargando accesos disponibles...
+            </article>
+          </div>
+        </section>
+
+        <section class="vault-group vault-group--locked" aria-labelledby="vaultLockedTitle">
+          <div class="vault-group__head">
+            <div>
+              <p class="account-kicker">NEXT UNLOCKS</p>
+              <h3 id="vaultLockedTitle">Próximos desbloqueos</h3>
+            </div>
+
+            <p data-vault-locked-note>
+              Nuevos accesos aparecerán al progresar dentro de Prophetia Tribe.
+            </p>
+          </div>
+
+          <div class="vault-grid vault-grid--locked" data-vault-locked-grid>
+            <article class="vault-loading">
+              Cargando próximos desbloqueos...
+            </article>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+  <div id="popup-area"></div>
+
+  <script type="module" src="/assets/js/firebase-init.js"></script>
+  <script type="module" src="/assets/js/firebase-auth.js"></script>
+  <script defer src="/assets/js/header-init.js"></script>
+
+  <script src="/assets/js/cart.js" defer></script>
+  <script src="/assets/js/script.js" defer></script>
+  <script src="/assets/js/popup.js" defer></script>
+  <script src="/assets/js/cookies.js" defer></script>
+  <script src="/assets/js/vault.js" defer></script>
+</body>
+</html>

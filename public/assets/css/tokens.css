@@ -1,0 +1,76 @@
+/* =========================================================
+   PROPHETIA · TOKENS
+   Base fluida responsive 320px → desktop
+   ========================================================= */
+
+:root {
+  /* Layout */
+  --edge: clamp(14px, 4vw, 24px);
+  --hdr-h: clamp(58px, 9vw, 68px);
+  --pp-header-h: var(--hdr-h);
+
+  /* Header veil */
+  --pp-veil-bg: rgba(255, 255, 255, .82);
+  --pp-veil-blur: 12px;
+  --pp-veil-sat: 160%;
+
+  /* Typography */
+  --font-display: "Playfair Display", "Cormorant Garamond", serif;
+  --font-ui: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-urban: "TheUrbanWayItalic", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  /* Floating logo */
+  --logo-x: clamp(-74px, -6vw, -18px);
+  --logo-y: clamp(10px, 4vw, 38px);
+  --logo-scale: 1;
+
+  /* Hero */
+  --hero-min: clamp(420px, 78dvh, 560px);
+  --hero-vw: 56.25vw;
+  --hero-max: 760px;
+
+  /* PDP */
+  --pdp-logo-maxw: 820px;
+  --pdp-logo-offset-y: -51px;
+  --pdp-logo-offset-x: -43px;
+
+  /* Motion */
+  --pp-ease-soft: cubic-bezier(.25, .1, .25, 1);
+  --pp-ease-luxury: cubic-bezier(.16, .84, .44, 1);
+  --pp-anim-fast: 160ms;
+  --pp-anim-med: 260ms;
+  --pp-anim-slow: 420ms;
+
+  /* Z-index */
+  --z-modal: 3500;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+img,
+video,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --edge: clamp(14px, 4.6vw, 18px);
+    --hdr-h: 60px;
+    --hero-min: clamp(460px, 82dvh, 620px);
+    --logo-x: clamp(-34px, -7vw, -12px);
+    --logo-y: clamp(8px, 3vw, 18px);
+  }
+}

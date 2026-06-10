@@ -1,0 +1,721 @@
+/* =========================================================
+   PROPHETIA · HEADER (Prophetia-like) — v2025-11-10
+   Depende de: tokens.css / layout.css  (usa --edge y --hdr-h)
+   Objetivos:
+   - Rejilla estable: [left ········· right]
+   - Icon buttons accesibles (44×44) con icono 18×18
+   - Auth logo sin píldora ni blur (solo el emblema)
+   - Sticky con blur y sombra suave (alineado con megamenu)
+   ========================================================= */
+
+/* -----------------------------
+   Contenedor principal
+   ----------------------------- */
+.pp-header {                       /* banda fija superior */
+  position: relative;
+  top: 0;
+  z-index: 1200;
+  background: #fff;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* Elimina el padding lateral para ocupar todo el espacio */
+.pp-header > .container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding-inline: 22px;
+  box-sizing: border-box;
+}
+
+/* Tipografía canónica del header (gana siempre) */
+.pp-header,
+.pp-header *{
+  font-family: var(--font-ui, "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+}
+
+
+/* Barra superior interna */
+.pp-topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 28px;
+  height: var(--hdr-h, 68px);
+  overflow: visible;
+}
+
+/* Columnas laterales */
+.pp-left  { display: flex !important; align-items: center !important; gap: 28px; flex: 0 0 auto; }
+.pp-right {
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px; /* más compacto, pero igual para todos */
+  flex: 0 0 auto;
+  line-height: 0;
+}
+/* -----------------------------
+   MEGA TABS (layout del panel izquierdo)
+   ----------------------------- */
+.pp-header .mega { position: relative; }
+
+.pp-header .mega-tabs{
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pp-header .mega-tabs > li{
+  margin: 0;
+  padding: 0;
+}
+
+/* Necesario para que el ::after del activo se coloque bien */
+.pp-header .mega-toggle{
+  position: relative;
+}
+
+/* -----------------------------
+   Sticky + sombra coherente con mega
+   ----------------------------- */
+.site-header.sticky {
+  position: static;      /* deja de flotar */
+  background: #fff;      /* fondo sólido */
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+
+/* -----------------------------
+   Botones básicos del header (reset editorial)
+   ----------------------------- */
+.pp-header button,
+.pp-header .mega-toggle {
+  all: unset;
+  cursor: pointer;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+  font-size: 12.5px;     /* ⬅️ más lujo */
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: .02em;
+
+  padding: 7px 0;
+  color: #111;
+}
+/* Header: asegura tipografía global también en links */
+.pp-header a{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+}
+
+/* activo: un toque de “peso”, pero sin mazacote */
+.pp-header .mega-toggle.is-active{
+  font-weight: 600;
+}
+
+/* Subrayado editorial: cae justo bajo la palabra */
+.pp-header .mega-toggle{
+  position: relative;
+  display: inline-flex;     /* evita comportamientos raros de inline + absolute */
+  padding-inline: 0;        /* el subrayado no “hereda” padding lateral */
+}
+
+.pp-header .mega-toggle.is-active::after{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  bottom:-6px;              /* un pelín más fino que -8 */
+  height:1px;               /* más lujo que 2px */
+  background: currentColor;
+  border-radius:999px;
+  opacity:.85;
+  transform: scaleX(.72);   /* hace el trazo más corto, centrado */
+  transform-origin: center;
+}
+
+
+/* Iconos del header: line-height 0 SOLO en la zona derecha (evita “tachado” en tabs) */
+.pp-header .pp-right button,
+.pp-header .pp-right a,
+.pp-header .pp-right .icon-btn{
+  line-height: 0;
+}
+
+/* -----------------------------
+   Buscador inline
+   ----------------------------- */
+.search-inline { display: inline-flex; align-items: center; min-width: 0; }
+.search-inline .search-input{
+  width: 200px;
+  max-width: 28vw;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  padding: 4px 0 6px 0;
+  font: 400 14px/1.2 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  transition: border-color .2s ease, width .25s ease;
+}
+.search-inline .search-input:focus{
+  outline: none;
+  border-bottom-width: 2px;
+  width: 280px;
+}
+
+/* -----------------------------
+   Iconografía del lado derecho (CANÓNICO)
+   - Área clicable accesible 44×44
+   - Icono interno 18×18
+   ----------------------------- */
+.pp-header .pp-right .icon-btn,
+.pp-header .pp-right button,
+.pp-header .pp-right a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;   /* <= elige 32 o 36, pero lo mismo para todos */
+  height: 52px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  line-height: 0;
+  
+  
+}
+
+
+/* Anula márgenes heredados para que todos los iconos tengan el mismo “pegado” */
+.pp-header .pp-right .icon-btn,
+.pp-header .pp-right .icon-btn + .icon-btn {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Normalización de iconografía (Prophetia-like)
+   Fuerza mismo ancho visual entre iconos */
+.pp-header .pp-right .icon-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+  margin: 0 auto;          /* centra visualmente */
+}
+
+/* Ajuste fino solo para el carrito (icono más ancho por diseño) */
+#cartOpen svg {
+  transform: scale(1.14);   /* 0.85–0.90 según gusto */
+}
+
+/* Asegura tipografía en los tabs del mega aunque existan resets externos */
+.pp-header .mega-tabs,
+.pp-header .mega-tabs *{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+}
+
+
+/* -----------------------------
+   Brand compact (estilo píldora) — por si lo usas en otro contexto
+   En el header, el botón de AUTH se neutraliza más abajo.
+   ----------------------------- */
+.pp-header .brand-compact{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--line, #e9e9e9) 60%, transparent);
+  box-shadow: 0 6px 22px rgba(0,0,0,.10);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.pp-header .brand-compact:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.14);
+}
+
+/* -----------------------------
+   Auth logo (emblema) dentro de .pp-right
+   - SIN píldora ni blur; solo icono 18×18 dentro de caja 44×44
+   ----------------------------- */
+.pp-header .pp-right #ppAuthLogoBtn.brand-compact{
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  min-width: auto !important;
+  height: auto !important;
+  backdrop-filter: none !important;
+}
+
+/* Garantiza que la imagen del auth respete 18×18 */
+.pp-header .pp-right #ppAuthLogoBtn.brand-compact img{
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+
+/* -----------------------------
+   Utilidad de accesibilidad para labels invisibles
+   ----------------------------- */
+.sr-only{
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -----------------------------
+   Salvaguardas (evitan “rebotes” de otros resets)
+   ----------------------------- */
+.pp-header, .pp-topbar, .pp-left { overflow: visible; }
+.pp-header * { box-sizing: border-box; }
+/* ===== Prophetia · Capas header/mega ===== */
+:root{
+  --hdr-h: var(--pp-header-h, 72px);
+}
+
+/* Header estable arriba (solo cuando uses .site-header.sticky) */
+.site-header.sticky, .pp-header {
+  z-index: 1500;
+  position: relative;
+}
+
+
+/* Mega: contenedor fijo fuera de stacking de brand-band */
+.mega{ position:relative; z-index:2000; }
+.mega .mega-panel{
+  position:fixed;
+  top:var(--hdr-h); left:0; right:0;
+  display:none; opacity:0; transform:translateY(8px);
+  z-index:3000; /* por encima de logo, brand-band, filtros */
+  will-change:transform, opacity;
+}
+.mega.is-open .mega-panel{ display:block; opacity:1; transform:translateY(0); }
+
+/* Cualquier banda editorial por debajo del mega */
+.brand-band, .plp-mast, .bb-right{ position:relative; z-index:1; }
+
+
+/* ===== Cuenta Prophetia en el header ===== */
+.pp-account {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+
+/* Por defecto: solo se ve el botón de login (logo) */
+.pp-account #ppAuthLogoBtn {
+  display: inline-flex;
+}
+
+.pp-account .pp-profile-chip,
+.pp-account .pp-logout-btn {
+  display: none;
+}
+
+/* Cuando el usuario está logado (body.pp-auth-logged lo pone Firebase) */
+.pp-auth-logged .pp-account #ppAuthLogoBtn {
+  display: none;
+}
+
+.pp-auth-logged .pp-account .pp-profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pp-auth-logged .pp-account .pp-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.85);
+  font-size: 12px;
+  cursor: pointer;
+}
+#ppAuthLogoBtn.is-logged img {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+#ppAuthLogoBtn.is-logged {
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.12);
+}
+
+
+/* Botón invitado (icono login)
+   OJO: no usamos all:unset para no perder el width/height 40px del patrón */
+#ppAuthLogoBtn {
+  cursor: pointer;
+}
+
+
+/* Chip Mi cuenta (usuario logado) */
+#ppProfileChip {
+  /* NO usar all: unset; para no perder width/height = 52px del header */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* centrado perfecto del emblema */
+  gap: 0;                  /* no necesitamos hueco porque el texto va oculto */
+}
+
+/* Círculo con la inicial */
+.pp-profile-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-family: var(--pp-serif, "Cinzel", serif);
+}
+
+/* Texto junto al avatar: oculto para tener SOLO el emblema */
+.pp-profile-label {
+  display: none;     /* ← si algún día quieres mostrar “Mi cuenta”, cambias aquí */
+}
+/* =========================
+   PP · Top Notice (Prophetia)
+   ========================= */
+.pp-topnotice{
+  position: sticky;
+  top: 0;
+  z-index: 5000; /* por encima de header/mega */
+  background: #111;
+  color: #fff;
+}
+
+.pp-topnotice[hidden]{ display:none; }
+
+.pp-topnotice__inner{
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 16px;
+}
+
+.pp-topnotice__msg{
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.pp-topnotice__close{
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+/* ================================
+   TOP NOTICE · ocupa header (overlay)
+   Requiere HTML: #ppTopNotice dentro del header o body (da igual)
+   ================================ */
+
+:root{
+  --pp-topnotice-h: var(--hdr-h, 68px);
+  --pp-topnotice-bg: rgba(255,255,255,.92);
+  --pp-topnotice-line: rgba(0,0,0,.10);
+}
+
+#ppTopNotice{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--pp-topnotice-h);
+  z-index: 5000;                 /* por encima del header/mega */
+  display: grid;
+  align-items: center;
+  background: var(--pp-topnotice-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--pp-topnotice-line);
+
+  transform: translateY(-110%);
+  opacity: 0;
+  pointer-events: none;
+
+  transition: transform .28s ease, opacity .28s ease;
+}
+
+/* Estado visible: usa aria-hidden como fuente de verdad */
+#ppTopNotice[aria-hidden="false"]{
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Contenido interior alineado como header */
+#ppTopNotice .pp-topnotice__inner{
+  max-width: 100%;
+  padding-inline: 22px;          /* mismo padding que tu header container */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+#ppTopNoticeMsg{
+  font: 500 12.5px/1.35 var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+  letter-spacing: .02em;
+  color: #111;
+}
+
+#ppTopNoticeClose{
+  all: unset;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+}
+#ppTopNoticeClose:hover{
+  background: rgba(0,0,0,.05);
+}
+
+/* Mientras el aviso está abierto, bloquea clics en el header por debajo */
+html:has(#ppTopNotice[aria-hidden="false"]) .pp-header{
+  pointer-events: none;
+}
+
+/* Pero deja clickable el propio aviso */
+html:has(#ppTopNotice[aria-hidden="false"]) #ppTopNotice{
+  pointer-events: auto;
+}
+
+/* =========================================================
+   PROPHETIA · HEADER RESPONSIVE
+   320px → tablet
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .pp-header > .container {
+    padding-inline: var(--edge);
+  }
+
+  .pp-topbar {
+    gap: clamp(10px, 2vw, 20px);
+  }
+
+  .pp-left {
+    min-width: 0;
+    flex: 1 1 auto;
+    gap: 16px;
+  }
+
+  .pp-header .mega {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .pp-header .mega-tabs {
+    gap: clamp(16px, 4vw, 28px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+
+  .pp-header .mega-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pp-header .mega-tabs > li {
+    flex: 0 0 auto;
+  }
+
+  .pp-right {
+    gap: 4px;
+  }
+
+  .search-inline .search-input {
+    width: clamp(120px, 18vw, 180px);
+    max-width: 180px;
+  }
+
+  .search-inline .search-input:focus {
+    width: clamp(140px, 22vw, 220px);
+  }
+}
+
+@media (max-width: 760px) {
+    .pp-header {
+    overflow-x: clip;
+  }
+
+  .pp-header > .container {
+    padding-inline: var(--edge, 16px);
+  }
+  .pp-topbar {
+    height: var(--hdr-h);
+    gap: 8px;
+  }
+
+  .pp-left {
+    order: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .pp-right {
+    order: 2;
+    flex: 0 0 auto;
+    gap: 0;
+  }
+
+  .search-inline {
+    display: none;
+  }
+
+  .pp-header .mega-tabs {
+    gap: 18px;
+    max-width: calc(100vw - 146px);
+  }
+
+  .pp-header button,
+  .pp-header .mega-toggle {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .pp-header .pp-right .icon-btn,
+  .pp-header .pp-right button,
+  .pp-header .pp-right a {
+    width: 44px;
+    height: 44px;
+  }
+
+  .pp-header .pp-right .icon-btn svg,
+  .pp-header .pp-right #ppAuthLogoBtn.brand-compact img {
+    width: 17px;
+    height: 17px;
+  }
+
+  .mega .mega-panel {
+    top: var(--hdr-h);
+    max-height: calc(100dvh - var(--hdr-h));
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .pp-header .mega-tabs {
+    gap: 14px;
+    max-width: calc(100vw - 132px);
+  }
+
+  .pp-header button,
+  .pp-header .mega-toggle {
+    font-size: 11.5px;
+  }
+
+  .pp-header .pp-right .icon-btn,
+  .pp-header .pp-right button,
+  .pp-header .pp-right a {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* =========================================================
+   HEADER · Auth/Profile final visibility authority
+   Solo un icono visible: invitado o usuario logado
+   ========================================================= */
+
+/* Base visual del chip, SIN forzar display */
+.pp-header .pp-right #ppProfileChip {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+
+  line-height: 0 !important;
+  cursor: pointer;
+}
+
+/* Invitado: se ve login, NO se ve perfil */
+body:not(.pp-auth-logged) .pp-header .pp-right #ppAuthLogoBtn {
+  display: inline-flex !important;
+}
+
+body:not(.pp-auth-logged) .pp-header .pp-right #ppProfileChip,
+body:not(.pp-auth-logged) .pp-header .pp-right [data-pp-profile],
+.pp-header .pp-right #ppProfileChip[hidden],
+.pp-header .pp-right [data-pp-profile][hidden] {
+  display: none !important;
+}
+
+/* Logado: se ve perfil, NO se ve login */
+body.pp-auth-logged .pp-header .pp-right #ppAuthLogoBtn,
+body.pp-auth-logged .pp-header .pp-right #ppAuthLogoBtn[hidden] {
+  display: none !important;
+}
+
+body.pp-auth-logged .pp-header .pp-right #ppProfileChip,
+body.pp-auth-logged .pp-header .pp-right [data-pp-profile] {
+  display: inline-flex !important;
+}
+
+/* Oculta avatar/letra/texto dentro del chip */
+.pp-header .pp-right #ppProfileChip .pp-profile-avatar,
+.pp-header .pp-right #ppProfileChip .pp-profile-label,
+.pp-header .pp-right #ppProfileChip #ppProfileName,
+.pp-header .pp-right #ppProfileChip [data-pp-profile-name] {
+  display: none !important;
+}
+
+/* Solo emblema SVG */
+.pp-header .pp-right #ppProfileChip > img {
+  width: 18px !important;
+  height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  display: block !important;
+  object-fit: contain !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Sin underline raro */
+.pp-header .pp-right #ppProfileChip::after {
+  display: none !important;
+  content: none !important;
+}
+
+

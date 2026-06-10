@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Política de cookies — PROPHETIA</title>
+  <meta name="description" content="Política de cookies de PROPHETIA: qué son, qué tecnologías usamos y cómo gestionar el consentimiento.">
+  <meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#f7f4ee">
+<link rel="canonical" href="https://prophetia.es/NOMBRE-RUTA">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/assets/img/logo/propnegrovf.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/legal.css">
+</head>
+
+<body class="legal-page">
+  <main class="legal-shell">
+    <a class="legal-logo" href="/home" aria-label="Inicio Prophetia">
+      PROPHETIA
+    </a>
+
+    <article class="legal-card">
+      <p class="legal-kicker">Política de cookies</p>
+      <h1>Cookies y tecnologías similares</h1>
+
+      <section>
+        <h2>1. ¿Qué son las cookies?</h2>
+        <p>
+          Las cookies son pequeños archivos que se almacenan en tu dispositivo al navegar.
+          Sirven para recordar preferencias, mantener funciones esenciales, mejorar la experiencia
+          de usuario y, cuando corresponda, analizar el uso de la web.
+        </p>
+      </section>
+
+      <section>
+        <h2>2. Tecnologías que podemos utilizar</h2>
+        <p>
+          Además de cookies, PROPHETIA puede utilizar tecnologías similares como localStorage
+          o sessionStorage para mantener el carrito, preferencias de checkout, consentimiento de cookies
+          o ajustes necesarios para el funcionamiento de la tienda.
+        </p>
+      </section>
+
+      <section>
+        <h2>3. Tipos de cookies</h2>
+        <p>
+          Podemos utilizar cookies técnicas necesarias para el funcionamiento de la web,
+          cookies de preferencias para recordar elecciones del usuario y, solo si el usuario lo acepta,
+          cookies analíticas o de marketing.
+        </p>
+      </section>
+
+      <section>
+        <h2>4. Cookies y almacenamiento propio</h2>
+
+        <div class="legal-table-wrap">
+          <table class="legal-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Finalidad</th>
+                <th>Duración estimada</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>prophetia_cookies</code></td>
+                <td>Guardar la elección del usuario sobre el banner de cookies.</td>
+                <td>Hasta modificación o limpieza del navegador.</td>
+              </tr>
+
+              <tr>
+                <td><code>pp_cart_v2</code></td>
+                <td>Mantener los productos añadidos al carrito.</td>
+                <td>Hasta finalizar compra, cerrar sesión de compra o limpieza manual.</td>
+              </tr>
+
+              <tr>
+                <td><code>pp_checkout_email</code></td>
+                <td>Recordar temporalmente el email usado durante el checkout.</td>
+                <td>Durante el proceso de compra.</td>
+              </tr>
+
+              <tr>
+                <td><code>pp_checkout_shipping_details</code></td>
+                <td>Recordar temporalmente los datos de envío durante el checkout.</td>
+                <td>Durante el proceso de compra.</td>
+              </tr>
+
+              <tr>
+                <td><code>pp_checkout_step</code></td>
+                <td>Recordar el paso del checkout en el que se encuentra el usuario.</td>
+                <td>Durante el proceso de compra.</td>
+              </tr>
+
+              <tr>
+                <td><code>Firebase Auth</code></td>
+                <td>Mantener la sesión de usuario y permitir acceso seguro a la cuenta.</td>
+                <td>Según configuración de Firebase y navegador.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Cookies de terceros</h2>
+        <p>
+          PROPHETIA puede utilizar servicios externos necesarios para la operación de la tienda,
+          como autenticación, mapas, pagos seguros, email transaccional o herramientas técnicas.
+          Si en el futuro se incorporan cookies analíticas o publicitarias no necesarias, se solicitará
+          el consentimiento del usuario cuando corresponda.
+        </p>
+      </section>
+
+      <section>
+        <h2>6. Gestión del consentimiento</h2>
+        <p>
+          Puedes aceptar, rechazar o modificar tus preferencias desde el banner de cookies o desde
+          esta página. Las cookies técnicas necesarias no pueden desactivarse desde la web porque
+          son imprescindibles para el funcionamiento básico del servicio.
+        </p>
+
+        <div class="legal-actions">
+          <button id="acceptCookies" class="legal-btn legal-btn--dark" type="button">
+            Aceptar cookies
+          </button>
+
+          <button id="rejectCookies" class="legal-btn legal-btn--ghost" type="button">
+            Rechazar cookies
+          </button>
+        </div>
+
+        <p id="cookieStatus" class="legal-note" aria-live="polite"></p>
+      </section>
+
+      <section>
+        <h2>7. Cómo eliminar cookies desde el navegador</h2>
+        <p>
+          También puedes eliminar, bloquear o limitar cookies desde la configuración de tu navegador.
+          Ten en cuenta que bloquear ciertas tecnologías puede afectar al carrito, inicio de sesión
+          o proceso de compra.
+        </p>
+      </section>
+
+      <section>
+        <h2>8. Contacto</h2>
+        <p>
+          Si tienes dudas sobre esta política, puedes escribir a
+          <a href="mailto:clientservices@prophetia.com">clientservices@prophetia.com</a>.
+        </p>
+      </section>
+
+      <p class="legal-updated">Última actualización: mayo de 2026</p>
+    </article>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const status = document.getElementById('cookieStatus');
+
+      function setCookieChoice(value) {
+        localStorage.setItem('prophetia_cookies', value);
+
+        if (status) {
+          status.textContent = value === 'accepted'
+            ? 'Has aceptado las cookies opcionales.'
+            : 'Has rechazado las cookies opcionales.';
+        }
+
+        window.dispatchEvent(new CustomEvent('prophetia:cookies-updated', {
+          detail: { value }
+        }));
+      }
+
+      document.getElementById('acceptCookies')?.addEventListener('click', () => {
+        setCookieChoice('accepted');
+      });
+
+      document.getElementById('rejectCookies')?.addEventListener('click', () => {
+        setCookieChoice('rejected');
+      });
+
+      const current = localStorage.getItem('prophetia_cookies');
+
+      if (status && current) {
+        status.textContent = current === 'accepted'
+          ? 'Estado actual: cookies opcionales aceptadas.'
+          : 'Estado actual: cookies opcionales rechazadas.';
+      }
+    });
+  </script>
+</body>
+</html>

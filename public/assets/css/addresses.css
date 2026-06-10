@@ -1,0 +1,510 @@
+/* =========================================================
+   PROPHETIA · ADDRESSES
+   Página: addresses.html
+   Estilo: Silent Luxury editorial
+   ========================================================= */
+
+.addresses-main {
+  padding: clamp(54px, 6vw, 96px) 0 clamp(90px, 9vw, 150px);
+}
+
+.addresses-shell {
+  max-width: 1320px;
+}
+
+.addresses-title {
+  max-width: 720px;
+  margin: 0 0 clamp(64px, 8vw, 128px);
+}
+
+/* =========================================================
+   BLOQUE PRINCIPAL
+   ========================================================= */
+
+.addresses-section {
+  display: grid;
+  grid-template-columns: minmax(180px, 300px) minmax(0, 1fr);
+  gap: clamp(32px, 7vw, 130px);
+
+  padding: clamp(34px, 4vw, 58px) 0 clamp(54px, 6vw, 96px);
+  border-top: 1px solid rgba(0,0,0,.42);
+}
+
+.addresses-section__head {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+.addresses-list,
+.address-empty {
+  grid-column: 2;
+}
+.addresses-section__head h2 {
+  margin: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+
+
+
+/* =========================================================
+   LISTA DIRECCIONES
+   ========================================================= */
+
+.addresses-list {
+  display: grid;
+  gap: 0;
+  max-width: 920px;
+}
+
+.address-card {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(24px, 4vw, 64px);
+
+  padding: 34px 0 42px;
+  border-top: 1px solid rgba(0,0,0,.42);
+}
+
+.address-card:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.address-card:last-child {
+  border-bottom: 1px solid rgba(0,0,0,.16);
+}
+
+.address-card__content {
+  max-width: 620px;
+}
+
+.address-card__tag {
+  display: inline-flex;
+  width: fit-content;
+
+  margin: 0 0 18px;
+  padding: 3px 8px;
+
+  background: rgba(0,0,0,.055);
+  color: rgba(0,0,0,.72);
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: .04em;
+}
+
+.address-card__name {
+  margin: 0 0 10px;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(24px, 2vw, 32px);
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -.015em;
+}
+
+.address-card__text {
+  margin: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.72;
+
+  color: rgba(0,0,0,.78);
+}
+
+.address-card__default {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 18px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.2;
+
+  color: #111;
+}
+
+.address-card__default::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: #111;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.address-card__set-default {
+  display: inline-flex;
+  width: fit-content;
+
+  margin-top: 18px;
+  padding: 0 0 5px;
+
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+
+  position: relative;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.address-card__set-default::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 1px;
+  background: currentColor;
+
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+.address-card__set-default:hover::after,
+.address-card__set-default:focus-visible::after {
+  transform: scaleX(.68);
+}
+
+/* Acciones */
+.address-card__actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 22px;
+
+  min-width: 112px;
+}
+
+
+
+/* Estado vacío */
+.address-empty {
+  margin: 0;
+  padding: 34px 0;
+  border-top: 1px solid rgba(0,0,0,.42);
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(0,0,0,.62);
+}
+
+/* =========================================================
+   PANEL LATERAL
+   ========================================================= */
+
+.address-panel {
+  position: fixed;
+  inset: 0 0 0 auto;
+
+  width: min(560px, 100%);
+  max-width: none;
+  height: 100dvh;
+  max-height: 100dvh;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(rgba(255,255,255,.92), rgba(255,255,255,.86)),
+    url("../img/textures/fondoform.png") center / cover no-repeat;
+
+  box-shadow: -22px 0 60px rgba(0,0,0,.18);
+}
+
+.address-panel::backdrop {
+  background: rgba(0,0,0,.34);
+  backdrop-filter: blur(5px);
+}
+
+.address-form {
+  position: relative;
+  height: 100dvh;
+  min-height: 100dvh;
+
+  padding: clamp(34px, 4vw, 56px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.address-panel__close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  font-size: 28px;
+  line-height: 1;
+}
+
+.address-panel__title {
+  margin: 0 0 18px;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(34px, 4vw, 58px);
+  line-height: .98;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+.address-form label {
+  display: grid;
+  gap: 8px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.62);
+}
+
+.address-form input {
+  width: 100%;
+
+  border: 0;
+  border-bottom: 1px solid rgba(0,0,0,.32);
+  background: transparent;
+
+  padding: 10px 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 15px;
+  color: #111;
+}
+
+.address-form input:focus {
+  outline: 0;
+  border-bottom-color: #111;
+}
+
+.address-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.address-check {
+  display: flex !important;
+  grid-template-columns: none;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 8px;
+
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 14px !important;
+  color: #111 !important;
+}
+
+.address-check input {
+  width: auto;
+}
+
+.address-form__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.address-form button[disabled] {
+  opacity: .55;
+  cursor: wait;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .addresses-section {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+.addresses-list,
+.address-empty {
+  grid-column: 1;
+}
+  .addresses-list {
+    max-width: none;
+  }
+
+  .address-card {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .address-card__actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .address-form__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   ADDRESSES · Button reset / Silent Luxury links
+   ========================================================= */
+
+.addresses-page button {
+  font: inherit;
+}
+
+.addresses-page .addresses-add,
+.addresses-page .address-card__actions button,
+.addresses-page .address-card__set-default {
+  appearance: none;
+  -webkit-appearance: none;
+
+  border: 0;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+
+  position: relative;
+  width: fit-content;
+  padding: 0 0 5px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: left;
+  text-decoration: none;
+}
+
+.addresses-page .addresses-add {
+  font-size: 14px;
+}
+
+.addresses-page .addresses-add::before {
+  content: "›";
+  margin-right: 8px;
+}
+
+.addresses-page .addresses-add::after,
+.addresses-page .address-card__actions button::after,
+.addresses-page .address-card__set-default::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 1px;
+  background: currentColor;
+
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+.addresses-page .addresses-add::after {
+  left: 18px;
+}
+
+.addresses-page .addresses-add:hover::after,
+.addresses-page .addresses-add:focus-visible::after,
+.addresses-page .address-card__actions button:hover::after,
+.addresses-page .address-card__actions button:focus-visible::after,
+.addresses-page .address-card__set-default:hover::after,
+.addresses-page .address-card__set-default:focus-visible::after {
+  transform: scaleX(.68);
+}
+
+/* =========================================================
+   ADDRESSES · Logo Prophetia account brand
+   Control X/Y + tamaño solo para libro de direcciones
+   ========================================================= */
+
+body.addresses-page {
+  --addresses-logo-x: 355px;       /* + derecha / - izquierda */
+  --addresses-logo-y: 0px;       /* + abajo / - arriba */
+  --addresses-logo-size: 90px;  /* altura del logo */
+}
+
+body.addresses-page .account-brand__logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  text-decoration: none;
+
+  transform: translate(
+    var(--addresses-logo-x),
+    var(--addresses-logo-y)
+  );
+}
+
+body.addresses-page .account-brand__logo img {
+  height: var(--addresses-logo-size);
+  width: auto;
+  max-width: min(760px, 92vw);
+  display: block;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  body.addresses-page {
+    --addresses-logo-x: 0px;
+    --addresses-logo-y: 0px;
+    --addresses-logo-size: clamp(72px, 16vw, 110px);
+  }
+
+  body.addresses-page .account-brand__logo img {
+    max-width: 86vw;
+  }
+}
+
+/* =========================================================
+   ADDRESSES · Auth visibility guard
+   Evita que bloques hidden aparezcan por reglas globales
+   ========================================================= */
+
+body.addresses-page [hidden] {
+  display: none !important;
+}
+
+body.addresses-page.pp-auth-logged [data-pp-addresses-guest] {
+  display: none !important;
+}
+
+body.addresses-page.pp-auth-guest [data-pp-addresses-logged] {
+  display: none !important;
+}

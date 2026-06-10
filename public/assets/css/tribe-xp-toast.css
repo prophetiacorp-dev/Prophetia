@@ -1,0 +1,1746 @@
+/* =========================================================
+   PROPHETIA · Tribe XP Toast
+   Barra de experiencia post-compra
+   ========================================================= */
+
+.pp-xpToast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  z-index: 6200;
+
+  width: min(760px, calc(100vw - 28px));
+
+  transform:
+    translate(-50%, -22px)
+    scale(.985);
+
+  opacity: 0;
+  filter: blur(10px);
+
+  pointer-events: none;
+  will-change: transform, opacity, filter;
+
+  transition:
+    transform 1180ms cubic-bezier(.16, 1, .3, 1),
+    opacity 980ms ease,
+    filter 1180ms ease;
+}
+.pp-xpToast.is-visible {
+  transform:
+    translate(-50%, 0)
+    scale(1);
+
+  opacity: 1;
+  filter: blur(0);
+
+  pointer-events: auto;
+
+  transition:
+    transform 980ms cubic-bezier(.16, 1, .3, 1),
+    opacity 860ms ease,
+    filter 980ms ease;
+}
+.pp-xpToast__inner {
+  transform: translateY(-4px);
+  opacity: .92;
+
+  transition:
+    transform 980ms cubic-bezier(.16, 1, .3, 1),
+    opacity 760ms ease,
+    box-shadow 820ms ease,
+    border-color 820ms ease,
+    background 820ms ease;
+}
+
+.pp-xpToast.is-visible .pp-xpToast__inner {
+  transform: translateY(0);
+  opacity: 1;
+}
+.pp-xpToast.is-leaving {
+  transform:
+    translate(-50%, -18px)
+    scale(.985);
+
+  opacity: 0;
+  filter: blur(10px);
+
+  pointer-events: none;
+
+  transition:
+    transform 920ms cubic-bezier(.16, 1, .3, 1),
+    opacity 760ms ease,
+    filter 920ms ease;
+}
+.pp-xpToast.is-leaving .pp-xpToast__inner {
+  box-shadow:
+    0 18px 54px rgba(0,0,0,.12),
+    0 0 18px var(--xp-glow, rgba(212, 175, 100, .10)),
+    inset 0 1px 0 rgba(255,255,255,.52);
+
+  transition:
+    box-shadow 820ms ease,
+    border-color 820ms ease,
+    background 820ms ease;
+}
+.pp-xpToast__inner {
+  position: relative;
+  overflow: hidden;
+
+  display: grid;
+  grid-template-columns: 92px 1fr 34px;
+  gap: 18px;
+  align-items: center;
+
+  padding: 16px 18px;
+
+  border: 1px solid var(--xp-border, rgba(191, 157, 92, .38));
+  border-radius: 22px;
+
+  background:
+    radial-gradient(circle at 8% 18%, var(--xp-glow-soft, rgba(191, 157, 92, .18)), transparent 34%),
+    var(--xp-surface, rgba(253, 250, 246, .94));
+
+  box-shadow:
+    0 22px 70px rgba(0,0,0,.18),
+    0 0 42px var(--xp-glow, rgba(212, 175, 100, .18)),
+    inset 0 1px 0 rgba(255,255,255,.78);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.pp-xpToast__emblem {
+  position: relative;
+  overflow: visible;
+
+  width: 58px;
+  height: 58px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 999px;
+  border: 1px solid rgba(191, 157, 92, .38);
+  background: rgba(255,255,255,.68);
+
+  transform-origin: center;
+  will-change: transform, filter;
+}
+
+.pp-xpToast__emblem img {
+  position: relative;
+  z-index: 2;
+
+  width: 62px;
+  height: 62px;
+
+  object-fit: contain;
+
+  transform-origin: center;
+  will-change: transform, filter;
+}
+.pp-xpToast__content {
+  min-width: 0;
+}
+
+.pp-xpToast__kicker {
+  margin: 0 0 4px;
+
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+
+  color: rgba(0,0,0,.52);
+}
+
+.pp-xpToast__title {
+  margin: 0 0 8px;
+
+  font-family: var(--font-display, "Playfair Display", Georgia, serif);
+  font-size: clamp(22px, 3vw, 34px);
+  line-height: 1;
+  letter-spacing: -.04em;
+  font-weight: 500;
+
+  color: #111;
+}
+.pp-xpToast__title span {
+  color: var(--xp-title, #9a7836);
+}
+
+.pp-xpToast__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 7px;
+
+  font-size: 12px;
+  line-height: 1;
+  color: rgba(0,0,0,.66);
+}
+
+.pp-xpToast__meta strong {
+  color: #111;
+}
+
+.pp-xpToast__bar {
+  position: relative;
+
+  height: 9px;
+  overflow: hidden;
+
+  border-radius: 999px;
+  background: rgba(0,0,0,.10);
+}
+
+.pp-xpToast__barFill {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  width: 100%;
+
+  border-radius: inherit;
+
+  background: var(
+    --xp-bar,
+    linear-gradient(90deg, #111 0%, #8b6a2d 48%, #d4af64 100%)
+  );
+
+  box-shadow:
+    0 0 18px var(--xp-bar-glow, rgba(212, 175, 100, .42)),
+    0 0 34px var(--xp-bar-glow, rgba(212, 175, 100, .18));
+
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.pp-xpToast__barFill::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.46),
+      transparent
+    );
+
+  transform: translateX(-110%);
+  animation: ppXpBarSheen 1500ms ease-out 560ms both;
+}
+
+.pp-xpToast__barFill::before {
+  content: "";
+
+  position: absolute;
+  top: 50%;
+  right: -18px;
+  z-index: 2;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,248,218,.96) 0%,
+      rgba(255,232,170,.70) 22%,
+      var(--xp-bar-glow, rgba(212,175,100,.42)) 48%,
+      transparent 72%
+    );
+
+  opacity: 0;
+  filter: blur(9px);
+
+  transform: translateY(-50%) scale(.82);
+
+  pointer-events: none;
+}
+
+.pp-xpToast__bar.is-charging .pp-xpToast__barFill::before {
+  opacity: .88;
+  animation: ppToastXpLeadingGlow 980ms ease-in-out infinite;
+}
+
+/* Rangos Prophetia Tribe */
+
+.pp-xpToast.rank-initiate {
+  --xp-title: #9a4f2b;
+  --xp-border: rgba(123, 63, 31, .42);
+  --xp-surface:
+    radial-gradient(circle at 12% 48%, rgba(160, 82, 40, .18), transparent 30%),
+    radial-gradient(circle at 78% 16%, rgba(255, 232, 196, .32), transparent 28%),
+    linear-gradient(135deg, rgba(255, 250, 242, .97), rgba(242, 226, 204, .94));
+  --xp-glow: rgba(188, 102, 52, .28);
+  --xp-glow-soft: rgba(211, 139, 82, .20);
+  --xp-bar: linear-gradient(90deg, #1a0b06 0%, #6f3218 42%, #c47a3f 72%, #f0c184 100%);
+  --xp-bar-glow: rgba(202, 125, 65, .46);
+}
+/* INITIATE · Bronze Sacred Breath */
+
+.pp-xpToast.rank-initiate .pp-xpToast__emblem {
+  border-color: rgba(139, 79, 39, .36);
+
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 231, 193, .46), transparent 38%),
+    rgba(255,255,255,.66);
+
+  box-shadow:
+    0 10px 26px rgba(83, 38, 18, .12),
+    0 0 18px rgba(172, 96, 48, .10),
+    inset 0 1px 0 rgba(255,255,255,.78);
+
+  animation: ppInitiateEmblemFloat 4600ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-initiate .pp-xpToast__emblem img {
+  animation: ppInitiateBronzeGlow 3800ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-initiate .pp-xpToast__emblemAura {
+  position: absolute;
+  inset: -12px;
+  z-index: 0;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(201, 132, 72, .28) 0%,
+      rgba(201, 132, 72, .14) 42%,
+      transparent 74%
+    );
+
+  opacity: .48;
+  filter: blur(9px);
+
+  animation: ppInitiateAuraBreath 3800ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+.pp-xpToast.rank-initiate .pp-xpToast__emblemSheen {
+  position: absolute;
+  inset: -2px;
+  z-index: 3;
+
+  border-radius: 999px;
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.pp-xpToast.rank-initiate .pp-xpToast__emblemSheen::after {
+  content: "";
+
+  position: absolute;
+  top: -26%;
+  left: -72%;
+
+  width: 42%;
+  height: 152%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.16),
+      rgba(255,244,220,.48),
+      rgba(255,255,255,.16),
+      transparent
+    );
+
+  filter: blur(.8px);
+
+  transform: rotate(18deg);
+
+  animation: ppInitiateSheen 5800ms ease-in-out infinite;
+}
+/* ADEPTUS · Royal Blue Enamel */
+
+.pp-xpToast.rank-adeptus .pp-xpToast__emblem {
+  border-color: rgba(29, 58, 124, .34);
+
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 241, 196, .40), transparent 38%),
+    radial-gradient(circle at 50% 58%, rgba(29, 58, 124, .18), transparent 62%),
+    rgba(255,255,255,.68);
+
+  box-shadow:
+    0 10px 28px rgba(17, 35, 82, .14),
+    0 0 22px rgba(36, 76, 154, .16),
+    inset 0 1px 0 rgba(255,255,255,.80);
+
+  animation: ppAdeptusEmblemFloat 4800ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-adeptus .pp-xpToast__emblem img {
+  filter:
+    drop-shadow(0 5px 8px rgba(17, 35, 82, .18))
+    drop-shadow(0 0 14px rgba(212, 175, 100, .22));
+
+  animation: ppAdeptusRoyalGlow 3900ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-adeptus .pp-xpToast__emblemAura {
+  position: absolute;
+  inset: -13px;
+  z-index: 0;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(circle, rgba(36, 76, 154, .26) 0%, rgba(212, 175, 100, .14) 46%, transparent 74%);
+
+  opacity: .54;
+  filter: blur(10px);
+
+  animation: ppAdeptusAuraBreath 3900ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ORACLE · Silver Vision */
+
+.pp-xpToast.rank-oracle .pp-xpToast__emblem {
+  border-color: rgba(150, 170, 185, .44);
+
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255,255,255,.72), transparent 36%),
+    radial-gradient(circle at 50% 62%, rgba(184, 218, 240, .28), transparent 62%),
+    rgba(250,253,255,.76);
+
+  box-shadow:
+    0 10px 28px rgba(93, 118, 136, .12),
+    0 0 24px rgba(184, 218, 240, .20),
+    inset 0 1px 0 rgba(255,255,255,.92);
+
+  animation: ppOracleEmblemFloat 5000ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-oracle .pp-xpToast__emblem img {
+  filter:
+    saturate(.96)
+    contrast(1.04)
+    drop-shadow(0 5px 8px rgba(93, 118, 136, .14))
+    drop-shadow(0 0 16px rgba(184, 218, 240, .34));
+
+  animation: ppOracleSilverGlow 4200ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-oracle .pp-xpToast__emblemAura {
+  position: absolute;
+  inset: -14px;
+  z-index: 0;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(circle, rgba(230, 246, 255, .46) 0%, rgba(184, 218, 240, .20) 46%, transparent 74%);
+
+  opacity: .58;
+  filter: blur(11px);
+
+  animation: ppOracleAuraBreath 4200ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ARCHIVIST · Ancient Archive Gold */
+
+.pp-xpToast.rank-archivist .pp-xpToast__emblem {
+  border-color: rgba(122, 78, 38, .34);
+
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 241, 204, .48), transparent 38%),
+    radial-gradient(circle at 50% 62%, rgba(122, 78, 38, .20), transparent 62%),
+    rgba(255,252,244,.72);
+
+  box-shadow:
+    0 10px 28px rgba(80, 52, 26, .13),
+    0 0 22px rgba(191, 157, 92, .18),
+    inset 0 1px 0 rgba(255,255,255,.84);
+
+  animation: ppArchivistEmblemFloat 5000ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-archivist .pp-xpToast__emblem img {
+  filter:
+    drop-shadow(0 5px 8px rgba(80, 52, 26, .16))
+    drop-shadow(0 0 14px rgba(191, 157, 92, .24));
+
+  animation: ppArchivistGoldGlow 4200ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-archivist .pp-xpToast__emblemAura {
+  position: absolute;
+  inset: -14px;
+  z-index: 0;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(circle, rgba(236, 221, 190, .42) 0%, rgba(148, 103, 55, .18) 46%, transparent 74%);
+
+  opacity: .56;
+  filter: blur(11px);
+
+  animation: ppArchivistAuraBreath 4200ms ease-in-out infinite;
+  pointer-events: none;
+}
+.pp-xpToast.rank-adeptus {
+  --xp-title: #173f92;
+  --xp-border: rgba(29, 58, 124, .42);
+  --xp-surface:
+    radial-gradient(circle at 10% 48%, rgba(29, 58, 124, .20), transparent 31%),
+    radial-gradient(circle at 76% 18%, rgba(226, 194, 118, .24), transparent 30%),
+    linear-gradient(135deg, rgba(250, 249, 244, .98), rgba(235, 239, 247, .94));
+  --xp-glow: rgba(36, 76, 154, .26);
+  --xp-glow-soft: rgba(212, 175, 100, .18);
+  --xp-bar: linear-gradient(90deg, #07122d 0%, #173f92 42%, #b99142 72%, #fff0b8 100%);
+  --xp-bar-glow: rgba(36, 76, 154, .44);
+}
+
+.pp-xpToast.rank-oracle {
+  --xp-title: #748fa2;
+  --xp-border: rgba(150, 170, 185, .50);
+  --xp-surface:
+    radial-gradient(circle at 12% 48%, rgba(184, 218, 240, .24), transparent 32%),
+    radial-gradient(circle at 78% 14%, rgba(255, 255, 255, .48), transparent 30%),
+    linear-gradient(135deg, rgba(250, 253, 255, .98), rgba(230, 239, 245, .94));
+  --xp-glow: rgba(184, 218, 240, .34);
+  --xp-glow-soft: rgba(226, 242, 250, .32);
+  --xp-bar: linear-gradient(90deg, #b8c9d5 0%, #f8fcff 48%, #9ecae6 76%, #d4af64 100%);
+  --xp-bar-glow: rgba(184, 218, 240, .56);
+}
+
+.pp-xpToast.rank-archivist {
+  --xp-title: #8b5a2f;
+  --xp-border: rgba(122, 78, 38, .40);
+  --xp-surface:
+    radial-gradient(circle at 10% 48%, rgba(122, 78, 38, .18), transparent 32%),
+    radial-gradient(circle at 76% 16%, rgba(244, 225, 188, .36), transparent 30%),
+    linear-gradient(135deg, rgba(255, 252, 244, .98), rgba(239, 224, 195, .94));
+  --xp-glow: rgba(148, 103, 55, .26);
+  --xp-glow-soft: rgba(236, 221, 190, .38);
+  --xp-bar: linear-gradient(90deg, #2b1b0d 0%, #8b5a2f 42%, #d9b56f 76%, #fff1c7 100%);
+  --xp-bar-glow: rgba(191, 157, 92, .46);
+}
+
+.pp-xpToast.rank-prophet {
+  --xp-title: #d4af64;
+  --xp-border: rgba(212, 175, 100, .62);
+  --xp-surface:
+    radial-gradient(circle at 11% 50%, rgba(212, 175, 100, .30), transparent 28%),
+    radial-gradient(circle at 22% 42%, rgba(0, 120, 72, .18), transparent 34%),
+    radial-gradient(circle at 72% 18%, rgba(255, 232, 170, .10), transparent 32%),
+    linear-gradient(135deg, rgba(28, 24, 18, .98), rgba(11, 10, 8, .96));
+  --xp-glow: rgba(212, 175, 100, .52);
+  --xp-glow-soft: rgba(212, 175, 100, .30);
+  --xp-bar: linear-gradient(90deg, #050505 0%, #5f461f 42%, #d4af64 74%, #fff1b8 100%);
+  --xp-bar-glow: rgba(212, 175, 100, .68);
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__kicker,
+.pp-xpToast.rank-prophet .pp-xpToast__meta,
+.pp-xpToast.rank-prophet .pp-xpToast__note {
+  color: rgba(255,255,255,.68);
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__title,
+.pp-xpToast.rank-prophet .pp-xpToast__meta strong,
+.pp-xpToast.rank-prophet .pp-xpToast__note strong,
+.pp-xpToast.rank-prophet .pp-xpToast__close {
+  color: #f8f1e3;
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__emblem {
+  width: 88px;
+  height: 88px;
+
+  justify-self: center;
+  align-self: center;
+
+  margin-left: 0;
+
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+
+  box-shadow: none;
+
+  display: grid;
+  place-items: center;
+
+  animation: ppProphetEmblemFloat 5200ms ease-in-out infinite;
+}
+.pp-xpToast.rank-prophet .pp-xpToast__emblem::before {
+  content: "";
+
+  position: absolute;
+  inset: -16px;
+  z-index: 0;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(circle, rgba(255,232,170,.34) 0%, rgba(212,175,100,.20) 42%, transparent 72%);
+
+  opacity: .74;
+  filter: blur(13px);
+
+  animation: ppProphetAuraBreath 3600ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__emblem img {
+  width: 86px;
+  height: 86px;
+
+  display: block;
+  object-fit: contain;
+  object-position: center;
+
+  transform: translate(0, 0);
+
+  filter:
+    drop-shadow(0 5px 5px rgba(0,0,0,.36))
+    drop-shadow(0 12px 18px rgba(0,0,0,.24))
+    drop-shadow(0 0 16px rgba(255,232,170,.36));
+
+  animation: ppProphetEmblemGlow 3400ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__emblemSheen {
+  position: absolute;
+  inset: -4px;
+  z-index: 4;
+
+  border-radius: 999px;
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__emblemSheen::after {
+  content: "";
+
+  position: absolute;
+  top: -30%;
+  left: -76%;
+
+  width: 42%;
+  height: 160%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.14),
+      rgba(255,232,170,.58),
+      rgba(255,255,255,.14),
+      transparent
+    );
+
+  filter: blur(.8px);
+
+  transform: rotate(18deg);
+
+  animation: ppProphetSheen 6200ms ease-in-out infinite;
+}
+/* PRESTIGE I · Painite Ivory Ceremony */
+
+.pp-xpToast.rank-prestige-i {
+  --xp-title: #a33a26;
+  --xp-border: rgba(142, 42, 33, .58);
+  --xp-surface:
+    radial-gradient(circle at 10% 48%, rgba(142, 42, 33, .28), transparent 30%),
+    radial-gradient(circle at 24% 42%, rgba(255, 239, 204, .30), transparent 34%),
+    radial-gradient(circle at 72% 18%, rgba(202, 74, 47, .20), transparent 32%),
+    linear-gradient(135deg, rgba(255, 249, 236, .98), rgba(237, 219, 190, .94));
+  --xp-glow: rgba(202, 74, 47, .42);
+  --xp-glow-soft: rgba(240, 194, 130, .34);
+  --xp-bar: linear-gradient(90deg, #24100d 0%, #7e241d 34%, #c24d32 62%, #f0d79d 100%);
+  --xp-bar-glow: rgba(202, 74, 47, .58);
+}
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__inner {
+  border-color: rgba(174, 112, 55, .48);
+
+  box-shadow:
+    0 24px 78px rgba(64, 31, 16, .18),
+    0 0 48px rgba(198, 132, 78, .20),
+    inset 0 1px 0 rgba(255,255,255,.78);
+}
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__kicker,
+.pp-xpToast.rank-prestige-i .pp-xpToast__meta,
+.pp-xpToast.rank-prestige-i .pp-xpToast__note,
+.pp-xpToast.rank-prestige-i .pp-xpToast__micro {
+  color: rgba(48, 31, 20, .66);
+}
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__title,
+.pp-xpToast.rank-prestige-i .pp-xpToast__meta strong,
+.pp-xpToast.rank-prestige-i .pp-xpToast__note strong,
+.pp-xpToast.rank-prestige-i .pp-xpToast__close {
+  color: #17110b;
+}
+
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__emblem {
+  width: 92px;
+  height: 92px;
+
+  justify-self: center;
+  align-self: center;
+
+  border: 1px solid rgba(174, 112, 55, .34);
+  border-radius: 999px;
+
+background:
+  radial-gradient(circle at 50% 42%, rgba(255, 248, 224, .88), rgba(202, 74, 47, .18) 46%, transparent 72%),
+  linear-gradient(145deg, rgba(255,255,255,.76), rgba(142, 42, 33, .16));
+
+  box-shadow:
+    0 12px 32px rgba(96, 47, 22, .14),
+    0 0 28px rgba(198, 132, 78, .22),
+    inset 0 1px 0 rgba(255,255,255,.82);
+
+  animation: ppPrestigePainiteFloat 5200ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__emblem::before {
+  content: "";
+
+  position: absolute;
+  inset: -18px;
+  z-index: 0;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(circle, rgba(198, 132, 78, .30) 0%, rgba(240, 215, 157, .20) 42%, transparent 72%);
+
+  opacity: .72;
+  filter: blur(14px);
+
+  animation: ppPrestigePainiteAura 3800ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__emblem img,
+.pp-xpToast.rank-prestige-i .pp-xpToast__emblem img[data-rank-emblem="prestige-i"] {
+  width: 82px;
+  height: 82px;
+
+  display: block;
+  object-fit: contain;
+  object-position: center;
+
+  transform: translate(0, 0) scale(1);
+
+  filter:
+    drop-shadow(0 5px 7px rgba(64, 31, 16, .24))
+    drop-shadow(0 12px 20px rgba(64, 31, 16, .14))
+    drop-shadow(0 0 16px rgba(240, 215, 157, .36))
+    drop-shadow(0 0 26px rgba(198, 132, 78, .22));
+
+  animation: ppPrestigePainiteGlow 3600ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__emblemSheen {
+  position: absolute;
+  inset: -3px;
+  z-index: 4;
+
+  border-radius: 999px;
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.pp-xpToast.rank-prestige-i .pp-xpToast__emblemSheen::after {
+  content: "";
+
+  position: absolute;
+  top: -30%;
+  left: -78%;
+
+  width: 44%;
+  height: 160%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.20),
+      rgba(255,239,204,.72),
+      rgba(198,132,78,.26),
+      rgba(255,255,255,.18),
+      transparent
+    );
+
+  filter: blur(.9px);
+
+  transform: rotate(18deg);
+
+  animation: ppPrestigePainiteSheen 5400ms ease-in-out infinite;
+}
+
+.pp-xpToast.rank-prestige-i.is-level-up .pp-xpToast__inner {
+  animation: ppPrestigeUnlockPulse 1350ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.pp-xpToast.rank-prestige-i.is-level-up .pp-xpToast__emblem {
+  animation: ppPrestigeEmblemUnlock 1050ms cubic-bezier(.22, 1, .36, 1) both;
+}
+/* Level up */
+
+.pp-xpToast.is-level-up .pp-xpToast__inner {
+  animation: ppXpLevelUpPulse 1200ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.pp-xpToast.is-level-up .pp-xpToast__emblem {
+  animation: ppXpEmblemReveal 900ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.pp-xpToast.is-level-up .pp-xpToast__title span {
+  animation: ppXpTextGlow 1300ms ease-out both;
+}
+
+/* Partículas doradas */
+
+.pp-xpParticle {
+  position: absolute;
+  left: var(--x);
+  bottom: 8px;
+  z-index: 0;
+
+  width: 4px;
+  height: 4px;
+
+  border-radius: 999px;
+  background: rgba(212, 175, 100, .9);
+
+  box-shadow:
+    0 0 10px rgba(212, 175, 100, .72),
+    0 0 24px rgba(212, 175, 100, .22);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transform:
+    translate3d(0, 0, 0)
+    scale(var(--scale, 1));
+
+  animation:
+    ppXpParticle 900ms ease-out var(--delay, 0ms) forwards;
+}
+.pp-xpToast.rank-initiate .pp-xpParticle {
+  background: rgba(202, 125, 65, .92);
+  box-shadow:
+    0 0 12px rgba(202, 125, 65, .72),
+    0 0 28px rgba(202, 125, 65, .24);
+}
+
+.pp-xpToast.rank-adeptus .pp-xpParticle {
+  background: rgba(226, 194, 118, .94);
+  box-shadow:
+    0 0 12px rgba(226, 194, 118, .70),
+    0 0 30px rgba(36, 76, 154, .26);
+}
+
+.pp-xpToast.rank-oracle .pp-xpParticle {
+  background: rgba(230, 246, 255, .96);
+  box-shadow:
+    0 0 14px rgba(230, 246, 255, .78),
+    0 0 32px rgba(184, 218, 240, .34);
+}
+
+.pp-xpToast.rank-archivist .pp-xpParticle {
+  background: rgba(236, 221, 190, .94);
+  box-shadow:
+    0 0 12px rgba(236, 221, 190, .72),
+    0 0 30px rgba(148, 103, 55, .28);
+}
+.pp-xpToast.rank-prophet .pp-xpParticle {
+  background: rgba(255, 232, 170, .96);
+  box-shadow:
+    0 0 14px rgba(255, 232, 170, .82),
+    0 0 32px rgba(212, 175, 100, .34);
+}
+
+.pp-xpToast__note {
+  margin: 9px 0 0;
+
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(0,0,0,.62);
+}
+
+.pp-xpToast__note strong {
+  color: #111;
+}
+
+.pp-xpToast__close {
+  appearance: none;
+
+  width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #111;
+
+  cursor: pointer;
+
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pp-xpToast__close:hover,
+.pp-xpToast__close:focus-visible {
+  background: rgba(0,0,0,.06);
+}
+@keyframes ppPrestigePainiteFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.018);
+  }
+}
+
+@keyframes ppPrestigePainiteAura {
+  0%, 100% {
+    opacity: .42;
+    transform: scale(.94);
+  }
+
+  50% {
+    opacity: .86;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ppPrestigePainiteGlow {
+  0%, 100% {
+    filter:
+      brightness(1)
+      saturate(1)
+      drop-shadow(0 5px 7px rgba(64, 31, 16, .24))
+      drop-shadow(0 12px 20px rgba(64, 31, 16, .14))
+      drop-shadow(0 0 14px rgba(240, 215, 157, .30))
+      drop-shadow(0 0 22px rgba(198, 132, 78, .18));
+  }
+
+  50% {
+    filter:
+      brightness(1.12)
+      saturate(1.08)
+      drop-shadow(0 6px 8px rgba(64, 31, 16, .26))
+      drop-shadow(0 14px 22px rgba(64, 31, 16, .16))
+      drop-shadow(0 0 20px rgba(255, 239, 204, .48))
+      drop-shadow(0 0 34px rgba(198, 132, 78, .28));
+  }
+}
+
+@keyframes ppPrestigePainiteSheen {
+  0%, 64%, 100% {
+    transform: translateX(0) rotate(18deg);
+    opacity: 0;
+  }
+
+  72% {
+    opacity: .92;
+  }
+
+  88% {
+    transform: translateX(250%) rotate(18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ppPrestigeUnlockPulse {
+  0% {
+    box-shadow:
+      0 24px 78px rgba(64, 31, 16, .18),
+      0 0 42px rgba(198, 132, 78, .20),
+      inset 0 1px 0 rgba(255,255,255,.78);
+  }
+
+  42% {
+    box-shadow:
+      0 30px 92px rgba(64, 31, 16, .22),
+      0 0 72px rgba(198, 132, 78, .36),
+      0 0 132px rgba(240, 215, 157, .22),
+      inset 0 1px 0 rgba(255,255,255,.92);
+  }
+
+  100% {
+    box-shadow:
+      0 24px 78px rgba(64, 31, 16, .18),
+      0 0 48px rgba(198, 132, 78, .20),
+      inset 0 1px 0 rgba(255,255,255,.78);
+  }
+}
+
+@keyframes ppPrestigeEmblemUnlock {
+  0% {
+    transform: scale(.88);
+    filter: brightness(.96);
+  }
+
+  42% {
+    transform: scale(1.13);
+    filter: brightness(1.18);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+@keyframes ppProphetEmblemFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.018);
+  }
+}
+
+@keyframes ppProphetAuraBreath {
+  0%, 100% {
+    opacity: .42;
+    transform: scale(.94);
+  }
+
+  50% {
+    opacity: .88;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ppProphetEmblemGlow {
+  0%, 100% {
+    filter:
+      brightness(1)
+      saturate(1)
+      drop-shadow(0 0 8px rgba(212,175,100,.26))
+      drop-shadow(0 0 14px rgba(0,120,72,.12));
+  }
+
+  50% {
+    filter:
+      brightness(1.12)
+      saturate(1.12)
+      drop-shadow(0 0 14px rgba(255,232,170,.46))
+      drop-shadow(0 0 24px rgba(0,120,72,.24));
+  }
+}
+
+@keyframes ppProphetSheen {
+  0%, 68%, 100% {
+    transform: translateX(0) rotate(18deg);
+    opacity: 0;
+  }
+
+  75% {
+    opacity: .92;
+  }
+
+  88% {
+    transform: translateX(250%) rotate(18deg);
+    opacity: 0;
+  }
+}
+@keyframes ppInitiateEmblemFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.012);
+  }
+}
+
+@keyframes ppInitiateBronzeGlow {
+  0%, 100% {
+    filter:
+      brightness(1)
+      saturate(1)
+      drop-shadow(0 0 0 rgba(201,132,72,0));
+  }
+
+  50% {
+    filter:
+      brightness(1.09)
+      saturate(1.10)
+      drop-shadow(0 0 10px rgba(201,132,72,.34));
+  }
+}
+
+@keyframes ppInitiateAuraBreath {
+  0%, 100% {
+    opacity: .36;
+    transform: scale(.94);
+  }
+
+  50% {
+    opacity: .82;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ppInitiateSheen {
+  0%, 70%, 100% {
+    transform: translateX(0) rotate(18deg);
+    opacity: 0;
+  }
+
+  76% {
+    opacity: .88;
+  }
+
+  88% {
+    transform: translateX(245%) rotate(18deg);
+    opacity: 0;
+  }
+}
+@keyframes ppAdeptusEmblemFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.016);
+  }
+}
+
+@keyframes ppAdeptusRoyalGlow {
+  0%, 100% {
+    filter:
+      brightness(1)
+      saturate(1)
+      drop-shadow(0 5px 8px rgba(17, 35, 82, .18))
+      drop-shadow(0 0 12px rgba(212, 175, 100, .18));
+  }
+
+  50% {
+    filter:
+      brightness(1.08)
+      saturate(1.10)
+      drop-shadow(0 6px 10px rgba(17, 35, 82, .22))
+      drop-shadow(0 0 20px rgba(212, 175, 100, .32));
+  }
+}
+
+@keyframes ppAdeptusAuraBreath {
+  0%, 100% {
+    opacity: .36;
+    transform: scale(.94);
+  }
+
+  50% {
+    opacity: .78;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ppOracleEmblemFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.018);
+  }
+}
+
+@keyframes ppOracleSilverGlow {
+  0%, 100% {
+    filter:
+      brightness(1)
+      saturate(.96)
+      contrast(1.04)
+      drop-shadow(0 5px 8px rgba(93, 118, 136, .14))
+      drop-shadow(0 0 12px rgba(184, 218, 240, .26));
+  }
+
+  50% {
+    filter:
+      brightness(1.12)
+      saturate(1.04)
+      contrast(1.08)
+      drop-shadow(0 6px 10px rgba(93, 118, 136, .18))
+      drop-shadow(0 0 22px rgba(184, 218, 240, .46));
+  }
+}
+
+@keyframes ppOracleAuraBreath {
+  0%, 100% {
+    opacity: .38;
+    transform: scale(.94);
+  }
+
+  50% {
+    opacity: .84;
+    transform: scale(1.09);
+  }
+}
+
+@keyframes ppArchivistEmblemFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.016);
+  }
+}
+
+@keyframes ppArchivistGoldGlow {
+  0%, 100% {
+    filter:
+      brightness(1)
+      saturate(1)
+      drop-shadow(0 5px 8px rgba(80, 52, 26, .16))
+      drop-shadow(0 0 12px rgba(191, 157, 92, .18));
+  }
+
+  50% {
+    filter:
+      brightness(1.08)
+      saturate(1.06)
+      drop-shadow(0 6px 10px rgba(80, 52, 26, .20))
+      drop-shadow(0 0 20px rgba(191, 157, 92, .34));
+  }
+}
+
+@keyframes ppArchivistAuraBreath {
+  0%, 100% {
+    opacity: .36;
+    transform: scale(.94);
+  }
+
+  50% {
+    opacity: .80;
+    transform: scale(1.08);
+  }
+}
+@keyframes ppToastXpBorderFlow {
+  0% {
+    background-position: 0% 50%;
+    opacity: .28;
+  }
+
+  46% {
+    opacity: .86;
+  }
+
+  100% {
+    background-position: 220% 50%;
+    opacity: .38;
+  }
+}
+
+@keyframes ppToastXpBorderPulse {
+  0%, 100% {
+    opacity: .42;
+    filter: brightness(1);
+  }
+
+  50% {
+    opacity: .94;
+    filter: brightness(1.12);
+  }
+}
+
+@keyframes ppToastXpLeadingGlow {
+  0%, 100% {
+    opacity: .46;
+    transform: translateY(-50%) scale(.86);
+  }
+
+  50% {
+    opacity: .92;
+    transform: translateY(-50%) scale(1.08);
+  }
+}
+
+@keyframes ppToastXpBarSettle {
+  0% {
+    opacity: .96;
+    box-shadow:
+      inset 0 0 0 1px rgba(255,232,170,.42),
+      inset 0 0 14px var(--xp-bar-glow, rgba(212,175,100,.30)),
+      0 0 30px var(--xp-bar-glow, rgba(212,175,100,.28)),
+      0 0 64px var(--xp-bar-glow, rgba(212,175,100,.16));
+  }
+
+  100% {
+    opacity: .42;
+    box-shadow:
+      inset 0 0 0 1px rgba(255,232,170,.18),
+      inset 0 0 9px var(--xp-bar-glow, rgba(212,175,100,.12)),
+      0 0 13px var(--xp-bar-glow, rgba(212,175,100,.10));
+  }
+}
+@keyframes ppXpBarSheen {
+  from {
+    transform: translateX(-110%);
+  }
+
+  to {
+    transform: translateX(115%);
+  }
+}
+
+@keyframes ppXpParticle {
+  0% {
+    opacity: 0;
+    transform:
+      translate3d(0, 0, 0)
+      scale(var(--scale, 1));
+  }
+
+  18% {
+    opacity: .86;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(var(--drift, 0), -92px, 0)
+      scale(.24);
+  }
+}
+
+@keyframes ppXpLevelUpPulse {
+  0% {
+    box-shadow:
+      0 22px 70px rgba(0,0,0,.18),
+      0 0 32px var(--xp-glow, rgba(212, 175, 100, .18)),
+      inset 0 1px 0 rgba(255,255,255,.78);
+  }
+
+  42% {
+    box-shadow:
+      0 26px 82px rgba(0,0,0,.22),
+      0 0 68px var(--xp-glow, rgba(212, 175, 100, .34)),
+      0 0 118px rgba(212, 175, 100, .16),
+      inset 0 1px 0 rgba(255,255,255,.88);
+  }
+
+  100% {
+    box-shadow:
+      0 22px 70px rgba(0,0,0,.18),
+      0 0 42px var(--xp-glow, rgba(212, 175, 100, .18)),
+      inset 0 1px 0 rgba(255,255,255,.78);
+  }
+}
+
+@keyframes ppXpEmblemReveal {
+  0% {
+    transform: scale(.92);
+    filter: brightness(1);
+  }
+
+  44% {
+    transform: scale(1.08);
+    filter: brightness(1.16);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes ppXpTextGlow {
+  0% {
+    text-shadow: none;
+  }
+
+  45% {
+    text-shadow: 0 0 22px rgba(212, 175, 100, .42);
+  }
+
+  100% {
+    text-shadow: none;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-xpToast,
+  .pp-xpToast *,
+  .pp-xpToast *::before,
+  .pp-xpToast *::after {
+    animation-duration: 1ms;
+    animation-iteration-count: 1;
+    transition-duration: 1ms;
+  }
+
+  .pp-xpParticle {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   PROPHETIA · XP Toast v2 Reward Psychology
+   Más información, tensión de progreso y recompensa visual
+   ========================================================= */
+
+.pp-xpToast__aura {
+  position: absolute;
+  inset: -40%;
+  z-index: 0;
+
+  background:
+    radial-gradient(circle at 22% 42%, var(--xp-glow, rgba(212,175,100,.22)), transparent 28%),
+    radial-gradient(circle at 76% 18%, rgba(255,255,255,.22), transparent 22%);
+
+  opacity: .72;
+  filter: blur(18px);
+  pointer-events: none;
+
+  animation: ppXpAuraBreath 2600ms ease-in-out infinite;
+}
+
+.pp-xpToast__emblem,
+.pp-xpToast__content,
+.pp-xpToast__close {
+  position: relative;
+  z-index: 1;
+}
+
+.pp-xpToast__title span {
+  display: inline-block;
+  min-width: 1.2ch;
+  font-variant-numeric: tabular-nums;
+}
+
+.pp-xpToast__bar {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+
+  height: 12px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
+
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,.24),
+    inset 0 -1px 0 rgba(255,255,255,.30),
+    0 0 0 1px rgba(212,175,100,.10),
+    0 0 18px var(--xp-bar-glow, rgba(212,175,100,.10));
+}
+
+.pp-xpToast__bar::before {
+  content: "";
+
+  position: absolute;
+  inset: -7px;
+  z-index: -1;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--xp-bar-glow, rgba(212,175,100,.22)) 22%,
+      rgba(255,241,184,.72) 50%,
+      var(--xp-bar-glow, rgba(212,175,100,.22)) 78%,
+      transparent 100%
+    );
+
+  background-size: 220% 100%;
+
+  opacity: 0;
+  filter: blur(8px);
+
+  pointer-events: none;
+}
+
+.pp-xpToast__bar::after {
+  content: "";
+
+  position: absolute;
+  inset: -2px;
+  z-index: 5;
+
+  border-radius: inherit;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,232,170,.18),
+    inset 0 0 9px var(--xp-bar-glow, rgba(212,175,100,.12)),
+    0 0 13px var(--xp-bar-glow, rgba(212,175,100,.10));
+
+  opacity: .42;
+  pointer-events: none;
+}
+
+.pp-xpToast__bar.is-charging::before {
+  opacity: .88;
+  animation: ppToastXpBorderFlow 2600ms ease-in-out infinite;
+}
+
+.pp-xpToast__bar.is-charging::after {
+  opacity: .95;
+  animation: ppToastXpBorderPulse 1200ms ease-in-out infinite;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,232,170,.38),
+    inset 0 0 14px var(--xp-bar-glow, rgba(212,175,100,.26)),
+    0 0 26px var(--xp-bar-glow, rgba(212,175,100,.24)),
+    0 0 52px var(--xp-bar-glow, rgba(212,175,100,.14));
+}
+
+.pp-xpToast__bar.is-settled::after {
+  animation: ppToastXpBarSettle 780ms ease-out both;
+}
+
+.pp-xpToast__barTrack {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(10% - 1px),
+      rgba(255,255,255,.34) calc(10% - 1px),
+      rgba(255,255,255,.34) 10%
+    );
+
+  opacity: .42;
+  pointer-events: none;
+}
+
+.pp-xpToast__barGlow {
+  position: absolute;
+  inset: -12px 0 auto auto;
+
+  width: 80px;
+  height: 36px;
+
+  background: radial-gradient(circle, var(--xp-bar-glow, rgba(212,175,100,.5)), transparent 68%);
+  opacity: .72;
+  filter: blur(8px);
+
+  animation: ppXpGlowDrift 1800ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+.pp-xpToast__micro {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-top: 7px;
+
+  font-size: 10.5px;
+  line-height: 1.2;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  color: rgba(0,0,0,.48);
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__micro {
+  color: rgba(255,255,255,.56);
+}
+
+.pp-xpToast__cta,
+.pp-xpToast__cta:link,
+.pp-xpToast__cta:visited {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 10px;
+  padding: 7px 12px;
+
+  border: 1px solid rgba(0,0,0,.14);
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.42);
+  color: inherit;
+
+  text-decoration: none;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.pp-xpToast__cta:hover,
+.pp-xpToast__cta:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(0,0,0,.42);
+  background: rgba(255,255,255,.72);
+}
+
+.pp-xpToast.rank-prophet .pp-xpToast__cta {
+  border-color: rgba(212,175,100,.34);
+  background: rgba(255,255,255,.08);
+  color: #f8f1e3;
+}
+
+.pp-xpToast.is-level-up .pp-xpToast__bar {
+  animation: ppXpBarImpact 900ms ease both;
+}
+.pp-xpToast.rank-initiate .pp-xpToast__cta {
+  border-color: rgba(123, 63, 31, .24);
+  background: rgba(255, 244, 230, .52);
+}
+
+.pp-xpToast.rank-adeptus .pp-xpToast__cta {
+  
+  border-color: rgba(29, 58, 124, .24);
+  background: rgba(246, 248, 255, .54);
+}
+
+.pp-xpToast.rank-oracle .pp-xpToast__cta {
+  
+  border-color: rgba(150, 170, 185, .34);
+  background: rgba(250, 253, 255, .62);
+}
+
+.pp-xpToast.rank-archivist .pp-xpToast__cta {
+ 
+  border-color: rgba(122, 78, 38, .24);
+  background: rgba(255, 249, 238, .54);
+}
+
+@keyframes ppXpAuraBreath {
+  0%, 100% {
+    opacity: .45;
+    transform: scale(.98);
+  }
+
+  50% {
+    opacity: .86;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes ppXpGlowDrift {
+  0%, 100% {
+    transform: translateX(-8px);
+    opacity: .42;
+  }
+
+  50% {
+    transform: translateX(18px);
+    opacity: .88;
+  }
+}
+
+@keyframes ppXpBarImpact {
+  0% {
+    transform: scaleX(1);
+    filter: brightness(1);
+  }
+
+  42% {
+    transform: scaleX(1.012);
+    filter: brightness(1.18);
+  }
+
+  100% {
+    transform: scaleX(1);
+    filter: brightness(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .pp-xpToast {
+    top: 10px;
+    width: min(100vw - 20px, 540px);
+  }
+
+  .pp-xpToast__inner {
+    grid-template-columns: 56px 1fr 28px;
+    gap: 12px;
+    align-items: start;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .pp-xpToast__emblem {
+    width: 42px;
+    height: 42px;
+  }
+
+  .pp-xpToast__emblem img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .pp-xpToast.rank-prophet .pp-xpToast__emblem {
+    width: 56px;
+    height: 56px;
+    margin-left: 0;
+  }
+
+  .pp-xpToast.rank-prophet .pp-xpToast__emblem img {
+    width: 70px;
+    height: 70px;
+    transform: translateY(-3px);
+  }
+
+  .pp-xpToast.rank-prestige-i .pp-xpToast__emblem {
+    width: 62px;
+    height: 62px;
+  }
+
+  .pp-xpToast.rank-prestige-i .pp-xpToast__emblem img,
+  .pp-xpToast.rank-prestige-i .pp-xpToast__emblem img[data-rank-emblem="prestige-i"] {
+    width: 58px;
+    height: 58px;
+    transform: translate(0, 0) scale(1);
+  }
+
+  .pp-xpToast__title {
+    font-size: clamp(19px, 6vw, 26px);
+    line-height: 1.02;
+  }
+
+  .pp-xpToast__micro {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pp-xpToast__cta {
+    margin-top: 8px;
+  }
+}

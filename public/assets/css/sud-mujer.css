@@ -1,0 +1,987 @@
+/* =========================================================
+   PROPHETIA · SUDADERAS PUNTO MUJER
+   Objetivo: 1:1 con Sudaderas Hombre (look editorial)
+   Scope: body.women-page.sud-women-page
+   ========================================================= */
+
+body.women-page.sud-women-page{
+  --pp-edge-sudw: 40px;
+  --hdr-h: var(--pp-header-h, 64px);
+
+  /* Floating logo · control manual */
+  --logo-x-sudw: -30px;   /* + derecha / - izquierda */
+  --logo-y-sudw: -90px;   /* + abajo / - arriba */
+  --logo-size-sudw: 920px;
+
+  --logo-w-sudw: 766px;
+}
+
+
+
+
+/* =========================
+   HERO (en flujo, limpio)
+   ========================= */
+body.women-page.sud-women-page .pp-hero.hero--two-cols{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  padding: 42px var(--pp-edge-sudw) 26px;
+  min-height: 260px;
+  box-sizing: border-box;
+
+  background: transparent;
+}
+
+body.women-page.sud-women-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+/* Logo flotante */
+body.women-page.sud-women-page .pp-hero__media .floating-logo{
+  position: absolute;
+  left: var(--logo-x-sudw);
+  top: calc(var(--hdr-h) + var(--logo-y-sudw));
+  transform: none;
+}
+
+body.women-page.sud-women-page .pp-hero__media .floating-logo img{
+  width: var(--logo-size-sudw) !important;
+  height: auto !important;
+  max-width: none !important;
+  display: block;
+  object-fit: contain;
+}
+/* =========================
+   BREADCRUMB — a la derecha del logo (como otras PLP)
+   ========================= */
+body.women-page.sud-women-page .pp-breadcrumb--hero{
+  position: absolute;
+  z-index: 30;
+
+ left: calc(
+  var(--pp-edge-sudw) + var(--logo-x-sudw) + var(--logo-w-sudw) + var(--bc-gap-sudw) + var(--bc-x-sudw) + var(--bc-x-shift-sudw)
+);
+
+  top: calc(42px + var(--hdr-h) + var(--logo-y-sudw) + 82px + var(--bc-y-sudw));
+
+  right: var(--pp-edge-sudw);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+/* Aside derecha, sin caja */
+body.women-page.sud-women-page .pp-hero__side{
+  align-self: flex-end;
+  margin-left: auto;
+  max-width: 360px;
+
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  color: #000;
+}
+
+body.women-page.sud-women-page .pp-hero__title{
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  margin: 0 0 10px;
+}
+
+body.women-page.sud-women-page .pp-hero__list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+body.women-page.sud-women-page .pp-hero__list a{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  text-decoration: none;
+  color: rgba(0,0,0,0.62);
+  padding-block: 1px;
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease, transform .2s ease, opacity .2s ease;
+}
+
+body.women-page.sud-women-page .pp-hero__list a:hover{
+  opacity: 0.85;
+  color: #000;
+  border-bottom-color: #000;
+  transform: translateX(2px);
+}
+
+/* =========================
+   SPACERS (compactos)
+   ========================= */
+body.women-page.sud-women-page .bb-spacer{
+  height: clamp(20px, 4vw, 56px);
+}
+
+body.women-page.sud-women-page .sud-spacer{
+  height: clamp(12px, 3vw, 40px);
+}
+
+/* =========================
+   INTRO (alineada al carril)
+   ========================= */
+body.women-page.sud-women-page .sud-intro.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-sudw);
+  box-sizing: border-box;
+}
+
+body.women-page.sud-women-page .sud-intro__text{
+  margin: 0;
+  max-width: 62ch;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(0,0,0,0.72);
+}
+
+/* =========================
+   TOOLBAR (FILTROS) — como topbar
+   transparente + sticky
+   ========================= */
+body.women-page.sud-women-page .pp-filters.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 10px var(--pp-edge-sudw);
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: var(--pp-header-h, 64px);
+  z-index: 50;
+
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+
+  /* tipografía toolbar */
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+body.women-page.sud-women-page .pp-filter-left,
+body.women-page.sud-women-page .pp-filter-right{
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+body.women-page.sud-women-page .pp-btn{
+  background: transparent;
+  border: 0;
+  padding: 2px 0;
+  border-radius: 0;
+  cursor: pointer;
+  font: inherit;
+  color: rgba(0,0,0,0.85);
+}
+
+body.women-page.sud-women-page .pp-btn:hover{ opacity: .75; }
+
+body.women-page.sud-women-page .pp-check span{
+  font: inherit;
+  color: rgba(0,0,0,0.80);
+}
+
+/* =========================
+   GRID (alineado al carril)
+   ========================= */
+body.women-page.sud-women-page .pp-plp.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-sudw);
+  box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 1024px){
+  body.women-page.sud-women-page{
+    --pp-edge-sudw: 24px;
+  }
+}
+
+@media (max-width: 640px){
+  body.women-page.sud-women-page .pp-filters.container{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  body.women-page.sud-women-page .pp-filter-right{
+    align-self: flex-end;
+  }
+}
+/* Opcional: evita que el drawer tape el header visualmente en móvil */
+@media (max-width: 768px){
+  body.women-page.sud-women-page .women-filters-drawer{
+    padding-top: 0;
+  }
+}
+@media (max-width: 640px){
+  body.women-page.sud-women-page{
+    --logo-w-sudw: 520px; /* reduce el “ancho asumido” */
+  }
+  body.women-page.sud-women-page .pp-breadcrumb--hero{
+    left: var(--pp-edge-sudw);
+    top: calc(42px + var(--hdr-h) + 120px);
+    white-space: normal;
+  }
+}
+/* =========================================================
+   PROPHETIA · PLP GRID — Sudaderas punto Mujer (fix tamaño)
+   Scope: body.women-page.sud-women-page
+   ========================================================= */
+body.women-page.sud-women-page #plp-grid.plp-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.2vw, 30px);
+  align-items: start;
+}
+
+/* Card: estructura vertical limpia */
+body.women-page.sud-women-page #plp-grid .card{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Media: ratio editorial y recorte elegante */
+body.women-page.sud-women-page #plp-grid .card-media{
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 14px; /* si ya tienes radio global, puedes quitarlo */
+}
+
+/* Imagen: siempre dentro del marco */
+body.women-page.sud-women-page #plp-grid .card-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+background: #f6f6f6;
+
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1200px){
+  body.women-page.sud-women-page #plp-grid.plp-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 840px){
+  body.women-page.sud-women-page #plp-grid.plp-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px){
+  body.women-page.sud-women-page #plp-grid.plp-grid{
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================================================
+   SUD MUJER · NAV (prev/next) dentro del card-media
+   Icono: /assets/img/logo/emblemblanco.svg
+   ========================================================= */
+
+body.women-page.sud-women-page{
+  --pp-nav-logo: url("/assets/img/logo/emblemblanco.svg");
+  --pp-nav-size: 18px;
+  --pp-nav-rot-prev: 180deg;
+  --pp-nav-rot-next: 0deg;
+}
+
+/* Asegura contexto de posicionamiento */
+body.women-page.sud-women-page #plp-grid .card-media{
+  position: relative;
+}
+
+/* Botones */
+body.women-page.sud-women-page #plp-grid .plp-media .nav.prev,
+body.women-page.sud-women-page #plp-grid .plp-media .nav.next{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,.18);
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+  z-index: 10;
+
+  /* Icono Prophetia */
+  background-image: var(--pp-nav-logo);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--pp-nav-size);
+
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, opacity 160ms ease, background-size 160ms ease;
+}
+body.women-page.sud-women-page #plp-grid .plp-media{
+  position: relative;
+  overflow: visible;
+}
+
+
+/* Posición */
+/* Posición CORRECTA (los botones viven en .plp-media) */
+body.women-page.sud-women-page #plp-grid .plp-media .nav.prev{ left: 10px; }
+body.women-page.sud-women-page #plp-grid .plp-media .nav.next{ right: 10px; }
+
+
+/* Rotación del icono */
+body.women-page.sud-women-page #plp-grid .card-media .nav.prev{
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-prev));
+}
+body.women-page.sud-women-page #plp-grid .card-media .nav.next{
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-next));
+}
+
+/* Hover premium */
+@media (hover:hover){
+  body.women-page.sud-women-page #plp-grid .plp-media:hover .nav.prev,
+  body.women-page.sud-women-page #plp-grid .plp-media:hover .nav.next{
+    opacity: 1;
+  }
+
+  body.women-page.sud-women-page #plp-grid .plp-media .nav.prev:hover,
+  body.women-page.sud-women-page #plp-grid .plp-media .nav.next:hover{
+    border-color: rgba(0,0,0,.28);
+    box-shadow: 0 10px 22px rgba(0,0,0,.10);
+    background-size: calc(var(--pp-nav-size) + 2px);
+  }
+}
+
+
+
+
+
+/* Foco accesible */
+body.women-page.sud-women-page #plp-grid .card-media .nav.prev:focus-visible,
+body.women-page.sud-women-page #plp-grid .card-media .nav.next:focus-visible{
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+/* Disabled (si lo usas) */
+body.women-page.sud-women-page #plp-grid .card-media .nav.prev[disabled],
+body.women-page.sud-women-page #plp-grid .card-media .nav.next[disabled]{
+  opacity: .35;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* Mobile */
+@media (max-width: 768px){
+  body.women-page.sud-women-page #plp-grid .card-media .nav.prev,
+  body.women-page.sud-women-page #plp-grid .card-media .nav.next{
+    width: 40px;
+    height: 40px;
+  }
+  body.women-page.sud-women-page #plp-grid .card-media .nav.prev{ left: 8px; }
+  body.women-page.sud-women-page #plp-grid .card-media .nav.next{ right: 8px; }
+}
+
+
+/* =========================================================
+   SUDADERAS MUJER · Sort dropdown real
+   ========================================================= */
+
+body.women-page.sud-women-page .pp-sort {
+  position: relative;
+  display: inline-block;
+}
+
+body.women-page.sud-women-page .pp-sort-trigger {
+  list-style: none;
+  cursor: pointer;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .08em;
+  text-transform: none;
+  color: rgba(0,0,0,.82);
+}
+
+body.women-page.sud-women-page .pp-sort-trigger::-webkit-details-marker {
+  display: none;
+}
+
+body.women-page.sud-women-page .pp-sort-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 120;
+
+  min-width: 190px;
+  padding: 8px 0;
+
+  background: rgba(255,255,255,.98);
+  border: 1px solid rgba(0,0,0,.10);
+  box-shadow: 0 18px 48px rgba(0,0,0,.14);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+
+body.women-page.sud-women-page .pp-sort-option {
+  width: 100%;
+  display: block;
+
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .04em;
+  text-transform: none;
+  color: rgba(0,0,0,.78);
+}
+
+body.women-page.sud-women-page .pp-sort-option:hover {
+  background: rgba(0,0,0,.055);
+  color: #000;
+}
+
+/* =========================================================
+   SUDADERAS MUJER · Filters drawer atelier final
+   Mismo lenguaje que hombre, más suave
+   ========================================================= */
+
+body.women-page.sud-women-page {
+  --sudw-drawer-bg-1: #f8f2eb;
+  --sudw-drawer-bg-2: #eadfd2;
+  --sudw-drawer-ink: #1b1712;
+  --sudw-drawer-muted: rgba(27,23,18,.62);
+  --sudw-drawer-line: rgba(27,23,18,.13);
+  --sudw-drawer-gold: #a98548;
+  --sudw-drawer-ease: cubic-bezier(.16,.84,.44,1);
+}
+
+body.women-page.sud-women-page #womenFiltersOverlay.women-filters-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2600;
+
+  background:
+    radial-gradient(circle at 18% 18%, rgba(169,133,72,.14), transparent 34%),
+    rgba(12,10,9,.42);
+
+  backdrop-filter: blur(8px) saturate(116%);
+  -webkit-backdrop-filter: blur(8px) saturate(116%);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity .36s var(--sudw-drawer-ease),
+    visibility 0s linear .36s;
+}
+
+body.women-page.sud-women-page #womenFiltersOverlay.women-filters-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .36s var(--sudw-drawer-ease);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer.women-filters-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  width: min(520px, 94vw);
+  height: 100dvh;
+  z-index: 2700;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-inline: clamp(26px, 4vw, 48px);
+
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255,255,255,.72), transparent 34%),
+    linear-gradient(145deg, var(--sudw-drawer-bg-1), var(--sudw-drawer-bg-2) 58%, #dccdbf);
+
+  color: var(--sudw-drawer-ink);
+
+  border-left: 1px solid rgba(255,255,255,.58);
+  box-shadow:
+    -28px 0 90px rgba(0,0,0,.24),
+    inset 1px 0 0 rgba(255,255,255,.76);
+
+  transform: translate3d(104%, 0, 0) scale(.985);
+  opacity: .72;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    transform .46s var(--sudw-drawer-ease),
+    opacity .36s var(--sudw-drawer-ease),
+    visibility 0s linear .46s;
+
+  overflow: hidden;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer.women-filters-drawer.is-open {
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    transform .46s var(--sudw-drawer-ease),
+    opacity .36s var(--sudw-drawer-ease);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer.women-filters-drawer::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(169,133,72,.50),
+    rgba(255,255,255,.65),
+    rgba(169,133,72,.30),
+    transparent
+  );
+
+  box-shadow:
+    0 0 24px rgba(169,133,72,.25),
+    10px 0 60px rgba(255,255,255,.22);
+
+  pointer-events: none;
+}
+
+/* Header */
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-head {
+  flex: 0 0 auto;
+  padding: 34px 0 22px;
+  border-bottom: 1px solid var(--sudw-drawer-line);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-title {
+  margin: 0;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.02em;
+  text-transform: none;
+  color: var(--sudw-drawer-ink);
+}
+
+/* X */
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-close {
+  position: relative;
+
+  width: 38px;
+  height: 38px;
+  padding: 0 !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  border: 1px solid rgba(27,23,18,.16);
+  border-radius: 999px;
+  background: rgba(255,255,255,.50);
+
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+
+  cursor: pointer;
+
+  transition:
+    transform .22s var(--sudw-drawer-ease),
+    background .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-close::before {
+  content: "×";
+  display: block;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+
+  color: rgba(27,23,18,.78);
+  transform: translateY(-1px);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-close:hover {
+  transform: rotate(90deg) scale(1.03);
+  background: rgba(255,255,255,.78);
+  border-color: rgba(169,133,72,.38);
+  box-shadow: 0 12px 28px rgba(0,0,0,.10);
+}
+
+/* Tabs */
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-tabs {
+  margin-top: 26px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-tab {
+  position: relative;
+  padding: 8px 0;
+
+  border: 0;
+  background: transparent;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+
+  color: var(--sudw-drawer-muted);
+  cursor: pointer;
+
+  transition:
+    color .22s ease,
+    transform .22s var(--sudw-drawer-ease);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+
+  height: 1px;
+  background: transparent;
+
+  transition:
+    background .22s ease,
+    box-shadow .22s ease;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-tab.is-active {
+  color: var(--sudw-drawer-ink);
+  transform: translateY(-1px);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-tab.is-active::after {
+  background: var(--sudw-drawer-gold);
+  box-shadow: 0 0 18px rgba(169,133,72,.30);
+}
+
+/* Body */
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-body {
+  flex: 1 1 auto;
+  padding: 30px 0 22px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+
+  color: var(--sudw-drawer-ink);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-panel {
+  display: none;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-panel.is-active {
+  display: block;
+  animation: sudWomenDrawerPanelIn .28s var(--sudw-drawer-ease) both;
+}
+
+@keyframes sudWomenDrawerPanelIn {
+  from {
+    opacity: 0;
+    transform: translate3d(10px, 4px, 0);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+/* Swatches */
+body.women-page.sud-women-page #womenFiltersDrawer .women-swatch-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 34px;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-swatch {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-height: 30px;
+  min-width: 0;
+  cursor: pointer;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-swatch-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-swatch-dot {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(27,23,18,.22);
+
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.42),
+    0 5px 12px rgba(0,0,0,.10);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-swatch-label,
+body.women-page.sud-women-page #womenFiltersDrawer .women-check {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.3;
+  color: rgba(27,23,18,.74);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-swatch:hover .women-swatch-label {
+  color: var(--sudw-drawer-ink);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-swatch-input:checked + .women-swatch-dot {
+  transform: scale(1.08);
+  border-color: rgba(169,133,72,.70);
+  box-shadow:
+    0 0 0 2px rgba(169,133,72,.72),
+    0 0 0 6px rgba(169,133,72,.12),
+    0 10px 22px rgba(0,0,0,.14);
+}
+
+/* Tallas */
+body.women-page.sud-women-page #womenFiltersDrawer .women-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+/* Footer */
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-foot {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+
+  padding: 18px 0 26px;
+  border-top: 1px solid var(--sudw-drawer-line);
+
+  background:
+    linear-gradient(180deg, rgba(234,223,210,0), rgba(234,223,210,.96) 34%, rgba(234,223,210,.98));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-foot-inner {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-clear,
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-cta {
+  min-height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 12px 18px;
+  border-radius: 999px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .08em;
+  text-transform: none;
+
+  cursor: pointer;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-clear {
+  border: 1px solid rgba(27,23,18,.18);
+  background: rgba(255,255,255,.36);
+  color: rgba(27,23,18,.78);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-cta {
+  margin-left: auto;
+  border: 1px solid #1b1712;
+  background: #1b1712;
+  color: #f8f1e7;
+  box-shadow: 0 16px 34px rgba(0,0,0,.18);
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-cta span {
+  font: inherit;
+  display: inline-flex;
+  min-width: 1ch;
+  margin-inline: 2px;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-clear:hover,
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-cta:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  body.women-page.sud-women-page #womenFiltersDrawer.women-filters-drawer {
+    width: 100%;
+    padding-inline: 22px;
+  }
+
+  body.women-page.sud-women-page #womenFiltersDrawer .women-swatch-list {
+    grid-template-columns: 1fr;
+  }
+
+  body.women-page.sud-women-page #womenFiltersDrawer .women-filters-foot-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.women-page.sud-women-page #womenFiltersDrawer .women-filters-clear,
+  body.women-page.sud-women-page #womenFiltersDrawer .women-filters-cta {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SUDADERAS MUJER · Drawer final authority clean
+   Igualado visual + footer integrado
+   ========================================================= */
+
+body.women-page.sud-women-page #womenFiltersDrawer.women-filters-drawer {
+  box-sizing: border-box !important;
+  width: min(560px, 94vw) !important;
+  padding-inline: clamp(28px, 4vw, 52px) !important;
+
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255,255,255,.72), transparent 34%),
+    linear-gradient(145deg, var(--sudw-drawer-bg-1), var(--sudw-drawer-bg-2) 58%, #dccdbf) !important;
+}
+
+/* Footer integrado: sin franja rara */
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-foot {
+  flex: 0 0 auto !important;
+  position: sticky !important;
+  bottom: 0 !important;
+
+  margin: 0 !important;
+  padding: 18px 0 26px !important;
+
+  border-top: 1px solid var(--sudw-drawer-line) !important;
+
+background: transparent !important;
+
+  box-shadow: none !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+body.women-page.sud-women-page #womenFiltersDrawer .women-filters-foot-inner {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+}

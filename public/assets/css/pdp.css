@@ -1,0 +1,1541 @@
+/* ================================
+   PDP · Galería Prophetia-like
+   Rail sticky + stack vertical
+   ================================ */
+
+body.pdp .pdp-gallery {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  min-width: 0;
+  margin: 24px 0;
+}
+
+/* Rail miniaturas (sticky) */
+body.pdp .pdp-thumbs {
+  width: 88px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: sticky;
+  top: calc(var(--pp-header-h, 64px) + 18px);
+  max-height: calc(100vh - var(--pp-header-h, 64px) - 36px);
+  overflow: auto;
+  padding-right: 6px;
+}
+
+/* Thumbs como button “limpio” */
+body.pdp .pdp-rail__btn {
+  all: unset;              /* <- clave: borra estilos globales de button */
+  display: block;
+  cursor: pointer;
+  line-height: 0;
+  opacity: .72;
+}
+
+body.pdp .pdp-rail__btn.is-active { opacity: 1; }
+
+body.pdp .pdp-rail__btn img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Stack vertical: 1 columna sí o sí */
+body.pdp .pdp-hero {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr; /* <- clave: mata el 2-col viejo */
+  gap: 14px;
+}
+
+/* Cada imagen grande es un “asset button” */
+/* === PDP · Asset container (Prophetia real) === */
+body.pdp .pdp-shot{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+
+  display: block;
+  width: 100%;
+  position: relative;
+  cursor: zoom-in;
+
+  line-height: 0;
+  pointer-events: auto;
+  z-index: 1;
+
+  scroll-margin-top: calc(var(--pp-header-h, 64px) + 18px);
+}
+
+body.pdp .pdp-shot picture,
+body.pdp .pdp-shot img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+body.pdp .pdp-shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Focus accesible (muy Prophetia: invisible hasta teclado) */
+body.pdp .pdp-shot:focus-visible,
+body.pdp .pdp-rail__btn:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 4px;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  body.pdp .pdp-gallery {
+    flex-direction: column;
+  }
+
+  body.pdp .pdp-thumbs {
+    position: static;
+    width: 100%;
+    flex-direction: row;
+    max-height: none;
+    overflow: auto;
+  }
+
+  body.pdp .pdp-rail__btn {
+    min-width: 84px;
+  }
+}
+
+/* ================================
+   PDP · Atributos (Prophetia-like)
+   ================================ */
+
+/* Atributos (Prophetia-like: label izquierda + valor derecha) */
+.pdp-attrs {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(0, 0, 0, .10);
+}
+
+.pdp-attr {
+  border-bottom: 1px solid rgba(0, 0, 0, .10);
+}
+
+
+.pdp-attr__label {
+  letter-spacing: .01em;
+}
+
+.pdp-attr__value {
+  color: rgba(0, 0, 0, .65);
+}
+
+/* Links que abren el side panel (›) */
+.pdp-links {
+  margin-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, .10);
+}
+
+/* Atributos: fila fina + chevron editorial */
+.pdp-attr__btn,
+.pdp-rowbtn{
+  all: unset;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 14px 0;
+  cursor: pointer;
+
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  color: rgba(0,0,0,.88);
+}
+
+/* Flecha del HTML (un solo chevron, estilo Prophetia) */
+.pdp-attr__btn > span:last-child,
+.pdp-rowbtn > span:last-child{
+  font-size: 12px;
+  line-height: 1;
+  color: rgba(0,0,0,.35);
+  transform: translateY(-1px);
+}
+
+
+/* Label/Value más “luxury” */
+.pdp-attr__label{
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: rgba(0,0,0,.88);
+}
+
+.pdp-attr__value{
+  font-weight: 400;
+  color: rgba(0,0,0,.55);
+}
+
+/* Hover: subrayado fino (Prophetia vibe) */
+.pdp-attr__btn:hover .pdp-attr__label,
+.pdp-rowbtn:hover span:first-child{
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* Focus accesible */
+.pdp-attr__btn:focus-visible,
+.pdp-rowbtn:focus-visible{
+  outline: 2px solid #111;
+  outline-offset: 4px;
+}
+/* ================================
+   PDP · Drawer genérico (Prophetia-like)
+   ================================ */
+
+.ad {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: none;
+}
+
+.ad.open {
+  display: block;
+}
+
+.ad-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+  opacity: 0;
+  animation: adBackdropIn .28s ease forwards;
+}
+
+.ad-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(560px, 92vw);
+  background: #fff;
+  box-shadow: -24px 0 60px rgba(0, 0, 0, .18);
+  transform: translateX(100%);
+  opacity: .96;
+  animation: adPanelIn .32s cubic-bezier(.2, .7, .2, 1) forwards;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes adBackdropIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes adPanelIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.ad.closing .ad-backdrop {
+  animation: adBackdropOut .22s ease forwards;
+}
+
+.ad.closing .ad-panel {
+  animation: adPanelOut .22s ease forwards;
+}
+
+@keyframes adBackdropOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes adPanelOut {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.ad-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.ad-title {
+  font-size: 18px;
+  margin: 0;
+}
+
+.ad-close {
+  all: unset;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.ad-body {
+  padding: 18px 20px;
+  overflow: auto;
+}
+
+body.pdp .ad .opts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body.pdp .ad .opt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 10px;
+
+  border: 1px solid rgba(0,0,0,.14);
+  background: #fff;
+  color: rgba(0,0,0,.86);
+
+  cursor: pointer;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .16s ease;
+}
+
+body.pdp .ad .opt:hover {
+  border-color: #111;
+  box-shadow: 0 0 0 1px #111 inset;
+  transform: translateY(-1px);
+}
+
+body.pdp .ad .opt.is-active {
+  border-color: #111;
+  box-shadow: 0 0 0 1px #111 inset;
+}
+
+body.pdp .ad .swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 1px solid rgba(0,0,0,.18);
+}
+
+body.drawer-open,
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Drawer tabs (Prophetia-like) */
+.ad-tabs {
+  padding: 0 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.ad-tabs__list {
+  display: flex;
+  gap: 22px;
+  list-style: none;
+  margin: 0;
+  padding: 12px 0;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.ad-tab {
+  all: unset;
+  cursor: pointer;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  font-size: 13px;
+  letter-spacing: .01em;
+}
+
+.ad-tab[aria-selected="true"] {
+  border-bottom-color: #111;
+}
+
+/* Panel content */
+.ad-panel-content {
+  padding-top: 12px;
+}
+
+.ad-optlist {
+  display: flex;
+  flex-direction: column;
+}
+
+.ad-optrow {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .08);
+  cursor: pointer;
+}
+
+.ad-optrow .left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ad-optrow .name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ad-optrow .check {
+  opacity: 0;
+}
+
+.ad-optrow.is-active .check {
+  opacity: 1;
+}
+
+
+
+/* ================================
+   PDP · Layout (Prophetia-like)
+   Aside pegado a la derecha + tipografía refinada
+   ================================ */
+
+:root{
+  --pdp-edge: clamp(18px, 3vw, 44px);
+  --pdp-aside: 360px; /* Prophetia feel: estrecho y editorial */
+}
+
+body.pdp .product-wrap.container{
+  /* romper el “container centrado” SOLO en PDP */
+  max-width: none;
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: var(--pdp-edge);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, var(--pdp-aside));
+
+  column-gap: clamp(18px, 3vw, 56px);
+  align-items: start;
+  margin-bottom: clamp(40px, 8vw, 120px);
+}
+
+@media (max-width: 980px){
+  body.pdp .product-wrap.container{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Panel derecho: pegado al borde derecho del layout */
+body.pdp .pdp-panel{
+  justify-self: end;
+  position: sticky;
+  top: calc(var(--pp-header-h, 64px) + 16px);
+  align-self: start;
+  max-width: var(--pdp-aside);
+}
+
+/* ================================
+   PDP · Tipografía panel (Silent Luxury)
+   ================================ */
+
+body.pdp .pdp-breadcrumb{
+  margin: 0 0 10px;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 11px;
+  line-height: 1.35;
+  color: rgba(0,0,0,.60);
+}
+
+body.pdp .pdp-breadcrumb a{
+  color: rgba(0,0,0,.65);
+  text-decoration: none;
+}
+
+body.pdp .pdp-breadcrumb a:hover{
+  text-decoration: underline;
+}
+
+/* Título: más pequeño, más “editorial”, menos cartel de feria */
+body.pdp .pdp-title{
+  margin: 0 0 12px;
+  font-family: var(--pp-serif, "Playfair Display", "Cinzel", serif);
+  font-weight: 500;
+  letter-spacing: .01em;
+  line-height: 1.08;
+  font-size: clamp(22px, 2.1vw, 32px);
+  color: #0d0d0d;
+}
+
+body.pdp .pdp-short{
+  margin: 0 0 14px;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(0,0,0,.70);
+  max-width: 34ch;
+}
+
+body.pdp .pdp-price{
+  margin-top: 6px;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #0d0d0d;
+}
+
+/* Atributos: más finos y con aire */
+body.pdp .pdp-attrs{
+  margin-top: 14px;
+}
+
+body.pdp .pdp-attr__btn{
+  padding: 12px 0;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+}
+
+body.pdp .pdp-attr__label{
+  font-weight: 500;
+  color: rgba(0,0,0,.85);
+}
+
+body.pdp .pdp-attr__value{
+  font-weight: 400;
+  color: rgba(0,0,0,.55);
+}
+
+/* Links (Todos los detalles / Envíos): misma línea editorial */
+body.pdp .pdp-rowbtn{
+  padding: 12px 0;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  color: rgba(0,0,0,.85);
+}
+
+/* CTA + QTY · Prophetia-like (pill fino + hint elegante) */
+body.pdp .pdp-buy{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+/* Qty pill: limpio, sin “UI de formulario” */
+body.pdp .pdp-buy #qty{
+  height: 44px;
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 999px;
+  padding: 0 14px;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  letter-spacing: .02em;
+  color: rgba(0,0,0,.90);
+  background: #fff;
+  outline: none;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quita spinners (Chrome/Safari/Edge) */
+body.pdp .pdp-buy #qty::-webkit-outer-spin-button,
+body.pdp .pdp-buy #qty::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+body.pdp .pdp-buy #qty{ -moz-appearance: textfield; }
+
+/* CTA pill: borde fino, tipografía editorial */
+body.pdp #pdpCta{
+  height: 44px;
+  border-radius: 999px;
+  padding: 0 18px;
+
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 12px;
+  letter-spacing: .20em;
+  text-transform: uppercase;
+
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+
+  cursor: pointer;
+  transition: transform .12s ease, background-color .2s ease, border-color .2s ease, color .2s ease;
+  position: relative;
+}
+
+/* Micro-interacción premium */
+body.pdp #pdpCta:hover{ transform: translateY(-1px); }
+body.pdp #pdpCta:active{ transform: translateY(0); }
+
+/* Disabled visual (pero sigue clicable por tu JS) */
+body.pdp #pdpCta.is-disabled,
+body.pdp #pdpCta[aria-disabled="true"]{
+  background: #fff;
+  color: rgba(0,0,0,.70);
+  border-color: rgba(0,0,0,.22);
+}
+
+/* Hint tipo Prophetia (tooltip discreto) */
+body.pdp #pdpCta.is-disabled[data-hint]::after,
+body.pdp #pdpCta[aria-disabled="true"][data-hint]::after{
+  content: attr(data-hint);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  white-space: nowrap;
+
+  font-size: 11px;
+  letter-spacing: .02em;
+  text-transform: none;
+
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(17,17,17,.92);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+/* aparece al hover/focus (solo cuando está “bloqueado”) */
+body.pdp #pdpCta.is-disabled:hover::after,
+body.pdp #pdpCta.is-disabled:focus-visible::after,
+body.pdp #pdpCta[aria-disabled="true"]:hover::after,
+body.pdp #pdpCta[aria-disabled="true"]:focus-visible::after{
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Focus visible muy limpio */
+body.pdp #pdpCta:focus-visible,
+body.pdp .pdp-buy #qty:focus-visible{
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+
+/* ===== PDP: evitar que la galería empuje el aside fuera ===== */
+body.pdp .product-wrap.container{
+  overflow-x: clip;          /* o hidden si prefieres compat total */
+}
+
+body.pdp .pdp-gallery,
+body.pdp .pdp-hero,
+body.pdp .pdp-shot,
+body.pdp .pdp-picture{
+  max-width: 100%;
+  min-width: 0;
+}
+
+body.pdp .pdp-shot img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* aside: pegado a la derecha como Prophetia */
+body.pdp .pdp-panel{
+  justify-self: end;
+}
+
+/* ===== PDP: cortar overflow horizontal real (layout safe) ===== */
+body.pdp{
+  overflow-x: clip; /* usa hidden si prefieres compatibilidad total */
+}
+
+body.pdp .product-wrap.container{
+  box-sizing: border-box;
+  max-width: 100vw;     /* clave */
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: var(--pdp-edge);
+}
+
+
+body.pdp .pdp-title{
+  letter-spacing: .005em;  /* un pelo más “lujo” */
+  line-height: 1.06;
+}
+.pdp-breadcrumb,
+.pp-breadcrumb{
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(0,0,0,.55);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.pp-bc__link{
+  color: rgba(0,0,0,.65);
+  text-decoration: none;
+}
+
+.pp-bc__link:hover{ text-decoration: underline; }
+
+.pp-bc__sep{
+  opacity: .55;
+}
+
+.pp-bc__current{
+  color: rgba(0,0,0,.85);
+}
+/* Drawer · Detalles (tabs estilo Prophetia) */
+.ad.ad--details .ad-head{
+  padding: 18px 22px;
+}
+
+.ad.ad--details .ad-title{
+  font-family: var(--pp-serif, "Playfair Display", "Cinzel", serif);
+  font-weight: 500;
+  letter-spacing: .01em;
+}
+
+.ad.ad--details .ad-tabs{
+  padding: 0 22px;
+  border-bottom: 1px solid rgba(0,0,0,.10);
+}
+
+.ad.ad--details .ad-tabs__list{
+  display: flex;
+  gap: 22px;
+  list-style: none;
+  margin: 0;
+  padding: 12px 0;
+  overflow: auto;
+}
+
+.ad.ad--details .ad-tab{
+  all: unset;
+  cursor: pointer;
+  padding: 6px 0;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.55);
+  border-bottom: 1px solid transparent;
+}
+
+.ad.ad--details .ad-tab[aria-selected="true"]{
+  color: rgba(0,0,0,.90);
+  border-bottom-color: #111;
+}
+
+.ad.ad--details .ad-body{
+  padding: 18px 22px 28px;
+}
+
+.ad.ad--details .ad-body p,
+.ad.ad--details .ad-body li{
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(0,0,0,.78);
+}
+
+/* Tabla de atributos (Color, Material, Peso...) */
+.ad.ad--details .ad-specs{
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 22px;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  color: rgba(0,0,0,.78);
+}
+
+.ad.ad--details .ad-specs .k{
+  color: rgba(0,0,0,.55);
+}
+
+@media (max-width: 520px){
+  .ad.ad--details .ad-specs{ grid-template-columns: 1fr; }
+}
+body.pdp #pdpCta.btn-primary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  width:100%;
+  text-transform:none;
+}
+body.pdp .pdp-cta__label{
+  font-size:12px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+body.pdp .pdp-cta__price{
+  font-size:12px;
+  opacity:.85;
+}
+body.pdp #pdpCta.is-disabled{
+  opacity:.55;
+}
+.ad.ad--details .ad-producthead{
+  display:grid;
+  grid-template-columns: 84px 1fr;
+  gap:14px;
+  padding: 6px 0 14px;
+  border-bottom:1px solid rgba(0,0,0,.08);
+  margin-bottom: 12px;
+}
+.ad.ad--details .ad-producthead__img{
+  width:84px; aspect-ratio:1/1;
+  border-radius:10px;
+  overflow:hidden;
+  background:#f5f5f5;
+  border:1px solid rgba(0,0,0,.06);
+}
+.ad.ad--details .ad-producthead__img img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.ad.ad--details .ad-producthead__name{ font-size:14px; line-height:1.3; }
+.ad.ad--details .ad-producthead__sub{ font-size:12px; opacity:.75; margin-top:4px; }
+.ad.ad--details .ad-producthead__price{ font-size:12px; opacity:.9; margin-top:8px; }
+/* Prophetia-like: key/value + secciones */
+.ad-kv{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  padding: 10px 0 18px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  margin-bottom: 18px;
+}
+
+.ad-kv .k{
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+
+.ad-kv .v{
+  text-align: right;
+  opacity: .92;
+}
+
+.ad-sections{ display: grid; gap: 18px; }
+
+.ad-section .ad-h4{
+  margin: 0 0 6px;
+  font-size: 14px;
+  letter-spacing: .02em;
+}
+
+.ad-section p{
+  margin: 0;
+  line-height: 1.55;
+  opacity: .92;
+}
+/* =========================
+   PDP ZOOM — clean premium
+   ========================= */
+
+#pdpZoom{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#pdpZoom.hidden{
+  display: none;
+}
+
+#pdpZoom .lb-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(17,17,17,.82);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 0;
+}
+
+#pdpZoom .lb-figure{
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 1400px);
+  height: min(88vh, 980px);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+#pdpZoomImg{
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transform-origin: center center;
+  transition: transform .18s ease;
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-drag: none;
+  display: block;
+}
+
+#pdpZoom.zoomed #pdpZoomImg{
+  transition: none;
+  cursor: grab;
+}
+
+#pdpZoom.zoomed #pdpZoomImg:active{
+  cursor: grabbing;
+}
+
+#pdpZoom .lb-close{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#pdpZoom .lb-prev,
+#pdpZoom .lb-next{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#pdpZoom .lb-prev{ left: 20px; }
+#pdpZoom .lb-next{ right: 20px; }
+
+#pdpZoom .lb-thumbs{
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#pdpZoom .lb-thumbs li{
+  width: 62px;
+  height: 78px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.22);
+  cursor: pointer;
+  opacity: .62;
+  background: rgba(255,255,255,.08);
+}
+
+#pdpZoom .lb-thumbs li.is-active{
+  opacity: 1;
+  border-color: rgba(255,255,255,.62);
+}
+
+#pdpZoom .lb-thumbs img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 860px){
+  #pdpZoom .lb-figure{
+    width: 100vw;
+    height: 100vh;
+    padding: 72px 16px 100px;
+  }
+
+  #pdpZoom .lb-prev,
+  #pdpZoom .lb-next{
+    width: 42px;
+    height: 42px;
+    top: auto;
+    bottom: 24px;
+    transform: none;
+  }
+
+  #pdpZoom .lb-prev{ left: 16px; }
+  #pdpZoom .lb-next{ right: 16px; }
+
+  #pdpZoom .lb-close{
+    top: 16px;
+    right: 16px;
+  }
+
+  #pdpZoom .lb-thumbs{
+    left: 50%;
+    top: auto;
+    bottom: 24px;
+    transform: translateX(-50%);
+    flex-direction: row;
+  }
+
+  #pdpZoom .lb-thumbs li{
+    width: 52px;
+    height: 66px;
+  }
+}
+
+/* ================================
+   BRAND BAND · Ajuste fino (PDP)
+   ================================ */
+:root{
+  /* Mover la franja completa */
+  --bb-x: -280px;           /* + derecha */
+  --bb-y: -60px;           /* + abajo */
+
+  /* Mover solo el logo dentro */
+  --page-logo-x: 0px;
+  --page-logo-y: 0px;
+
+  /* Tamaño del logo */
+  --page-logo-w: 820px;
+}
+
+/* Evita que el header fijo lo pise (solo PDP) */
+body.pdp .brand-band{
+  margin-top: var(--pp-header-h, 64px);
+  position: relative;
+  transform: translate(var(--bb-x), var(--bb-y));
+}
+
+/* Control fino del logo */
+body.pdp .brand-band .page-logo{
+  display: inline-block;
+  line-height: 0;
+  transform: translate(var(--page-logo-x), var(--page-logo-y));
+}
+
+/* Tu HTML no usa .page-logo__img, así que target al <img> real */
+body.pdp .brand-band .page-logo img,
+body.pdp .brand-band .page-logo__img{
+  width: min(92vw, var(--page-logo-w));
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* =========================================================
+   PDP · Mobile refinement final
+   Producto premium en móvil: galería, panel, CTA y drawers
+   ========================================================= */
+
+@media (max-width: 860px) {
+  body.pdp {
+    overflow-x: hidden;
+  }
+
+  body.pdp .brand-band {
+    margin-top: var(--pp-header-h, 60px);
+    transform: translate(-34px, -28px);
+  }
+
+  body.pdp .brand-band .page-logo img,
+  body.pdp .brand-band .page-logo__img {
+    width: min(78vw, 420px);
+  }
+
+  body.pdp .product-wrap.container {
+    width: 100%;
+    max-width: 100vw;
+    padding-inline: var(--edge, 16px);
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 22px;
+    margin-bottom: 72px;
+  }
+
+  body.pdp .pdp-gallery {
+    margin: 0;
+    gap: 12px;
+  }
+
+  body.pdp .pdp-hero {
+    gap: 10px;
+  }
+
+  body.pdp .pdp-shot {
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  body.pdp .pdp-shot img {
+    width: 100%;
+    max-height: 72dvh;
+    object-fit: cover;
+  }
+
+  body.pdp .pdp-thumbs {
+    order: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 0 0 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  body.pdp .pdp-rail__btn {
+    flex: 0 0 68px;
+    min-width: 68px;
+    scroll-snap-align: start;
+    opacity: .55;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+
+  body.pdp .pdp-rail__btn.is-active {
+    opacity: 1;
+    border-color: rgba(0,0,0,.28);
+  }
+
+  body.pdp .pdp-rail__btn img {
+    width: 68px;
+    height: 88px;
+    object-fit: cover;
+    display: block;
+  }
+
+  body.pdp .pdp-panel {
+    position: static;
+    justify-self: stretch;
+    max-width: none;
+    width: 100%;
+    padding-top: 4px;
+  }
+
+  body.pdp .pdp-breadcrumb,
+  body.pdp .pp-breadcrumb {
+    font-size: 11px;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  body.pdp .pdp-title {
+    font-size: clamp(24px, 8vw, 34px);
+    line-height: 1.02;
+    margin-bottom: 10px;
+  }
+
+  body.pdp .pdp-short {
+    max-width: none;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  body.pdp .pdp-attrs {
+    margin-top: 16px;
+  }
+
+  body.pdp .pdp-attr__btn,
+  body.pdp .pdp-rowbtn {
+    min-height: 48px;
+    padding: 14px 0;
+    font-size: 13px;
+  }
+
+  body.pdp .pdp-buy {
+    margin-top: 18px;
+  }
+
+  body.pdp #pdpCta {
+    min-height: 50px;
+    height: auto;
+    padding: 0 18px;
+    border-radius: 999px;
+  }
+
+  body.pdp .pdp-cta__label,
+  body.pdp .pdp-cta__price {
+    font-size: 11.5px;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 520px) {
+  body.pdp .brand-band {
+    transform: translate(-26px, -24px);
+  }
+
+  body.pdp .brand-band .page-logo img,
+  body.pdp .brand-band .page-logo__img {
+    width: min(82vw, 360px);
+  }
+
+  body.pdp .pdp-shot img {
+    max-height: 66dvh;
+  }
+
+  body.pdp .pdp-title {
+    font-size: clamp(23px, 9vw, 31px);
+  }
+
+  body.pdp .pdp-short {
+    font-size: 13px;
+  }
+
+  body.pdp #pdpCta.btn-primary {
+    gap: 10px;
+  }
+}
+
+/* =========================================================
+   PDP · Attribute drawer mobile refinement
+   ========================================================= */
+
+@media (max-width: 640px) {
+  body.pdp .ad-panel {
+    width: 100%;
+    max-width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+
+  body.pdp .ad-head {
+    padding: 18px 20px;
+  }
+
+  body.pdp .ad-title {
+    font-family: var(--font-display, "Playfair Display", serif);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  body.pdp .ad-close {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0,0,0,.10);
+    border-radius: 999px;
+    font-size: 24px;
+  }
+
+  body.pdp .ad-body {
+    padding: 20px;
+  }
+
+  body.pdp .ad .opts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  body.pdp .ad .opt {
+    min-height: 54px;
+    border-radius: 14px;
+    font-size: 13px;
+  }
+
+  body.pdp .ad.ad--details .ad-tabs {
+    padding-inline: 20px;
+  }
+
+  body.pdp .ad.ad--details .ad-tabs__list {
+    gap: 18px;
+  }
+
+  body.pdp .ad.ad--details .ad-tab {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  body.pdp .ad.ad--details .ad-producthead {
+    grid-template-columns: 72px 1fr;
+  }
+
+  body.pdp .ad.ad--details .ad-producthead__img {
+    width: 72px;
+  }
+
+  body.pdp .ad-kv {
+    grid-template-columns: 1fr;
+  }
+
+  body.pdp .ad-kv .v {
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   PDP · Zoom mobile polish
+   ========================================================= */
+
+@media (max-width: 640px) {
+  #pdpZoom .lb-figure {
+    width: 100vw;
+    height: 100dvh;
+    padding: 70px 14px 104px;
+  }
+
+  #pdpZoomImg {
+    max-height: calc(100dvh - 190px);
+  }
+
+  #pdpZoom .lb-close {
+    width: 42px;
+    height: 42px;
+    top: 14px;
+    right: 14px;
+    font-size: 26px;
+  }
+
+  #pdpZoom .lb-prev,
+  #pdpZoom .lb-next {
+    width: 42px;
+    height: 42px;
+    bottom: 22px;
+    font-size: 30px;
+  }
+
+  #pdpZoom .lb-thumbs {
+    max-width: calc(100vw - 120px);
+    overflow-x: auto;
+    gap: 8px;
+  }
+
+  #pdpZoom .lb-thumbs li {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 62px;
+    border-radius: 10px;
+  }
+}
+
+
+/* =========================================================
+   PDP · Intelligent Fit Guide
+   ========================================================= */
+
+body.pdp .fit-guide {
+  display: grid;
+  gap: 22px;
+}
+
+body.pdp .fit-guide__intro,
+body.pdp .fit-guide__note {
+  margin: 0;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  line-height: 1.68;
+  color: rgba(0,0,0,.66);
+}
+
+body.pdp .fit-guide__form {
+  display: grid;
+  gap: 18px;
+}
+
+body.pdp .fit-guide__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+body.pdp .fit-guide label {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+body.pdp .fit-guide label > span {
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.48);
+}
+
+body.pdp .fit-guide input,
+body.pdp .fit-guide select {
+  width: 100%;
+  height: 48px;
+  border: 1px solid rgba(0,0,0,.16);
+  border-radius: 0;
+  background: rgba(255,255,255,.72);
+  padding: 0 14px;
+
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 14px;
+  color: #111;
+  outline: none;
+}
+
+body.pdp .fit-guide input:focus,
+body.pdp .fit-guide select:focus {
+  border-color: #111;
+}
+
+body.pdp .fit-guide small {
+  position: absolute;
+  right: 14px;
+  bottom: 17px;
+
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 11px;
+  color: rgba(0,0,0,.42);
+  pointer-events: none;
+}
+
+body.pdp .fit-guide__submit,
+body.pdp .fit-guide__select {
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+body.pdp .fit-guide__result {
+  padding: 24px;
+  border: 1px solid rgba(0,0,0,.10);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(154,120,54,.10), transparent 38%),
+    rgba(255,255,255,.62);
+}
+
+body.pdp .fit-guide__resultKicker {
+  margin: 0 0 12px;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.46);
+}
+
+body.pdp .fit-guide__result h4 {
+  margin: 0 0 12px;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(34px, 4vw, 52px);
+  line-height: .95;
+  letter-spacing: -.045em;
+  font-weight: 500;
+  color: #111;
+}
+
+body.pdp .fit-guide__result p {
+  margin: 0;
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(0,0,0,.66);
+}
+
+body.pdp .fit-guide__resultMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+body.pdp .fit-guide__resultMeta span {
+  display: inline-flex;
+  padding: 8px 10px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.48);
+
+  font-family: var(--font-ui, Inter, system-ui);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.55);
+}
+
+body.pdp .fit-guide__select {
+  margin-top: 20px;
+  background: transparent;
+  color: #111;
+}
+
+@media (max-width: 520px) {
+  body.pdp .fit-guide__grid {
+    grid-template-columns: 1fr;
+  }
+}

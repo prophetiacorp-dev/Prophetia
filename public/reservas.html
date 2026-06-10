@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Reservas — PROPHETIA</title>
+  <meta name="description" content="Consulta tus reservas de piezas, drops limitados y cápsulas Prophetia." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#f7f4ee" />
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- CUENTA / RESERVAS -->
+  <link rel="stylesheet" href="assets/css/account.css">
+  <link rel="stylesheet" href="assets/css/reservas.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="account-page reservations-page" data-page="reservas">
+
+  <div id="header"></div>
+
+  <main id="swup" class="account-layout" tabindex="-1">
+
+    <!-- LOGO / BRAND BAND -->
+    <section class="account-brand" aria-label="PROPHETIA">
+      <div class="container">
+        <a class="account-brand__logo" href="/home" aria-label="Inicio Prophetia">
+          <img src="/assets/img/logo/propnegrovf.svg" alt="PROPHETIA">
+        </a>
+      </div>
+    </section>
+
+    <!-- NAV CUENTA -->
+    <nav class="account-nav" aria-label="Área de cliente">
+      <div class="container account-nav__inner">
+         <div class="account-nav__links">
+          <a href="/my-content">Mi contenido</a>
+          <a href="/drop-calendar">Mi calendario</a>
+          <a href="/vault">Vault</a>
+          <a href="/pedidos">Pedidos</a>
+          <a href="/reservas">Reservas</a>
+          <a href="/wishlist">Lista de deseos</a>
+          <a href="/account">Cuenta</a>
+          <a href="/addresses" aria-current="page">Libro de direcciones</a>
+          <a href="/my-services">Mis servicios</a>
+        </div>
+
+        <button class="account-nav__logout" type="button" data-pp-logout>
+          Cerrar sesión
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN RESERVAS -->
+    <section class="reservations-main">
+      <div class="container reservations-shell">
+
+        <header class="reservations-title">
+          <p class="account-kicker">PROPHETIA ACCOUNT</p>
+
+          <h1 class="account-title">
+            Reservas
+          </h1>
+
+          <p class="account-lede">
+            Aquí aparecerán las piezas que reserves antes de su lanzamiento:
+            drops limitados, cápsulas privadas y prendas con disponibilidad anticipada.
+          </p>
+        </header>
+
+        <!-- BLOQUE INVITADO -->
+        <section class="account-section" data-pp-reservations-guest hidden>
+          <h2 class="account-section__title">Acceso seguro</h2>
+
+          <div class="account-section__content">
+            <div class="account-guest-box">
+              <p class="account-kicker">PROPHETIA RESERVATIONS</p>
+
+              <h3>Inicia sesión para ver tus reservas</h3>
+
+              <p class="account-note">
+                Para consultar piezas reservadas, primero necesitas acceder con tu cuenta Prophetia.
+              </p>
+
+              <div class="account-actions">
+                <button class="account-btn" type="button" data-pp-open-login>
+                  Iniciar sesión
+                </button>
+
+                <button class="account-btn account-btn--ghost" type="button" data-pp-open-register>
+                  Crear cuenta
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- BLOQUE LOGADO -->
+        <section class="reservations-section" data-pp-reservations-logged hidden>
+          <div class="reservations-section__head">
+            <h2>Tus reservas</h2>
+
+            <a class="reservations-explore" href="/colecciones">
+              Explorar piezas
+            </a>
+          </div>
+
+          <div class="reservations-list" data-reservations-list></div>
+
+          <div class="reservations-empty" data-reservations-empty hidden>
+            <p class="reservations-empty__kicker">Sin reservas activas</p>
+
+            <h3>No se han realizado reservas.</h3>
+
+            <p>
+              Cuando reserves una pieza antes de un lanzamiento o drop limitado,
+              aparecerá aquí con su estado, fecha estimada y acceso directo.
+            </p>
+
+            <a href="/colecciones" class="reservations-empty__link">
+              Explorar colecciones
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer"></div>
+  <div id="popup-area"></div>
+
+  <script type="module" src="/assets/js/firebase-init.js"></script>
+  <script type="module" src="/assets/js/firebase-auth.js"></script>
+  <script defer src="/assets/js/header-init.js"></script>
+
+  <script src="/assets/js/cart.js" defer></script>
+  <script src="/assets/js/script.js" defer></script>
+  <script src="/assets/js/popup.js" defer></script>
+  <script src="/assets/js/cookies.js" defer></script>
+
+  <script type="module" src="/assets/js/reservas-page.js"></script>
+</body>
+</html>

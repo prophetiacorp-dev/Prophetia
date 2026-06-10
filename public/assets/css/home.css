@@ -1,0 +1,800 @@
+/* =========================================================
+   PROPHETIA · HOME
+   Silent Luxury editorial · Fuente única de verdad
+   ========================================================= */
+
+/* =========================================================
+   HOME · Diales globales
+   Controlan el espaciado hero → gateway → archive → tiles
+   ========================================================= */
+
+body.home-page {
+  --home-after-video: clamp(18px, 2.2vw, 34px);
+
+  --home-gateway-pt: clamp(54px, 6vw, 92px);
+  --home-gateway-pb: clamp(70px, 7vw, 118px);
+
+  --home-archive-pt: clamp(70px, 7vw, 110px);
+  --home-archive-pb: clamp(64px, 6vw, 96px);
+
+  --home-tiles-pt: clamp(58px, 6vw, 96px);
+  --home-tiles-pb: clamp(72px, 7vw, 112px);
+
+  --home-values-pt: clamp(72px, 7vw, 112px);
+  --home-values-pb: clamp(76px, 8vw, 128px);
+
+  /* Logo flotante del hero */
+  --home-logo-x: -135px;      /* - izquierda / + derecha */
+  --home-logo-y: -110px;      /* - arriba / + abajo */
+  --home-logo-size: 240px;   /* tamaño del logo */
+}
+
+/* =========================================================
+   HERO · Vídeo principal
+   ========================================================= */
+
+body.home-page #home_hero.hero {
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+body.home-page #home_hero .hero-frame {
+  position: relative;
+  inset: auto;
+  left: auto;
+  right: auto;
+
+  box-sizing: border-box;
+  inline-size: min(1920px, calc(100% - 2 * var(--edge, 24px)));
+  margin-inline: auto;
+
+  aspect-ratio: 16 / 9;
+  min-block-size: clamp(520px, 82svh, 900px);
+  max-block-size: 88svh;
+
+  overflow: clip;
+  background: #000;
+}
+
+body.home-page #home_hero .hero-video {
+  position: absolute;
+  inset: 0;
+}
+
+body.home-page #home_hero .hero-video__media {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  display: block;
+  border: 0;
+}
+
+/* =========================================================
+   HERO · Logo flotante
+   ========================================================= */
+
+body.home-page #home_hero .floating-logo {
+  position: absolute;
+  left: var(--edge, 24px);
+  top: var(--hdr-h, 68px);
+
+  z-index: 20;
+  line-height: 0;
+
+  transform: translate(var(--home-logo-x), var(--home-logo-y));
+  transform-origin: top left;
+}
+
+body.home-page #home_hero .floating-logo img {
+  height: var(--home-logo-size);
+  width: auto;
+  display: block;
+}
+
+/* =========================================================
+   HERO · Franja editorial bajo vídeo
+   ========================================================= */
+
+body.home-page .editorial-strip {
+  margin-top: var(--home-after-video);
+  margin-bottom: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: .04em;
+
+  color: #111;
+}
+
+body.home-page .editorial-strip .ed-kicker {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+body.home-page .editorial-strip .ed-caption {
+  color: rgba(0,0,0,.72);
+}
+
+body.home-page .editorial-strip .ed-divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+
+  background: currentColor;
+  opacity: .45;
+}
+
+body.home-page #home_hero .hairline {
+  margin-top: 18px;
+  height: 1px;
+  background: rgba(0,0,0,.08);
+}
+
+/* =========================================================
+   HOME · Editorial Gateway
+   Bloque principal después del vídeo
+   ========================================================= */
+
+body.home-page .home-editorial-gateway {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(280px, 420px);
+  gap: clamp(48px, 8vw, 132px);
+
+  padding-top: var(--home-gateway-pt);
+  padding-bottom: var(--home-gateway-pb);
+
+  border-bottom: 1px solid rgba(0,0,0,.10);
+}
+
+body.home-page .home-editorial-gateway::after {
+  content: "";
+  position: absolute;
+  top: var(--home-gateway-pt);
+  right: clamp(24px, 3vw, 48px);
+  bottom: var(--home-gateway-pb);
+
+  width: 1px;
+  background: rgba(0,0,0,.28);
+
+  transform-origin: top;
+  animation: ppLineGrow 900ms cubic-bezier(.22,.61,.36,1) both;
+}
+
+body.home-page .home-editorial-gateway__copy {
+  max-width: 720px;
+  animation: ppFadeUp 760ms cubic-bezier(.22,.61,.36,1) both;
+}
+
+body.home-page .home-editorial-gateway .eyebrow {
+  margin: 0 0 24px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+
+  color: #111;
+}
+
+body.home-page .home-editorial-gateway .display {
+  margin: 0;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(38px, 4.6vw, 78px);
+  line-height: .96;
+  font-weight: 500;
+  letter-spacing: -.035em;
+
+  color: #111;
+}
+
+body.home-page .home-editorial-gateway .lede {
+  max-width: 620px;
+  margin: 28px 0 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.75;
+
+  color: rgba(0,0,0,.72);
+}
+
+/* CTA editorial */
+
+body.home-page .home-editorial-gateway__cta {
+  position: relative;
+
+  display: inline-flex;
+  width: fit-content;
+
+  margin-top: 24px;
+  padding-bottom: 5px;
+
+  border: 0;
+  background: transparent;
+  color: #111;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 14px;
+  letter-spacing: .02em;
+  text-decoration: none;
+}
+
+body.home-page .home-editorial-gateway__cta::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 1px;
+  background: currentColor;
+
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+body.home-page .home-editorial-gateway__cta:hover::after,
+body.home-page .home-editorial-gateway__cta:focus-visible::after {
+  transform: scaleX(.72);
+}
+
+/* Índice derecho */
+
+body.home-page .home-editorial-gateway__index {
+  align-self: end;
+
+  display: grid;
+  gap: 14px;
+
+  padding-right: clamp(34px, 4vw, 76px);
+
+  animation: ppFadeUp 760ms cubic-bezier(.22,.61,.36,1) 140ms both;
+}
+
+body.home-page .home-editorial-gateway__index-title {
+  margin: 0 0 12px 58px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+
+  color: rgba(0,0,0,.42);
+}
+
+body.home-page .home-editorial-gateway__index a {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: baseline;
+  gap: 16px;
+
+  padding: 9px 0;
+
+  color: #111;
+  text-decoration: none;
+}
+
+body.home-page .home-editorial-gateway__index span {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  letter-spacing: .16em;
+  color: rgba(0,0,0,.48);
+}
+
+body.home-page .home-editorial-gateway__index strong {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+
+body.home-page .home-editorial-gateway__index a::after {
+  content: "";
+  position: absolute;
+  left: 58px;
+  right: 0;
+  bottom: 3px;
+
+  height: 1px;
+  background: currentColor;
+
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 240ms cubic-bezier(.22,.61,.36,1);
+}
+
+body.home-page .home-editorial-gateway__index a:hover::after,
+body.home-page .home-editorial-gateway__index a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* =========================================================
+   HOME · Archive Studies
+   ========================================================= */
+
+body.home-page .pp-post-hero--editorial {
+  padding: var(--home-archive-pt) 0 var(--home-archive-pb);
+  background: #fff;
+}
+
+body.home-page .pp-post-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(32px, 6vw, 96px);
+  align-items: end;
+}
+
+body.home-page .pp-post-hero__kicker {
+  margin: 0 0 18px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+
+  color: rgba(0,0,0,.54);
+}
+
+body.home-page .pp-ph-title {
+  margin: 0;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(30px, 3vw, 52px);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+
+body.home-page .pp-ph-sub {
+  max-width: 580px;
+  margin: 22px 0 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 15px;
+  line-height: 1.8;
+
+  color: rgba(0,0,0,.68);
+}
+
+body.home-page .pp-ph-links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-self: end;
+}
+
+body.home-page .pp-ph-link {
+  position: relative;
+
+  padding-bottom: 6px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: .04em;
+  white-space: nowrap;
+
+  color: #111;
+  text-decoration: none;
+}
+
+body.home-page .pp-ph-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 1px;
+  background: currentColor;
+
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 240ms cubic-bezier(.22,.61,.36,1);
+}
+
+body.home-page .pp-ph-link:hover::after,
+body.home-page .pp-ph-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* =========================================================
+   HOME · Tiles
+   ========================================================= */
+
+body.home-page #quick-tiles.section-gap {
+  padding: var(--home-tiles-pt) 0 var(--home-tiles-pb);
+  background: #fafafa;
+  border-top: 1px solid rgba(0,0,0,.06);
+  border-bottom: 0;
+}
+
+body.home-page #quick-tiles .tiles {
+  margin-top: 0;
+}
+
+/* =========================================================
+   HOME · Values
+   ========================================================= */
+
+body.home-page main > .section-gap:last-of-type {
+  padding: var(--home-values-pt) 0 var(--home-values-pb);
+  background: #f7f7f7;
+  border-top: 1px solid rgba(0,0,0,.06);
+  border-bottom: 0;
+}
+
+body.home-page .values.container {
+  max-width: 1200px;
+  margin-inline: auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: clamp(20px, 3vw, 40px);
+
+  align-items: start;
+  justify-items: center;
+  text-align: center;
+}
+
+body.home-page .value {
+  display: grid;
+  gap: 10px;
+}
+
+body.home-page .value-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  opacity: .9;
+}
+
+body.home-page .value-title {
+  margin: 8px 0 4px;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 500;
+}
+
+body.home-page .value-text {
+  margin: 0;
+  max-width: 34ch;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 15px;
+  line-height: 1.65;
+
+  color: rgba(0,0,0,.68);
+}
+
+/* =========================================================
+   HOME · Animaciones
+   ========================================================= */
+
+@keyframes ppFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ppLineGrow {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* =========================================================
+   HOME · Responsive
+   ========================================================= */
+
+@media (max-width: 960px) {
+  body.home-page .home-editorial-gateway {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  body.home-page .home-editorial-gateway::after {
+    display: none;
+  }
+
+  body.home-page .home-editorial-gateway__index {
+    padding-right: 0;
+    align-self: start;
+  }
+
+  body.home-page .pp-post-hero__grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  body.home-page .pp-ph-links {
+    justify-content: flex-start;
+  }
+
+  body.home-page .values.container {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    text-align: left;
+    justify-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  body.home-page {
+    --home-logo-x: -42px;
+    --home-logo-y: -64px;
+    --home-logo-size: 150px;
+  }
+
+  body.home-page .editorial-strip {
+    flex-wrap: wrap;
+  }
+
+  body.home-page .home-editorial-gateway .display {
+    font-size: clamp(36px, 12vw, 54px);
+  }
+
+  body.home-page .home-editorial-gateway__index-title {
+    margin-left: 0;
+  }
+
+  body.home-page .home-editorial-gateway__index a {
+    grid-template-columns: 34px 1fr;
+  }
+
+  body.home-page .home-editorial-gateway__index a::after {
+    left: 50px;
+  }
+}
+
+/* =========================================================
+   HOME · Mobile fluid refinement
+   320px → 700px
+   ========================================================= */
+
+@media (max-width: 700px) {
+  body.home-page {
+    --home-after-video: clamp(14px, 4vw, 22px);
+
+    --home-gateway-pt: clamp(42px, 12vw, 64px);
+    --home-gateway-pb: clamp(54px, 14vw, 78px);
+
+    --home-archive-pt: clamp(54px, 14vw, 76px);
+    --home-archive-pb: clamp(48px, 12vw, 68px);
+
+    --home-tiles-pt: clamp(46px, 12vw, 68px);
+    --home-tiles-pb: clamp(54px, 14vw, 78px);
+
+    --home-values-pt: clamp(54px, 14vw, 78px);
+    --home-values-pb: clamp(58px, 15vw, 86px);
+
+    --home-logo-x: clamp(-46px, -11vw, -26px);
+    --home-logo-y: clamp(-54px, -10vw, -28px);
+    --home-logo-size: clamp(112px, 36vw, 150px);
+  }
+
+body.home-page #home_hero .hero-frame {
+  inline-size: 100%;
+  aspect-ratio: auto;
+
+  min-block-size: clamp(520px, 78svh, 680px);
+  block-size: min(680px, calc(100svh - var(--hdr-h, 60px)));
+
+  max-block-size: none;
+}
+
+  body.home-page .editorial-strip {
+    align-items: flex-start;
+    gap: 8px 10px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  body.home-page .editorial-strip .ed-caption {
+    flex: 1 1 100%;
+  }
+
+  body.home-page #home_hero .hairline {
+    margin-top: 14px;
+  }
+
+  body.home-page .home-editorial-gateway {
+    gap: 34px;
+  }
+
+  body.home-page .home-editorial-gateway .eyebrow {
+    margin-bottom: 18px;
+    font-size: 11px;
+    letter-spacing: .14em;
+  }
+
+  body.home-page .home-editorial-gateway .display {
+    font-size: clamp(34px, 11.4vw, 50px);
+    line-height: .98;
+    letter-spacing: -.04em;
+  }
+
+  body.home-page .home-editorial-gateway .lede {
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  body.home-page .home-editorial-gateway__cta {
+    min-height: 44px;
+    align-items: center;
+    margin-top: 22px;
+  }
+
+  body.home-page .home-editorial-gateway__index {
+    gap: 8px;
+  }
+
+  body.home-page .home-editorial-gateway__index a {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 12px;
+    padding: 11px 0;
+  }
+
+  body.home-page .home-editorial-gateway__index strong {
+    font-size: 13.5px;
+  }
+
+  body.home-page .home-editorial-gateway__index a::after {
+    left: 44px;
+  }
+
+  body.home-page .pp-post-hero__grid {
+    gap: 28px;
+  }
+
+  body.home-page .pp-ph-title {
+    font-size: clamp(30px, 9vw, 44px);
+  }
+
+  body.home-page .pp-ph-sub {
+    margin-top: 18px;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+
+  body.home-page .pp-ph-links {
+    gap: 18px;
+  }
+
+  body.home-page .pp-ph-link {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  body.home-page .values.container {
+    gap: 28px;
+  }
+
+  body.home-page .value {
+    gap: 8px;
+  }
+
+  body.home-page .value-text {
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  body.home-page #home_hero .floating-logo {
+  max-width: 92vw;
+  overflow: visible;
+}
+
+body.home-page #home_hero .floating-logo img {
+  max-height: clamp(104px, 34vw, 148px);
+}
+
+body.home-page .home-editorial-gateway,
+body.home-page .home-editorial-gateway__copy,
+body.home-page .home-editorial-gateway__index,
+body.home-page .pp-post-hero__grid {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+body.home-page .home-editorial-gateway .display,
+body.home-page .pp-ph-title,
+body.home-page .value-title {
+  overflow-wrap: anywhere;
+}
+
+body.home-page .pp-ph-links {
+  width: 100%;
+  gap: 14px 22px;
+}
+
+body.home-page .pp-ph-link,
+body.home-page .home-editorial-gateway__cta {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+}
+
+@media (max-width: 380px) {
+  body.home-page .home-editorial-gateway .display {
+    font-size: clamp(31px, 10.8vw, 42px);
+  }
+
+  body.home-page .home-editorial-gateway .lede,
+  body.home-page .pp-ph-sub,
+  body.home-page .value-text {
+    font-size: 14px;
+  }
+}
+
+/* =========================================================
+   PROPHETIA · HOME FINAL MOBILE POLISH
+   Ajuste fino 320–480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+  body.home-page {
+    --home-logo-x: clamp(-38px, -9vw, -20px);
+    --home-logo-y: clamp(-48px, -9vw, -24px);
+    --home-logo-size: clamp(104px, 34vw, 136px);
+  }
+
+  body.home-page .editorial-strip {
+    padding-inline: var(--edge, 16px);
+  }
+
+  body.home-page .home-editorial-gateway .display {
+    font-size: clamp(31px, 10.4vw, 44px);
+    line-height: 1;
+  }
+
+  body.home-page .home-editorial-gateway__index a {
+    min-height: 46px;
+  }
+
+  body.home-page .pp-post-hero--editorial {
+    padding-inline: 0;
+  }
+
+  body.home-page .values.container {
+    gap: 30px;
+  }
+}

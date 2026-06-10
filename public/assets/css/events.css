@@ -1,0 +1,77 @@
+/* =========================================================
+   PROPHETIA · EVENTS (Silent Luxury editorial)
+   Scope: body.house-page.events-page
+   ========================================================= */
+
+body.house-page.events-page{
+  --events-ink: rgba(10,10,12,.92);
+  --events-muted: rgba(10,10,12,.55);
+  --events-line: rgba(10,10,12,.10);
+
+  color: var(--events-ink);
+  background:
+    radial-gradient(900px 400px at 70% -10%, rgba(120,170,255,.10), transparent 60%),
+    radial-gradient(700px 300px at 20% 10%, rgba(0,0,0,.04), transparent 55%),
+    #fff;
+}
+
+/* Evita que wrappers globales metan fondo raro */
+body.house-page.events-page main,
+body.house-page.events-page .events-main{
+  background: transparent;
+}
+
+/* Layout centrado */
+body.house-page.events-page .events-main{
+  min-height: calc(100vh - 160px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+/* Bloque central */
+body.house-page.events-page .events-empty{
+  width: min(100%, 520px);
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid var(--events-line);
+  border-bottom: 1px solid var(--events-line);
+  box-sizing: border-box;
+}
+
+/* Kicker */
+body.house-page.events-page .events-kicker{
+  margin: 0 0 14px 0;
+  font-family: var(--font-ui, "Inter", system-ui, -apple-system, sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--events-muted);
+}
+
+/* Título */
+body.house-page.events-page .events-title{
+  margin: 0 0 16px 0;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--events-ink);
+}
+
+/* Texto */
+body.house-page.events-page .events-text{
+  margin: 0;
+  font-family: var(--font-ui, "Inter", system-ui, -apple-system, sans-serif);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--events-muted);
+}

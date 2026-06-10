@@ -1,0 +1,1188 @@
+/* =========================================================
+   PROPHETIA · CAMISETAS HOMBRE
+   Layout tipo Prophetia · página: /camisetas-punto-hombre
+   ========================================================= */
+
+/* ---------- Variables y ancho de carril ---------- */
+
+.camisetas-page {
+  /* mismo gutter que Hombre (men.css) */
+  --pp-edge-men: 40px;
+  --pp-hero-height: 280px;
+}
+
+/* El main de camisetas ocupa toda la anchura, como Hombre */
+.camisetas-page main.pp-collection-page {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+/* Espaciador bajo la franja, muy discreto */
+.camisetas-page .bb-spacer {
+  height: 16px;
+}
+
+/* =========================================================
+   SUBHERO · “SILENT LUXURY HOMBRE”
+   Alineado al mismo carril que el hero
+   ========================================================= */
+
+.camisetas-page .pp-collection-hero {
+  padding-inline: var(--pp-edge-men);
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+body.camisetas-page .pp-hero-title{
+  font-family: var(--font-display);
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+
+.camisetas-page .pp-hero-sub {
+  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* =========================================================
+   TOOLBAR · FILTROS / ORDENAR / EN STOCK / VISTA
+   (misma anchura que el hero + menú HOMBRE por encima)
+   ========================================================= */
+
+.camisetas-page .pp-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  padding-inline: var(--pp-edge-men);
+  padding-block: 10px;
+
+ 
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.camisetas-page .pp-filter-left,
+.camisetas-page .pp-filter-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.camisetas-page .pp-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.camisetas-page .pp-btn:hover {
+  opacity: 0.7;
+}
+
+
+/* =========================================================
+   GRID DE PRODUCTOS · PLP
+   ========================================================= */
+
+.camisetas-page .pp-plp {
+  padding-inline: var(--pp-edge-men);
+  padding-top: 24px;
+  padding-bottom: 72px;
+}
+
+/* ===== GRID CAMISETAS · ESTILO Prophetia ===== */
+.camisetas-page .plp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  column-gap: clamp(32px, 4vw, 56px);
+  row-gap: clamp(48px, 5vw, 72px);
+  align-items: flex-start;
+}
+
+/* En pantallas grandes fijamos 4 columnas editoriales */
+@media (min-width: 1440px) {
+  .camisetas-page .plp-grid {
+    grid-template-columns: repeat(4, minmax(260px, 1fr));
+  }
+}
+
+
+/* Ajustes suaves para las tarjetas */
+.camisetas-page .product-card,
+.camisetas-page .card {
+  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  background: #fff;
+}
+
+.camisetas-page .card__title,
+.camisetas-page .product-card__title {
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.camisetas-page .card__price,
+.camisetas-page .product-card__price {
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+
+
+/* ==== PLP Cards: evitar IMG gigantes y que se salga del card ==== */
+.camisetas-page #plp-grid .card {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 14px;
+
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.86), rgba(250,247,240,.72));
+
+box-shadow:
+  0 32px 90px rgba(0,0,0,.055),
+  0 0 80px rgba(191,157,92,.06),
+  inset 0 1px 0 rgba(255,255,255,.78);
+}
+
+/* El contenedor de la imagen (tu <a class="card-media">) */
+.camisetas-page #plp-grid .card-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  position: relative;
+
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,.84), transparent 46%),
+    linear-gradient(180deg, #f8f6f1 0%, #efebe2 100%);
+}
+
+/* La imagen: NUNCA más grande que su caja */
+.camisetas-page #plp-grid .card-media img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+/* Hover sutil editorial */
+.camisetas-page #plp-grid .card-media img{
+  transition: transform .6s cubic-bezier(.25,.15,.25,1);
+}
+.camisetas-page #plp-grid .card:hover .card-media img{
+  transform: scale(1.02);
+}
+
+/* Aire en el cuerpo del card */
+.camisetas-page #plp-grid .card-body{
+  padding-top: 10px;
+}
+
+
+/* ============================================
+   FILTROS / ORDEN · PEGADOS A LOS EXTREMOS
+   ============================================ */
+
+.camisetas-page .pp-filters {
+  width: 100%;
+  max-width: none;
+  padding-inline: var(--pp-edge-men); /* coincidencia con hero */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Izquierda: Filtros / Ordenar */
+.camisetas-page .pp-filter-left {
+  display: flex;
+  gap: 22px;
+}
+
+/* Derecha: En stock / Vista */
+.camisetas-page .pp-filter-right {
+  display: flex;
+  gap: 22px;
+}
+
+
+body.camisetas-page {
+  --pp-edge-global: 40px;
+}
+
+.camisetas-page .pp-filters,
+.camisetas-page .pp-plp,
+.camisetas-page .pp-collection-hero {
+  padding-inline: var(--pp-edge-global);
+}
+/* ============================================
+   CARRIL Prophetia PARA CAMISETAS · FILTROS + GRID
+   ============================================ */
+
+/* Gutter global de la página camisetas */
+body.camisetas-page {
+  --pp-edge-global: 40px; /* prueba 32–40px hasta que te cuadre visualmente */
+}
+
+/* Barra de filtros a ancho completo, como Prophetia */
+.camisetas-page .pp-filters.container {
+  max-width: none;          /* quita el tope de 1320px del .container */
+  width: 100%;
+  margin: 0;                /* fuera el centrado auto */
+  padding-inline: var(--pp-edge-global);
+  box-sizing: border-box;
+}
+
+/* Subhero (SILENT LUXURY HOMBRE) alineado al mismo carril */
+.camisetas-page .pp-collection-hero.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-global);
+  box-sizing: border-box;
+}
+
+/* Grid de productos alineado al mismo carril */
+.camisetas-page .pp-plp.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-global);
+  box-sizing: border-box;
+}
+body.camisetas-page .pp-btn {
+  background: transparent;
+  border: none;              /* sin borde */
+  padding: 2px 0;            /* más compacto, sin pastilla */
+  border-radius: 0;          /* sin border-radius */
+  cursor: pointer;
+
+  font-size: 0.78rem;        /* ~12–13px, como Prophetia */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+/* Escala general más pequeña tipo Prophetia */
+body.camisetas-page {
+  font-size: 14px; /* en lugar de 16px por defecto */
+}
+
+
+
+
+
+/* "SILENT LUXURY HOMBRE" */
+body.camisetas-page .pp-hero-title{
+  font-family: var(--font-display);
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+
+/* Texto pequeño debajo */
+.camisetas-page .pp-hero-sub {
+  font-size: 0.82rem;
+}
+
+/* Texto "En stock" y compañía */
+.camisetas-page .pp-check span {
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+}
+
+
+
+
+
+
+/* ===== FONDO MURAL UNIFICADO CAMISETAS ===== */
+
+
+
+
+/* ===== FOOTER CAMISETAS · MISMO FONDO MURAL ===== */
+
+body.camisetas-page #footer,
+body.camisetas-page .site-footer,
+body.camisetas-page .footer-inner {
+  background: #ffffff;   /* fondo blanco sólido */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* =========================================================
+   TOOLBAR · Igualar a breadcrumb (tamaño + casing)
+   ========================================================= */
+
+body.camisetas-page{
+  --pp-toolbar-size: 0.75rem;     /* = breadcrumb */
+  --pp-toolbar-track: 0em;        /* breadcrumb no lleva tracking visible */
+}
+
+/* La toolbar define tipografía y casing (sin uppercase) */
+body.camisetas-page .pp-filters{
+  font-size: var(--pp-toolbar-size);
+  letter-spacing: var(--pp-toolbar-track);
+  text-transform: none;           /* <- quita el uppercase */
+}
+
+/* Botones heredan EXACTO lo mismo */
+body.camisetas-page .pp-filters .pp-btn{
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-weight: 400;
+  padding: 2px 0;
+}
+
+/* “En stock” hereda EXACTO lo mismo */
+body.camisetas-page .pp-filters .pp-check,
+body.camisetas-page .pp-filters .pp-check span{
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+/* Checkbox (solo estética) */
+body.camisetas-page .pp-filters .pp-check input[type="checkbox"]{
+  width: 14px;
+  height: 14px;
+  border: 1px solid #000;
+  accent-color: #000;
+}
+/* ============================================
+   PLP · Título de card: negro + sin estilo de enlace
+   ============================================ */
+body.camisetas-page #plp-grid .card-title a{
+  color: #111;              /* negro editorial */
+  text-decoration: none;    /* fuera subrayado */
+}
+
+body.camisetas-page #plp-grid .card-title a:visited{
+  color: #111;              /* evita morado visitado */
+}
+
+/* Hover/focus sutil (accesible) */
+body.camisetas-page #plp-grid .card-title a:hover{
+  opacity: .75;
+}
+
+body.camisetas-page #plp-grid .card-title a:focus-visible{
+  outline: 2px solid rgba(0,0,0,.35);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+body.camisetas-page .pp-filters{
+  border-top: 0;
+  border-bottom: 0;
+}
+
+
+
+/* =========================================================
+   CAMISETAS · HERO + BREADCRUMB + TOOLBAR (single source of truth)
+   - Sin transforms (evita solapes)
+   - Breadcrumb absoluto dentro del hero
+   - Toolbar sticky con fondo controlado
+   ========================================================= */
+
+body.camisetas-page{
+  --pp-edge-cam: 40px;
+  --hdr-h: var(--pp-header-h, 72px);
+
+  /* logo */
+  --logo-x-camisetas: -15px;
+  --logo-y-camisetas: -48px;
+
+  /* breadcrumb */
+  --bc-top: 18px;          /* separación desde arriba del hero */
+  --bc-right: 40px;        /* alineado al carril */
+}
+
+/* HERO (en flujo normal) */
+body.camisetas-page .pp-hero.hero--two-cols{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 42px var(--pp-edge-cam) 26px;
+  min-height: 260px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* media */
+body.camisetas-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+/* logo flotante */
+body.camisetas-page .pp-hero__media .floating-logo{
+  position: absolute;
+  left: var(--logo-x-camisetas);
+  top: calc(var(--hdr-h) + var(--logo-y-camisetas));
+}
+
+body.camisetas-page .pp-hero__media .floating-logo img{
+  height: 100px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* breadcrumb: ABSOLUTO (sin transform, no rompe flujo) */
+body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero{
+  position: absolute;
+  top: var(--bc-top);
+  right: var(--bc-right);
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgba(0,0,0,0.70);
+}
+
+body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero a{
+  color: rgba(0,0,0,0.80);
+  text-decoration: none;
+}
+body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero a:hover{
+  color: rgba(0,0,0,0.95);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__sep{
+  color: rgba(0,0,0,0.35);
+}
+
+/* aside: EN FLUJO (sin transform) */
+body.camisetas-page .pp-hero__side{
+  align-self: flex-end;
+  margin-left: auto;
+  max-width: 360px;
+
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  color: #000;
+}
+
+body.camisetas-page .pp-hero__title{
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  margin: 0 0 10px;
+}
+
+body.camisetas-page .pp-hero__list a{
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  text-decoration: none;
+  color: rgba(0,0,0,0.62);
+}
+
+/* TOOLBAR sticky (elige fondo aquí) */
+body.camisetas-page .pp-filters.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 10px var(--pp-edge-cam);
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: var(--pp-header-h, 72px);
+  z-index: 50;
+
+  /* OPCIÓN A (recomendado): blur editorial, NO “blanco a bloque” */
+ background: transparent !important;
+backdrop-filter: none !important;
+-webkit-backdrop-filter: none !important;
+
+
+  /* Si quieres 100% transparente, cambia lo de arriba por:
+     background: transparent;
+     backdrop-filter: none;
+  */
+}
+
+/* Responsive */
+@media (max-width:1024px){
+  body.camisetas-page .pp-hero.hero--two-cols{ padding-inline: 24px; }
+  body.camisetas-page .pp-filters.container{ padding-inline: 24px; }
+  body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero{ right: 24px; }
+}
+
+@media (max-width: 640px) {
+  body.camisetas-page {
+    --pp-edge-cam: var(--edge, 16px);
+    --logo-x-camisetas: 0px;
+    --logo-y-camisetas: -28px;
+    --bc-top: 14px;
+    --bc-right: var(--edge, 16px);
+  }
+
+  body.camisetas-page .pp-hero.hero--two-cols {
+    padding: 32px var(--pp-edge-cam) 22px;
+    min-height: 230px;
+    gap: 22px;
+  }
+
+  body.camisetas-page .pp-hero__media {
+    min-height: 112px;
+    justify-content: flex-start;
+  }
+
+  body.camisetas-page .pp-hero__media .floating-logo {
+    left: 0;
+    top: calc(var(--hdr-h) + var(--logo-y-camisetas));
+  }
+
+  body.camisetas-page .pp-hero__media .floating-logo img {
+    height: clamp(72px, 24vw, 94px);
+  }
+
+  body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero {
+    position: relative;
+    top: auto;
+    right: auto;
+    order: -1;
+    width: 100%;
+    font-size: 0.72rem;
+  }
+
+  body.camisetas-page .pp-hero__side {
+    align-self: flex-start;
+    margin-left: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  body.camisetas-page .pp-hero__title {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  body.camisetas-page .pp-hero__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  body.camisetas-page .pp-hero__list a {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  body.camisetas-page .pp-filters.container {
+    position: sticky;
+    top: var(--pp-header-h, 60px);
+
+    padding: 10px var(--pp-edge-cam);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+
+    background: rgba(255,255,255,.62) !important;
+    backdrop-filter: blur(10px) saturate(1.2) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(1.2) !important;
+  }
+
+  body.camisetas-page .pp-filter-left,
+  body.camisetas-page .pp-filter-right {
+    width: 100%;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  body.camisetas-page .pp-filter-right {
+    align-self: auto;
+  }
+
+  body.camisetas-page .pp-btn,
+  body.camisetas-page .pp-filters .pp-check {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  body.camisetas-page .pp-plp.container {
+    padding-inline: var(--pp-edge-cam);
+    padding-top: 20px;
+  }
+
+  body.camisetas-page .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+    row-gap: 34px;
+  }
+}
+/* Header/topbar transparentes sobre el mural (solo camisetas) */
+body.camisetas-page .pp-topbar,
+body.camisetas-page .pp-header{
+  background: transparent !important;
+  border-bottom: 0;
+  box-shadow: none;
+}
+/* =========================================================
+   CAMISETAS · Background Prophetia Archive Surface
+   Fondo editorial cálido + mural canvas + profundidad
+   ========================================================= */
+
+body.camisetas-page {
+  background-color: #efe7d8;
+
+  background-image:
+    radial-gradient(circle at 18% 58%, rgba(255,255,255,.58), transparent 32%),
+    radial-gradient(circle at 84% 22%, rgba(191,157,92,.10), transparent 30%),
+    radial-gradient(circle at 72% 78%, rgba(0,0,0,.035), transparent 34%),
+    linear-gradient(
+      90deg,
+      rgba(245,238,224,.82) 0%,
+      rgba(255,252,246,.52) 38%,
+      rgba(243,235,219,.62) 100%
+    ),
+    var(--pp-canvas-bg, none);
+
+  background-size:
+    120% 120%,
+    110% 110%,
+    120% 120%,
+    cover,
+    cover;
+
+  background-position:
+    left 48%,
+    right top,
+    right bottom,
+    center top,
+    center top;
+
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Velo editorial: suaviza el mural sin apagarlo */
+body.camisetas-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+background:
+  radial-gradient(circle at 25% 64%, rgba(255,255,255,.42), transparent 36%),
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.16) 0%,
+      rgba(255,255,255,.24) 42%,
+      rgba(255,255,255,.12) 100%
+    );
+
+  mix-blend-mode: soft-light;
+}
+body.camisetas-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,0,0,.025) 0 1px, transparent 1px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,.18) 0 1px, transparent 1px);
+
+  background-size: 38px 38px, 52px 52px;
+  opacity: .12;
+}
+
+/* =========================================================
+   CAMISETAS · Small mobile polish
+   ========================================================= */
+
+@media (max-width: 390px) {
+  body.camisetas-page .plp-grid {
+    grid-template-columns: 1fr;
+    row-gap: 34px;
+  }
+
+  body.camisetas-page .pp-filter-left,
+  body.camisetas-page .pp-filter-right {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  body.camisetas-page .pp-hero__list {
+    display: grid;
+    gap: 6px;
+  }
+
+  body.camisetas-page .pp-hero__list a {
+    min-height: 34px;
+  }
+}
+
+/* =========================================================
+   CAMISETAS · FINAL RESPONSIVE AUTHORITY
+   Neutraliza herencias de men.css / plp.css solo aquí
+   ========================================================= */
+
+body.camisetas-page {
+  --pp-edge-cam: clamp(16px, 3vw, 40px);
+}
+
+/* Carril único para hero, filtros y grid */
+body.camisetas-page .pp-hero.hero--two-cols,
+body.camisetas-page .pp-filters.container,
+body.camisetas-page .pp-plp.container {
+  max-width: none;
+  width: 100%;
+  margin-inline: 0;
+  box-sizing: border-box;
+  padding-inline: var(--pp-edge-cam);
+}
+
+/* Hero: autoridad final */
+body.camisetas-page .pp-hero.hero--two-cols {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 30px;
+  padding-top: 42px;
+  padding-bottom: 26px;
+  min-height: 260px;
+  background: transparent;
+}
+
+/* Logo controlado */
+body.camisetas-page .pp-hero__media {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  overflow: visible;
+}
+
+body.camisetas-page .pp-hero__media .floating-logo {
+  position: absolute;
+  left: var(--logo-x-camisetas, -15px);
+  top: calc(var(--hdr-h, 72px) + var(--logo-y-camisetas, -48px));
+  transform: none;
+}
+
+body.camisetas-page .pp-hero__media .floating-logo img {
+  height: 100px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Breadcrumb */
+body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero {
+  position: absolute;
+  top: var(--bc-top, 18px);
+  right: var(--bc-right, 40px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgba(0,0,0,.70);
+}
+
+/* Aside */
+body.camisetas-page .pp-hero__side {
+  position: static;
+  align-self: flex-end;
+  margin-left: auto;
+  max-width: 360px;
+  transform: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Toolbar */
+body.camisetas-page .pp-filters.container {
+  position: sticky;
+  top: var(--pp-header-h, 72px);
+  z-index: 50;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  border: 0;
+  background: transparent !important;
+  box-shadow: none;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Grid producto */
+body.camisetas-page .plp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  column-gap: clamp(24px, 3vw, 48px);
+  row-gap: clamp(42px, 5vw, 68px);
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 1440px) {
+  body.camisetas-page .plp-grid {
+    grid-template-columns: repeat(4, minmax(230px, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  body.camisetas-page {
+    --pp-edge-cam: var(--edge, 16px);
+    --logo-x-camisetas: 0px;
+    --logo-y-camisetas: -28px;
+    --bc-top: 14px;
+    --bc-right: var(--edge, 16px);
+  }
+
+  body.camisetas-page .pp-hero.hero--two-cols {
+    padding-top: 32px;
+    padding-bottom: 22px;
+    min-height: 230px;
+    gap: 22px;
+  }
+
+  body.camisetas-page .pp-hero__media {
+    min-height: 112px;
+    justify-content: flex-start;
+  }
+
+  body.camisetas-page .pp-hero__media .floating-logo {
+    left: 0;
+    top: calc(var(--hdr-h, 60px) + var(--logo-y-camisetas));
+  }
+
+  body.camisetas-page .pp-hero__media .floating-logo img {
+    height: clamp(72px, 24vw, 94px);
+  }
+
+  body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero {
+    position: relative;
+    top: auto;
+    right: auto;
+    order: -1;
+    width: 100%;
+    font-size: .72rem;
+  }
+
+  body.camisetas-page .pp-hero__side {
+    align-self: flex-start;
+    margin-left: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  body.camisetas-page .pp-hero__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  body.camisetas-page .pp-hero__list a {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  body.camisetas-page .pp-filters.container {
+    top: var(--pp-header-h, 60px);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+
+    background: rgba(255,255,255,.62) !important;
+    backdrop-filter: blur(10px) saturate(1.2) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(1.2) !important;
+  }
+
+  body.camisetas-page .pp-filter-left,
+  body.camisetas-page .pp-filter-right {
+    width: 100%;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  body.camisetas-page .pp-filter-right {
+    align-self: auto;
+  }
+
+  body.camisetas-page .pp-btn,
+  body.camisetas-page .pp-filters .pp-check {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  body.camisetas-page .pp-plp.container {
+    padding-top: 20px;
+  }
+
+  body.camisetas-page .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+    row-gap: 34px;
+  }
+}
+
+@media (max-width: 390px) {
+  body.camisetas-page .plp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.camisetas-page .pp-filter-left,
+  body.camisetas-page .pp-filter-right {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  body.camisetas-page .pp-hero__list {
+    display: grid;
+    gap: 6px;
+  }
+}
+
+/* =========================================================
+   CAMISETAS HOMBRE · FLOATING LOGO FINAL AUTHORITY
+   Fuente real: camisetas.css, no overrides.css
+   ========================================================= */
+
+body.camisetas-page:not(.women-page) {
+  --logo-x-camisetas: -35px;       /* + derecha / - izquierda */
+  --logo-y-camisetas: -110px;       /* + abajo / - arriba */
+  --logo-size-camisetas: 918px;    /* ancho real del logo */
+}
+
+body.camisetas-page:not(.women-page) .pp-hero__media {
+  position: relative;
+  overflow: visible;
+}
+
+body.camisetas-page:not(.women-page) .pp-hero__media .floating-logo {
+  position: absolute !important;
+  left: var(--logo-x-camisetas) !important;
+  top: calc(var(--hdr-h, var(--pp-header-h, 72px)) + var(--logo-y-camisetas)) !important;
+  transform: none !important;
+  z-index: 2;
+  line-height: 0;
+}
+
+body.camisetas-page:not(.women-page) .pp-hero__media .floating-logo img {
+  width: var(--logo-size-camisetas) !important;
+  height: auto !important;
+  max-width: none !important;
+  display: block;
+  object-fit: contain;
+}
+
+/* ===== CAMISETAS HOMBRE · FOOTER SIN CAJA BLANCA ===== */
+body.camisetas-page #footer,
+body.camisetas-page .site-footer,
+body.camisetas-page .site-footer::before,
+body.camisetas-page .footer-inner {
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+/* ============================================
+   PLP CAMISETAS · TIPOGRAFÍA SILENT LUXURY
+   ============================================ */
+
+/* Cuerpo tipográfico general dentro de las tarjetas */
+body.camisetas-page .pp-plp .card,
+body.camisetas-page .pp-plp .product-card {
+  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+/* Bloque de texto bajo la imagen */
+body.camisetas-page .pp-plp .card-body {
+  padding: 14px 18px 18px;
+  display: grid;
+  row-gap: 4px;          /* espacio vertical limpio */
+}
+
+/* Quitamos márgenes raros heredados */
+body.camisetas-page .pp-plp .card-body > * {
+  margin: 0;
+}
+
+/* TÍTULO del producto (h3) */
+body.camisetas-page .pp-plp .card-body h3,
+body.camisetas-page .pp-plp .card-body h3 a {
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+body.camisetas-page .pp-plp .card-body h3 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* DESCRIPCIÓN corta (primer <p> debajo del título) */
+body.camisetas-page .pp-plp .card-body p:nth-of-type(1) {
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.70);
+}
+
+/* PRECIO + meta (segundo <p>) – en fino, separado */
+body.camisetas-page .pp-plp .card-body p:nth-of-type(2) {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.82);
+}
+
+/* Por si más adelante creas clases explícitas */
+body.camisetas-page .pp-plp .card-price {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+
+/* PLP · Texto elegante bajo cada producto */
+
+body.camisetas-page .card-body {
+  padding: 14px 18px 18px;
+  display: grid;
+  row-gap: 4px;
+}
+
+body.camisetas-page .card-title,
+body.camisetas-page .card-title a {
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+body.camisetas-page .card-title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+body.camisetas-page .card-sub {
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.70);
+}
+
+body.camisetas-page .card-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.82);
+}
+/* ===== Wishlist heart único en PLP camisetas ===== */
+
+body.camisetas-page .card .icon-btn.save {
+  position: absolute;
+  right: 14px;
+  bottom: -44px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+
+body.camisetas-page .card .icon-btn.save svg {
+  width: 18px;
+  height: 18px;
+}
+
+body.camisetas-page .card .icon-btn.save.is-saved {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+
+/* ==== FIX: que el overlay de filtros no tape la X del carrito en camisetas-punto-hombre ==== */
+body.camisetas-page #menFiltersOverlay {
+  pointer-events: none;      /* no captura clics cuando está cerrado */
+}
+
+/* Cuando abras los filtros, SÍ debe capturar clics para poder cerrarlos */
+body.camisetas-page #menFiltersOverlay.is-open {
+  pointer-events: auto;
+}

@@ -1,0 +1,301 @@
+/* =========================================================
+   PROPHETIA · PLP
+   ========================================================= */
+.pp-quickbar.container{
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 420px);
+  align-items: start;
+  gap: clamp(16px, 3vw, 48px);
+  padding-block: clamp(6px, 1vw, 12px);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  margin-bottom: clamp(18px, 3.2vw, 36px);
+}
+.pp-bc .pp-bc__list{
+  display:flex; gap:8px; flex-wrap:wrap; list-style:none; padding:0; margin:0 0 8px;
+  font: 400 12px/1.4 var(--font-ui, Inter);
+  color: rgba(0,0,0,.66);
+}
+.pp-bc .pp-bc__list a{ color: currentColor; text-decoration:none; }
+.pp-bc .pp-bc__list a:hover{ text-decoration: underline; }
+.pp-qb-title{ font-family: var(--font-display); font-weight:500; font-size: clamp(20px, 1.6vw, 22px); margin:0; }
+
+.pp-qb-menu{ display:grid; gap:8px 0; justify-items:start; align-content:start; }
+.pp-qb-menu a{ text-decoration:none; font: 400 14px/1.4 var(--font-ui, Inter); color: rgba(0,0,0,.85); }
+.pp-qb-menu a:hover{ text-decoration: underline; }
+
+/* Filtros barra */
+.pp-filters.container{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding-top:12px; padding-bottom:16px;
+  position: sticky; top: var(--pp-header-h, 64px);
+  background:#fff; z-index:5;
+  border-top:1px solid #eee; border-bottom:1px solid #eee;
+}
+.pp-plp.container{ margin-bottom: clamp(40px, 8vw, 120px); }
+.pp-bottom-space{ height: clamp(60px, 10vw, 160px); }
+.pp-plp { min-height: 40vh; }
+
+@media (max-width: 1024px){
+  .pp-quickbar.container{ grid-template-columns: 1fr; }
+  .pp-qb-menu{ display:none; }
+  .pp-filters.container{ position: static; }
+}
+
+/* ===== Prophetia · PLP Mast (franja de marca) ===== */
+.plp-mast{
+  border-block-end: 1px solid color-mix(in srgb, var(--text, #0d0d0d) 12%, transparent);
+  /* separación respecto al header fijo si lo usas */
+  margin-block-start: clamp(8px, 1vh, 16px);
+}
+/* ===== Prophetia · PLP Mast (grid tipo Prophetia) ===== */
+.plp-mast__inner{
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 420px); /* logo | lateral derecho */
+  align-items: end;
+  column-gap: clamp(24px, 4vw, 80px);
+  min-height: clamp(88px, 10vw, 160px);
+  padding-block: clamp(4px, .8vw, 12px);
+  overflow: visible; /* no cortar mega-panel */
+}
+
+/* Lateral derecho en la misma franja */
+.bb-right{
+  justify-self: end;
+  max-inline-size: 420px;
+  padding-block: 6px 10px;
+}
+
+/* Migas + lista vertical */
+.pp-bc{ margin-block: 0 8px; }
+.pp-bc__panel{ display: grid; gap: 8px; }
+
+/* Espaciador bajo la franja (alto suave) */
+.bb-spacer{ height: clamp(12px, 2.2vw, 24px); }
+
+
+/* ====== HERO Prophetia-LIKE ====== */
+.hero--two-cols{
+  display:grid;
+  grid-template-columns: 1fr minmax(260px, 360px);
+  gap: clamp(16px, 3vw, 40px);
+  align-items:start;
+  padding: clamp(8px, 1vw, 16px) var(--edge) clamp(18px, 3vw, 32px);
+}
+.pp-hero__media img{
+  width:100%; height:auto; display:block;
+}
+.pp-hero__side{ position: sticky; top: calc(var(--pp-header-h,72px) + 16px); align-self:start; }
+.pp-hero__title{ font-family: var(--font-display, Cinzel, serif); font-size: clamp(18px, 2.2vw, 22px); margin: 0 0 10px; }
+.pp-hero__list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+.pp-hero__list a{ text-decoration: none; border-bottom: 1px solid transparent; }
+.pp-hero__list a:hover{ border-color: currentColor; }
+
+/* Toolbar al estilo Prophetia */
+.Prophetia-bar{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding: 10px var(--edge) 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.btn-plain{ background:none; border:0; padding:6px 10px; text-decoration:underline; cursor:pointer; }
+.select-wrap select{ appearance:none; padding:8px 14px; border:1px solid var(--line); border-radius:8px; background:#fff; }
+.ck-wrap{ display:inline-flex; align-items:center; gap:8px; }
+
+/* Grid + vista lista */
+.plp-wrap{ padding-inline: var(--edge); }
+.plp-actions{ display:flex; justify-content:center; padding:24px 0 40px; }
+.btn-outline{ background:#fff; border:1px solid var(--text); padding:.6rem 1rem; border-radius:999px; }
+
+body.view-list .plp-grid{ grid-template-columns: 1fr !important; }
+body.view-list .plp-grid .card{ flex-direction: row; gap:18px; }
+body.view-list .plp-grid .card-media img{ aspect-ratio: 16/10; }
+
+/* Responsive: aside abajo en móvil */
+@media (max-width: 960px){
+  .hero--two-cols{ grid-template-columns: 1fr; }
+  .pp-hero__side{ position:static; }
+}
+
+
+
+/* =========================================================
+   PROPHETIA · PLP refinements (Silent Luxury)
+   ========================================================= */
+
+/* Nav de imágenes: solo aparece en hover (menos ruido visual) */
+.plp-grid .card-media .nav,
+.plp-grid .plp-media .nav{
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+
+@media (hover:hover){
+  .plp-grid .card:hover .card-media .nav,
+  .plp-grid .card:hover .plp-media .nav{
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+
+/* Imagen: micro-zoom ultra sutil (dopamina controlada) */
+.plp-grid .card-media img{
+  transition: transform .28s ease;
+  transform: translateZ(0);
+}
+@media (hover:hover){
+  .plp-grid .card:hover .card-media img{
+    transform: scale(1.015);
+  }
+}
+
+/* Badge: más editorial, menos “pegatina” */
+.plp-grid .card-badges{
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+.plp-grid .card-badge{
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .25rem .5rem;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: #fff;
+}
+.plp-grid .card-badge.is-new{
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+.plp-grid .card-badge.is-out{
+  background: #eee;
+  color: #666;
+  border-color: #ddd;
+}
+
+/* Accesibilidad: foco visible en links */
+.plp-grid .card a:focus-visible,
+.plp-grid .card button:focus-visible{
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+/* Respeto a usuarios con menos movimiento */
+@media (prefers-reduced-motion: reduce){
+  .plp-grid .card-media img,
+  .plp-grid .card-media .nav{
+    transition: none !important;
+  }
+}
+/* Carrusel en card */
+.card.has-carousel .card-media { position: relative; }
+
+.card.has-carousel .card-media .nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:36px;
+  height:36px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity .18s ease, transform .18s ease;
+  z-index:5;
+}
+
+.card.has-carousel .card-media:hover .nav{ opacity:1; }
+.card.has-carousel .card-media .nav.prev{ left:10px; }
+.card.has-carousel .card-media .nav.next{ right:10px; }
+
+
+
+/* No “mover” layout al aparecer */
+@media (hover:none){
+  .card.has-carousel .card-media .nav{ opacity:1; }
+}
+/* Placeholder “Próximamente” */
+.pp-card--coming .pp-card__media--coming{
+  height: 220px;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.10), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.pp-card--coming .pp-card__price{
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: .72rem;
+  opacity: .75;
+}
+/* =========================================
+   PLP · Carousel NAV (BASE ÚNICA)
+   - Sin ::before
+   - Icono por background-image vía variables
+   ========================================= */
+
+.card.has-carousel .card-media .nav-prev,
+.card.has-carousel .card-media .nav-next{
+  appearance: none;
+  -webkit-appearance: none;
+
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 8;
+
+  width: var(--pp-nav-size, 44px);
+  height: var(--pp-nav-size, 44px);
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--pp-nav-border, rgba(0,0,0,.14));
+  background-color: var(--pp-nav-bg, rgba(255,255,255,.78));
+  backdrop-filter: blur(var(--pp-nav-blur, 10px)) saturate(120%);
+  -webkit-backdrop-filter: blur(var(--pp-nav-blur, 10px)) saturate(120%);
+
+  /* Icono (tema) */
+  background-image: var(--pp-nav-icon, none);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--pp-nav-icon-size, 22px) var(--pp-nav-icon-size, 22px);
+
+  /* Si el botón trae texto, lo anulamos */
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity .18s ease, border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+.card.has-carousel .card-media .nav-prev{ left: 10px; }
+.card.has-carousel .card-media .nav-next{ right: 10px; }
+
+.card.has-carousel:hover .card-media .nav-prev,
+.card.has-carousel:hover .card-media .nav-next{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mobile: siempre visibles */
+@media (hover:none){
+  .card.has-carousel .card-media .nav-prev,
+  .card.has-carousel .card-media .nav-next{
+    opacity: .92;
+    pointer-events: auto;
+  }
+}

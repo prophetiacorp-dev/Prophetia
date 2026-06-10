@@ -1,0 +1,1792 @@
+/* =========================================================
+   PROPHETIA · HOODIES MUJER
+   Objetivo: 1:1 con cam-mujer.css (misma estructura),
+   + background editorial con assets/img/backgrounds/hoodies.png
+   Scope: body.women-page.hoodies-page
+   ========================================================= */
+   /* =========================================================
+   PROPHETIA · FONT: DongGraffiti
+   (cargar al final = OK)
+   ========================================================= */
+@font-face{
+  font-family: "Mistral";
+  src: url("../fonts/MISTRAL.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root{
+  --font-graffiti: "Mistral", var(--font-ui, Inter, system-ui, sans-serif);
+}
+body.women-page.hoodies-page{
+  --pp-edge-hoodw: 40px;
+  --hdr-h: var(--pp-header-h, 64px);
+
+  --logo-x-hoodw: -20px;
+  --logo-y-hoodw: -110px;
+
+  --hoodw-ink: rgba(255,255,255,.92);
+  --hoodw-muted: rgba(255,255,255,.70);
+
+  --hoodw-glass: rgba(6,7,10,.42);
+  --hoodw-glass-strong: rgba(6,7,10,.62);
+
+  --hoodw-bg: #050607;
+  --hoodw-zebra-opacity: .07;
+  --hoodw-grain-opacity: .10;
+  --hoodw-zebra-scale: 720px;
+  --hoodw-grain-scale: 180px;
+
+  --hood-header-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+
+  --pp-nav-size: 44px;
+  --pp-nav-icon: url("/assets/img/logo/emblemblancovf.svg");
+  --pp-nav-icon-size: 22px;
+  --pp-nav-bg: rgba(6,7,10,.58);
+  --pp-nav-border: rgba(255,255,255,.18);
+  --pp-nav-blur: 10px;
+
+  --hood-ui: 13px;
+  --hood-topbar-fs: 12.5px;
+  --hood-mega-tab-fs: 12px;
+  --hood-mega-tab-lh: 1.4;
+  --hood-mega-tab-gap: 18px;
+  --hood-list-fs: 11px;
+  background: var(--hoodw-bg);
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 13px;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================================
+   HOODIES MUJER · Background editorial premium
+   PNG + capas CSS (igual filosofía que hoodies hombre)
+   ========================================================= */
+body.women-page.hoodies-page{
+  --pp-edge-hoodw: 40px;
+  --hdr-h: var(--pp-header-h, 64px);
+
+  --logo-x-hoodw: -20px;
+  --logo-y-hoodw: -110px;
+
+  --hoodw-ink: rgba(255,255,255,.92);
+  --hoodw-muted: rgba(255,255,255,.70);
+
+  --hoodw-glass: rgba(6,7,10,.42);
+  --hoodw-glass-strong: rgba(6,7,10,.62);
+
+  --hood-header-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+
+  --pp-nav-size: 44px;
+  --pp-nav-icon: url("/assets/img/logo/emblemblancovf.svg");
+  --pp-nav-icon-size: 22px;
+  --pp-nav-bg: rgba(6,7,10,.58);
+  --pp-nav-border: rgba(255,255,255,.18);
+  --pp-nav-blur: 10px;
+
+  --hood-ui: 13px;
+  --hood-topbar-fs: 12.5px;
+  --hood-mega-tab-fs: 12px;
+  --hood-mega-tab-lh: 1.4;
+  --hood-mega-tab-gap: 18px;
+  --hood-list-fs: 11px;
+
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 13px;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.10), transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(ellipse at 0% 50%, rgba(0,0,0,0.45), transparent 60%),
+    radial-gradient(ellipse at 100% 50%, rgba(0,0,0,0.45), transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65)),
+    url("../img/backgrounds/hoodies.png");
+
+  background-size:
+    100% 420px,
+    100% 420px,
+    600px 100%,
+    600px 100%,
+    100% 100%,
+    cover;
+
+  background-repeat: no-repeat;
+  background-position:
+    top center,
+    bottom center,
+    left center,
+    right center,
+    center,
+    center;
+
+  background-attachment: fixed;
+}
+
+body.women-page.hoodies-page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgba(255,255,255,.02);
+}
+
+body.women-page.hoodies-page::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.015) 0%,
+      rgba(255,255,255,0) 24%,
+      rgba(0,0,0,.12) 100%);
+  mix-blend-mode: screen;
+  opacity: .45;
+}
+
+body.women-page.hoodies-page main,
+body.women-page.hoodies-page .pp-page,
+body.women-page.hoodies-page .pp-wrap{
+  background: transparent;
+}
+/* Responsive gutter */
+@media (max-width: 1024px){
+  body.women-page.hoodies-page{ --pp-edge-hoodw: 24px; }
+}
+
+/* =========================
+   HERO
+   ========================= */
+body.women-page.hoodies-page .pp-hero.hero--two-cols{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 42px var(--pp-edge-hoodw) 26px;
+  min-height: 260px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+body.women-page.hoodies-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+/* =========================================================
+   HOODIES MUJER · FLOATING LOGO FINAL AUTHORITY
+   Única fuente de verdad
+   ========================================================= */
+
+body.women-page.hoodies-page{
+  --logo-x-hoodw: -89px;       /* + derecha / - izquierda */
+  --logo-y-hoodw: -130px;      /* + abajo / - arriba */
+  --logo-size-hoodw: 920px;    /* ancho real del logo */
+}
+
+body.women-page.hoodies-page .pp-hero__media{
+  position: relative;
+  overflow: visible;
+}
+
+body.women-page.hoodies-page .pp-hero__media .floating-logo{
+  position: absolute !important;
+  left: var(--logo-x-hoodw) !important;
+  top: calc(var(--hdr-h, var(--pp-header-h, 64px)) + var(--logo-y-hoodw)) !important;
+  transform: none !important;
+  z-index: 2;
+  line-height: 0;
+}
+
+body.women-page.hoodies-page .pp-hero__media .floating-logo img{
+  width: var(--logo-size-hoodw) !important;
+  height: auto !important;
+  max-width: none !important;
+  display: block;
+  object-fit: contain;
+}
+
+
+
+body.women-page.hoodies-page .pp-hero__title{
+  font-family: "Mistral", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
+  color: #fff !important;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: .02em;
+  text-shadow: 0 1px 14px rgba(0,0,0,.55);
+  font-size: clamp(18px, 2.4vw, 22px) !important;
+  line-height: 1.05;
+  margin: 0 0 10px;
+}
+body.women-page.hoodies-page .pp-hero__list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+body.women-page.hoodies-page .pp-hero__list a{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+    color: var(--hoodw-muted);
+
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease, transform .2s ease, opacity .2s ease;
+}
+
+body.women-page.hoodies-page .pp-hero__list a:hover{
+  opacity: .85;
+  color: var(--hoodw-ink-strong);
+  border-bottom-color: var(--hoodw-ink-strong);
+  transform: translateX(2px);
+}
+
+/* =========================
+   SPACERS
+   ========================= */
+body.women-page.hoodies-page .bb-spacer{ height: clamp(20px, 4vw, 56px); }
+
+/* =========================
+   TOOLBAR (FILTROS)
+   - Mantén lo mismo que cam-mujer (sin cajas blancas)
+   ========================= */
+
+   body.women-page.hoodies-page .pp-filters.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 10px var(--pp-edge-hoodw);
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: var(--pp-header-h, 64px);
+  z-index: 50;
+
+  background: rgba(10,11,14,0.88);
+  border-top: 1px solid rgba(245,245,239,0.91);
+  border-bottom: 1px solid rgba(255,255,255,0.98);
+  box-shadow: 0 -14px 34px rgba(243, 230, 230, 0.918);
+
+  font-family: var(--hood-header-font);
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--hoodw-ink);
+}
+
+body.women-page.hoodies-page .pp-filters.container::before,
+body.women-page.hoodies-page .pp-filters.container::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  height:1px;
+  background: rgba(160,120,255,0.55);
+  pointer-events:none;
+}
+
+body.women-page.hoodies-page .pp-filters.container::before{
+  top:0;
+  box-shadow:
+    0 -6px 12px rgba(160,120,255,0.22),
+    0 -14px 22px rgba(160,120,255,0.12);
+}
+
+body.women-page.hoodies-page .pp-filters.container::after{
+  bottom:0;
+  box-shadow:
+    0 6px 12px rgba(160,120,255,0.22),
+    0 14px 22px rgba(160,120,255,0.12);
+}
+
+body.women-page.hoodies-page .pp-filter-left,
+body.women-page.hoodies-page .pp-filter-right{
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+body.women-page.hoodies-page .pp-btn{
+  background: transparent;
+  border: 0;
+  padding: 2px 0;
+  border-radius: 0;
+  cursor: pointer;
+  font: inherit;
+    color: var(--hoodw-ink);
+
+}
+body.women-page.hoodies-page .pp-btn:hover{ opacity: .75; }
+
+body.women-page.hoodies-page .pp-check span{ color: var(--hoodw-ink); }
+
+
+/* =========================
+   GRID
+   ========================= */
+body.women-page.hoodies-page .pp-plp.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-hoodw);
+  box-sizing: border-box;
+}
+
+/* Si plp.css ya define grid, esto solo asegura consistencia */
+body.women-page.hoodies-page .pp-plp.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-left: var(--pp-edge-hoodw);
+  padding-right: var(--pp-edge-hoodw);
+  box-sizing: border-box;
+  margin-bottom: clamp(40px, 8vw, 120px);
+}
+
+body.women-page.hoodies-page #plp-grid.plp-grid,
+body.women-page.hoodies-page .pp-plp .plp-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
+  gap: clamp(14px, 2vw, 22px);
+  justify-content: start;
+  align-items: start;
+  width: 100%;
+}
+/* Responsive grid */
+@media (max-width: 1200px){
+  body.women-page.hoodies-page #plp-grid.plp-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 840px){
+  body.women-page.hoodies-page #plp-grid.plp-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px){
+  body.women-page.hoodies-page #plp-grid.plp-grid{ grid-template-columns: 1fr; }
+}
+
+
+
+
+/* =========================================================
+   HOODIES MUJER · GLASS SURFACES (para que el glow se vea)
+   ========================================================= */
+
+
+
+/* HEADER: borde + glow (visible) */
+body.women-page.hoodies-page .pp-header,
+body.women-page.hoodies-page .pp-topbar{
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  background: linear-gradient(to bottom, var(--hoodw-glass-strong), var(--hoodw-glass));
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 0;
+  box-shadow: 0 10px 28px rgba(253, 249, 249, 0.45);
+  position: relative;
+}
+body.women-page.hoodies-page .pp-header::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:1px;
+  background: rgba(160,120,255,0.55);
+  box-shadow:
+    0 6px 12px rgba(160,120,255,0.22),
+    0 14px 22px rgba(160,120,255,0.12);
+  pointer-events:none;
+}
+
+body.women-page.hoodies-page .pp-header *,
+body.women-page.hoodies-page .pp-topbar *{
+  font-family: inherit;
+}
+
+
+body.women-page.hoodies-page .pp-header a,
+body.women-page.hoodies-page .pp-header button,
+body.women-page.hoodies-page .pp-topbar a,
+body.women-page.hoodies-page .pp-topbar button{
+  color: var(--hoodw-ink);
+  text-shadow: 0 1px 10px rgba(0,0,0,.55);
+}
+
+
+
+
+/* bb-spacer: NADA de líneas. Solo espacio limpio. */
+body.women-page.hoodies-page .bb-spacer{
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* =========================================================
+   HOODIES MUJER · Mega negro (solo aquí)
+   ========================================================= */
+body.women-page.hoodies-page .mega .mega-panel{
+  background: rgba(0,0,0,.92);
+  color: rgba(255,255,255,.92);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 26px 90px rgba(0,0,0,.70);
+  backdrop-filter: blur(10px) saturate(110%);
+  -webkit-backdrop-filter: blur(10px) saturate(110%);
+}
+
+body.women-page.hoodies-page .mega .mega-panel *{
+  color: inherit;
+}
+
+body.women-page.hoodies-page .mega .mega-panel a{
+  color: rgba(255,255,255,.90);
+  text-decoration: none;
+}
+
+body.women-page.hoodies-page .mega .mega-panel a:hover{
+  color: rgba(255,255,255,.98);
+  text-decoration: underline;
+}
+
+body.women-page.hoodies-page .mega .mega-panel :where(.muted,.meta,.hint,small){
+  color: rgba(255,255,255,.65);
+}
+/* =========================================================
+   HOODIES MUJER · Footer glass nocturno (solo aquí)
+   ========================================================= */
+body.women-page.hoodies-page .site-footer{
+  background: rgba(5,6,10,0.92);
+  color: rgba(255,255,255,.86);
+  border-top: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 -26px 64px rgba(243, 240, 240, 0.7);
+  position: relative;
+}
+body.women-page.hoodies-page .site-footer::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:1px;
+  background: rgba(160,120,255,0.55);
+  box-shadow:
+    0 -6px 12px rgba(160,120,255,0.22),
+    0 -14px 22px rgba(160,120,255,0.12);
+  pointer-events:none;
+}
+
+body.women-page.hoodies-page .site-footer a{ color: rgba(255,255,255,.82); }
+body.women-page.hoodies-page .site-footer a:hover{ color:#fff; }
+
+
+/* Asegurar herencia en zonas típicas del PLP */
+body.women-page.hoodies-page .pp-plp,
+body.women-page.hoodies-page .pp-plp *{
+  font-family: inherit;
+}
+
+/* TITULAR / HERO: aquí sí */
+body.women-page.hoodies-page .pp-hero__title{
+  font-family: var(--font-graffiti) !important;
+  font-size: var(--hood-graffiti-title);
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  text-shadow: 0 2px 18px rgba(0,0,0,.55);
+}
+
+
+
+
+/* Links de tu lista derecha: subir un poco y mejorar tracking */
+body.women-page.hoodies-page .pp-hero__list a{
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+}
+body.women-page.hoodies-page{
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.women-page.hoodies-page .pp-filters,
+body.women-page.hoodies-page .pp-filters *{
+  letter-spacing: 0.04em;
+}
+
+
+
+/* =========================================================
+   HOODIES MUJER · PLP CARDS (Silent Luxury + contraste)
+   Pegar al FINAL
+   ========================================================= */
+
+body.women-page.hoodies-page #plp-grid .card{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, rgba(6,7,10,.62), rgba(6,7,10,.34));
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.55),
+    0 0 26px rgba(255,255,255,.05);
+  transform: translateZ(0);
+}
+
+body.women-page.hoodies-page #plp-grid .card-media{
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+body.women-page.hoodies-page #plp-grid .card-media > img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover !important;
+}
+
+body.women-page.hoodies-page #plp-grid .card:hover{
+  border-color: rgba(255,255,255,0.16);
+  box-shadow:
+    0 24px 80px rgba(0,0,0,0.62),
+    0 0 34px rgba(255,255,255,0.07);
+}
+
+
+
+/* Overlay suave para legibilidad (sin matar la foto) */
+body.women-page.hoodies-page #plp-grid .card-media::after{
+  content:"";
+  position:absolute; inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 35%, rgba(255,255,255,0.06), transparent 55%),
+    linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.55));
+  pointer-events:none;
+}
+
+
+/* Cuerpo del card = igual que STREETWEAR */
+body.women-page.hoodies-page #plp-grid .card-body{
+  padding: 12px 14px 14px;
+  display: grid;
+  gap: 6px;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  color: rgba(255,255,255,.92);
+}
+
+/* Título / subtítulo / precio como STREETWEAR */
+body.women-page.hoodies-page #plp-grid .card-title{
+  font-family: inherit;
+  margin: 0 0 6px;
+  font-size: clamp(15px, 1vw, 17px);
+  letter-spacing: .02em;
+  line-height: 1.2;
+  text-transform: none;
+  color: rgba(255,255,255,.95);
+}
+
+body.women-page.hoodies-page #plp-grid .card-sub{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  margin: 0 0 10px;
+  font-size: clamp(12px, .85vw, 13px);
+  line-height: 1.35;
+  opacity: .70;
+  color: rgba(255,255,255,.70);
+}
+
+body.women-page.hoodies-page #plp-grid .card-meta{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: .72;
+}
+
+body.women-page.hoodies-page #plp-grid .price{
+  font-family: inherit;
+  font-size: clamp(12px, .75vw, 13px);
+  letter-spacing: .06em;
+  font-weight: 500;
+  line-height: 1.15;
+  color: rgba(255,255,255,.90);
+}
+
+
+
+
+/* =========================================================
+   HOODIES MUJER · FONT SCOPE CLEAN
+   - Default Prophetia (UI) en header/topbar/filters
+   - Graffiti SOLO en el title del hero
+   ========================================================= */
+
+/* Base de página: deja la fuente por defecto de Prophetia */
+body.women-page.hoodies-page{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+}
+
+
+/* Controles típicos dentro de esas zonas */
+body.women-page.hoodies-page :is(.pp-topbar,.pp-header,.pp-filters.container)
+  :is(a,button,input,label,span,small,li,ul){
+  font-family: inherit;
+}
+
+/* Graffiti SOLO para el título principal (lo “icónico”) */
+body.women-page.hoodies-page .pp-hero__title{
+  font-family: var(--font-graffiti) !important;
+}
+
+/* =========================================================
+   HOODIES MUJER · TYPO SCALE (diales)
+   Pegar al FINAL
+   ========================================================= */
+
+
+body.women-page.hoodies-page .pp-filters,
+body.women-page.hoodies-page .pp-plp,
+body.women-page.hoodies-page .site-footer{
+  font-size: var(--hood-ui);
+}
+
+/* Lista derecha del hero */
+
+body.women-page.hoodies-page .pp-hero__list a{
+  font-size: var(--hood-list-fs);
+  line-height: 1.35;
+}
+
+
+
+
+body.women-page.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero{
+  align-self: flex-end;
+  text-align: right;
+  background: transparent !important;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 1px 10px rgba(0,0,0,.55);
+}
+
+body.women-page.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link{
+  color: rgba(255,255,255,.92) !important;
+  text-decoration: none;
+}
+
+body.women-page.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+body.women-page.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__sep{
+  color: rgba(255,255,255,.72) !important;
+}
+
+
+body.women-page.hoodies-page .pp-hero__side *{
+  font-family: var(--hood-header-font) !important;
+}
+
+body.women-page.hoodies-page .pp-header .search-input{
+  color: rgba(255,255,255,.92);
+  caret-color: rgba(255,255,255,.92);
+}
+
+body.women-page.hoodies-page .pp-header .search-input::placeholder{
+  color: rgba(255,255,255,.70);
+  opacity: 1;
+}
+
+body.women-page.hoodies-page .pp-account{
+  color: rgba(255,255,255,.92);
+}
+
+body.women-page.hoodies-page .pp-account svg{
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+body.women-page.hoodies-page .pp-account img{
+  filter: brightness(0) invert(1);
+}
+
+body.women-page.hoodies-page .pp-right,
+body.women-page.hoodies-page .pp-right a,
+body.women-page.hoodies-page .pp-right button{
+  color: rgba(255,255,255,.92);
+}
+
+body.women-page.hoodies-page .pp-right svg{
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+body.women-page.hoodies-page .pp-right img{
+  filter: brightness(0) invert(1);
+}
+
+body.women-page.hoodies-page .pp-filters .pp-btn:hover{
+  background: rgba(255,255,255,.085);
+  border-color: rgba(255,255,255,.14);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 14px 34px rgba(0,0,0,.42);
+}
+
+body.women-page.hoodies-page .pp-filters .pp-btn:active{
+  transform: translateY(0);
+  opacity: .92;
+}
+
+body.women-page.hoodies-page .pp-filters .pp-btn[aria-controls]{
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.16);
+}
+
+body.women-page.hoodies-page .pp-filters .pp-btn:focus-visible{
+  outline: 2px solid rgba(255,255,255,.55);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   HOODIES MUJER · Filters drawer (women-*) — nocturno
+   ========================================================= */
+
+body.women-page.hoodies-page .women-filters-overlay{
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+  z-index: 2600;
+  background: rgba(0,0,0,.22);
+  backdrop-filter: blur(3px);
+}
+
+body.women-page.hoodies-page .women-filters-overlay.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.women-page.hoodies-page .women-filters-drawer::before{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  width:1px;
+  background: rgba(160,120,255,0.55);
+  box-shadow:
+    -6px 0 14px rgba(160,120,255,0.22),
+    -14px 0 24px rgba(160,120,255,0.12);
+  pointer-events:none;
+}
+
+body.women-page.hoodies-page .women-filters-title,
+body.women-page.hoodies-page .women-filters-subtitle{
+  color: var(--hoodw-ink);
+}
+
+body.women-page.hoodies-page .women-filters-tab{
+  color: rgba(255,255,255,.72);
+}
+
+body.women-page.hoodies-page .women-filters-tab.is-active{
+  color: #fff;
+}
+
+body.women-page.hoodies-page .women-filters-tab.is-active::after{
+  background: rgba(255,255,255,.85);
+}
+
+body.women-page.hoodies-page .women-swatch-label,
+body.women-page.hoodies-page .women-check{
+  color: rgba(255,255,255,.88);
+}
+
+body.women-page.hoodies-page .women-swatch-dot{
+  border-color: rgba(255,255,255,.22);
+}
+
+body.women-page.hoodies-page .women-filters-foot{
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+body.women-page.hoodies-page .women-filters-clear{
+  background: transparent;
+  color: rgba(255,255,255,.82);
+  border-right: 1px solid rgba(255,255,255,.10);
+}
+
+body.women-page.hoodies-page .women-filters-cta{
+  background: rgba(255,255,255,.92);
+  color: rgba(10,10,12,.92);
+}
+
+body.women-page.hoodies-page .women-filters-panel{ display: none; }
+body.women-page.hoodies-page .women-filters-panel.is-active{ display: block; }
+
+
+
+/* =========================================================
+   HOODIES MUJER · Collection hero
+   ========================================================= */
+body.women-page.hoodies-page .pp-collection-hero{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 10px var(--pp-edge-hoodw) 18px;
+  box-sizing: border-box;
+  color: var(--hoodw-ink);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+body.women-page.hoodies-page .pp-hero-title{
+  color: var(--hoodw-ink);
+  letter-spacing: .06em;
+}
+
+body.women-page.hoodies-page .pp-hero-sub{
+  color: var(--hoodw-muted);
+}
+
+/* =========================================================
+   HOODIES MUJER · FIX tamaño filtros
+   ========================================================= */
+body.women-page.hoodies-page .pp-filters.container .pp-btn,
+body.women-page.hoodies-page .pp-filters.container label,
+body.women-page.hoodies-page .pp-filters.container span{
+  font-size: 1em;
+  line-height: inherit;
+}
+
+
+
+
+
+
+
+body.women-page.hoodies-page main{
+  font-family: "Mistral", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 22px;
+  line-height: 1.55;
+}
+
+body.women-page.hoodies-page .pp-hero.hero--two-cols,
+body.women-page.hoodies-page .pp-plp{
+  font-family: "Mistral", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 22px;
+  line-height: 1.55;
+}
+
+body.women-page.hoodies-page main :where(p, li){
+  font-size: 1em;
+  line-height: inherit;
+}
+
+body.women-page.hoodies-page #plp-grid :where(p, li){
+  font-size: revert;
+  line-height: revert;
+}
+
+body.women-page.hoodies-page main button,
+body.women-page.hoodies-page main input,
+body.women-page.hoodies-page main select,
+body.women-page.hoodies-page main textarea{
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+/* tabs del mega con el mismo espaciado */
+body.women-page.hoodies-page .pp-header .mega-tabs{
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+body.women-page.hoodies-page .pp-header .mega-tabs > li{
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   HOODIES MUJER · HEADER ALIGN 1:1 con STREETWEAR-MUJER
+   ========================================================= */
+
+/* usa exactamente el mismo gutter que streetwear-mujer */
+body.women-page.hoodies-page{
+  --pp-edge-women: var(--pp-edge-hoodw);
+}
+
+/* el container del header NO mete padding extra */
+body.women-page.hoodies-page .pp-header > .container{
+  padding-inline: 0 !important;
+}
+
+/* la topbar es la que manda el carril, igual que en woman.css */
+body.women-page.hoodies-page .pp-topbar{
+  padding-inline: var(--pp-edge-women) !important;
+  justify-content: space-between !important;
+}
+
+/* mismo comportamiento lateral que streetwear */
+body.women-page.hoodies-page .pp-topbar .pp-left{
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+body.women-page.hoodies-page .pp-topbar .pp-right{
+  margin-left: auto !important;
+  padding-right: 10px !important;
+}
+
+/* =========================================================
+   HOODIES MUJER · HEADER MICRO-ALIGN final
+   ========================================================= */
+
+body.women-page.hoodies-page .pp-topbar .pp-left{
+  margin-left: -10px !important;
+}
+
+body.women-page.hoodies-page{
+  --hood-header-left-nudge: -20px;
+  --hood-header-right-nudge: -20px;
+}
+
+body.women-page.hoodies-page .pp-topbar .pp-left{
+  margin-left: var(--hood-header-left-nudge) !important;
+}
+
+body.women-page.hoodies-page .pp-topbar .pp-right{
+  margin-right: var(--hood-header-right-nudge) !important;
+  padding-right: 0 !important;
+}
+
+
+
+
+/* =========================================================
+   HOODIES MUJER · RIGHT COLUMN LOCK
+   breadcrumb + side en la misma columna visual
+   ========================================================= */
+
+body.women-page.hoodies-page{
+  --hood-right-col-w: 360px;
+}
+
+/* Breadcrumb en la MISMA columna que el side */
+body.women-page.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero{
+  align-self: flex-end;
+  width: min(100%, var(--hood-right-col-w));
+  max-width: var(--hood-right-col-w);
+  text-align: left;
+  margin: 0;
+}
+
+body.women-page.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__list{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Side en la MISMA columna */
+body.women-page.hoodies-page .pp-hero__side{
+  align-self: flex-end;
+  width: min(100%, var(--hood-right-col-w));
+  max-width: var(--hood-right-col-w);
+  margin-left: 0;
+  text-align: left;
+}
+
+/* =========================================================
+   HOODIES MUJER · Diales X/Y para breadcrumbs y hero list
+   ========================================================= */
+
+body.women-page.hoodies-page{
+  /* Breadcrumbs */
+  --hood-bc-x: 200px;     /* + derecha / - izquierda */
+--hood-bc-y: -150px;     /* + abajo   / - arriba */
+
+  /* Bloque derecho completo (título + lista) */
+  --hood-side-x: 80px;   /* + derecha / - izquierda */
+  --hood-side-y: 30px; /* + abajo   / - arriba */
+
+  /* Solo la lista, por si quieres moverla dentro del bloque */
+  --hood-list-x: 0px;   /* + derecha / - izquierda */
+  --hood-list-y: 0px;   /* + abajo   / - arriba */
+}
+
+/* Breadcrumbs */
+body.women-page.hoodies-page .pp-breadcrumb.pp-breadcrumb--hero{
+  transform: translate(var(--hood-bc-x), var(--hood-bc-y));
+  will-change: transform;
+}
+
+/* Bloque derecho completo */
+body.women-page.hoodies-page .pp-hero__side{
+  transform: translate(var(--hood-side-x), var(--hood-side-y)) !important;
+  will-change: transform;
+}
+
+/* Solo la lista */
+body.women-page.hoodies-page .pp-hero__list{
+  transform: translate(var(--hood-list-x), var(--hood-list-y));
+  will-change: transform;
+}
+
+body.women-page.hoodies-page{
+  --hood-header-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+}
+
+body.women-page.hoodies-page .pp-hero__side,
+body.women-page.hoodies-page .pp-hero__side *{
+  font-family: var(--hood-header-font) !important;
+}
+
+/* =========================================================
+   HOODIES MUJER · HERO SIDE FINAL
+   ========================================================= */
+
+body.women-page.hoodies-page{
+  --hood-right-col-w: 360px;
+  --hood-mega-link: 11px;
+
+  /* diales reales */
+  --hood-side-x: 210px;
+  --hood-side-y: -30px;
+}
+
+body.women-page.hoodies-page .pp-hero__side{
+  align-self: flex-end;
+  width: min(100%, var(--hood-right-col-w));
+  max-width: var(--hood-right-col-w);
+  margin-left: 0;
+  text-align: left;
+
+  transform: translate(var(--hood-side-x), var(--hood-side-y)) !important;
+  will-change: transform;
+
+  font-family: var(--hood-header-font) !important;
+  font-size: var(--hood-mega-link) !important;
+}
+
+body.women-page.hoodies-page .pp-hero__side *{
+  font-family: var(--hood-header-font) !important;
+}
+
+body.women-page.hoodies-page .pp-hero__side .pp-hero__list a{
+  font-size: var(--hood-mega-link) !important;
+  line-height: 1.35;
+}
+
+
+
+
+/* Wishlist igual que streetwear */
+body.women-page.hoodies-page #plp-grid .icon-btn.save,
+body.women-page.hoodies-page #plp-grid .save-btn{
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(0,0,0,0.55);
+  color: rgba(255,255,255,0.92);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+}
+
+body.women-page.hoodies-page #plp-grid .icon-btn.save:hover,
+body.women-page.hoodies-page #plp-grid .save-btn:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.30);
+  background: rgba(0,0,0,0.62);
+}
+
+body.women-page.hoodies-page #plp-grid .icon-btn.save.is-saved,
+body.women-page.hoodies-page #plp-grid .save-btn.is-saved{
+  background: rgba(255,255,255,.92);
+  color: rgba(10,10,12,.92);
+  border-color: rgba(255,255,255,.35);
+}
+
+
+/* =========================================================
+   HOODIES MUJER · NAV ICON FIX FINAL
+   ========================================================= */
+
+body.women-page.hoodies-page #plp-grid .card.has-carousel .card-media .nav{
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 8 !important;
+
+  width: var(--pp-nav-size, 44px) !important;
+  height: var(--pp-nav-size, 44px) !important;
+  border-radius: 999px !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  background: rgba(0,0,0,.52) !important; /* importante: base oscura */
+  border: 1px solid rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(var(--pp-nav-blur, 10px)) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(var(--pp-nav-blur, 10px)) saturate(120%) !important;
+
+  background-image: var(--pp-nav-icon, none) !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: var(--pp-nav-icon-size, 22px) var(--pp-nav-icon-size, 22px) !important;
+
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+
+body.women-page.hoodies-page #plp-grid .card.has-carousel .card-media .nav.prev{
+  left: 10px !important;
+}
+
+body.women-page.hoodies-page #plp-grid .card.has-carousel .card-media .nav.next{
+  right: 10px !important;
+}
+
+body.women-page.hoodies-page #plp-grid .card.has-carousel:hover .card-media .nav{
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* =========================================================
+   HOODIES MUJER · Logo footer más visible
+   ========================================================= */
+
+/* Si el footer usa emblemblanco.png */
+body.women-page.hoodies-page .site-footer img[src*="emblemblanco.png"],
+body.women-page.hoodies-page #footer img[src*="emblemblanco.png"]{
+  height: 34px;
+  width: auto;
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 10px rgba(255,255,255,.18))
+    drop-shadow(0 8px 22px rgba(212,205,205,.42));
+}
+
+/* Fallback si sigue entrando un SVG oscuro */
+body.women-page.hoodies-page .site-footer img[src*="emblem.svg"],
+body.women-page.hoodies-page #footer img[src*="emblem.svg"]{
+  filter:
+    brightness(0) invert(1)
+    drop-shadow(0 0 10px rgba(255,255,255,.16))
+    drop-shadow(0 8px 22px rgba(212,205,205,.38));
+  opacity: 1;
+}
+
+/* Si el logo va dentro de un bloque artístico o brand */
+body.women-page.hoodies-page .site-footer .footer-art img,
+body.women-page.hoodies-page .site-footer .footer-brand img,
+body.women-page.hoodies-page #footer .footer-art img,
+body.women-page.hoodies-page #footer .footer-brand img{
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   FIX HOODIES MUJER · media cards visible (hard override)
+   ========================================================= */
+body.women-page.hoodies-page #plp-grid .card-media{
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+body.women-page.hoodies-page #plp-grid .card-media img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  /* por si algún CSS global las apaga */
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* =========================================================
+   HOODIES MUJER · Carousel NAV (DEF en overrides)
+   - Botón glass oscuro (adiós blanco)
+   - Icono emblemblanco.svg como background (más fiable que content:url)
+   - No depende de ::before para tamaño
+   ========================================================= */
+
+body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-prev,
+body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-next{
+  appearance: none;
+  -webkit-appearance: none;
+
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+
+  background-color: rgba(5,6,10,0.62) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+
+  padding: 0;
+  margin: 0;
+
+  display: grid;
+  place-items: center;
+
+  /* Icono robusto */
+  background-image: url("../img/logo/emblemblanco.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px 22px;
+
+  /* Si el botón trae texto interno, lo “mata” */
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
+}
+
+body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-prev{ left: 10px; }
+body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-next{ right: 10px; }
+
+body.women-page.hoodies-page #plp-grid .card.has-carousel:hover .nav-prev,
+body.women-page.hoodies-page #plp-grid .card.has-carousel:hover .nav-next{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover:hover){
+  body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-prev:hover,
+  body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-next:hover{
+    border-color: rgba(255,255,255,0.30) !important;
+    background-color: rgba(5,6,10,0.78) !important;
+    box-shadow:
+      0 12px 30px rgba(0,0,0,0.55),
+      0 0 26px rgba(255,255,255,0.14);
+  }
+}
+
+@media (hover:none){
+  body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-prev,
+  body.women-page.hoodies-page #plp-grid .card.has-carousel .nav-next{
+    opacity: .92;
+    pointer-events: auto;
+  }
+}
+
+
+
+
+/* =========================================================
+   HOODIES MUJER · Filters drawer final authority
+   Corrige estructura, espaciado, footer y apertura
+   ========================================================= */
+
+body.women-page.hoodies-page #womenFiltersOverlay.women-filters-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2600;
+
+  background: rgba(0,0,0,.42);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity .22s ease,
+    visibility 0s linear .22s;
+}
+
+body.women-page.hoodies-page #womenFiltersOverlay.women-filters-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .22s ease;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer.women-filters-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  width: min(540px, 100%);
+  max-width: 100vw;
+  height: 100dvh;
+
+  z-index: 2700;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-inline: clamp(22px, 4vw, 48px);
+
+  background:
+    linear-gradient(180deg, rgba(13,14,18,.98), rgba(7,8,12,.98));
+  color: rgba(255,255,255,.92);
+
+  border-left: 1px solid rgba(255,255,255,.10);
+  box-shadow: -18px 0 48px rgba(0,0,0,.62);
+
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    transform .26s cubic-bezier(.16,.84,.44,1),
+    visibility 0s linear .26s;
+
+  overflow: hidden;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer.women-filters-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform .26s cubic-bezier(.16,.84,.44,1);
+}
+
+/* Línea lateral */
+body.women-page.hoodies-page #womenFiltersDrawer.women-filters-drawer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 1px;
+  background: rgba(255,255,255,.32);
+  box-shadow:
+    -6px 0 14px rgba(255,255,255,.10),
+    -14px 0 24px rgba(160,120,255,.12);
+
+  pointer-events: none;
+}
+
+/* Header */
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-head {
+  flex: 0 0 auto;
+  padding: 32px 0 18px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-title {
+  margin: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: .04em;
+  text-transform: none;
+
+  color: rgba(255,255,255,.94);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-close {
+  width: 34px;
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+
+  color: rgba(255,255,255,.92);
+  font-size: 22px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-close:hover {
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.22);
+  transform: rotate(90deg);
+}
+
+/* Tabs */
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-tabs {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  margin-top: 18px;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-tab {
+  position: relative;
+
+  border: 0;
+  background: transparent;
+  padding: 6px 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.56);
+  cursor: pointer;
+
+  opacity: 1;
+  transition:
+    color .18s ease,
+    transform .18s ease;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+
+  height: 1px;
+  background: transparent;
+
+  transition: background .18s ease, box-shadow .18s ease;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-tab.is-active {
+  color: rgba(255,255,255,.94);
+  transform: translateY(-1px);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-tab.is-active::after {
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 0 16px rgba(255,255,255,.20);
+}
+
+/* Body */
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-body {
+  flex: 1 1 auto;
+
+  padding: 24px 0 18px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: block;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-panel {
+  display: none;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-panel.is-active {
+  display: block;
+  animation: hoodWomenDrawerPanelIn .18s ease-out;
+}
+
+@keyframes hoodWomenDrawerPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Lista colores */
+body.women-page.hoodies-page #womenFiltersDrawer .women-swatch-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 34px;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-swatch {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 28px;
+
+  cursor: pointer;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-swatch-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-swatch-label,
+body.women-page.hoodies-page #womenFiltersDrawer .women-check {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.3;
+  color: rgba(255,255,255,.78);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-swatch-dot {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.28);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-swatch-input:checked + .women-swatch-dot {
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.92),
+    0 0 18px rgba(255,255,255,.14);
+}
+
+/* Tallas */
+body.women-page.hoodies-page #womenFiltersDrawer .women-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+/* Footer */
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-foot {
+  flex: 0 0 auto;
+
+  position: sticky;
+  bottom: 0;
+
+  padding: 16px 0 24px;
+
+  border-top: 1px solid rgba(255,255,255,.10);
+  background:
+    linear-gradient(180deg, rgba(7,8,12,0), rgba(7,8,12,.96) 36%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-foot-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-clear,
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-cta {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 16px;
+  border-radius: 999px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-clear {
+  border: 1px solid rgba(255,255,255,.22);
+  background: transparent;
+  color: rgba(255,255,255,.82);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-cta {
+  margin-left: auto;
+
+  border: 1px solid rgba(255,255,255,.92);
+  background: rgba(255,255,255,.92);
+  color: #08090c;
+}
+
+@media (max-width: 640px) {
+  body.women-page.hoodies-page #womenFiltersDrawer.women-filters-drawer {
+    width: 100%;
+    padding-inline: 20px;
+  }
+
+  body.women-page.hoodies-page #womenFiltersDrawer .women-swatch-list {
+    grid-template-columns: 1fr;
+  }
+
+  body.women-page.hoodies-page #womenFiltersDrawer .women-filters-foot-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.women-page.hoodies-page #womenFiltersDrawer .women-filters-clear,
+  body.women-page.hoodies-page #womenFiltersDrawer .women-filters-cta {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   HOODIES MUJER · Drawer micro-fix final
+   Centrado X + separación CTA "Ver resultados"
+   ========================================================= */
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-close {
+  position: relative;
+  display: grid !important;
+  place-items: center !important;
+
+  width: 34px;
+  height: 34px;
+  padding: 0 !important;
+
+  font-size: 0 !important;
+  line-height: 1 !important;
+  text-align: center;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-close::before {
+  content: "×";
+  display: block;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+
+  transform: translateY(-1px);
+  color: rgba(255,255,255,.92);
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-cta {
+  gap: 8px;
+  white-space: nowrap;
+}
+
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-cta span,
+body.women-page.hoodies-page #womenFiltersDrawer .women-filters-cta [id*="ResultsCount"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 1ch;
+  margin-inline: 2px;
+
+  font: inherit;
+  letter-spacing: inherit;
+}

@@ -1,0 +1,1695 @@
+/* =========================================================
+   PROPHETIA · SUDADERAS HOMBRE (modo streetwear-fidelity)
+   Página: sudaderas.html
+   Fidelidad: 1:1 con streetwear.css pero scoping a .sud-men-page
+   ========================================================= */
+
+/* =========================================================
+   SUDADERAS · GALERÍA CÁLIDA (fondo editorial, sin imagen)
+   ========================================================= */
+body.sud-men-page{
+  /* tokens de layout */
+  --pp-edge-sud: 40px;
+
+  /* “Street” tokens usados por tus componentes (mantener) */
+  --street-accent: #FFD700;
+  --street-shell: #1a1a1a;
+
+  /* Fondo blanco puro */
+  background: #fff;
+  color: #111;
+}
+
+
+
+
+
+
+
+/* =========================================================
+   HEADER / TOPBAR
+   ========================================================= */
+
+body.sud-men-page .pp-topbar,
+body.sud-men-page .pp-header {
+  background: transparent !important; /* Cambiar a transparente */
+  color: #f5f5ef;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.945);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.516);
+}
+
+body.sud-men-page .pp-header .container,
+body.sud-men-page .pp-topbar {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-sud);
+  box-sizing: border-box;
+}
+
+body.sud-men-page .pp-header a,
+body.sud-men-page .pp-topbar a {
+  color: var(--street-ink);
+}
+
+
+/* Cambiar el color del texto en el input de búsqueda */
+body.sud-men-page .search-inline input{
+  background: rgba(22, 22, 22, 0.1);
+  border-color: rgb(3, 3, 3);
+  color: #000000 !important; /* Cambié el color del texto a negro */
+}
+
+body.sud-men-page .search-inline input::placeholder{
+  color: rgba(0, 0, 0, 0.65); /* Cambié el color del placeholder a un gris más oscuro */
+}
+
+/* mega-menu */
+body.sud-men-page .mega-panel{
+  background:
+    radial-gradient(circle at 0 0, rgb(255, 255, 255), transparent 90%),
+    linear-gradient(to bottom, #ffffff, #ffffff);
+  color: var(--street-ink);
+}
+
+/* =========================================================
+   SUDADERAS · MEGA PANEL · tipografía coherente con el resto
+   ========================================================= */
+body.sud-men-page .mega-panel a{
+  color: #000;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Arial, sans-serif);
+  text-transform: none;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+body.sud-men-page .mega-panel a:hover{
+  color: rgba(0,0,0,0.72);
+}
+
+body.sud-men-page .mega-panel a:hover{
+  color: var(--street-ink, #000);
+}
+
+body.sud-men-page .mega-panel a:hover{
+  color: var(--street-ink);
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+body.sud-men-page .pp-hero.hero--two-cols{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 42px var(--pp-edge-sud) 26px;
+  min-height: 260px;
+  box-sizing: border-box;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+body.sud-men-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+
+/* Panel derecha: estilo Prophetia (SIN caja) */
+body.sud-men-page .pp-hero__side{
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  padding: 0;
+}
+
+
+/* Aseguramos que el texto en el lado derecho del hero tenga el color negro */
+body.sud-men-page .pp-hero__side{
+  color: #000000 !important; /* Aplica color negro al texto */
+}
+body.sud-men-page .pp-hero__title{
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;   /* baja tracking: en minúsculas, 0.18em se ve “Cinzel-ish” */
+  text-transform: none;     /* ✅ fuera mayúsculas */
+}
+
+
+body.sud-men-page .pp-hero__nav{
+  position: relative;                 /* clave: para anclar el ::before */
+  
+  padding-top: 8px;
+  margin-top: 0;
+}
+
+body.sud-men-page .pp-hero__nav::before{
+  content: none;
+}
+
+
+body.sud-men-page .pp-hero__list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+body.sud-men-page .pp-hero__list a{
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;  /* más “silent luxury”, menos cartel */
+  text-transform: none;    /* ✅ fuera mayúsculas */
+  text-decoration: none;
+  color: var(--street-muted);
+  padding-block: 1px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+
+body.sud-men-page .pp-hero__list a:hover{
+  opacity: 0.85;
+  color: var(--street-ink);
+  border-bottom-color: var(--street-ink);
+  transform: translateX(2px);
+}
+
+body.sud-men-page .pp-hero__list a[aria-current="page"]{
+  color: var(--street-ink);
+  border-bottom-color: var(--street-accent);
+}
+
+body.sud-men-page .bb-spacer{
+  height: clamp(40px, 6vw, 90px);
+}
+
+/* intro opcional (tu texto) */
+body.sud-men-page .sud-intro.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-sud);
+  box-sizing: border-box;
+}
+
+body.sud-men-page .sud-intro__text{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--street-muted);
+  max-width: 78ch;
+  margin: 0;
+}
+
+
+/* =========================================================
+   TOOLBAR / FILTROS
+   ========================================================= */
+
+body.sud-men-page .pp-filters.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-sud);
+  padding-block: 10px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: var(--pp-header-h, 72px);
+  z-index: 20;
+
+    background: rgb(255, 255, 255);
+    border-top: 1px solid rgb(255, 255, 255);
+  border-bottom: 1px solid rgb(255, 255, 255);
+
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--street-muted);
+}
+
+body.sud-men-page .pp-filter-left,
+body.sud-men-page .pp-filter-right{
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+body.sud-men-page .pp-btn{
+  border: none;
+  background: transparent;
+  padding: 2px 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--street-ink);
+}
+
+body.sud-men-page .pp-btn:hover{ opacity: 0.8; }
+
+body.sud-men-page .pp-check{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+body.sud-men-page .pp-check span{
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--street-muted);
+}
+
+body.sud-men-page .pp-check input[type="checkbox"]{
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.6);
+  accent-color: #ffffff;
+  background: transparent;
+}
+
+/* =========================================================
+   DRAWER FILTROS (men-*)
+   ========================================================= */
+
+body.sud-men-page{
+  /* Drawer “silent luxury” */
+  --drawer-bg: #151515;         /* grafito premium */
+  --drawer-bg-2: #121212;       /* sombra sutil */
+  --drawer-line: rgba(255,255,255,0.10);
+  --drawer-line-soft: rgba(255,255,255,0.06);
+  --drawer-text: #f5f5ef;
+  --drawer-muted: rgba(245,245,239,0.72);
+}
+
+body.sud-men-page .men-filters-drawer{
+  background: linear-gradient(180deg, var(--drawer-bg), var(--drawer-bg-2));
+  color: var(--drawer-text);
+
+  border-left: 1px solid var(--drawer-line-soft);
+  border-right: 1px solid var(--drawer-line-soft);
+
+  /* Sombra realista: oscura, no blanca */
+  box-shadow: -18px 0 40px rgba(0,0,0,0.55);
+}
+
+
+body.sud-men-page .men-filters-head{
+  border-bottom: 1px solid var(--street-line);
+}
+
+body.sud-men-page .men-filters-title{
+  font-family: var(--font-urban);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f5f5ef;
+}
+
+body.sud-men-page .men-filters-tab{
+  font-family: var(--font-urban);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f5f5ef;
+}
+
+body.sud-men-page .men-filters-tab.is-active{
+  border-bottom-color: var(--street-accent);
+}
+
+body.sud-men-page .men-swatch-label{
+  color: var(--street-muted);
+}
+
+/* FOOTER drawer filtros */
+.men-filters-foot{
+  position: sticky;
+  bottom: 0;
+  padding: 16px 24px;              /* <- aire real contra el borde */
+  border-top: 1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.35));
+  backdrop-filter: blur(10px);
+}
+
+.men-filters-foot-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;                       /* <- separa botones */
+}
+
+/* Botones footer */
+.men-filters-clear,
+.men-filters-cta{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;              /* <- evita texto pegado al borde del botón */
+  border-radius: 999px;
+  line-height: 1;
+}
+
+.men-filters-cta{
+  margin-left: auto;               /* <- se va a la derecha y respeta gap */
+}
+
+/* =========================================================
+   DRAWER FILTROS (men-*) · SUDADERAS
+   (sin duplicar layout base de men.css)
+   ========================================================= */
+
+body.sud-men-page .men-filters-overlay{
+  /* si men.css ya lo define, esto solo ajusta el look */
+  background: rgba(0,0,0,0.45);
+}
+
+body.sud-men-page .men-filters-drawer{
+  /* NO tocar position/right/transform aquí: eso es de men.css */
+ /* background: url("../img/backgrounds/drawer-bg.png") center/cover no-repeat;*/
+  color: #f5f5ef;
+  box-shadow: -2px 0 22px rgba(0,0,0,0.55);
+}
+
+body.sud-men-page .men-filters-tab{
+  cursor: pointer;
+  opacity: 0.60;
+
+  /* ✅ LED glow: border-top + box-shadow */
+  border-top: 2px solid transparent;
+  box-shadow: none;
+
+  transition: opacity .18s ease-out, transform .18s ease-out,
+              border-top-color .18s ease-out, box-shadow .18s ease-out;
+}
+
+body.sud-men-page .men-filters-tab.is-active{
+  opacity: 1;
+  transform: translateY(-1px);
+
+  border-top-color: var(--street-accent);
+  box-shadow: 0 -10px 18px rgba(255,215,0,0.28);
+}
+
+/* Paneles: ocultar/mostrar + animación */
+body.sud-men-page #menFiltersDrawer .men-filters-panel{ display: none; }
+body.sud-men-page #menFiltersDrawer .men-filters-panel.is-active{
+  display: block;
+  animation: sudMenPanelIn .18s ease-out;
+}
+
+@keyframes sudMenPanelIn{
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+
+/* === FIX: tabs y transición paneles (COLOR / TALLA) === */
+body.sud-men-page #menFiltersDrawer .men-filters-tab{
+  cursor: pointer;
+  opacity: 0.55;
+  border-bottom: 2px solid transparent;
+  transition: opacity .18s ease-out, transform .18s ease-out, border-color .18s ease-out;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-tab.is-active{
+  opacity: 1;
+  transform: translateY(-1px);
+  border-bottom-color: rgba(255,255,255,0.95);
+}
+
+/* Paneles: ocultar/mostrar + animación */
+body.sud-men-page #menFiltersDrawer .men-filters-panel{
+  display: none;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-panel.is-active{
+  display: block;
+  animation: sudMenPanelIn .18s ease-out;
+}
+
+@keyframes sudMenPanelIn{
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* =========================================================
+   SUDADERAS · PLP GRID (Prophetia: cards pegados)
+   ========================================================= */
+
+body.sud-men-page{
+  --pp-edge-sud: 40px;         /* si no lo tenías definido */
+  --sud-grid-lines: rgba(0,0,0,.10);
+  --sud-media-ratio: 4 / 5;    /* Prophetia-ish (más editorial que 1/1) */
+}
+
+/* Grid sin separación */
+body.sud-men-page #plp-grid.plp-grid,
+body.sud-men-page .pp-plp .plp-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  align-items: start;
+}
+
+/* 3 cols */
+@media (max-width: 1280px){
+  body.sud-men-page #plp-grid.plp-grid,
+  body.sud-men-page .pp-plp .plp-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* 2 cols */
+@media (max-width: 900px){
+  body.sud-men-page #plp-grid.plp-grid,
+  body.sud-men-page .pp-plp .plp-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 1 col */
+@media (max-width: 520px){
+  body.sud-men-page #plp-grid.plp-grid,
+  body.sud-men-page .pp-plp .plp-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card pegada con “líneas” finas (sin doble borde visible) */
+body.sud-men-page .plp-grid > .card,
+body.sud-men-page .plp-grid > .product-card{
+  background: #fff;
+}
+
+body.sud-men-page .card-media,
+body.sud-men-page .product-card .card-media,
+body.sud-men-page .product-card .img-wrap{
+  background: #fff;
+}
+
+
+
+
+
+
+body.sud-men-page .card-body{
+  padding: 14px 18px 18px;
+  display: grid;
+  row-gap: 4px;
+}
+
+body.sud-men-page .card-title,
+body.sud-men-page .card-title a,
+body.sud-men-page .product-card__title,
+body.sud-men-page .product-card__title a{
+  font-family: var(--font-urban);
+  font-weight: 500;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--street-ink);
+  text-decoration: none;
+}
+
+body.sud-men-page .card-title a:hover,
+body.sud-men-page .product-card__title a:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+body.sud-men-page .card-sub,
+body.sud-men-page .product-card__subtitle{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--street-muted);
+}
+
+body.sud-men-page .card-meta,
+body.sud-men-page .product-card__price{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+/* =========================================================
+   SUDADERAS · MEDIA (imagen dentro, ratio editorial)
+   ========================================================= */
+
+body.sud-men-page .card-media,
+body.sud-men-page .product-card .card-media,
+body.sud-men-page .product-card .img-wrap{
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: var(--sud-media-ratio);
+  overflow: hidden;
+  background: rgba(255,255,255,0.65);
+}
+
+/* Si tu media es un <a class="card-media"> */
+body.sud-men-page a.card-media{ display:block; }
+
+body.sud-men-page .card-media img,
+body.sud-men-page .product-card .card-media img,
+body.sud-men-page .product-card .img-wrap img{
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* wishlist */
+body.sud-men-page .card .icon-btn.save,
+body.sud-men-page .product-card .save-btn{
+  position: absolute;
+  right: 14px;
+  bottom: -44px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--street-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+body.sud-men-page .card .icon-btn.save.is-saved,
+body.sud-men-page .product-card .save-btn.is-saved{
+  background: var(--street-accent);
+  color: #000;
+  border-color: var(--street-accent);
+  transform: translateY(-2px);
+}
+
+/* toast */
+body.sud-men-page #ppToast .pp-toast__inner{
+  background: #000;
+  color: #fff;
+}
+
+/* footer · sudaderas: TRANSPARENTE */
+body.sud-men-page #footer,
+body.sud-men-page .site-footer,
+body.sud-men-page .footer-inner,
+body.sud-men-page .footer-bottom{
+  background: transparent !important;
+  background-image: none !important;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 -16px 40px rgba(255, 255, 255, 0.55);
+}
+
+
+/* Texto y links del footer en negro (para que se lea sobre tu fondo claro) */
+body.sud-men-page .site-footer,
+body.sud-men-page .footer-inner{
+  color: rgba(0,0,0,0.85);
+}
+
+body.sud-men-page .site-footer a{
+  color: rgba(0,0,0,0.72);
+}
+body.sud-men-page .site-footer a:hover{
+  color: #000;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1024px){
+  body.sud-men-page .pp-hero.hero--two-cols{ padding-inline: 24px; }
+  body.sud-men-page .pp-filters.container,
+  body.sud-men-page .pp-plp.container,
+  body.sud-men-page .sud-intro.container{ padding-inline: 24px; }
+}
+
+@media (max-width: 640px){
+  body.sud-men-page .pp-filters.container{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  body.sud-men-page .pp-filter-right{ align-self: flex-end; }
+
+  body.sud-men-page .plp-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+}
+
+
+
+
+
+
+
+/* Cambiar fondo para sudaderas de lujo */
+
+
+/* Velo blanco suave para toda la página */
+body.sud-men-page::before{
+  content: none;
+}
+
+/* =========================================================
+   TOOLBAR / FILTROS
+   ========================================================= */
+
+
+/* ===== Sudaderas · escala tipográfica (coherente con el resto) ===== */
+body.sud-men-page{
+  --sud-ui: 11px;        /* links UI / filtros */
+  --sud-kicker: 0.92rem; /* títulos pequeños tipo “HOMBRE” */
+  --sud-meta: 0.78rem;   /* precio / meta */
+  --sud-sub: 0.86rem;    /* textos de apoyo */
+}
+
+/* HERO */
+body.sud-men-page .pp-hero__title{
+  font-size: var(--sud-kicker);
+  letter-spacing: 0.22em;
+}
+
+body.sud-men-page .pp-hero__list a{
+  font-size: var(--sud-ui);
+  letter-spacing: 0.16em;
+}
+
+/* Intro */
+body.sud-men-page .sud-intro__text{
+  font-size: var(--sud-sub);
+  line-height: 1.7;
+}
+
+/* Toolbar */
+body.sud-men-page .pp-filters.container{
+  font-size: var(--sud-ui);
+  letter-spacing: 0.14em;
+}
+
+/* Cards */
+body.sud-men-page .card-title,
+body.sud-men-page .card-title a,
+body.sud-men-page .product-card__title,
+body.sud-men-page .product-card__title a{
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+}
+
+body.sud-men-page .card-meta,
+body.sud-men-page .product-card__price{
+  font-size: var(--sud-meta);
+  letter-spacing: 0.14em;
+}
+/* =========================================================
+   SUDADERAS · NAV ARROWS (prev/next tipo Prophetia)
+   ========================================================= */
+
+body.sud-men-page .icon-btn.nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.25);
+  background: rgba(255,255,255,.78);
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease, background .18s ease;
+}
+
+/* Mostrar en hover (desktop) */
+@media (hover:hover){
+  body.sud-men-page .card:hover .icon-btn.nav,
+  body.sud-men-page .product-card:hover .icon-btn.nav{
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* En móvil/touch: visibles */
+@media (hover:none){
+  body.sud-men-page .icon-btn.nav{
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+body.sud-men-page .icon-btn.nav.prev{ left: 10px; }
+body.sud-men-page .icon-btn.nav.next{ right: 10px; }
+
+body.sud-men-page .icon-btn.nav:active{
+  transform: translateY(-50%) scale(0.98);
+}
+body.sud-men-page .icon-btn.nav:focus-visible{
+  outline: 2px solid rgba(0,0,0,.35);
+  outline-offset: 2px;
+}
+/* wrapper que permite botones dentro (sin meter buttons dentro de <a>) */
+body.sud-men-page .plp-media{
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: var(--sud-media-ratio);
+  overflow: hidden;
+}
+
+/* lo que vaya dentro ocupa todo el alto */
+body.sud-men-page .plp-media > .card-media,
+body.sud-men-page .plp-media > .img-wrap,
+body.sud-men-page .plp-media > picture{
+  display:block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* solo mostrar flechas si hay carrusel */
+@media (hover:hover){
+  body.sud-men-page .has-carousel:hover .icon-btn.nav{ opacity: 1; pointer-events: auto; }
+}
+/* PLP a ancho completo (evita max-width centrado del .container) */
+body.sud-men-page .pp-plp.container{
+  max-width: none;
+  width: 80%;
+  margin: 0;
+  /* elige UNA: */
+  padding-inline: 0;                /* Prophetia full-bleed */
+  /* padding-inline: var(--pp-edge-sud); */ /* alineado con tu “edge” */
+}
+
+/* por si otro CSS mete justify-content al grid */
+body.sud-men-page #plp-grid.plp-grid{
+  justify-content: start;
+  place-content: start;
+}
+/* =========================================================
+   HERO · Prophetia alignment (breadcrumb arriba + panel más abajo)
+   ========================================================= */
+
+body.sud-men-page{
+  /* Control fino: ajusta aquí SIN tocar márgenes raros */
+  --bc-y: -194px;     /* breadcrumb: más negativo = más arriba */
+  --side-y: -72px;    /* panel derecho: más positivo = más abajo */
+
+  /* Stack tipo Avus (sin depender de “Avus” real) */
+  --font-avus-like: "Avenir Next", "Avenir", "Helvetica Neue", "Inter",
+                    system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+/* El hero como “contexto” */
+body.sud-men-page .pp-hero.hero--two-cols{
+  position: relative;
+}
+
+/* Breadcrumb: arriba/derecha e INDEPENDIENTE del panel */
+body.sud-men-page .pp-breadcrumb.pp-breadcrumb--hero{
+  align-self: flex-end;
+  margin-left: auto;
+
+  /* lo deja donde lo quieres (sin reventar el flujo) */
+  transform: translateY(var(--bc-y));
+
+  /* Prophetia-like */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;            /* fuera márgenes conflictivos */
+  padding: 0;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgba(0,0,0,0.65);
+}
+
+body.sud-men-page .pp-breadcrumb.pp-breadcrumb--hero a{
+  color: rgba(0,0,0,0.75);
+  text-decoration: none;
+}
+body.sud-men-page .pp-breadcrumb.pp-breadcrumb--hero a:hover{
+  color: rgba(0,0,0,0.95);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+body.sud-men-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__sep{
+  color: rgba(0,0,0,0.35);
+}
+
+/* Panel derecho: baja SIN mover breadcrumb */
+body.sud-men-page section.pp-hero.hero--two-cols > .pp-hero__side{
+  align-self: flex-end;
+  margin-left: auto;
+  text-align: left;
+  max-width: 360px;
+
+  transform: translateY(var(--side-y));
+}
+
+/* Sudaderas (elegante): título editorial + links UI */
+body.sud-men-page .pp-hero__title{
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+body.sud-men-page .pp-hero__list a{
+  font-family: var(--font-ui);
+}
+/* FIX duro: Sudaderas NO usan Cinzel bajo ningún concepto */
+body.sud-men-page .pp-hero__title,
+body.sud-men-page h1,
+body.sud-men-page h2,
+body.sud-men-page h3,
+body.sud-men-page h4{
+  font-family: var(--font-display) !important;
+}
+/* ============================
+   SUD · BLANCO PURO (hard)
+   ============================ */
+html,
+body.sud-men-page{
+  background: #fff !important;
+}
+
+/* Evita “blancos con leche” en cards/media */
+body.sud-men-page .plp-grid > .card,
+body.sud-men-page .plp-grid > .product-card,
+body.sud-men-page .card-media,
+body.sud-men-page .product-card .card-media,
+body.sud-men-page .product-card .img-wrap{
+  background: #fff !important;
+}
+/* ============================
+   DRAWER · Espaciado Prophetia
+   ============================ */
+body.sud-men-page #menFiltersDrawer .men-filters-head{
+  padding-top: 28px;              /* separa “FILTROS” del borde superior */
+}
+
+/* Baja las tabs (Color / Talla) */
+body.sud-men-page #menFiltersDrawer .men-filters-tabs{
+  margin-top: 26px !important;    /* <- aquí está la magia */
+  padding-top: 0;
+}
+/* Baja las tabs (Color / Talla) */
+body.sud-men-page #menFiltersDrawer .men-filters-tabs {
+  margin-top: 66px !important; /* Ajusta este valor según sea necesario */
+  padding-top: 0;
+}
+/* =========================================================
+   DRAWER · Colores en 2 columnas paralelas (tipo Prophetia)
+   ========================================================= */
+
+/* Lista: 2 columnas fijas, filas limpias */
+body.sud-men-page #menFiltersDrawer .men-swatch-list{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(20px, 5vw, 56px);  /* <- en lugar de 186px */
+  row-gap: 18px;
+}
+
+/* Asegura que cada <li> ocupe su celda completa */
+body.sud-men-page #menFiltersDrawer .men-swatch-list > li{
+  margin: 0;
+  padding: 0;
+}
+
+/* Cada item no debe “empujar” el grid */
+body.sud-men-page #menFiltersDrawer .men-swatch{
+  min-width: 0;
+}
+
+/* Opcional: tamaño del dot consistente */
+body.sud-men-page #menFiltersDrawer .men-swatch-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+/* Móvil: una sola columna para no apretar */
+@media (max-width: 480px){
+  body.sud-men-page #menFiltersDrawer .men-swatch-list{
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+}
+
+
+/* Reducir el tamaño de la fuente de los filtros */
+body.sud-men-page .men-filters-title {
+  font-size: 0.75rem;  /* Reducir tamaño de fuente */
+  letter-spacing: 0.1em; /* Ajustar espacio entre letras */
+}
+
+/* Reducir el tamaño de la fuente de los tabs (Color / Talla) */
+body.sud-men-page .men-filters-tab {
+  font-size: 0.75rem;  /* Reducir tamaño de fuente */
+  letter-spacing: 0.1em; /* Ajustar espacio entre letras */
+  padding: 10px 15px; /* Asegura que el tamaño del botón sea más pequeño */
+}
+body.sud-men-page #menFiltersDrawer .men-filters-title{
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: none; /* Prophetia suele ir más sobrio */
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-tab{
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  padding: 8px 10px;
+}
+
+/* Drawer · X cerrar en blanco */
+body.sud-men-page #menCloseFilters.men-filters-close{
+  color: #fff;
+  opacity: .92;
+}
+body.sud-men-page #menCloseFilters.men-filters-close:hover{
+  opacity: 1;
+}
+body.sud-men-page #menCloseFilters.men-filters-close:focus-visible{
+  outline: 2px solid rgba(255,255,255,.35);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+/* Swatches · dot con glow sutil (para ver negro sobre fondo oscuro) */
+body.sud-men-page #menFiltersDrawer .men-swatch-dot{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.22),     /* aro fino */
+    0 0 10px rgba(255,255,255,.12);     /* glow suave */
+}
+
+/* Negro: añade borde más evidente */
+body.sud-men-page #menFiltersDrawer .men-swatch--black{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.40),
+    0 0 14px rgba(255,255,255,.16);
+}
+
+/* Estado seleccionado: ring más claro */
+body.sud-men-page #menFiltersDrawer .men-swatch-input:checked + .men-swatch-dot{
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.65),
+    0 0 18px rgba(255,255,255,.18);
+}
+
+/* Accesibilidad: focus visible (cuando tabulas) */
+body.sud-men-page #menFiltersDrawer .men-swatch-input:focus-visible + .men-swatch-dot{
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.55),
+    0 0 18px rgba(255,255,255,.18);
+}
+/* Drawer base */
+.men-filters-drawer{
+  box-sizing: border-box;
+  width: min(540px, 92vw);     /* <- un pelín menos agresivo que 100% */
+  padding-inline: 28px;        /* <- antes 48px, esto recupera espacio real */
+  overflow-x: hidden;          /* <- evita scroll horizontal raro */
+}
+
+/* Lista de swatches en 2 columnas “seguras” */
+.men-swatch-list{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+  row-gap: 18px;
+}
+
+/* Evita que el contenido haga overflow raro */
+.men-swatch{
+  min-width: 0;
+}
+/* Footer botones: misma tipografía exacta */
+body.sud-men-page #menFiltersDrawer .men-filters-clear,
+body.sud-men-page #menFiltersDrawer .men-filters-cta{
+  font: inherit;
+  font-size: 0.72rem;       /* pon el mismo valor para ambos */
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+/* Por si el span del contador cambia tamaño */
+body.sud-men-page #menFiltersDrawer .men-filters-cta span{
+  font: inherit;
+}
+/* Guardados (header) en negro en Sudaderas */
+body.sud-men-page #ppSavedBtn.icon-btn{
+  color: #000;                 /* controla el SVG por currentColor */
+}
+
+body.sud-men-page #ppSavedBtn.icon-btn:hover{
+  color: rgba(0,0,0,0.75);
+}
+/* =========================================================
+   SUDADERAS HOMBRE · FLOATING LOGO RESTORE
+   Mismo sistema que camisetas.css
+   ========================================================= */
+
+body.sud-men-page{
+  --hdr-h: var(--pp-header-h, 72px);
+
+  --logo-x-sudaderas: -45px;
+  --logo-y-sudaderas: -105px;
+  --logo-size-sudaderas: 120px;
+}
+
+body.sud-men-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+body.sud-men-page .pp-hero__media .floating-logo{
+  position: absolute;
+  left: var(--logo-x-sudaderas);
+  top: calc(var(--hdr-h) + var(--logo-y-sudaderas));
+  transform: none !important;
+  display: inline-block;
+  line-height: 0;
+}
+
+body.sud-men-page .pp-hero__media .floating-logo img{
+  height: var(--logo-size-sudaderas);
+  width: auto;
+  display: block;
+  object-fit: contain;
+  max-width: none;
+}
+
+/* =========================================================
+   SUDADERAS · Sort dropdown real
+   ========================================================= */
+
+body.sud-men-page .pp-sort {
+  position: relative;
+  display: inline-block;
+}
+
+body.sud-men-page .pp-sort-trigger {
+  list-style: none;
+  cursor: pointer;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .08em;
+  text-transform: none;
+  color: rgba(0,0,0,.82);
+}
+
+body.sud-men-page .pp-sort-trigger::-webkit-details-marker {
+  display: none;
+}
+
+body.sud-men-page .pp-sort-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 120;
+
+  min-width: 190px;
+  padding: 8px 0;
+
+  background: rgba(255,255,255,.98);
+  border: 1px solid rgba(0,0,0,.10);
+  box-shadow: 0 18px 48px rgba(0,0,0,.14);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+
+body.sud-men-page .pp-sort-option {
+  width: 100%;
+  display: block;
+
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .04em;
+  text-transform: none;
+  color: rgba(0,0,0,.78);
+}
+
+body.sud-men-page .pp-sort-option:hover {
+  background: rgba(0,0,0,.055);
+  color: #000;
+}
+
+/* =========================================================
+   SUDADERAS HOMBRE · Filters drawer atelier final
+   Fondo editorial cálido + apertura/cierre premium
+   ========================================================= */
+
+body.sud-men-page {
+  --sud-drawer-bg-1: #f4efe6;
+  --sud-drawer-bg-2: #e7ded0;
+  --sud-drawer-bg-3: #181614;
+  --sud-drawer-ink: #1b1712;
+  --sud-drawer-muted: rgba(27,23,18,.62);
+  --sud-drawer-line: rgba(27,23,18,.14);
+  --sud-drawer-gold: #9c7a3d;
+  --sud-drawer-ease: cubic-bezier(.16,.84,.44,1);
+}
+
+/* Overlay elegante */
+body.sud-men-page #menFiltersOverlay.men-filters-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2600;
+
+  background:
+    radial-gradient(circle at 18% 18%, rgba(156,122,61,.16), transparent 34%),
+    rgba(10,9,8,.46);
+
+  backdrop-filter: blur(8px) saturate(116%);
+  -webkit-backdrop-filter: blur(8px) saturate(116%);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity .36s var(--sud-drawer-ease),
+    visibility 0s linear .36s;
+}
+
+body.sud-men-page #menFiltersOverlay.men-filters-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .36s var(--sud-drawer-ease);
+}
+
+/* Drawer atelier */
+body.sud-men-page #menFiltersDrawer.men-filters-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  width: min(520px, 94vw);
+  height: 100dvh;
+  z-index: 2700;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-inline: clamp(26px, 4vw, 48px);
+
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.72), transparent 34%),
+    linear-gradient(145deg, var(--sud-drawer-bg-1), var(--sud-drawer-bg-2) 58%, #d8caba);
+
+  color: var(--sud-drawer-ink);
+
+  border-left: 1px solid rgba(255,255,255,.55);
+  box-shadow:
+    -28px 0 90px rgba(0,0,0,.26),
+    inset 1px 0 0 rgba(255,255,255,.72);
+
+  transform: translate3d(104%, 0, 0) scale(.985);
+  opacity: .72;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    transform .46s var(--sud-drawer-ease),
+    opacity .36s var(--sud-drawer-ease),
+    visibility 0s linear .46s;
+
+  overflow: hidden;
+}
+
+body.sud-men-page #menFiltersDrawer.men-filters-drawer.is-open {
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    transform .46s var(--sud-drawer-ease),
+    opacity .36s var(--sud-drawer-ease);
+}
+
+/* Línea lateral tipo costura */
+body.sud-men-page #menFiltersDrawer.men-filters-drawer::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(156,122,61,.50),
+    rgba(255,255,255,.65),
+    rgba(156,122,61,.34),
+    transparent
+  );
+
+  box-shadow:
+    0 0 24px rgba(156,122,61,.28),
+    10px 0 60px rgba(255,255,255,.22);
+
+  pointer-events: none;
+}
+
+/* Header */
+body.sud-men-page #menFiltersDrawer .men-filters-head {
+  flex: 0 0 auto;
+  padding: 34px 0 22px;
+  border-bottom: 1px solid var(--sud-drawer-line);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-title {
+  margin: 0;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.02em;
+  text-transform: none;
+  color: var(--sud-drawer-ink);
+}
+
+/* X centrada y premium */
+body.sud-men-page #menFiltersDrawer .men-filters-close {
+  position: relative;
+
+  width: 38px;
+  height: 38px;
+  padding: 0 !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  border: 1px solid rgba(27,23,18,.16);
+  border-radius: 999px;
+  background: rgba(255,255,255,.46);
+
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+
+  cursor: pointer;
+
+  transition:
+    transform .22s var(--sud-drawer-ease),
+    background .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-close::before {
+  content: "×";
+  display: block;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+
+  color: rgba(27,23,18,.78);
+  transform: translateY(-1px);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-close:hover {
+  transform: rotate(90deg) scale(1.03);
+  background: rgba(255,255,255,.74);
+  border-color: rgba(156,122,61,.38);
+  box-shadow: 0 12px 28px rgba(0,0,0,.10);
+}
+
+/* Tabs */
+body.sud-men-page #menFiltersDrawer .men-filters-tabs {
+  margin-top: 26px !important;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-tab {
+  position: relative;
+  padding: 8px 0;
+
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+
+  color: var(--sud-drawer-muted);
+  cursor: pointer;
+
+  opacity: 1;
+  transition:
+    color .22s ease,
+    transform .22s var(--sud-drawer-ease);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+
+  height: 1px;
+  background: transparent;
+  box-shadow: none;
+
+  transition:
+    background .22s ease,
+    box-shadow .22s ease;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-tab.is-active {
+  color: var(--sud-drawer-ink);
+  transform: translateY(-1px);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-tab.is-active::after {
+  background: var(--sud-drawer-gold);
+  box-shadow: 0 0 18px rgba(156,122,61,.32);
+}
+
+/* Body */
+body.sud-men-page #menFiltersDrawer .men-filters-body {
+  flex: 1 1 auto;
+  padding: 30px 0 22px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+
+  color: var(--sud-drawer-ink);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-panel {
+  display: none;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-panel.is-active {
+  display: block;
+  animation: sudDrawerPanelIn .28s var(--sud-drawer-ease) both;
+}
+
+@keyframes sudDrawerPanelIn {
+  from {
+    opacity: 0;
+    transform: translate3d(10px, 4px, 0);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+/* Swatches */
+body.sud-men-page #menFiltersDrawer .men-swatch-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 34px;
+}
+
+body.sud-men-page #menFiltersDrawer .men-swatch {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-height: 30px;
+  min-width: 0;
+  cursor: pointer;
+}
+
+body.sud-men-page #menFiltersDrawer .men-swatch-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+body.sud-men-page #menFiltersDrawer .men-swatch-dot {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(27,23,18,.22);
+
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.42),
+    0 5px 12px rgba(0,0,0,.10);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease;
+}
+
+body.sud-men-page #menFiltersDrawer .men-swatch-label,
+body.sud-men-page #menFiltersDrawer .men-check {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.3;
+  color: rgba(27,23,18,.74);
+}
+
+body.sud-men-page #menFiltersDrawer .men-swatch:hover .men-swatch-label {
+  color: var(--sud-drawer-ink);
+}
+
+body.sud-men-page #menFiltersDrawer .men-swatch-input:checked + .men-swatch-dot {
+  transform: scale(1.08);
+  border-color: rgba(156,122,61,.70);
+  box-shadow:
+    0 0 0 2px rgba(156,122,61,.72),
+    0 0 0 6px rgba(156,122,61,.12),
+    0 10px 22px rgba(0,0,0,.14);
+}
+
+/* Tallas */
+body.sud-men-page #menFiltersDrawer .men-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+/* Footer */
+body.sud-men-page #menFiltersDrawer .men-filters-foot {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+
+  padding: 18px 0 26px;
+  border-top: 1px solid var(--sud-drawer-line);
+
+  background:
+    linear-gradient(180deg, rgba(231,222,208,0), rgba(231,222,208,.96) 34%, rgba(231,222,208,.98));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-foot-inner {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-clear,
+body.sud-men-page #menFiltersDrawer .men-filters-cta {
+  min-height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 12px 18px;
+  border-radius: 999px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .08em;
+  text-transform: none;
+
+  cursor: pointer;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-clear {
+  border: 1px solid rgba(27,23,18,.18);
+  background: rgba(255,255,255,.34);
+  color: rgba(27,23,18,.78);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-cta {
+  margin-left: auto;
+  border: 1px solid #1b1712;
+  background: #1b1712;
+  color: #f8f1e7;
+  box-shadow: 0 16px 34px rgba(0,0,0,.18);
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-cta span {
+  font: inherit;
+  display: inline-flex;
+  min-width: 1ch;
+  margin-inline: 2px;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-clear:hover,
+body.sud-men-page #menFiltersDrawer .men-filters-cta:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  body.sud-men-page #menFiltersDrawer.men-filters-drawer {
+    width: 100%;
+    padding-inline: 22px;
+  }
+
+  body.sud-men-page #menFiltersDrawer .men-swatch-list {
+    grid-template-columns: 1fr;
+  }
+
+  body.sud-men-page #menFiltersDrawer .men-filters-foot-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.sud-men-page #menFiltersDrawer .men-filters-clear,
+  body.sud-men-page #menFiltersDrawer .men-filters-cta {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SUDADERAS HOMBRE · Drawer width sync final
+   Igualado con Sudaderas Mujer
+   ========================================================= */
+
+body.sud-men-page #menFiltersDrawer.men-filters-drawer {
+  box-sizing: border-box;
+  width: min(560px, 94vw);
+  padding-inline: clamp(28px, 4vw, 52px);
+}
+
+/* =========================================================
+   SUDADERAS HOMBRE · Drawer final authority clean
+   Igualado visual + footer integrado
+   ========================================================= */
+
+body.sud-men-page #menFiltersDrawer.men-filters-drawer {
+  box-sizing: border-box !important;
+  width: min(560px, 94vw) !important;
+  padding-inline: clamp(28px, 4vw, 52px) !important;
+
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.72), transparent 34%),
+    linear-gradient(145deg, var(--sud-drawer-bg-1), var(--sud-drawer-bg-2) 58%, #d8caba) !important;
+}
+
+/* Footer integrado: sin franja rara */
+body.sud-men-page #menFiltersDrawer .men-filters-foot {
+  flex: 0 0 auto !important;
+  position: sticky !important;
+  bottom: 0 !important;
+
+  margin: 0 !important;
+  padding: 18px 0 26px !important;
+
+  border-top: 1px solid var(--sud-drawer-line) !important;
+
+background: transparent !important;
+
+  box-shadow: none !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+body.sud-men-page #menFiltersDrawer .men-filters-foot-inner {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+}

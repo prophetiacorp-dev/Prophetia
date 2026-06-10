@@ -1,0 +1,462 @@
+/* =========================================================
+   PROPHETIA · OVERRIDES (cargar al final)
+   ========================================================= */
+
+
+
+/* Mega: visibilidad + pointer events + estabilidad extra */
+.mega-panel{ z-index: 1600; }
+.pp-header, .pp-topbar, .pp-left { overflow: visible; }
+
+/* Ajustes de brand-band para camisetas */
+.camisetas-page .brand-band--plp{ margin-top: calc(var(--pp-header-h, 80px) + 24px); }
+.brand-band--plp .page-logo__img{ width: clamp(280px, 36vw, 520px); height: auto; display:block; margin-left:0; }
+/* Evita que el vídeo tape el header cuando el navegador pinta raro */
+.hero { position: relative; z-index: 0; }
+.pp-header { z-index: 1200; }
+
+/* Normaliza tipografía UI en controles sueltos */
+button,input,select { font-family: var(--font-ui, Inter, system-ui, sans-serif); }
+
+/* ===== Prophetia · TRIBE REOPEN (botón flotante) ===== */
+:root{
+  --tribe-reopen: 56px;          /* diámetro del botón */
+  --tribe-reopen-img: 28px;      /* tamaño del logo dentro */
+}
+
+.tribe-reopen{
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  width: var(--tribe-reopen);
+  height: var(--tribe-reopen);
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, #000 10%, transparent);
+  box-shadow: 0 10px 28px rgba(0,0,0,.14);
+  cursor: pointer;
+  pointer-events: auto;      /* ← importante para que reciba el clic */
+  z-index: 5000;             /* ← por encima de hero, header y grids */
+}
+
+.tribe-reopen__img{
+  width: var(--tribe-reopen-img);
+  height: var(--tribe-reopen-img);
+  display: block;
+  object-fit: contain;       /* sin deformación del emblema */
+}
+/* ==== FIX TRIBE MODAL: no ocultar por display:none aunque tenga aria-hidden ==== */
+#tribeModal,
+#tribeModal[aria-hidden="true"] {
+  display: flex;                 /* vence a selectores genéricos por especificidad */
+  align-items: center;
+  justify-content: center;
+  position: fixed; inset: 0;
+}
+
+/* visibilidad la seguimos controlando por opacity/pointer-events */
+#tribeModal[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+#tribeModal.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+/* ====== Alineación exacta LOGO (brand-band) vs PANEL (pp-collection-page) ====== */
+/* 1) Única fuente de verdad de contenedor */
+:root{
+  --pp-container-max: 1320px;    /* ajusta a tu ancho editorial real */
+  --pp-gutter: 24px;             /* gutter horizontal */
+}
+
+/* 2) Misma caja para la franja de marca y para el contenido de la colección */
+.brand-band .container,
+.pp-collection-page .container{
+  max-width: var(--pp-container-max);
+  padding-inline: var(--pp-gutter);
+  margin-inline: auto;
+  box-sizing: content-box;
+}
+
+/* 3) Blindaje por si alguna sección del main no usa .container
+      (empuja su padding hasta el mismo carril del logo) */
+.pp-collection-page{
+  --pp-edge: calc((100vw - var(--pp-container-max)) / 2);
+}
+.pp-collection-page .pp-quickbar,
+.pp-collection-page .pp-filters,
+.pp-collection-page .pp-plp{
+  padding-inline: max(var(--pp-gutter), var(--pp-edge));
+}
+
+/* 4) Sticky y z-index coherentes bajo el header real */
+.pp-quickbar{ position: sticky; top: var(--pp-header-h); z-index: 5; background:#fff; }
+.pp-filters { position: sticky; top: var(--pp-header-h); z-index: 4; background:#fff; }
+
+/* 5) Grid limpio: migas/título a la izq, menú a la dcha */
+.pp-quickbar.container{ display:grid; grid-template-columns: 1fr auto; column-gap: 64px; }
+.pp-quickmenu{ display:flex; flex-direction:column; gap:6px; }
+
+/* ====== Brand Band · layout a lo Prophetia ====== */
+.brand-band--plp .container.bb-grid{
+  display: grid;
+  grid-template-columns: 1fr clamp(280px, 24vw, 420px); /* logo / panel */
+  align-items: end;          /* alinea inferiores (misma altura visual) */
+  gap: clamp(24px, 4vw, 64px);
+}
+
+/* Tamaño del logo (ya tenías una regla, reforzamos) */
+.brand-band--plp .page-logo__img{
+  width: clamp(300px, 36vw, 560px);
+  height: auto;
+  display: block;
+}
+
+/* Panel de la derecha: pegado y “sticky” con offset del header */
+.bb-right{
+  align-self: end; /* alinea con base del logo */
+  position: sticky;
+  top: calc(var(--pp-header-h, 72px) + clamp(8px, 1.2vw, 16px));
+  z-index: 10;
+}
+
+/* Migas y lista de categorías del panel */
+.bb-right .pp-bc__list{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  font: 400 12px/1.5 var(--font-ui, Inter, system-ui, sans-serif);
+  color: rgba(0,0,0,.55);
+}
+.bb-right .pp-bc__list a{ text-decoration: underline; text-underline-offset: 2px; }
+
+.bb-right .pp-bc__panel{
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  font: 400 14px/1.5 var(--font-ui, Inter, system-ui, sans-serif);
+}
+.bb-right .pp-bc__panel a{
+  color: #111;
+  text-decoration: none;
+}
+.bb-right .pp-bc__panel a:hover{
+  text-decoration: underline;
+}
+
+/* Espaciador bajo la cabecera (como el <div style="height:8vw"> de Prophetia) */
+.bb-spacer{ height: clamp(48px, 8vw, 160px); }
+
+/* Responsive: en tablet/móvil el panel cae debajo del logo */
+@media (max-width: 1024px){
+  .brand-band--plp .container.bb-grid{
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .bb-right{ position: static; top: auto; }
+}
+.pp-filters.container{
+  position: sticky;
+  top: calc(var(--pp-header-h, 72px) + 8px);
+  z-index: 5;
+}
+/* === Stack order saneado: el mega-menu siempre por encima de la franja PLP === */
+.brand-band,
+.plp-mast,
+.plp-mast__inner,
+.bb-right{
+  position: relative;       /* crea contexto propio sin elevar z-index */
+  z-index: 1;               /* menor que el header/mega */
+  overflow: visible;        /* evita cortar el panel */
+}
+
+/* 1) Header y mega — plano superior consistente */
+.site-header.sticky, .pp-header { z-index: 1500; }
+.mega { position: relative; z-index: 2000; }
+.pp-header .mega-panel {
+  position: fixed;           /* saca del stacking del brand-band */
+  inset: calc(var(--hdr-h,68px)) 0 auto 0;
+  z-index: 2001;             /* por encima del logo */
+}
+
+/* 2) Brand band/PLP — siempre por debajo del mega */
+.brand-band, .plp-mast, .plp-mast__inner, .bb-right { 
+  position: relative; 
+  z-index: 1; 
+  overflow: visible;
+}
+
+/* 3) Logo PLP que no robe eventos (solo en páginas de catálogo) */
+body.camisetas-page .page-logo { pointer-events: none; }
+/* ===== PARCHE TEMPORAL COOKIES ===== */
+#cc-banner {
+  z-index: 999999;           /* por encima de todo */
+  pointer-events: auto !important;
+}
+
+#cc-banner .cc-btn,
+#cc-banner button {
+  pointer-events: auto !important;
+}
+/* ===== Integrar header en el blur del carrito ===== */
+
+/* Usa la MISMA clase que uses para abrir el carrito en body:
+   si no sabes cuál, mira el <body> con el carrito abierto.
+   Supongo algo tipo .pp-cart-open; si no, cámbiala. */
+
+body.pp-cart-open #header {
+  filter: blur(4px);
+  pointer-events: none;     /* para que no se pueda clicar mientras tanto */
+}
+/* ===== Integrar header + contenido cuando el carrito está abierto ===== */
+
+/* Si quieres blur tipo Prophetia */
+body.pp-cart-open #header,
+body.pp-cart-open #swup {
+  filter: blur(4px);
+  pointer-events: none;   /* que no se pueda clicar nada por debajo */
+}
+
+/* Overlay del carrito cubriendo TODO el viewport */
+.pp-cart-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0,0,0,.35);
+}
+
+/* Drawer por encima del overlay */
+.pp-cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100%);
+  z-index: 1300;
+}
+/* ===== FIX: header no flotante ===== */
+.pp-header,
+.site-header.sticky {
+  position: relative !important;
+  top: 0 !important;
+  margin: 0 !important;
+}
+/* ===== Prophetia Tribe · que tape SIEMPRE al header ===== */
+.tribe-modal{
+  z-index: 9999 !important;       /* por encima de cualquier header/mega */
+}
+
+.tribe-modal .tribe-backdrop{
+  z-index: 0 !important;          /* fondo */
+}
+
+.tribe-modal .tribe-panel{
+  z-index: 1 !important;          /* la tarjeta del formulario */
+}
+
+
+/* ============================================
+   FIX: el carrito NO debe bloquear clics cuando está cerrado
+   ============================================ */
+
+/* Estado por defecto (carrito cerrado): nada intercepta clics */
+
+/* Solo cuando el body abre el carrito pueden recibir clics */
+body.pp-cart-open .pp-cart-overlay,
+body.pp-cart-open .pp-cart-drawer {
+  pointer-events: auto;
+}
+.pp-cart-overlay {
+  opacity: 0;
+  transition: opacity .24s ease-out;
+}
+
+body.pp-cart-open .pp-cart-overlay {
+  opacity: 1;
+}
+
+
+
+
+
+/* =========================================================
+   PROPHETIA · Hover underline editorial definitivo
+   Una sola línea fina, sin dobles subrayados
+   ========================================================= */
+
+/* 1) Neutralizamos subrayados viejos en zonas principales */
+.pp-header a,
+.pp-header button,
+.mega a,
+.mega button,
+.men-toolbar button,
+.men-band__list a,
+.pp-plp .card-title a,
+.wl-nav__list a,
+.bb-right a,
+#ppAccountPanel .account-link {
+  position: relative;
+  text-decoration: none !important;
+  border-bottom-color: transparent;
+}
+
+/* 2) Evitamos que la línea ocupe todo el ancho del bloque */
+.mega a,
+.mega button,
+.men-band__list a,
+.pp-plp .card-title a,
+.bb-right a,
+#ppAccountPanel .account-link {
+  display: inline-block;
+  width: fit-content;
+}
+
+/* 3) Botón filtros: quitamos underline nativo para que no haya doble línea */
+.men-btn-ghost {
+  text-decoration: none !important;
+}
+
+/* 4) Línea animada única */
+.pp-header a:not(.icon-btn):not(.floating-logo):not(.page-logo):not(.card-media)::after,
+.pp-header button:not(.icon-btn):not(.nav):not(.save-btn):not(.pp-cart-close):not(.cart-close)::after,
+.mega a::after,
+.mega button::after,
+.men-toolbar button:not(.icon-btn)::after,
+.men-band__list a::after,
+.pp-plp .card-title a::after,
+.wl-nav__list a::after,
+.bb-right a::after,
+#ppAccountPanel .account-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+
+  width: 100%;
+  height: 1px;
+
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  transition: transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+/* 5) Animación hover / teclado */
+.pp-header a:not(.icon-btn):not(.floating-logo):not(.page-logo):not(.card-media):hover::after,
+.pp-header a:not(.icon-btn):not(.floating-logo):not(.page-logo):not(.card-media):focus-visible::after,
+.pp-header button:not(.icon-btn):not(.nav):not(.save-btn):not(.pp-cart-close):not(.cart-close):hover::after,
+.pp-header button:not(.icon-btn):not(.nav):not(.save-btn):not(.pp-cart-close):not(.cart-close):focus-visible::after,
+.mega a:hover::after,
+.mega a:focus-visible::after,
+.mega button:hover::after,
+.mega button:focus-visible::after,
+.men-toolbar button:not(.icon-btn):hover::after,
+.men-toolbar button:not(.icon-btn):focus-visible::after,
+.men-band__list a:hover::after,
+.men-band__list a:focus-visible::after,
+.pp-plp .card-title a:hover::after,
+.pp-plp .card-title a:focus-visible::after,
+.wl-nav__list a:hover::after,
+.wl-nav__list a:focus-visible::after,
+.bb-right a:hover::after,
+.bb-right a:focus-visible::after,
+#ppAccountPanel .account-link:hover::after,
+#ppAccountPanel .account-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* 6) Estado activo de wishlist: una sola línea, no border + after */
+body.wishlist-page .wl-nav__list a.active,
+body.wishlist-page .wl-nav__list a[aria-current="page"] {
+  border-bottom-color: transparent !important;
+}
+
+body.wishlist-page .wl-nav__list a.active::after,
+body.wishlist-page .wl-nav__list a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* 7) Select Relevancia / Ordenar por */
+.men-select {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+}
+
+.men-select::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 32px;
+  bottom: 2px;
+
+  height: 1px;
+  background: currentColor;
+
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  transition: transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+.men-select:hover::before,
+.men-select:focus-within::before {
+  transform: scaleX(1);
+}
+
+
+/* =========================================================
+   PROPHETIA · Aviso superior wishlist
+   ========================================================= */
+
+.pp-top-notice {
+  position: fixed;
+  top: calc(var(--pp-header-h, 64px) + 14px);
+  left: 50%;
+  z-index: 3200;
+
+  transform: translateX(-50%);
+
+  min-width: min(420px, calc(100vw - 32px));
+  padding: 14px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 18px 40px rgba(0,0,0,.10);
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 14px;
+  color: #111;
+}
+
+.pp-top-notice[hidden] {
+  display: none;
+}
+
+.pp-top-notice__close {
+  border: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}

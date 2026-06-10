@@ -1,0 +1,278 @@
+/* =========================================================
+   PROPHETIA · CAMISETAS PUNTO MUJER
+   Objetivo: 1:1 con PLP Hombre, pero scope Mujer
+   Scope: body.women-page.camisetas-page
+   ========================================================= */
+
+body.women-page.camisetas-page{
+  --pp-edge-camw: 40px;
+  --hdr-h: var(--pp-header-h, 64px);
+
+  --logo-x-camw: -30px;
+  --logo-y-camw: -90px;
+  --logo-w-camw: 766px;
+
+  --bc-gap-camw: 32px;
+  --bc-x-camw: 740px;        /* empuje extra en X */
+  --bc-y-camw: 0px;
+
+  font-size: 14px;
+}
+
+/* =========================
+   HERO
+   ========================= */
+body.women-page.camisetas-page .pp-hero.hero--two-cols{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  padding: 42px var(--pp-edge-camw) 26px;
+  min-height: 260px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+body.women-page.camisetas-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+body.women-page.camisetas-page .pp-hero__media .floating-logo{
+  position: absolute;
+  left: var(--logo-x-camw);
+  top: calc(var(--hdr-h) + var(--logo-y-camw));
+  transform: none;
+}
+
+body.women-page.camisetas-page .pp-hero__media .floating-logo img{
+  height: 100px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* =========================
+   BREADCRUMB (a la derecha del logo)
+   ========================= */
+/* =========================
+   BREADCRUMB · Mujer
+   Más estable: alineado a derecha, sin cálculos extremos
+   ========================= */
+
+body.women-page.camisetas-page .pp-breadcrumb--hero {
+  position: absolute;
+  z-index: 30;
+  top: 18px;
+  right: var(--pp-edge-camw);
+  left: auto;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgba(0,0,0,.70);
+  white-space: normal;
+}
+
+/* Aside derecha */
+body.women-page.camisetas-page .pp-hero__side{
+  align-self: flex-end;
+  margin-left: auto;
+  max-width: 360px;
+
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  color: #000;
+}
+
+body.women-page.camisetas-page .pp-hero__title{
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  margin: 0 0 10px;
+}
+
+body.women-page.camisetas-page .pp-hero__list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+body.women-page.camisetas-page .pp-hero__list a{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: rgba(0,0,0,0.62);
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease, transform .2s ease, opacity .2s ease;
+}
+
+body.women-page.camisetas-page .pp-hero__list a:hover{
+  opacity: .85;
+  color: #000;
+  border-bottom-color: #000;
+  transform: translateX(2px);
+}
+
+/* =========================
+   SPACERS
+   ========================= */
+body.women-page.camisetas-page .bb-spacer{ height: clamp(20px, 4vw, 56px); }
+
+/* =========================
+   TOOLBAR (FILTROS)
+   ========================= */
+body.women-page.camisetas-page .pp-filters.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 10px var(--pp-edge-camw);
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: var(--pp-header-h, 64px);
+  z-index: 50;
+
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+body.women-page.camisetas-page .pp-filter-left,
+body.women-page.camisetas-page .pp-filter-right{
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+body.women-page.camisetas-page .pp-btn{
+  background: transparent;
+  border: 0;
+  padding: 2px 0;
+  border-radius: 0;
+  cursor: pointer;
+  font: inherit;
+  color: rgba(0,0,0,0.85);
+}
+body.women-page.camisetas-page .pp-btn:hover{ opacity: .75; }
+
+body.women-page.camisetas-page .pp-check span{ color: rgba(0,0,0,0.80); }
+
+/* =========================
+   GRID
+   ========================= */
+body.women-page.camisetas-page .pp-plp.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-camw);
+  box-sizing: border-box;
+}
+
+body.women-page.camisetas-page #plp-grid.plp-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.2vw, 30px);
+  align-items: start;
+}
+
+body.women-page.camisetas-page #plp-grid .card{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+body.women-page.camisetas-page #plp-grid .card-media{
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+body.women-page.camisetas-page #plp-grid .card-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #f6f6f6;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 640px){
+  body.women-page.camisetas-page{
+    --logo-w-camw: 520px;
+  }
+
+  body.women-page.camisetas-page .pp-breadcrumb--hero{
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: 100%;
+    order: -1;
+    font-size: .72rem;
+    white-space: normal;
+  }
+}
+
+/* =========================================================
+   CAMISETAS MUJER · FLOATING LOGO FINAL AUTHORITY
+   Fuente real: cam-mujer.css, no overrides.css
+   ========================================================= */
+
+body.women-page.camisetas-page {
+  --logo-x-camw: -30px;       /* + derecha / - izquierda */
+  --logo-y-camw: -105px;       /* + abajo / - arriba */
+  --logo-size-camw: 918px;    /* ancho real del logo */
+  --logo-w-camw: 838px;       /* para cálculo del breadcrumb */
+}
+
+body.women-page.camisetas-page .pp-hero__media {
+  position: relative;
+  overflow: visible;
+}
+
+body.women-page.camisetas-page .pp-hero__media .floating-logo {
+  position: absolute !important;
+  left: var(--logo-x-camw) !important;
+  top: calc(var(--hdr-h, var(--pp-header-h, 64px)) + var(--logo-y-camw)) !important;
+  transform: none !important;
+  z-index: 2;
+  line-height: 0;
+}
+
+body.women-page.camisetas-page .pp-hero__media .floating-logo img {
+  width: var(--logo-size-camw) !important;
+  height: auto !important;
+  max-width: none !important;
+  display: block;
+  object-fit: contain;
+}

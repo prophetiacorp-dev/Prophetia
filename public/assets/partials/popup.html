@@ -1,0 +1,179 @@
+<!-- assets/partials/popup.html -->
+<!-- =========================================
+     PROPHETIA · POPUPS GLOBALES
+     - Prophetia Tribe (modal + reopen)
+     - Cookies (banner + modal)
+     - Cart Drawer (global)
+     ========================================= -->
+
+<!-- ===== Prophetia Tribe — POPUP ===== -->
+<div id="tribeModal" class="tribe-modal" aria-hidden="true">
+  <div class="tribe-backdrop" data-close></div>
+
+  <section class="tribe-panel" role="dialog" aria-modal="true" aria-labelledby="tribeTitle">
+    <button class="tribe-close" type="button" aria-label="Cerrar" data-close>×</button>
+
+    <div class="tribe-left">
+      <img src="/assets/img/logo/emblem.svg" alt="Prophetia Emblem" class="tribe-emblem" />
+      <!-- Aquí se pintará el mensaje dinámico de éxito -->
+      <div id="tribeStatus" class="tribe-status" aria-live="polite"></div>
+    </div>
+
+    <div class="tribe-right">
+     <h2 id="tribeTitle" class="tribe-title">Prophetia Tribe — Private Access</h2>
+<p class="tribe-sub">
+  Únete a Prophetia Tribe y recibe acceso anticipado, códigos privados y beneficios reservados para miembros.
+</p>
+
+      <form class="tribe-form" id="tribeForm" autocomplete="on" novalidate>
+        <label class="sr-only" for="tribeName">Nombre</label>
+        <input id="tribeName" name="name" type="text" placeholder="Nombre" required>
+
+        <label class="sr-only" for="tribeEmail">Correo electrónico</label>
+        <input id="tribeEmail" name="email" type="email" placeholder="Correo electrónico" required>
+
+        <label class="tribe-check">
+          <input id="tribeOptIn" name="optin" type="checkbox">
+          <span>Quiero recibir novedades, acceso anticipado y beneficios privados.</span>
+        </label>
+
+        <div class="tribe-dob">
+  <div><input id="dobDD" name="dobDD" inputmode="numeric" maxlength="2" placeholder="DD" required></div>
+  <div><input id="dobMM" name="dobMM" inputmode="numeric" maxlength="2" placeholder="MM" required></div>
+  <div><input id="dobYY" name="dobYY" inputmode="numeric" maxlength="4" placeholder="YYYY" required></div>
+</div>
+
+        <button class="tribe-btn" type="submit">ENTRAR EN LA TRIBE</button>
+      </form>
+
+      <!-- ===== Estado de éxito tras enviar ===== -->
+      <div id="tribeSuccess" class="tribe-success" hidden aria-live="polite">
+        <div class="tribe-success__icon">✓</div>
+        <div class="tribe-success__msg">
+          <!-- Se rellena desde popup.js, por ejemplo:
+               "¡Éxito! Te has unido a Prophetia Tribe. Bienvenido/a." -->
+        </div>
+        <h3 class="tribe-success__title">¡Gracias por unirte!</h3>
+        <p class="tribe-success__text">
+          Te hemos enviado un correo para confirmar tu suscripción.<br>
+          Revisa spam o promociones si no lo ves.
+        </p>
+        <button type="button" class="tribe-btn tribe-success__close" data-close>
+          Seguir navegando
+        </button>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- Botón flotante para reabrir Prophetia Tribe -->
+<button id="tribeReopen" class="tribe-reopen" aria-label="Abrir Prophetia Tribe" hidden>
+  <img class="tribe-reopen__img" src="/assets/img/logo/prophetia-emblem.svg" alt="" />
+</button>
+<!-- ===== /Prophetia Tribe ===== -->
+
+
+<!-- ===== Cookies (GDPR) ===== -->
+<div id="cc-banner" class="cc-banner" role="region" aria-label="Aviso de cookies">
+  <div class="cc-inner">
+    <div class="cc-text">
+      Utilizamos cookies propias y de terceros, y otras tecnologías similares para mejorar su experiencia y analizar el uso. 
+      Puede aceptar todas, rechazarlas o configurar sus preferencias. 
+      Consulte nuestro <a href="#" class="cc-link">Aviso legal sobre privacidad</a>.
+    </div>
+
+    <div class="cc-actions">
+      <button id="onetrust-accept-btn-handler" class="cc-btn cc-primary">
+        Aceptar todo
+      </button>
+      <button id="onetrust-reject-all-handler" class="cc-btn cc-secondary">
+        Rechazar todo
+      </button>
+
+      <div class="cc-privacy">
+        <button id="onetrust-pc-btn-handler" 
+          aria-label="Centro de privacidad, Abre el cuadro de diálogo del centro de preferencias."
+          class="cookie-setting-link cc-btn cc-outline">
+          Centro de privacidad
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de preferencias -->
+<div id="cc-modal" class="cc-modal" aria-hidden="true" role="dialog" aria-labelledby="ccTitle" hidden>
+  <div class="cc-backdrop" data-cc="close"></div>
+  <section class="cc-panel">
+    <button class="cc-close" data-cc="close" aria-label="Cerrar">×</button>
+    <h3 id="ccTitle" class="cc-title">Preferencias de cookies</h3>
+
+    <div class="cc-group">
+      <label class="cc-switch">
+        <input type="checkbox" checked disabled>
+        <span>Necesarias (siempre activas)</span>
+      </label>
+      <small>Imprescindibles para el funcionamiento del sitio.</small>
+    </div>
+
+    <div class="cc-group">
+      <label class="cc-switch">
+        <input id="cc-analytics" type="checkbox">
+        <span>Analíticas</span>
+      </label>
+      <small>Nos ayudan a medir y mejorar (ej. Google Analytics).</small>
+    </div>
+
+    <div class="cc-group">
+      <label class="cc-switch">
+        <input id="cc-marketing" type="checkbox">
+        <span>Marketing</span>
+      </label>
+      <small>Personalización y publicidad.</small>
+    </div>
+
+    <div class="cc-foot">
+      <button class="cc-btn cc-secondary" data-cc="reject">Rechazar</button>
+      <button class="cc-btn cc-primary" data-cc="save">Guardar preferencias</button>
+    </div>
+  </section>
+</div>
+<!-- ===== /Cookies ===== -->
+
+
+
+ <!-- ===== Prophetia · Cart Drawer (global, estilo Prophetia) ===== -->
+ <div id="ppCartDrawer" class="pp-cart-drawer" aria-hidden="true">
+  <div class="pp-cart-header">
+     <h4>Cesta · <span id="ppCartCount">0</span></h4>
+     <button class="pp-cart-close" data-close="cart" aria-label="Cerrar">
+       <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.876 5.815 12 10.94l5.125-5.125 1.06 1.061L13.061 12l5.125 5.124-1.061 1.06L12 13.062l-5.124 5.125-1.061-1.06L10.94 12 5.815 6.877z"></path></svg>
+     </button>
+   </div>
+   <div class="pp-cart-body">
+<div class="pp-cart-empty">
+  <img class="pp-cart-empty__emblem" src="/assets/img/logo/prophetia-emblem.png" alt="" />
+  <div class="pp-cart-empty__text">No hay artículos en tu cesta</div>
+</div>
+
+  <!-- ✅ LISTA SUBE ARRIBA (donde debe ir el contenido real) -->
+  <div id="ppCartList" class="cart-list" hidden></div>
+
+
+     <div class="pp-cart-actions">
+       <button class="pp-cart-btn">Plazo de entrega estimado <span>›</span></button>
+       <button class="pp-cart-btn">Envío y devolución gratuitos <span>›</span></button>
+       <button class="pp-cart-btn">Contáctanos <span>›</span></button>
+    </div>
+    <!-- Si tu script pinta líneas de productos, aquí dentro irá #ppCartList -->
+ 
+     <div class="cart-foot">
+       <div class="cart-total"><span>Total</span> <strong id="ppCartTotal">€0,00</strong></div>
+       <button class="cart-checkout" data-cart-checkout type="button">
+  Finalizar compra
+</button>
+     </div>
+  </div>
+ </div>
+   <div id="ppCartOverlay" class="pp-cart-overlay" aria-hidden="true"></div>

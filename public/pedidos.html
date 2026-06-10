@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Pedidos — PROPHETIA</title>
+  <meta name="description" content="Consulta tus pedidos, estado de preparación, entrega estimada y detalles de compra en PROPHETIA." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#f7f4ee" />
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- CUENTA / PEDIDOS -->
+  <link rel="stylesheet" href="assets/css/account.css">
+  <link rel="stylesheet" href="assets/css/pedidos.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="account-page orders-page" data-page="pedidos">
+
+  <div id="header"></div>
+
+  <main id="swup" class="account-layout" tabindex="-1">
+
+    <!-- LOGO / BRAND BAND -->
+    <section class="account-brand" aria-label="PROPHETIA">
+      <div class="container">
+        <a class="account-brand__logo" href="/home" aria-label="Inicio Prophetia">
+          <img src="/assets/img/logo/propnegrovf.svg" alt="PROPHETIA">
+        </a>
+      </div>
+    </section>
+
+    <!-- NAV CUENTA -->
+    <nav class="account-nav" aria-label="Área de cliente">
+      <div class="container account-nav__inner">
+      <div class="account-nav__links">
+          <a href="/my-content">Mi contenido</a>
+          <a href="/drop-calendar">Mi calendario</a>
+          <a href="/vault">Vault</a>
+          <a href="/pedidos">Pedidos</a>
+          <a href="/reservas">Reservas</a>
+          <a href="/wishlist">Lista de deseos</a>
+          <a href="/account">Cuenta</a>
+          <a href="/addresses" aria-current="page">Libro de direcciones</a>
+          <a href="/my-services">Mis servicios</a>
+        </div>
+
+        <button class="account-nav__logout" type="button" data-pp-logout>
+          Cerrar sesión
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN PEDIDOS -->
+    <section class="orders-main">
+      <div class="container orders-shell">
+
+        <header class="orders-title">
+          <p class="account-kicker">PROPHETIA ACCOUNT</p>
+
+          <h1 class="account-title">
+            Pedidos
+          </h1>
+
+          <p class="account-lede">
+            Consulta tus compras, estado de preparación, entrega estimada y detalles
+            de cada pieza adquirida dentro de tu archivo Prophetia.
+          </p>
+        </header>
+
+
+
+        <!-- BLOQUE LOGADO -->
+        <section class="orders-section" data-pp-orders-logged hidden>
+          <div class="orders-section__head">
+            <h2>Tus pedidos</h2>
+
+            <a class="orders-explore" href="/colecciones">
+              Seguir explorando
+            </a>
+          </div>
+<p class="orders-loading" data-orders-loading>
+  Consultando tu archivo de pedidos...
+</p>
+          <div class="orders-list" data-orders-list></div>
+
+          <div class="orders-empty" data-orders-empty hidden>
+            <p class="orders-empty__kicker">Sin pedidos activos</p>
+
+            <h3>No se han realizado pedidos.</h3>
+
+            <p>
+              Cuando completes una compra, aparecerá aquí con su número de pedido,
+              estado de pago, preparación y entrega estimada.
+            </p>
+
+            <a href="/colecciones" class="orders-empty__link">
+              Explorar colecciones
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer"></div>
+  <div id="popup-area"></div>
+
+  <script type="module" src="/assets/js/firebase-init.js"></script>
+  <script type="module" src="/assets/js/firebase-auth.js"></script>
+  <script defer src="/assets/js/header-init.js"></script>
+
+  <script src="/assets/js/cart.js" defer></script>
+  <script src="/assets/js/script.js" defer></script>
+  <script src="/assets/js/popup.js" defer></script>
+  <script src="/assets/js/cookies.js" defer></script>
+
+  <script type="module" src="/assets/js/pedidos-page.js"></script>
+</body>
+</html>

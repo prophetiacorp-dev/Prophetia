@@ -1,0 +1,679 @@
+/* =========================================================
+   PROPHETIA · WISHLIST (scoped, estilo Prophetia)
+   ========================================================= */
+
+
+
+body.wishlist-page {
+  --wl-max-width: var(--pp-container-max, 1320px);
+  --wl-gutter: 32px;
+
+  /* Diales de aire editorial */
+  --wl-gap-logo-nav: 68px;
+  --wl-gap-nav-hero: 56px;
+
+  position: relative;
+  min-height: 100vh;
+  color: #111;
+
+  /* Fondo mármol epóxico Prophetia */
+background:
+  linear-gradient(
+    180deg,
+    rgba(250, 246, 237, .44) 0%,
+    rgba(250, 246, 237, .58) 42%,
+    rgba(246, 241, 230, .72) 100%
+  ),
+  radial-gradient(
+    circle at 50% 24%,
+    rgba(255, 255, 255, .34) 0%,
+    transparent 46%
+  ),
+  url("../img/textures/wishlist1.png") center center / cover fixed no-repeat;
+
+background-color: #f8f3e8;
+}
+
+/* Capa de brillo tipo resina epóxica */
+body.wishlist-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      118deg,
+      transparent 0%,
+      rgba(255, 255, 255, .16) 34%,
+      rgba(255, 255, 255, .54) 47%,
+      rgba(255, 255, 255, .18) 59%,
+      transparent 100%
+    );
+
+  opacity: .45;
+  mix-blend-mode: screen;
+}
+
+/* Viñeta suave para que no parezca plano */
+body.wishlist-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      rgba(0, 0, 0, .018) 68%,
+      rgba(0, 0, 0, .06) 100%
+    );
+
+  opacity: .55;
+}
+/* Espacio extra bajo el logo SOLO en wishlist */
+body.wishlist-page .brand-band {
+  margin-bottom: var(--wl-gap-logo-nav);
+}
+
+/* Wishlist: header y bandas dejan ver el mural, sin blur ni velos */
+body.wishlist-page .pp-header,
+body.wishlist-page .brand-band,
+body.wishlist-page .wl-nav {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* =========================================
+   SUB-NAV · “Mi selección / Puede que te guste”
+   ========================================= */
+
+body.wishlist-page .wl-nav {
+  position: sticky;
+  top: var(--pp-header-h, 72px);
+  z-index: 900;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+body.wishlist-page .wl-nav .container {
+  max-width: var(--wl-max-width);
+  margin-inline: auto;
+  padding-inline: var(--wl-gutter);
+}
+
+/* Lista centrada sin viñetas */
+body.wishlist-page .wl-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  display: inline-flex;
+  gap: 36px;
+  align-items: center;
+  justify-content: center;
+
+  /* Estilo editorial tipo Prophetia */
+  font-family: var(--pp-serif, "Cinzel", "Playfair Display", serif);
+  font-size: 14px;             /* más pequeño y fino */
+  letter-spacing: .46em;       /* más espaciado */
+  text-transform: uppercase;
+}
+
+
+body.wishlist-page .wl-nav__list li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Enlaces tipo Prophetia */
+body.wishlist-page .wl-nav__list a {
+  text-decoration: none;
+  color: rgba(0,0,0,.55);
+  padding-bottom: 6px;                /* un poco más de aire bajo el texto */
+  border-bottom: 2px solid transparent;
+  transition: color .18s ease, border-color .18s ease;
+}
+
+
+body.wishlist-page .wl-nav__list a:hover {
+  color: #000;
+}
+
+body.wishlist-page .wl-nav__list a.active,
+body.wishlist-page .wl-nav__list a[aria-current="page"] {
+  color: #000;
+  border-bottom-color: #000;
+}
+
+/* =========================================
+   LAYOUT GENERAL
+   ========================================= */
+
+body.wishlist-page main.wl-layout {
+  max-width: var(--wl-max-width);
+  margin-inline: auto;
+  padding: 32px var(--wl-gutter) 88px var(--wl-gutter);
+}
+
+/* =========================================
+   HERO / CONTADOR
+   ========================================= */
+
+body.wishlist-page .wl-hero {
+  margin-top: var(--wl-gap-nav-hero);
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+
+body.wishlist-page .wl-title {
+  margin: 0;
+}
+
+/* Pill blanca “Tienes X productos en tu selección” */
+body.wishlist-page .wl-sub {
+  display: inline-block;
+  padding: 14px 40px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, .78);
+  border: 1px solid rgba(0, 0, 0, .06);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, .12),
+    inset 0 1px 0 rgba(255, 255, 255, .76);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #111;
+}
+
+body.wishlist-page .wl-sub span {
+  font-weight: 600;
+}
+
+/* =========================================
+   ESTADO VACÍO · PANEL GRANDE
+   ========================================= */
+
+body.wishlist-page .wl-results {
+  max-width: var(--wl-max-width);
+  margin-inline: auto;
+  padding-inline: var(--wl-gutter);
+}
+
+/* Panel tipo Prophetia */
+body.wishlist-page .wl-empty {
+  margin-top: 48px;
+}
+
+body.wishlist-page .wl-empty__wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 60px 56px 52px;
+  border-radius: 26px;
+
+  background: rgba(255, 255, 255, .76);
+  border: 1px solid rgba(0, 0, 0, .07);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, .13),
+    inset 0 1px 0 rgba(255, 255, 255, .72);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  text-align: center;
+}
+
+body.wishlist-page .wl-empty__icon {
+  margin-bottom: 22px;
+  font-size: 0;
+  color: rgba(0,0,0,.80);
+}
+
+body.wishlist-page .wl-empty__wrap h3 {
+  margin: 0 0 10px;
+  font-family: var(--pp-serif, "Playfair Display", serif);
+  font-size: 18px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+body.wishlist-page .wl-empty__wrap p {
+  margin: 0 0 22px;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(0,0,0,0.70);
+}
+
+/* Botón negro editorial */
+body.wishlist-page .wl-empty__wrap .btn.btn-dark {
+  padding: 10px 28px;
+  border-radius: 999px;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 17px;
+  letter-spacing: .38em;
+  text-transform: uppercase;
+}
+
+/* Segundo estado vacío (“Tu selección está vacía”) */
+body.wishlist-page #wlEmpty {
+  text-align: center;
+}
+
+body.wishlist-page #wlEmpty .wl-empty-title {
+  margin-top: 40px;
+  margin-bottom: 6px;
+  font-family: var(--pp-serif, "Playfair Display", serif);
+  font-size: 17px;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+}
+
+body.wishlist-page #wlEmpty .wl-empty-sub {
+  margin: 0 0 16px;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 14px;
+  color: rgba(0,0,0,0.80);
+}
+
+body.wishlist-page #wlEmpty .btn {
+  padding: 8px 22px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   GRID DE PRODUCTOS GUARDADOS
+   ========================================= */
+
+body.wishlist-page .wishlist-grid {
+  width: min(1180px, 100%);
+  margin: 32px auto 0;
+  padding-bottom: 80px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 280px));
+  justify-content: center;
+  gap: 32px 24px;
+}
+
+/* Tarjeta editorial */
+body.wishlist-page .wishlist-grid .product-card {
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid rgba(0, 0, 0, .07);
+  border-radius: 22px;
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Imagen · tamaño controlado */
+body.wishlist-page .wishlist-grid .product-card .img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #f6f3ee;
+}
+
+/* Imagen dentro de la tarjeta */
+body.wishlist-page .wishlist-grid .product-card .img-wrap img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* Corazón “guardado” dentro de la tarjeta */
+body.wishlist-page .wishlist-grid .product-card .save-btn {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn.is-saved {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* Cuerpo de texto de la tarjeta */
+body.wishlist-page .wishlist-grid .product-card .body {
+  padding: 16px 18px 18px;
+  display: grid;
+  row-gap: 6px;
+}
+
+body.wishlist-page .wishlist-grid .product-card h4 {
+  margin: 0;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+
+body.wishlist-page .wishlist-grid .product-card .price {
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 13px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* Botones “Ver producto / Quitar” */
+body.wishlist-page .wishlist-grid .product-card .btn.btn--sm {
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+body.wishlist-page .wishlist-grid .product-card .btn--ghost {
+  background: transparent;
+  border: 1px solid #111;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 768px) {
+  body.wishlist-page {
+    --wl-gutter: 20px;
+  }
+
+  body.wishlist-page .wl-sub {
+    padding-inline: 22px;
+    letter-spacing: .12em;
+  }
+
+  body.wishlist-page .wl-empty__wrap {
+    padding: 40px 24px 36px;
+    border-radius: 20px;
+  }
+}
+body.wishlist-page #wlEmpty .wl-empty-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+body.wishlist-page #wlEmpty .wl-empty-actions .btn--ghost {
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: background .2s ease, color .2s ease;
+}
+
+body.wishlist-page #wlEmpty .wl-empty-actions .btn--ghost:hover {
+  background: #111;
+  color: #fff;
+}
+/* =========================================
+   MEJORA DE VISIBILIDAD · WISHLIST
+   ========================================= */
+
+/* Títulos principales */
+body.wishlist-page .wl-empty-title {
+  font-size: 20px;
+  font-weight: 600;          /* ANTES era 400 */
+  letter-spacing: .18em;
+  color: rgba(0,0,0,0.85);
+ 
+}
+
+/* Subtítulo */
+body.wishlist-page .wl-empty-sub {
+  font-size: 15px;
+  font-weight: 500;          /* un poco más fuerte */
+  color: rgba(0,0,0,0.75);
+}
+
+/* Botones (Mujer / Hombre / Colecciones) */
+body.wishlist-page #wlEmpty .wl-empty-actions .btn--ghost {
+  font-size: 14px;               /* antes 13px */
+  letter-spacing: .16em;
+  border-width: 1.5px;           /* líneas ligeramente más fuertes */
+  color: rgba(0,0,0,0.95);
+}
+
+/* Hover más elegante */
+body.wishlist-page #wlEmpty .wl-empty-actions .btn--ghost:hover {
+  background: #111;
+  color: #fff;
+}
+/* Más grosor y legibilidad */
+body.wishlist-page .wl-nav__list {
+  font-size: 12px;              /* más grande */
+  letter-spacing: .22em;        /* menos separación para más cuerpo */
+}
+
+body.wishlist-page .wl-nav__list a {
+  font-weight: 600;             /* engorda el texto */
+  color: rgba(0,0,0,0.75);      /* más oscuro = más visible */
+}
+
+/* =========================================
+   WISHLIST · RECOMENDACIONES
+   “Puede que te guste”
+   ========================================= */
+
+body.wishlist-page .wl-recommended {
+  max-width: min(980px, calc(100% - 64px));
+  margin: var(--wl-gap-nav-hero) auto 96px;
+  padding: clamp(34px, 5vw, 64px);
+
+  border: 1px solid rgba(0, 0, 0, .07);
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, .72);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, .12),
+    inset 0 1px 0 rgba(255, 255, 255, .78);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  text-align: center;
+}
+
+body.wishlist-page .wl-recommended__kicker {
+  margin: 0 0 18px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+
+  color: rgba(0, 0, 0, .54);
+}
+
+body.wishlist-page .wl-recommended__title {
+  margin: 0;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(38px, 5vw, 76px);
+  line-height: .95;
+  font-weight: 600;
+  letter-spacing: -.045em;
+
+  color: #111;
+}
+
+body.wishlist-page .wl-recommended__text {
+  max-width: 620px;
+  margin: 22px auto 0;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 15px;
+  line-height: 1.75;
+
+  color: rgba(0, 0, 0, .66);
+}
+
+body.wishlist-page .wl-recommended__links {
+  margin-top: clamp(30px, 4vw, 52px);
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+body.wishlist-page .wl-reco-card {
+  min-height: 164px;
+  padding: 22px;
+
+  display: grid;
+  align-content: space-between;
+  gap: 18px;
+
+  border: 1px solid rgba(0, 0, 0, .10);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, .76),
+      rgba(255, 255, 255, .48)
+    );
+
+  color: #111;
+  text-decoration: none;
+  text-align: left;
+
+  box-shadow:
+    0 16px 44px rgba(0, 0, 0, .08),
+    inset 0 1px 0 rgba(255, 255, 255, .70);
+
+  transition:
+    transform 220ms cubic-bezier(.22,.61,.36,1),
+    border-color 220ms cubic-bezier(.22,.61,.36,1),
+    background 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+body.wishlist-page .wl-reco-card:hover,
+body.wishlist-page .wl-reco-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: rgba(0, 0, 0, .26);
+  background: rgba(255, 255, 255, .82);
+}
+
+body.wishlist-page .wl-reco-card__eyebrow {
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+
+  color: rgba(0, 0, 0, .50);
+}
+
+body.wishlist-page .wl-reco-card strong {
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -.025em;
+}
+
+body.wishlist-page .wl-reco-card__arrow {
+  justify-self: end;
+  font-size: 18px;
+  line-height: 1;
+
+  transform: translateX(0);
+  transition: transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+body.wishlist-page .wl-reco-card:hover .wl-reco-card__arrow,
+body.wishlist-page .wl-reco-card:focus-visible .wl-reco-card__arrow {
+  transform: translateX(5px);
+}
+
+body.wishlist-page .wishlist-card-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 820px) {
+  body.wishlist-page .wl-recommended {
+    max-width: calc(100% - 40px);
+    border-radius: 22px;
+  }
+
+  body.wishlist-page .wl-recommended__links {
+    grid-template-columns: 1fr;
+  }
+
+  body.wishlist-page .wl-reco-card {
+    min-height: 132px;
+  }
+}
+
+/* ============================================
+   WISHLIST · LOGO PROPHETIA CONTROLADO
+   ============================================ */
+
+/* Diales para mover el logo SOLO en wishlist */
+body.wishlist-page {
+  --wl-logo-x: -280px;   /* - = hacia la izquierda, + = hacia la derecha */
+  --wl-logo-y: 0px;   /* por si quieres tocar Y algún día */
+}
+
+/* Contenedor del logo en la franja */
+body.wishlist-page .brand-band .page-logo {
+  display: inline-block;
+  line-height: 0;
+  transform: translate(var(--wl-logo-x), var(--wl-logo-y)) !important;
+}
+
+/* Tamaño del logo (más pequeño) */
+body.wishlist-page .brand-band .page-logo__img,
+body.wishlist-page .brand-band .page-logo img {
+  height: 90px;   /* prueba 90 / 100 / 120 según lo veas */
+  width: auto;
+}

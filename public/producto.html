@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Producto — PROPHETIA</title>
+<meta name="description" content="Ficha de producto PROPHETIA. Consulta detalles, variantes, disponibilidad y añade la pieza al carrito.">
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#f7f4ee">
+
+<link rel="canonical" href="https://prophetia.es/producto">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/assets/img/logo/propnegrovf.svg" type="image/svg+xml">
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="PROPHETIA">
+<meta property="og:title" content="Producto — PROPHETIA">
+<meta property="og:description" content="Ficha de producto PROPHETIA: detalles, variantes y disponibilidad.">
+<meta property="og:url" content="https://prophetia.es/producto">
+<meta property="og:image" content="https://prophetia.es/assets/img/og-cover.jpg">
+<meta property="og:locale" content="es_ES">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Producto — PROPHETIA">
+<meta name="twitter:description" content="Ficha de producto PROPHETIA: detalles, variantes y disponibilidad.">
+<meta name="twitter:image" content="https://prophetia.es/assets/img/og-cover.jpg">
+  
+<!-- BASE -->
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/typography.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+
+<!-- HEADER & NAV -->
+<link rel="stylesheet" href="assets/css/header.css">
+<link rel="stylesheet" href="assets/css/megamenu.css">
+<link rel="stylesheet" href="assets/css/brand-band.css">
+
+<!-- HOME / HERO / TILES -->
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/tiles.css">
+
+<!-- CATÁLOGO / PRODUCTOS -->
+<link rel="stylesheet" href="assets/css/catalog.css">
+<link rel="stylesheet" href="assets/css/plp.css">
+<link rel="stylesheet" href="assets/css/products.css">
+<link rel="stylesheet" href="assets/css/pdp.css">
+
+<!-- SECCIONES ESPECÍFICAS -->
+<link rel="stylesheet" href="assets/css/camisetas.css">
+<link rel="stylesheet" href="assets/css/hoodies.css">
+<link rel="stylesheet" href="assets/css/colecciones.css">
+<link rel="stylesheet" href="assets/css/wishlist.css">
+
+<!-- PANEL, LOGIN Y CARRITO -->
+<link rel="stylesheet" href="assets/css/auth.css">
+<link rel="stylesheet" href="assets/css/cart.css">
+<link rel="stylesheet" href="assets/css/footer.css">
+<!-- UTILS & FIXES -->
+<link rel="stylesheet" href="assets/css/utilities.css">
+<link rel="stylesheet" href="assets/css/popup.css">
+<link rel="stylesheet" href="assets/css/cookies.css">
+<link rel="stylesheet" href="assets/css/overrides.css">
+
+<!-- FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+</head>
+<body class="pdp" data-page="pdp">
+  <div id="header"></div>
+<!-- =======================================================
+     BRAND BAND — Logo Prophetia (igual que en camisetas)
+     ======================================================= -->
+<!-- ===== FRANJA DEL LOGO (idéntica a camisetas) ===== -->
+<div class="brand-band">
+  <div class="container">
+    <a class="page-logo" href="/home" aria-label="Inicio Prophetia">
+      <img src="assets/img/logo/propnegro.svg" alt="PROPHETIA">
+    </a>
+  </div>
+</div>
+
+
+  <div class="product-wrap container">
+
+
+<!-- Galería de imágenes del producto -->
+<section class="pdp-gallery" aria-label="Galería de producto">
+  <div id="pThumbs" class="pdp-thumbs" aria-label="Miniaturas"></div>
+  <div class="pdp-hero" id="pdpStack" aria-label="Imágenes del producto"></div>
+</section>
+
+
+    <!-- Panel derecha -->
+    <aside class="pdp-panel" id="pInfo">
+      <nav class="pdp-breadcrumb" aria-label="breadcrumbs"></nav>
+
+
+      <h1 id="pTitle" class="pdp-title">Producto</h1>
+      <p id="pShort" class="pdp-short"></p>
+
+      <div class="pdp-purchase">
+       
+
+        <!-- Atributos (Prophetia-like) -->
+     <ul class="pdp-attrs" aria-label="Opciones del producto">
+  <li class="pdp-attr">
+    <button type="button" class="pdp-attr__btn" id="pdpSizeBtn" aria-haspopup="dialog">
+      <span class="pdp-attr__label">Talla</span>
+      <span class="pdp-attr__value" id="pdpSizeVal">Seleccionar</span>
+    </button>
+  </li>
+  <li class="pdp-attr">
+  <button type="button" class="pdp-attr__btn" id="pdpFitGuideBtn" aria-haspopup="dialog">
+    <span class="pdp-attr__label">Fit Guide</span>
+    <span class="pdp-attr__value" id="pdpFitGuideVal">Recomendar talla</span>
+  </button>
+</li>
+
+  <li class="pdp-attr">
+    <button type="button" class="pdp-attr__btn" id="pdpColorBtn" aria-haspopup="dialog">
+      <span class="pdp-attr__label">Color</span>
+      <span class="pdp-attr__value" id="pdpColorVal">Seleccionar</span>
+    </button>
+  </li>
+
+  <li class="pdp-attr">
+    <button type="button" class="pdp-attr__btn" id="pdpVersionBtn" aria-haspopup="dialog">
+      <span class="pdp-attr__label">Versión</span>
+      <span class="pdp-attr__value" id="pdpVersionVal">Seleccionar</span>
+    </button>
+  </li>
+</ul>
+
+        <!-- Links (abren side panel con tabs) -->
+<div class="pdp-links">
+  <button type="button" class="pdp-rowbtn" data-open="details" data-tab="details">
+    <span>Todos los detalles</span><span aria-hidden="true">›</span>
+  </button>
+
+  <button type="button" class="pdp-rowbtn" data-open="fit-guide" data-tab="fit-guide">
+    <span>Guía inteligente de talla</span><span aria-hidden="true">›</span>
+  </button>
+</div>
+
+
+        
+        <!-- CTA -->
+<form id="buyForm" class="pdp-buy">
+  <button id="pdpCta" type="button" class="btn-primary">
+  <span class="pdp-cta__label">Seleccionar talla</span>
+  <span class="pdp-cta__price" id="pdpCtaPrice">—</span>
+</button>
+
+</form>
+
+
+      </div>
+
+ 
+  </div>
+
+  
+  <!-- Side panel atributos (Talla / Color) -->
+  <!-- Modal atributos (centrado, fade-in) -->
+<div id="attrDrawer" class="ad" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="ad-backdrop" data-ad-close></div>
+  <aside class="ad-panel" role="document" aria-labelledby="adTitle">
+    <header class="ad-head">
+      <h3 id="adTitle" class="ad-title">Selecciona</h3>
+      <button class="ad-close" type="button" data-ad-close aria-label="Cerrar">×</button>
+    </header>
+        <nav id="adTabs" class="ad-tabs" aria-label="Secciones" hidden></nav>
+
+    <div id="adBody" class="ad-body"></div>
+  </aside>
+</div>
+
+
+
+
+
+
+
+
+  <!-- Zoom PDP -->
+    <!-- Zoom PDP (con tira de miniaturas) -->
+  <div id="pdpZoom" class="lb hidden" aria-hidden="true" role="dialog">
+    <div class="lb-backdrop" data-lb-close></div>
+    <figure class="lb-figure">
+      <button class="lb-close" id="pdpZoomClose" aria-label="Cerrar">&times;</button>
+      <img id="pdpZoomImg" class="lb-img" alt="Imagen ampliada del producto">
+      <button class="lb-prev"  id="pdpZoomPrev"  aria-label="Anterior">‹</button>
+      <button class="lb-next"  id="pdpZoomNext"  aria-label="Siguiente">›</button>
+
+      <!-- tira vertical de thumbs -->
+      <ul id="pdpZoomThumbs" class="lb-thumbs" aria-label="Otras imágenes"></ul>
+    </figure>
+  </div>
+
+
+ <div id="footer"></div>
+<div id="popup-area"></div>
+
+<!-- Orden: parciales → carrito → app -->
+
+<script type="module" src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/firebase-auth.js"></script>
+<script defer src="/assets/js/header-init.js"></script>
+
+<script src="assets/js/cart.js" defer></script>
+<script src="assets/js/product-page.js" defer></script>
+<script src="assets/js/script.js" defer></script>
+<script src="assets/js/popup.js" defer></script>
+<script src="assets/js/cookies.js" defer></script>
+
+
+
+
+
+
+
+</body>
+</html>

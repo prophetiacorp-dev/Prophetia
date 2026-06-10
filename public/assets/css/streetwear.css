@@ -1,0 +1,3002 @@
+/* =========================================================
+   PROPHETIA · STREETWEAR HOMBRE
+   Página: streetwear.html
+   Estilo: urbano, oscuro, Silent Luxury
+   ========================================================= */
+/* ===== STREETWEAR · MISTRAL (solo esta página) ===== */
+@font-face{
+  font-family:"MistralProphetia";
+  src:
+    
+    url("/assets/fonts/MISTRAL.TTF") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+
+
+/* ---------- Variables base Streetwear ---------- */
+
+body.streetwear-page {
+  /* Gutter lateral coherente con Hombre */
+  --pp-edge-street: 40px;
+    /* NAV icon (carrusel) */
+  --pp-nav-size: 44px;
+  --pp-nav-icon: url("/assets/img/logo/emblemblancovf.svg");
+  --pp-nav-icon-size: 22px;
+  --pp-nav-bg: rgba(0,0,0,.52);
+  --pp-nav-border: rgba(255,255,255,.18);
+  --pp-nav-blur: 10px;
+
+
+  /* Fuente de TÍTULOS sólo para streetwear */
+/* Urban SOLO para header/mega (no tocar) */
+
+--sw-header-font: var(--font-ui); /* Inter = igual que el mega panel actual */
+
+
+
+  /* Colores base · noche urbana Silent Luxury */
+  --street-bg: #14151e;
+  --street-bg-soft: #1b1e29;
+  --street-hero-top: #202539;
+  --street-hero-bottom: #11131b;
+  --street-ink: #f5f5ef;
+  --street-muted: rgba(245,245,239,0.78);
+  --street-accent: #f0c674;
+  --street-line: rgba(255,255,255,0.18);
+    --street-shell: #05060a; /* cáscara oscura común header/drawer/footer */
+/* ===== Tipos editoriales (Streetwear) · legible ===== */
+--sw-ui:    clamp(12px, 0.90vw + 8px, 14px);
+--sw-kicker:clamp(12px, 0.75vw + 8px, 14px);
+--sw-meta:  clamp(11px, 0.70vw + 7px, 13px);
+--sw-sub:   clamp(13px, 0.90vw + 8px, 16px);
+
+
+
+
+  /* 🔥 BACKGROUND MAESTRO URBAN MIST */
+ /* 🔥 BACKGROUND MAESTRO URBAN MIST */
+  /*
+  background:
+    url("../img/backgrounds/urban-mist-streetwear.png")
+      center top / cover no-repeat fixed;
+  */
+  color: var(--street-ink);
+} 
+
+
+
+
+/* Velo muy suave para que el texto siempre lea bien */
+body.streetwear-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.20),
+    rgba(0,0,0,0.32)
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+
+/* =========================================================
+   HEADER / TOPBAR EN MODO URBANO
+   ========================================================= */
+
+body.streetwear-page .pp-topbar,
+body.streetwear-page .pp-header {
+  background: rgba(170, 197, 236, 0.98);              /* gris oscuro, no negro puro */
+  color: var(--street-ink);
+  border-bottom: 1px solid rgba(252, 249, 249, 0.932);
+  box-shadow: 0 10px 26px rgba(248, 247, 247, 0.45);     /* se separa del hero */
+}
+
+body.streetwear-page .pp-header .container,
+body.streetwear-page .pp-topbar {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-street);
+  box-sizing: border-box;
+}
+
+/* Iconos y enlaces del header aclarados */
+body.streetwear-page .pp-header a,
+body.streetwear-page .pp-topbar a {
+  color: var(--street-ink);
+}
+
+/* Buscador ligeramente ahumado */
+body.streetwear-page .search-inline input {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.14);
+  color: var(--street-ink);
+}
+
+/* =========================================================
+   HERO · LOGO TM + PANEL HOMBRE
+   ========================================================= */
+
+.streetwear-page .pp-hero.hero--two-cols {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 42px var(--pp-edge-street) 26px;
+  min-height: 260px;
+  box-sizing: border-box;
+
+  /* Sin fondo propio: que se vea la bruma tal cual */
+  background: transparent;
+  backdrop-filter: none;
+}
+
+
+
+
+
+
+/* Panel “Hombre / Streetwear” alineado a la derecha */
+.streetwear-page .pp-hero__side {
+  align-self: flex-end;
+  max-width: 360px;
+  text-align: left;
+}
+
+/* Título “HOMBRE” con tipografía urbana */
+.streetwear-page .pp-hero__title {
+  
+  font-size: var(--sw-kicker);
+
+  letter-spacing: 0.3em;
+  
+  color: var(--street-ink);
+  margin: 0 0 6px;
+}
+
+/* Línea + menú de categorías */
+.streetwear-page .pp-hero__nav {
+  /*border-top: 1px solid rgba(249, 244, 253, 0.966);*/
+  padding-top: 8px;
+  margin-top: 0;
+}
+
+.streetwear-page .pp-hero__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.streetwear-page .pp-hero__list a {
+ 
+  font-size: var(--sw-ui);
+  letter-spacing: 0.16em; /* un pelín menos “gritón” */
+
+  
+  text-decoration: none;
+  color: var(--street-muted);
+  padding-block: 1px;
+  border-bottom: 1px solid transparent;
+  box-shadow: 0 10px 30px rgba(235, 228, 228, 0.17);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.streetwear-page .pp-hero__list a:hover {
+  opacity: 0.85;
+  color: var(--street-ink);
+  border-bottom-color: var(--street-ink);
+  transform: translateX(2px);
+}
+
+.streetwear-page .pp-hero__list a[aria-current="page"] {
+  color: var(--street-ink);
+ 
+}
+
+/* Espaciador bajo hero */
+.streetwear-page .bb-spacer {
+  height: clamp(40px, 6vw, 90px);
+}
+
+/* =========================================================
+   SUBHERO · “Streetwear · Silent Luxury Hombre”
+   ========================================================= */
+
+.streetwear-page .pp-collection-hero.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-street);
+  padding-top: 0;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+
+
+.streetwear-page .pp-hero-sub {
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.86rem;
+  color: var(--street-muted);
+  max-width: 520px;
+}
+
+/* =========================================================
+   TOOLBAR · FILTROS / ORDEN / EN STOCK
+   ========================================================= */
+
+.streetwear-page .pp-filters.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-street);
+  padding-block: 10px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  position: sticky;
+  top: var(--pp-header-h, 72px);
+  z-index: 20;
+
+  background: rgba(20,22,33,0.97);                     /* franja oscura */
+  border-top: 1px solid rgba(255, 253, 255, 0.973);
+  border-bottom: 1px solid rgba(243, 227, 247, 0.952);
+box-shadow: 0 10px 30px rgba(235, 228, 228, 0.4);
+
+   font-size: var(--sw-meta);
+  letter-spacing: 0.14em; /* más editorial */
+  
+  color: var(--street-muted);
+}
+
+.streetwear-page .pp-filter-left,
+.streetwear-page .pp-filter-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.streetwear-page .pp-btn {
+  border: none;
+  background: transparent;
+  padding: 2px 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--street-ink);
+}
+
+.streetwear-page .pp-btn:hover {
+  opacity: 0.8;
+}
+
+/* Checkbox “En stock” */
+.streetwear-page .pp-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.streetwear-page .pp-check span{
+  font-size: var(--sw-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--street-muted);
+}
+
+.streetwear-page .pp-check input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.6);
+  accent-color: #ffffff;
+  background: transparent;
+}
+
+/* =========================================================
+   DRAWER DE FILTROS · MODO NEÓN URBANO
+   ========================================================= */
+
+
+
+
+
+
+.streetwear-page .men-filters-tab.is-active {
+  border-bottom-color: var(--street-accent);
+}
+
+/* Swatches en modo oscuro */
+.streetwear-page .men-swatch-label {
+  color: var(--street-muted);
+}
+
+/* =========================================================
+   GRID PLP · TARJETAS URBANAS
+   ========================================================= */
+
+.streetwear-page .pp-plp.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-street);
+  padding-top: 26px;
+  padding-bottom: 80px;
+  box-sizing: border-box;
+}
+
+
+
+/* =========================================================
+   STREETWEAR HOMBRE · PLP GRID (igual que MUJER)
+   - auto-fill con min/max por card (evita cards gigantes)
+   - gap editorial
+   ========================================================= */
+.streetwear-page .pp-plp.container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-left: var(--pp-edge-street);
+  padding-right: var(--pp-edge-street);
+  box-sizing: border-box;
+}
+
+.streetwear-page #plp-grid.plp-grid,
+.streetwear-page .pp-plp .plp-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
+  gap: clamp(14px, 2vw, 22px);
+  justify-content: start;
+  align-items: start;
+  width: 100%;
+}
+
+
+/* 2 cols */
+@media (max-width: 900px){
+  .streetwear-page #plp-grid.plp-grid,
+  .streetwear-page .pp-plp .plp-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 1 col */
+@media (max-width: 520px){
+  .streetwear-page #plp-grid.plp-grid,
+  .streetwear-page .pp-plp .plp-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* Tarjeta base */
+.streetwear-page .card,
+.streetwear-page .product-card {
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 60%),
+    rgba(245,245,239,0.92); /* card clara para texto negro */
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+  color: var(--street-card-ink);
+}
+
+/* Media wrapper (la imagen “vive” aquí dentro) */
+.streetwear-page .card-media,
+.streetwear-page .card picture,
+.streetwear-page .product-card .card-media,
+.streetwear-page .product-card .img-wrap{
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 1 / 1;   /* si quieres más editorial: 4 / 5 */
+  overflow: hidden;
+  position: relative;
+
+  background: radial-gradient(circle at 50% 0%, rgba(245,198,106,0.20), #151720);
+}
+
+/* La imagen se adapta al wrapper */
+.streetwear-page .card-media img,
+.streetwear-page .card picture img,
+.streetwear-page .product-card .card-media img,
+.streetwear-page .product-card .img-wrap img{
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+
+/* Texto */
+.streetwear-page .card-body {
+  padding: 14px 18px 18px;
+  display: grid;
+  row-gap: 4px;
+}
+
+
+
+.streetwear-page .card-title a:hover,
+.streetwear-page .product-card__title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Descripción corta */
+.streetwear-page .card-sub,
+.streetwear-page .product-card__subtitle{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: var(--sw-sub);
+  line-height: 1.6;
+  color: var(--street-card-muted);
+}
+
+
+/* Precio / meta */
+.streetwear-page .card-meta,
+.streetwear-page .product-card__price {
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: var(--sw-meta);
+  letter-spacing: 0.14em;
+  
+  margin-top: 4px;
+  color: var(--street-card-meta);
+}
+
+/* Corazón wishlist tipo chip */
+.streetwear-page .card .icon-btn.save,
+.streetwear-page .product-card .save-btn {
+  position: absolute;
+  right: 14px;
+  bottom: -44px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.85);
+  background: rgba(5,6,8,0.96);
+  color: var(--street-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.streetwear-page .card .icon-btn.save.is-saved,
+.streetwear-page .product-card .save-btn.is-saved {
+  background: var(--street-accent);
+  color: #000;
+  border-color: var(--street-accent);
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   TOAST WISHLIST · MODO BARRA NEGRA
+   ========================================================= */
+
+body.streetwear-page #ppToast .pp-toast__inner {
+  background: #000;
+  color: #fff;
+}
+
+/* =========================================================
+   FOOTER · FONDO INTEGRADO
+   ========================================================= */
+
+body.streetwear-page #footer,
+body.streetwear-page .site-footer,
+body.streetwear-page .footer-inner {
+  background: linear-gradient(to top, #10121a, #181b26);
+  color: var(--street-ink);
+  border-top: 1px solid rgba(241, 238, 245, 0.986);
+  box-shadow: 0 10px 30px rgba(235, 228, 228, 0.3);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .streetwear-page .pp-hero.hero--two-cols {
+    padding-inline: 24px;
+  }
+
+  .streetwear-page .pp-collection-hero.container,
+  .streetwear-page .pp-filters.container,
+  .streetwear-page .pp-plp.container {
+    padding-inline: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .streetwear-page .pp-filters.container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .streetwear-page .pp-filter-right {
+    align-self: flex-end;
+  }
+
+  .streetwear-page .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+}
+
+
+
+/* =========================================================
+   HEADER STREETWEAR · SOLO streetwear.html
+   ========================================================= */
+
+/* Header y topbar con el mismo código de color que el footer */
+body.streetwear-page .pp-topbar,
+body.streetwear-page .pp-header {
+  background: var(--street-shell); /* MISMO color sólido */
+  color: #f5f5ef;
+  border-bottom: 1px solid rgba(241, 237, 247, 0.938);
+  box-shadow: 0 10px 30px rgba(235, 228, 228, 0.3);
+}
+
+
+/* Contenedor a ancho completo con gutter de streetwear */
+body.streetwear-page .pp-header .container,
+body.streetwear-page .pp-topbar {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-street);
+  box-sizing: border-box;
+}
+
+/* Menú principal en blanco con tipografía urbana */
+body.streetwear-page .pp-header .mega-toggle,
+body.streetwear-page .pp-header nav a {
+  font-family: var(--font-urban);
+  color: #f5f5ef;
+}
+
+body.streetwear-page .pp-header .mega-toggle:hover,
+body.streetwear-page .pp-header nav a:hover {
+  color: var(--street-accent);
+}
+
+/* Iconos (login, guardados, carrito) en blanco */
+body.streetwear-page .pp-header .icon-btn,
+body.streetwear-page .pp-header .icon-btn svg {
+  color: #f5f5ef;
+  stroke: currentColor;
+}
+
+/* Icono específico de Guardados por si hay estilos globales */
+body.streetwear-page #ppSavedBtn svg {
+  color: #f5f5ef !important;
+  stroke: currentColor !important;
+}
+
+/* Emblemas de cuenta en blanco “puro” */
+body.streetwear-page .pp-account img {
+  filter: brightness(0) invert(1);
+  mix-blend-mode: normal;
+}
+
+/* Buscador en blanco, integrado con el header oscuro */
+body.streetwear-page .search-inline input {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(245,245,239,0.40);
+  color: #f5f5ef;
+}
+
+body.streetwear-page .search-inline input::placeholder {
+  color: rgba(245,245,239,0.65);
+}
+
+/* =========================================================
+   FOOTER STREETWEAR · SOLO streetwear.html
+   ========================================================= */
+
+body.streetwear-page .site-footer,
+body.streetwear-page .footer-inner,
+body.streetwear-page .footer-bottom {
+  background: var(--street-shell); /* MISMO color */
+  color: #f5f5ef;
+}
+
+
+/* Enlaces del footer */
+body.streetwear-page .site-footer a {
+  color: rgba(245,245,239,0.82);
+  text-decoration: none;
+}
+
+body.streetwear-page .site-footer a:hover {
+  color: var(--street-accent); /* dorado urbano */
+}
+
+/* Títulos de columna (Shop / Help / Studio) */
+body.streetwear-page .site-footer h5 {
+  color: #f5f5ef;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Texto pequeño tipo "Envíos ocasionales..." más tenue */
+body.streetwear-page .site-footer .muted,
+body.streetwear-page .site-footer small {
+  color: rgba(245,245,239,0.65);
+}
+
+/* Emblema del águila en blanco solo en streetwear */
+body.streetwear-page .site-footer .footer-art img {
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+}
+/* =========================================================
+   STREETWEAR · Mega menú en modo nocturno
+   ========================================================= */
+
+/* =========================================================
+   STREETWEAR (HOMBRE) · Mega panel glass (igual que MUJER)
+   ========================================================= */
+body.streetwear-page .mega .mega-panel,
+body.streetwear-page .mega-panel{
+  background: rgba(0,0,0,.92);
+  color: rgba(255,255,255,.92);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 26px 90px rgba(0,0,0,.70);
+  backdrop-filter: blur(10px) saturate(110%);
+  -webkit-backdrop-filter: blur(10px) saturate(110%);
+}
+
+/* Links dentro del panel */
+body.streetwear-page .mega-panel a{
+  color: rgba(255,255,255,.90);
+  text-decoration: none;
+}
+body.streetwear-page .mega-panel a:hover{
+  color: rgba(255,255,255,.98);
+  text-decoration: underline;
+}
+
+/* Muted dentro del panel */
+body.streetwear-page .mega-panel :where(.muted,.meta,.hint,small){
+  color: rgba(255,255,255,.65);
+}
+
+
+/* Enlaces dentro del mega-menú */
+/* STREETWEAR · Mega menú (tamaño fino, más acorde al header) */
+body.streetwear-page .mega-title{
+  font-size: var(--sw-mega-title, 10px);
+  letter-spacing: .14em;
+}
+
+body.streetwear-page .mega-col a{
+  font-size: var(--sw-mega-link, 11px);
+  letter-spacing: .10em;
+  line-height: 1.35;        /* un pelín más compacto */
+  text-transform: uppercase;
+  color: var(--street-muted);
+}
+
+
+body.streetwear-page .mega-col a:hover{
+  color: var(--street-ink);
+}
+
+/* =========================================================
+   STREETWEAR · Footer filtros compacto
+   ========================================================= */
+
+body.streetwear-page .men-filters-foot {
+  padding-block: 12px;
+}
+
+/* Contenedor de los dos botones: más estrecho y a la derecha */
+body.streetwear-page .men-filters-foot-inner {
+  display: flex;               /* en fila, no grid a lo ancho */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  max-width: 480px;            /* opcional: límite para que no se expandan */
+  margin-left: auto;
+}
+
+/* Estilo base común de los botones */
+body.streetwear-page .men-filters-clear,
+body.streetwear-page .men-filters-cta {
+  width: auto;                 /* fuera el 100% */
+  min-width: 0;
+  height: auto;                /* nada de pill gigante */
+  padding: 10px 18px;          /* tamaño similar al recuadro rojo que marcabas */
+  border-radius: 999px;
+  font-family: var(--font-urban);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Botón "Eliminar filtros": solo borde */
+body.streetwear-page .men-filters-clear {
+  background: transparent;
+  border: 1px solid rgba(245,245,239,0.6);
+  color: var(--street-ink);
+}
+
+/* Botón "Ver X resultados": pill principal */
+body.streetwear-page .men-filters-cta {
+  background: var(--street-ink);
+  color: #000;
+  border: none;
+}
+/* =========================================================
+   STREETWEAR HOMBRE · Fondo PRO (uniforme + zebra flames + grain)
+   - Base negro premium (sin PNG)
+   - Lift editorial superior
+   - Zebra flames watermark ultra sutil
+   ========================================================= */
+
+/* Tokens de fondo (ajústalos aquí) */
+body.streetwear-page{
+    
+  --sw-bg: #050607;
+
+  /* Intensidad patrón (muy sutil) */
+  --sw-zebra-opacity: .06;   /* 0.04–0.08 */
+  --sw-grain-opacity: .08;   /* 0.06–0.12 */
+
+  /* Escalas (zebra grande, grain pequeño) */
+  --sw-zebra-scale: 820px;
+  --sw-grain-scale: 180px;
+
+  background: var(--sw-bg);
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate; /* asegura capas limpias */
+ 
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+
+/* Base uniforme + lift editorial (SIN radiales visibles) */
+body.streetwear-page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.018) 0%,
+      rgba(255,255,255,0) 26%,
+      rgba(0,0,0,.22) 100%
+    ),
+    var(--sw-bg);
+
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Overlay: Zebra flames + grain fino */
+body.streetwear-page::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    /* Zebra flames procedural */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720'%3E%3Cfilter id='z'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='9'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0 0 0 0 0 0 0 1 1 1 1'/%3E%3CfeFuncG type='table' tableValues='0 0 0 0 0 0 0 1 1 1 1'/%3E%3CfeFuncB type='table' tableValues='0 0 0 0 0 0 0 1 1 1 1'/%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 .55 .75 1 1'/%3E%3C/feComponentTransfer%3E%3CfeGaussianBlur stdDeviation='0.45'/%3E%3C/filter%3E%3Crect width='720' height='720' filter='url(%23z)' fill='white' opacity='1'/%3E%3C/svg%3E"),
+    /* Grain fino */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+
+  background-repeat: repeat, repeat;
+  background-size: var(--sw-zebra-scale) var(--sw-zebra-scale), var(--sw-grain-scale) var(--sw-grain-scale);
+  background-position: 0 0, 0 0;
+
+  /* Integración “luxury”: patrón presente pero no “estampado” */
+  mix-blend-mode: soft-light;
+
+  /* Intensidad final */
+  opacity: calc(var(--sw-zebra-opacity) + var(--sw-grain-opacity));
+
+  filter: saturate(105%) contrast(105%);
+}
+
+/* Por si algún wrapper estaba pintando fondo */
+body.streetwear-page main,
+body.streetwear-page .pp-page,
+body.streetwear-page .pp-wrap{
+  background: transparent;
+}
+
+/* =========================================================
+   STREETWEAR · EXCEPCIONES: Header + Mega SIEMPRE Urban
+   ========================================================= */
+
+/* STREETWEAR · CONTENIDO en Inter (canon) */
+body.streetwear-page main,
+body.streetwear-page main *{
+  font-family: var(--font-ui) !important; /* Inter */
+}
+/* Panel derecho (pp-hero__side) SIEMPRE Inter, incluso contra typography.css */
+.streetwear-page .pp-hero__side,
+.streetwear-page .pp-hero__side *{
+  font-family: var(--font-ui) !important; /* Inter */
+}
+
+/* Caso específico: el H2 del panel (typography.css lo fuerza a display) */
+.streetwear-page h2.pp-hero__title{
+  font-family: var(--font-ui) !important; /* Inter */
+  font-weight: 80; /* ajusta si quieres 400/500 */
+  letter-spacing: 0.20em; /* mantienes tu look */
+}
+/* =========================================================
+   STREETWEAR · Fuente canónica (igual que mega panel = Inter)
+   ========================================================= */
+
+/* Panel derecho del hero: misma fuente que el mega panel */
+.streetwear-page .pp-hero__side,
+.streetwear-page .pp-hero__side *{
+  font-family: var(--sw-header-font) !important;
+}
+
+/* Caso específico: typography.css fuerza h2 a font-display */
+.streetwear-page h2.pp-hero__title{
+  font-family: var(--sw-header-font) !important;
+}
+
+/* Filtros: misma fuente que el mega panel */
+.streetwear-page .pp-filters,
+.streetwear-page .pp-filters *{
+  font-family: var(--sw-header-font) !important;
+}
+.streetwear-page{
+  --sw-mega-link: 11px; /* ya lo tienes */
+}
+
+.streetwear-page .pp-hero__list a{ font-size: var(--sw-mega-link); }
+.streetwear-page .pp-filters{ font-size: var(--sw-mega-link); }
+/* =========================================================
+   STREETWEAR · Tipografía (Inter como mega panel)
+   ========================================================= */
+
+body.streetwear-page{
+  --sw-header-font: var(--font-ui); /* Inter */
+}
+
+/* HERO SIDE = igual que mega panel */
+.streetwear-page .pp-hero__side,
+.streetwear-page .pp-hero__side *{
+  font-family: var(--sw-header-font) !important;
+}
+
+/* FIX: typography.css puede forzar h2 a display */
+.streetwear-page h2.pp-hero__title{
+  font-family: var(--sw-header-font) !important;
+}
+
+/* FILTERS = igual que mega panel */
+.streetwear-page .pp-filters,
+.streetwear-page .pp-filters *{
+  font-family: var(--sw-header-font) !important;
+}
+
+/* Tamaño: igual que mega */
+.streetwear-page{
+  --sw-mega-link: 11px;
+}
+.streetwear-page .pp-hero__list a{ font-size: var(--sw-mega-link); }
+.streetwear-page .pp-filters{ font-size: var(--sw-mega-link); }
+/* =========================================================
+   STREETWEAR (HOMBRE) · Tamaño base como MUJER (22px)
+   - Subimos el cuerpo del contenido
+   - Protegemos: hero-side + filtros + mega (tamaños editoriales)
+   ========================================================= */
+body.streetwear-page main{
+  font-size: 22px;
+  line-height: 1.55;
+}
+
+/* Evita que typography.css te lo vuelva a bajar en párrafos/listas */
+body.streetwear-page main :where(p, li){
+  font-size: 1em;
+  line-height: inherit;
+}
+
+/* No escalar tipografía dentro de PLP cards */
+body.streetwear-page #plp-grid :where(p, li){
+  font-size: revert;
+  line-height: revert;
+}
+
+/* PROTECCIÓN: filtros en 14px como MUJER */
+body.streetwear-page .pp-filters.container{
+  font-family: var(--sw-header-font, var(--font-ui, Inter, system-ui, sans-serif)) !important;
+  font-size: 14px !important;
+  line-height: 1.25;
+}
+body.streetwear-page .pp-filters.container :where(.pp-btn,label,span){
+  font-size: 1em;
+  line-height: inherit;
+}
+
+/* PROTECCIÓN: hero side (panel derecho) se queda editorial (11px) */
+body.streetwear-page{
+  --sw-mega-link: 11px;
+}
+body.streetwear-page .pp-hero__side{
+  font-size: var(--sw-mega-link) !important;
+}
+body.streetwear-page .pp-hero__side .pp-hero__list a{
+  font-size: var(--sw-mega-link) !important;
+  line-height: 1.35;
+}
+/* =========================================================
+   STREETWEAR HOMBRE · Filters Drawer = estilo MUJER (glass)
+   ========================================================= */
+
+/* Overlay */
+body.streetwear-page .men-filters-overlay{
+  background: rgba(0,0,0,.22);
+  backdrop-filter: blur(3px);
+}
+
+/* Drawer principal */
+body.streetwear-page .men-filters-drawer{
+  background: rgba(6,7,10,.92);
+  color: rgba(255,255,255,.92);
+  border-left: 1px solid rgba(255,255,255,.10);
+  box-shadow: -18px 0 60px rgba(0,0,0,.55);
+  backdrop-filter: blur(10px) saturate(110%);
+  -webkit-backdrop-filter: blur(10px) saturate(110%);
+}
+
+/* Head */
+body.streetwear-page .men-filters-title{
+  color: rgba(255,255,255,.92);
+}
+
+body.streetwear-page .men-filters-close{
+  color: rgba(255,255,255,.92);
+}
+
+/* Tabs */
+body.streetwear-page .men-filters-tab{
+  color: rgba(255,255,255,.72);
+}
+
+body.streetwear-page .men-filters-tab.is-active{
+  color: #fff;
+}
+
+body.streetwear-page .men-filters-tab.is-active::after{
+  background: rgba(255,255,255,.85);
+}
+
+/* Swatches */
+body.streetwear-page .men-swatch-label{
+  color: rgba(255,255,255,.88);
+}
+
+body.streetwear-page .men-swatch-dot{
+  border-color: rgba(255,255,255,.22);
+}
+
+/* Footer */
+body.streetwear-page .men-filters-foot{
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+/* Clear */
+body.streetwear-page .men-filters-clear{
+  background: transparent;
+  color: rgba(255,255,255,.82);
+  border-right: 1px solid rgba(255,255,255,.10);
+}
+
+/* CTA */
+body.streetwear-page .men-filters-cta{
+  background: rgba(255,255,255,.92);
+  color: rgba(10,10,12,.92);
+}
+/* =========================================================
+   STREETWEAR · Carousel nav buttons
+   Icono Prophetia centrado con ::before
+   ========================================================= */
+
+body.streetwear-page .card.has-carousel .card-media{
+  position: relative;
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav{
+  appearance: none;
+  -webkit-appearance: none;
+
+  position: absolute;
+  top: 50%;
+  z-index: 8;
+
+  width: var(--pp-nav-size, 40px);
+  height: var(--pp-nav-size, 40px);
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.58);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+
+  transform: translateY(-50%);
+  transition:
+    opacity .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease;
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav::before{
+  content: "";
+  width: var(--pp-nav-icon-size, 18px);
+  height: var(--pp-nav-icon-size, 18px);
+  display: block;
+
+  background-image: var(--pp-nav-icon, url("/assets/img/logo/emblemblancovf.svg"));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  pointer-events: none;
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav.prev{
+  left: 10px;
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav.next{
+  right: 10px;
+}
+
+body.streetwear-page .card.has-carousel:hover .card-media .nav{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover:none){
+  body.streetwear-page .card.has-carousel .card-media .nav{
+    opacity: .92;
+    pointer-events: auto;
+  }
+}
+
+@media (hover:hover){
+  body.streetwear-page .card.has-carousel .card-media .nav:hover{
+    background: rgba(0,0,0,.68);
+    border-color: rgba(255,255,255,.28);
+    box-shadow:
+      0 14px 34px rgba(0,0,0,.45),
+      inset 0 1px 0 rgba(255,255,255,.08);
+  }
+}
+/* =========================================================
+   STREETWEAR · Breadcrumb hero arriba como camisetas
+   ========================================================= */
+
+body.streetwear-page{
+  --sw-bc-top: 38px;
+  --sw-bc-right: var(--pp-edge-street, 40px);
+}
+
+body.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero{
+  position: absolute;
+  top: var(--sw-bc-top);
+  right: var(--sw-bc-right);
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  border: 0;
+  transform: none !important;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: .08em;
+
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 1px 10px rgba(0,0,0,.55);
+}
+
+body.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link{
+  color: rgba(255,255,255,.92) !important;
+  text-decoration: none;
+}
+
+body.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__link:hover{
+  color: #fff !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+body.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__sep{
+  color: rgba(255,255,255,.72) !important;
+}
+
+body.streetwear-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__current{
+  color: rgba(255,255,255,.92) !important;
+  text-shadow: 0 1px 10px rgba(0,0,0,.55);
+}
+
+@media (max-width: 1024px){
+  body.streetwear-page{
+    --sw-bc-right: 24px;
+  }
+}
+
+/* =========================================================
+   STREETWEAR · FLOATING LOGO RESTORE
+   Mismo sistema que camisetas.css
+   ========================================================= */
+
+body.streetwear-page{
+  --hdr-h: var(--pp-header-h, 72px);
+
+  --logo-x-street: -85px;
+  --logo-y-street: -123px;
+  --logo-size-street: 180px;
+}
+
+body.streetwear-page .pp-hero__media{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
+  position: relative;
+  overflow: visible;
+}
+
+body.streetwear-page .pp-hero__media .floating-logo{
+  position: absolute;
+  left: var(--logo-x-street);
+  top: calc(var(--hdr-h) + var(--logo-y-street));
+  transform: none !important;
+  display: inline-block;
+  line-height: 0;
+}
+
+body.streetwear-page .pp-hero__media .floating-logo img{
+  height: var(--logo-size-street);
+  width: auto;
+  display: block;
+  object-fit: contain;
+  max-width: none;
+}
+
+/* =========================================================
+   STREETWEAR · Toolbar refinement
+   Filtros / Ordenar / En stock / Vista
+   ========================================================= */
+
+body.streetwear-page .pp-filters.container{
+  font-family: var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-size: 11px !important;
+  line-height: 1.2;
+  letter-spacing: .08em;
+  text-transform: none;
+}
+
+body.streetwear-page .pp-filter-left,
+body.streetwear-page .pp-filter-right{
+  align-items: center;
+}
+
+body.streetwear-page .pp-filters .pp-btn,
+body.streetwear-page .pp-filters .pp-sort-trigger,
+body.streetwear-page .pp-filters .pp-sort-select{
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+body.streetwear-page .pp-check{
+  gap: 8px;
+}
+
+body.streetwear-page .pp-check span{
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.78);
+}
+
+body.streetwear-page .pp-check input[type="checkbox"]{
+  width: 12px;
+  height: 12px;
+  margin: 0;
+}
+
+/* =========================================================
+   STREETWEAR · Sort select
+   ========================================================= */
+
+body.streetwear-page .pp-sort{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,.82);
+}
+
+body.streetwear-page .pp-sort-label{
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+body.streetwear-page .pp-sort-select{
+  appearance: none;
+  -webkit-appearance: none;
+
+  min-width: 144px;
+  padding: 4px 22px 4px 0;
+
+  border: 0;
+  border-bottom: 1px solid rgba(255,255,255,.34);
+  border-radius: 0;
+  background: transparent;
+
+  color: rgba(255,255,255,.88);
+  cursor: pointer;
+}
+
+body.streetwear-page .pp-sort-select option{
+  color: #111;
+  background: #fff;
+}
+
+
+/* =========================================================
+   STREETWEAR · Sort dropdown real
+   Solo muestra "Ordenar"; opciones al desplegar
+   ========================================================= */
+
+body.streetwear-page .pp-sort {
+  position: relative;
+  display: inline-block;
+}
+
+body.streetwear-page .pp-sort-trigger {
+  list-style: none;
+  cursor: pointer;
+
+  font: 600 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.88);
+}
+
+body.streetwear-page .pp-sort-trigger::-webkit-details-marker {
+  display: none;
+}
+
+body.streetwear-page .pp-sort-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 120;
+
+  min-width: 190px;
+  padding: 8px 0;
+
+  background: rgba(8,9,12,.96);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 18px 48px rgba(0,0,0,.45);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+
+body.streetwear-page .pp-sort-option {
+  width: 100%;
+  display: block;
+
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.82);
+}
+
+body.streetwear-page .pp-sort-option:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+
+/* =========================================================
+   STREETWEAR · Carousel nav final size/icon
+   Botón más pequeño + logo negro Prophetia centrado
+   ========================================================= */
+
+body.streetwear-page {
+  --pp-nav-size: 30px;
+  --pp-nav-icon-size: 15px;
+  --pp-nav-icon: url("/assets/img/logo/propnegrovf.svg");
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav {
+  width: var(--pp-nav-size) !important;
+  height: var(--pp-nav-size) !important;
+
+  background: rgba(255,255,255,.88) !important;
+  border: 1px solid rgba(0,0,0,.10) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.16) !important;
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav::before {
+  width: var(--pp-nav-icon-size) !important;
+  height: var(--pp-nav-icon-size) !important;
+  background-image: var(--pp-nav-icon) !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav.prev {
+  left: 8px;
+}
+
+body.streetwear-page .card.has-carousel .card-media .nav.next {
+  right: 8px;
+}
+
+/* =========================================================
+   STREETWEAR HOMBRE · Urban drop grid final
+   Inspiración NoEmotions · Prophetia edition
+   ========================================================= */
+
+body.streetwear-page .pp-plp.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: 0;
+  padding-top: 0;
+  padding-bottom: clamp(72px, 8vw, 120px);
+}
+
+/* Grid más urbano: más ancho, más compacto, sin aire boutique */
+body.streetwear-page #plp-grid.plp-grid,
+body.streetwear-page .pp-plp .plp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  width: 100%;
+
+  background: rgba(255,255,255,.10);
+  border-top: 1px solid rgba(255,255,255,.10);
+  border-left: 1px solid rgba(255,255,255,.10);
+}
+
+/* Card tipo drop: sin radio, sin sombra, sin “tarjeta tienda clásica” */
+body.streetwear-page #plp-grid .card {
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  overflow: hidden;
+
+  background: rgba(245,245,245,.96);
+  color: #111;
+}
+
+/* Imagen protagonista */
+body.streetwear-page #plp-grid .card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 0;
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+/* Producto grande, centrado y limpio */
+body.streetwear-page #plp-grid .card-media > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Cuerpo más pequeño y urbano */
+body.streetwear-page #plp-grid .card-body {
+  padding: 12px 14px 16px;
+  display: grid;
+  gap: 5px;
+
+  background: rgba(255,255,255,.98);
+  color: #111;
+}
+
+body.streetwear-page #plp-grid .card-title {
+  margin: 0;
+  font: 600 13px/1.15 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .01em;
+  color: #111;
+}
+
+body.streetwear-page #plp-grid .card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+body.streetwear-page #plp-grid .card-sub {
+  margin: 0;
+  max-width: 30ch;
+
+  font: 400 12px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0;
+  color: rgba(0,0,0,.58);
+}
+
+body.streetwear-page #plp-grid .card-meta,
+body.streetwear-page #plp-grid .price {
+  margin-top: 4px;
+
+  font: 500 11px/1.2 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .04em;
+  color: rgba(0,0,0,.78);
+}
+
+/* Wishlist más integrado */
+body.streetwear-page #plp-grid .icon-btn.save {
+  top: 12px;
+  right: 12px;
+  bottom: auto;
+
+  width: 32px;
+  height: 32px;
+
+  background: rgba(0,0,0,.74);
+  border: 1px solid rgba(255,255,255,.20);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(0,0,0,.22);
+}
+
+/* Hover: mínimo, no boutique */
+@media (hover:hover) {
+  body.streetwear-page #plp-grid .card-media > img {
+    transition: transform .28s ease, opacity .28s ease;
+  }
+
+  body.streetwear-page #plp-grid .card:hover .card-media > img {
+    transform: scale(1.018);
+  }
+}
+
+/* Tablet */
+@media (max-width: 1180px) {
+  body.streetwear-page #plp-grid.plp-grid,
+  body.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Móvil */
+@media (max-width: 760px) {
+  body.streetwear-page #plp-grid.plp-grid,
+  body.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.streetwear-page #plp-grid .card-body {
+    padding: 10px 10px 14px;
+  }
+
+  body.streetwear-page #plp-grid .card-title {
+    font-size: 12px !important;
+  }
+
+  body.streetwear-page #plp-grid .card-sub {
+    font-size: 11px !important;
+    line-height: 1.35;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 420px) {
+  body.streetwear-page #plp-grid.plp-grid,
+  body.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   STREETWEAR HOMBRE · Grid size refinement final
+   Reduce tamaño de cards sin perder estética drop
+   ========================================================= */
+
+body.streetwear-page .pp-plp.container {
+  padding-inline: var(--pp-edge-street, 40px);
+}
+
+/* Desktop: cards más controladas */
+body.streetwear-page #plp-grid.plp-grid,
+body.streetwear-page .pp-plp .plp-grid {
+  grid-template-columns: repeat(4, minmax(220px, 300px));
+  justify-content: start;
+  gap: 1px;
+}
+
+/* Imagen algo menos alta */
+body.streetwear-page #plp-grid .card-media {
+  aspect-ratio: 1 / 1.18;
+}
+
+/* Texto más compacto */
+body.streetwear-page #plp-grid .card-body {
+  padding: 10px 12px 14px;
+}
+
+body.streetwear-page #plp-grid .card-title {
+  font-size: 12px !important;
+}
+
+body.streetwear-page #plp-grid .card-sub {
+  font-size: 11px !important;
+  line-height: 1.35;
+}
+
+body.streetwear-page #plp-grid .card-meta,
+body.streetwear-page #plp-grid .price {
+  font-size: 10.5px !important;
+}
+
+/* Tablet */
+@media (max-width: 1180px) {
+  body.streetwear-page #plp-grid.plp-grid,
+  body.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+  }
+}
+
+/* Móvil */
+@media (max-width: 760px) {
+  body.streetwear-page #plp-grid.plp-grid,
+  body.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 420px) {
+  body.streetwear-page #plp-grid.plp-grid,
+  body.streetwear-page .pp-plp .plp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   STREETWEAR HOMBRE · Filters drawer final authority
+   Igualamos footer/botones al sistema de Hoodies
+   ========================================================= */
+
+body.streetwear-page #menFiltersDrawer.men-filters-drawer {
+  width: min(540px, 100%);
+  max-width: 100vw;
+  height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-inline: clamp(22px, 4vw, 48px);
+
+  background:
+    linear-gradient(180deg, rgba(13,14,18,.98), rgba(7,8,12,.98));
+
+  overflow: hidden;
+}
+
+/* Body del drawer */
+body.streetwear-page #menFiltersDrawer .men-filters-body {
+  flex: 1 1 auto;
+
+  padding: 24px 0 18px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Footer fijo/integrado abajo */
+body.streetwear-page #menFiltersDrawer .men-filters-foot {
+  flex: 0 0 auto;
+
+  position: sticky;
+  bottom: 0;
+
+  padding: 16px 0 24px;
+
+  border-top: 1px solid rgba(255,255,255,.10);
+  background:
+    linear-gradient(180deg, rgba(7,8,12,0), rgba(7,8,12,.96) 36%);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Contenedor de botones como Hoodies */
+body.streetwear-page #menFiltersDrawer .men-filters-foot-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Reset total de botones */
+body.streetwear-page #menFiltersDrawer .men-filters-clear,
+body.streetwear-page #menFiltersDrawer .men-filters-cta {
+  width: auto;
+  min-width: 0;
+  min-height: 42px;
+  height: auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 16px;
+  border-radius: 999px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  text-align: center;
+
+  cursor: pointer;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* Eliminar filtros */
+body.streetwear-page #menFiltersDrawer .men-filters-clear {
+  border: 1px solid rgba(255,255,255,.22);
+  background: transparent;
+  color: rgba(255,255,255,.82);
+}
+
+/* Ver resultados */
+body.streetwear-page #menFiltersDrawer .men-filters-cta {
+  margin-left: auto;
+
+  border: 1px solid rgba(255,255,255,.92);
+  background: rgba(255,255,255,.92);
+  color: #08090c;
+}
+
+/* Separación correcta del contador */
+body.streetwear-page #menFiltersDrawer .men-filters-cta span,
+body.streetwear-page #menFiltersDrawer .men-filters-cta [id*="ResultsCount"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 1ch;
+  margin-inline: 2px;
+
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  body.streetwear-page #menFiltersDrawer.men-filters-drawer {
+    width: 100%;
+    padding-inline: 20px;
+  }
+
+  body.streetwear-page #menFiltersDrawer .men-filters-foot-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.streetwear-page #menFiltersDrawer .men-filters-clear,
+  body.streetwear-page #menFiltersDrawer .men-filters-cta {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   STREETWEAR · GRID COMO HOODIES
+   Single source of truth final
+   ========================================================= */
+
+body.streetwear-page{
+  --pp-edge-street: 40px;
+}
+
+/* Carril PLP igual que Hoodies */
+body.streetwear-page .pp-plp.container{
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+
+  padding-inline: var(--pp-edge-street) !important;
+  padding-top: 26px !important;
+  padding-bottom: 80px !important;
+
+  box-sizing: border-box;
+}
+
+/* Grid igual que Hoodies */
+body.streetwear-page #plp-grid.plp-grid,
+body.streetwear-page .pp-plp .plp-grid{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)) !important;
+
+  column-gap: clamp(24px, 3vw, 48px) !important;
+  row-gap: clamp(42px, 5vw, 68px) !important;
+
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  align-items: flex-start !important;
+
+  background: transparent !important;
+  border: 0 !important;
+}
+
+/* 4 columnas editoriales igual que Hoodies */
+@media (min-width: 1440px){
+  body.streetwear-page #plp-grid.plp-grid,
+  body.streetwear-page .pp-plp .plp-grid{
+    grid-template-columns: repeat(4, minmax(230px, 1fr)) !important;
+  }
+}
+
+/* Card igual que Hoodies: sin caja blanca tipo drop */
+body.streetwear-page #plp-grid .card,
+body.streetwear-page .pp-plp .card,
+body.streetwear-page #plp-grid .product-card,
+body.streetwear-page .pp-plp .product-card{
+  min-width: 0 !important;
+  max-width: none !important;
+  max-inline-size: none !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+
+  border-radius: 0 !important;
+  border: 0 !important;
+  overflow: visible !important;
+
+  background: transparent !important;
+  color: var(--street-ink) !important;
+
+  box-shadow: none !important;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+}
+
+/* Imagen igual que Hoodies */
+body.streetwear-page #plp-grid .card-media,
+body.streetwear-page .pp-plp .card-media{
+  display: block !important;
+  width: 100% !important;
+  inline-size: 100% !important;
+
+  aspect-ratio: 3 / 4 !important;
+
+  overflow: hidden !important;
+  position: relative !important;
+
+  border: 1px solid rgba(245,245,239,0.18) !important;
+  border-radius: 0 !important;
+
+  background:
+    radial-gradient(circle at 50% 42%, rgba(245,245,239,0.08), transparent 46%),
+    linear-gradient(180deg, rgba(13,14,18,0.92), rgba(3,4,7,0.98)) !important;
+}
+
+/* Imagen contenida */
+body.streetwear-page #plp-grid .card-media img,
+body.streetwear-page .pp-plp .card-media img,
+body.streetwear-page #plp-grid .card-media > img{
+  position: static !important;
+  inset: auto !important;
+
+  display: block !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+
+  object-fit: cover !important;
+  object-position: center !important;
+
+  transition: transform .6s cubic-bezier(.25,.15,.25,1) !important;
+}
+
+/* Hover igual que Hoodies */
+body.streetwear-page #plp-grid .card:hover .card-media img,
+body.streetwear-page .pp-plp .card:hover .card-media img{
+  transform: scale(1.02) !important;
+}
+
+/* Texto igual que Hoodies, legible sobre fondo oscuro */
+body.streetwear-page #plp-grid .card-body,
+body.streetwear-page .pp-plp .card-body{
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+
+  padding-top: 12px !important;
+  padding-inline: 0 !important;
+  padding-bottom: 0 !important;
+
+  min-height: auto !important;
+
+  background: transparent !important;
+  color: var(--street-ink) !important;
+}
+
+/* Título */
+body.streetwear-page #plp-grid .card-title,
+body.streetwear-page .pp-plp .card-title,
+body.streetwear-page #plp-grid .card-title a,
+body.streetwear-page .pp-plp .card-title a,
+body.streetwear-page #plp-grid .card-body h3,
+body.streetwear-page .pp-plp .card-body h3{
+  margin: 0 !important;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+
+  letter-spacing: 0.035em !important;
+  color: rgba(245,245,239,0.96) !important;
+
+  text-decoration: none !important;
+}
+
+/* Descripción */
+body.streetwear-page #plp-grid .card-sub,
+body.streetwear-page .pp-plp .card-sub,
+body.streetwear-page #plp-grid .card-body p,
+body.streetwear-page .pp-plp .card-body p{
+  margin: 0 !important;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+  font-size: 0.76rem !important;
+  font-weight: 400 !important;
+  line-height: 1.45 !important;
+
+  letter-spacing: 0.015em !important;
+  color: rgba(245,245,239,0.68) !important;
+
+  max-width: 30ch !important;
+}
+
+/* Precio */
+body.streetwear-page #plp-grid .card-meta,
+body.streetwear-page .pp-plp .card-meta,
+body.streetwear-page #plp-grid .price,
+body.streetwear-page .pp-plp .price{
+  margin-top: 4px !important;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+
+  letter-spacing: 0.07em !important;
+  color: rgba(201,165,107,0.94) !important;
+}
+
+/* Wishlist igual que Hoodies */
+body.streetwear-page #plp-grid .save-btn,
+body.streetwear-page .pp-plp .save-btn,
+body.streetwear-page #plp-grid .icon-btn.save,
+body.streetwear-page .pp-plp .icon-btn.save{
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+
+  width: 34px !important;
+  height: 34px !important;
+
+  border-radius: 999px !important;
+
+  background: rgba(245,245,239,.96) !important;
+  color: #07080b !important;
+
+  border: 1px solid rgba(255,255,255,.54) !important;
+
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.42),
+    0 0 18px rgba(245,245,239,.16),
+    0 0 24px rgba(160,120,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.54) !important;
+}
+
+/* =========================================================
+   STREETWEAR · FOOTER COMO HOODIES
+   Footer + footer-bottom + diales
+   ========================================================= */
+
+body.streetwear-page{
+  --street-footer-shell: rgba(5,6,10,0.92);
+  --street-footer-ink: #F5F5EF;
+  --street-footer-muted: rgba(245,245,239,0.76);
+  --street-footer-line: rgba(245,245,239,0.12);
+
+  --street-footer-led: rgba(160,120,255,0.55);
+  --street-footer-led-soft: rgba(160,120,255,0.22);
+  --street-footer-led-faint: rgba(160,120,255,0.12);
+
+  --street-footer-bottom-x: 150px; /* + derecha / - izquierda */
+  --street-footer-legal-x: -70px;  /* + derecha / - izquierda */
+  --street-footer-legal-y: 0px;    /* + abajo / - arriba */
+}
+
+/* Footer base */
+body.streetwear-page #footer,
+body.streetwear-page .site-footer{
+  background: var(--street-footer-shell) !important;
+  color: var(--street-footer-ink) !important;
+
+  border-top: 1px solid var(--street-footer-line) !important;
+
+  box-shadow:
+    0 -8px 20px rgba(245,245,239,.08),
+    0 -24px 58px rgba(0,0,0,.62) !important;
+
+  position: relative;
+}
+
+/* LED superior */
+body.streetwear-page #footer::before,
+body.streetwear-page .site-footer::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+
+  height:2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--street-footer-led) 16%,
+      rgba(245,245,239,.92) 50%,
+      rgba(255,214,158,.46) 62%,
+      var(--street-footer-led) 84%,
+      transparent 100%
+    );
+
+  box-shadow:
+    0 -2px 10px rgba(245,245,239,.32),
+    0 -12px 30px var(--street-footer-led-soft);
+
+  pointer-events:none;
+}
+
+/* Footer inner */
+body.streetwear-page #footer .footer-inner,
+body.streetwear-page .site-footer .footer-inner{
+  background: transparent !important;
+  color: var(--street-footer-ink) !important;
+}
+
+/* Links */
+body.streetwear-page #footer a,
+body.streetwear-page .site-footer a{
+  color: var(--street-footer-muted) !important;
+  text-decoration: none !important;
+}
+
+body.streetwear-page #footer a:hover,
+body.streetwear-page .site-footer a:hover{
+  color: var(--street-footer-ink) !important;
+}
+
+/* Logo footer como Hoodies */
+body.streetwear-page #footer img[src*="emblemblanco.png"],
+body.streetwear-page .site-footer img[src*="emblemblanco.png"],
+body.streetwear-page #footer img[src*="emblem.svg"],
+body.streetwear-page .site-footer img[src*="emblem.svg"]{
+  filter: brightness(0) invert(1) drop-shadow(0 10px 26px rgba(116,83,194,.42)) !important;
+  opacity: .98 !important;
+}
+
+/* Footer-bottom limpio */
+body.streetwear-page #footer .footer-bottom,
+body.streetwear-page .site-footer .footer-bottom,
+body.streetwear-page #footer .footer-bottom.container,
+body.streetwear-page .site-footer .footer-bottom.container{
+  background: transparent !important;
+
+  box-shadow: none !important;
+
+  border-top: 1px solid rgba(245,245,239,0.12) !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+
+  color: var(--street-footer-ink) !important;
+}
+
+/* Footer-bottom centrado con dial X */
+body.streetwear-page #footer .footer-bottom.container,
+body.streetwear-page .site-footer .footer-bottom.container{
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+
+  padding: 22px var(--pp-edge-street) 28px !important;
+  box-sizing: border-box;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 18px !important;
+
+  text-align: center !important;
+
+  transform: translateX(var(--street-footer-bottom-x)) !important;
+  will-change: transform;
+}
+
+/* Legal debajo del copyright y centrado */
+body.streetwear-page #footer .footer-bottom .legal,
+body.streetwear-page .site-footer .footer-bottom .legal{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+
+  width: 100% !important;
+  gap: 16px !important;
+
+  margin-top: 4px !important;
+
+  transform: translate(
+    var(--street-footer-legal-x),
+    var(--street-footer-legal-y)
+  ) !important;
+
+  will-change: transform;
+}
+
+/* Eliminar pseudo-marcos */
+body.streetwear-page #footer .footer-bottom::before,
+body.streetwear-page #footer .footer-bottom::after,
+body.streetwear-page .site-footer .footer-bottom::before,
+body.streetwear-page .site-footer .footer-bottom::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* =========================================================
+   STREETWEAR · FOOTER TYPOGRAPHY FIX
+   Igualar fuente del footer al sistema Prophetia / Hoodies
+   ========================================================= */
+
+body.streetwear-page #footer,
+body.streetwear-page .site-footer,
+body.streetwear-page #footer *,
+body.streetwear-page .site-footer *{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif) !important;
+}
+
+/* Marca PROPHETIA del footer: editorial, como el resto de la web */
+body.streetwear-page #footer .brand-col h3,
+body.streetwear-page .site-footer .brand-col h3,
+body.streetwear-page #footer .footer-brand,
+body.streetwear-page .site-footer .footer-brand{
+  font-family: var(--font-display, "Playfair Display", Georgia, serif) !important;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Títulos de columnas: SHOP / HELP / LEGAL / STUDIO */
+body.streetwear-page #footer .footer-col h5,
+body.streetwear-page .site-footer .footer-col h5{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Links y textos del footer */
+body.streetwear-page #footer .footer-col a,
+body.streetwear-page .site-footer .footer-col a,
+body.streetwear-page #footer .footer-bottom,
+body.streetwear-page .site-footer .footer-bottom,
+body.streetwear-page #footer .footer-bottom a,
+body.streetwear-page .site-footer .footer-bottom a{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+  font-size: 14px;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+/* Texto pequeño del newsletter */
+body.streetwear-page #footer small,
+body.streetwear-page .site-footer small,
+body.streetwear-page #footer .muted,
+body.streetwear-page .site-footer .muted{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif) !important;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   STREETWEAR · FOOTER IGUAL QUE HOODIES
+   Misma lógica visual sin romper footer-art / águila
+   ========================================================= */
+
+body.streetwear-page{
+  --street-footer-bottom-x: 150px; /* + derecha / - izquierda */
+  --street-footer-legal-x: -70px;  /* + derecha / - izquierda */
+  --street-footer-legal-y: 0px;    /* + abajo / - arriba */
+
+  --street-footer-shell: rgba(5,6,10,0.92);
+  --street-footer-ink: #F5F5EF;
+  --street-footer-muted: rgba(245,245,239,0.76);
+  --street-footer-line: rgba(245,245,239,0.12);
+
+  --street-footer-led: rgba(160,120,255,0.55);
+  --street-footer-led-soft: rgba(160,120,255,0.22);
+  --street-footer-led-faint: rgba(160,120,255,0.12);
+}
+
+/* Footer base igual que Hoodies */
+body.streetwear-page #footer,
+body.streetwear-page .site-footer{
+  background: var(--street-footer-shell) !important;
+  color: var(--street-footer-ink) !important;
+
+  border-top: 1px solid rgba(245,245,239,.24) !important;
+
+  box-shadow:
+    0 -8px 20px rgba(245,245,239,.08),
+    0 -24px 58px rgba(0,0,0,.62) !important;
+
+  position: relative;
+}
+
+/* LED superior igual que Hoodies */
+body.streetwear-page #footer::before,
+body.streetwear-page .site-footer::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+
+  height:2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--street-footer-led) 16%,
+      rgba(245,245,239,.92) 50%,
+      rgba(255,214,158,.46) 62%,
+      var(--street-footer-led) 84%,
+      transparent 100%
+    );
+
+  box-shadow:
+    0 -2px 10px rgba(245,245,239,.32),
+    0 -12px 30px var(--street-footer-led-soft);
+
+  pointer-events:none;
+}
+
+/* Footer inner: NO tocar estructura, solo quitar fondos heredados raros */
+body.streetwear-page #footer .footer-inner,
+body.streetwear-page .site-footer .footer-inner{
+  background: transparent !important;
+  color: var(--street-footer-ink) !important;
+
+  border-top-color: var(--street-footer-line) !important;
+  border-bottom-color: var(--street-footer-line) !important;
+}
+
+/* Links */
+body.streetwear-page #footer a,
+body.streetwear-page .site-footer a{
+  color: var(--street-footer-muted) !important;
+  text-decoration: none !important;
+}
+
+body.streetwear-page #footer a:hover,
+body.streetwear-page .site-footer a:hover{
+  color: var(--street-footer-ink) !important;
+}
+
+/* Logo footer igual que Hoodies */
+body.streetwear-page #footer img[src*="emblemblanco.png"],
+body.streetwear-page .site-footer img[src*="emblemblanco.png"]{
+  opacity: .98 !important;
+  filter: drop-shadow(0 10px 26px rgba(212,205,205,0.6)) !important;
+}
+
+body.streetwear-page #footer img[src*="emblem.svg"],
+body.streetwear-page .site-footer img[src*="emblem.svg"]{
+  filter:
+    brightness(0) invert(1)
+    drop-shadow(0 10px 26px rgba(116,83,194,0.42)) !important;
+  opacity: .98 !important;
+}
+
+/* Footer bottom limpio como Hoodies */
+body.streetwear-page #footer .footer-bottom,
+body.streetwear-page .site-footer .footer-bottom,
+body.streetwear-page #footer .footer-bottom.container,
+body.streetwear-page .site-footer .footer-bottom.container{
+  background: transparent !important;
+
+  box-shadow: none !important;
+
+  border-top: 1px solid rgba(245,245,239,0.12) !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+
+  color: var(--street-footer-ink) !important;
+}
+
+/* Footer bottom centrado con dial X */
+body.streetwear-page #footer .footer-bottom.container,
+body.streetwear-page .site-footer .footer-bottom.container{
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+
+  padding: 22px var(--pp-edge-street, 40px) 28px !important;
+  box-sizing: border-box;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 18px !important;
+
+  text-align: center !important;
+
+  transform: translateX(var(--street-footer-bottom-x)) !important;
+  will-change: transform;
+}
+
+/* Legal debajo del copyright */
+body.streetwear-page #footer .footer-bottom .legal,
+body.streetwear-page .site-footer .footer-bottom .legal{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+
+  width: 100% !important;
+  gap: 16px !important;
+
+  margin-top: 4px !important;
+
+  transform: translate(
+    var(--street-footer-legal-x),
+    var(--street-footer-legal-y)
+  ) !important;
+
+  will-change: transform;
+}
+
+/* Quitar pseudo-marcos solo del footer-bottom, como Hoodies */
+body.streetwear-page #footer .footer-bottom::before,
+body.streetwear-page #footer .footer-bottom::after,
+body.streetwear-page .site-footer .footer-bottom::before,
+body.streetwear-page .site-footer .footer-bottom::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* Tipografía footer igual que sistema Prophetia */
+body.streetwear-page #footer,
+body.streetwear-page .site-footer,
+body.streetwear-page #footer *,
+body.streetwear-page .site-footer *{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif) !important;
+}
+
+/* PROPHETIA del footer en display/editorial */
+body.streetwear-page #footer .brand-col h3,
+body.streetwear-page .site-footer .brand-col h3,
+body.streetwear-page #footer .footer-brand,
+body.streetwear-page .site-footer .footer-brand{
+  font-family: var(--font-display, Georgia, serif) !important;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+   STREETWEAR · FOOTER INNER FRAME FIX
+   Quita el marco de footer-inner sin tocar logo ni columnas
+   ========================================================= */
+
+body.streetwear-page #footer .footer-inner,
+body.streetwear-page .site-footer .footer-inner,
+body.streetwear-page #footer .footer-inner.container,
+body.streetwear-page .site-footer .footer-inner.container{
+  background: transparent !important;
+  box-shadow: none !important;
+
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+
+  outline: 0 !important;
+}
+
+/* Por si footer.css mete pseudo-marcos */
+body.streetwear-page #footer .footer-inner::before,
+body.streetwear-page #footer .footer-inner::after,
+body.streetwear-page .site-footer .footer-inner::before,
+body.streetwear-page .site-footer .footer-inner::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* =========================================================
+   PROPHETIA · Y2K LUXURY TOKENS
+   Uso: Streetwear + Hoodies
+   Estética: Y2K premium / urbano nocturno / chrome glow
+   ========================================================= */
+
+body.streetwear-page,
+body.hoodies-page{
+
+  /* =======================================================
+     BASE · NIGHT LUXURY
+     ======================================================= */
+
+  --pp-y2k-black: #05060A;
+  --pp-y2k-black-2: #08090F;
+  --pp-y2k-graphite: #10121A;
+  --pp-y2k-graphite-soft: #171A24;
+
+  --pp-y2k-ink: #F5F5EF;
+  --pp-y2k-ink-soft: rgba(245,245,239,0.78);
+  --pp-y2k-ink-muted: rgba(245,245,239,0.58);
+  --pp-y2k-line: rgba(245,245,239,0.14);
+  --pp-y2k-line-strong: rgba(245,245,239,0.28);
+
+  /* =======================================================
+     Y2K ACCENTS
+     ======================================================= */
+
+  --pp-y2k-violet: #A078FF;
+  --pp-y2k-violet-rgb: 160,120,255;
+
+  --pp-y2k-purple: #7A5CFF;
+  --pp-y2k-purple-rgb: 122,92,255;
+
+  --pp-y2k-ice: #53A8FF;
+  --pp-y2k-ice-rgb: 83,168,255;
+
+  --pp-y2k-pink: #F58AD8;
+  --pp-y2k-pink-rgb: 245,138,216;
+
+  --pp-y2k-chrome: #D9D9E6;
+  --pp-y2k-chrome-rgb: 217,217,230;
+
+  --pp-y2k-brass: #C1A45F;
+  --pp-y2k-brass-rgb: 193,164,95;
+
+  /* =======================================================
+     LED SYSTEM
+     ======================================================= */
+
+  --pp-y2k-led-core: rgba(245,245,239,0.92);
+  --pp-y2k-led-violet: rgba(var(--pp-y2k-violet-rgb),0.62);
+  --pp-y2k-led-violet-soft: rgba(var(--pp-y2k-violet-rgb),0.28);
+  --pp-y2k-led-violet-faint: rgba(var(--pp-y2k-violet-rgb),0.13);
+
+  --pp-y2k-led-ice: rgba(var(--pp-y2k-ice-rgb),0.48);
+  --pp-y2k-led-ice-soft: rgba(var(--pp-y2k-ice-rgb),0.20);
+
+  --pp-y2k-led-pink: rgba(var(--pp-y2k-pink-rgb),0.42);
+  --pp-y2k-led-pink-soft: rgba(var(--pp-y2k-pink-rgb),0.18);
+
+  --pp-y2k-led-warm: rgba(255,214,158,0.46);
+
+  /* Línea LED principal */
+  --pp-y2k-led-gradient:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--pp-y2k-led-violet) 16%,
+      var(--pp-y2k-led-core) 48%,
+      var(--pp-y2k-led-warm) 58%,
+      var(--pp-y2k-led-ice) 70%,
+      var(--pp-y2k-led-violet) 84%,
+      transparent 100%
+    );
+
+  /* Variante más rosa para Streetwear */
+  --pp-y2k-led-gradient-pop:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--pp-y2k-led-pink) 14%,
+      var(--pp-y2k-led-violet) 30%,
+      var(--pp-y2k-led-core) 50%,
+      var(--pp-y2k-led-ice) 68%,
+      var(--pp-y2k-led-pink) 84%,
+      transparent 100%
+    );
+
+  /* =======================================================
+     GLASS / PANELS
+     ======================================================= */
+
+  --pp-y2k-glass: rgba(5,6,10,0.58);
+  --pp-y2k-glass-strong: rgba(5,6,10,0.82);
+  --pp-y2k-glass-soft: rgba(255,255,255,0.055);
+
+  --pp-y2k-panel:
+    linear-gradient(
+      180deg,
+      rgba(13,14,18,0.88),
+      rgba(5,6,10,0.96)
+    );
+
+  --pp-y2k-panel-soft:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.075),
+      rgba(255,255,255,0.025)
+    );
+
+  --pp-y2k-card-bg:
+    radial-gradient(circle at 50% 0%, rgba(245,245,239,0.08), transparent 42%),
+    radial-gradient(circle at 100% 100%, rgba(var(--pp-y2k-violet-rgb),0.08), transparent 38%),
+    rgba(0,0,0,0.18);
+
+  --pp-y2k-card-bg-hover:
+    radial-gradient(circle at 50% 0%, rgba(245,245,239,0.12), transparent 44%),
+    radial-gradient(circle at 100% 100%, rgba(var(--pp-y2k-violet-rgb),0.14), transparent 40%),
+    rgba(0,0,0,0.24);
+
+  /* =======================================================
+     SHADOWS / GLOWS
+     ======================================================= */
+
+  --pp-y2k-shadow-deep:
+    0 24px 58px rgba(0,0,0,0.62);
+
+  --pp-y2k-shadow-card:
+    0 18px 42px rgba(0,0,0,0.48),
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 0 0 1px rgba(var(--pp-y2k-violet-rgb),0.04);
+
+  --pp-y2k-shadow-card-hover:
+    0 24px 56px rgba(0,0,0,0.58),
+    0 0 22px rgba(245,245,239,0.10),
+    0 0 34px rgba(var(--pp-y2k-violet-rgb),0.13),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+
+  --pp-y2k-glow-led:
+    0 0 8px rgba(245,245,239,0.48),
+    0 0 18px var(--pp-y2k-led-violet-soft),
+    0 12px 32px var(--pp-y2k-led-violet-faint);
+
+  --pp-y2k-glow-led-strong:
+    0 0 10px rgba(245,245,239,0.52),
+    0 0 24px rgba(var(--pp-y2k-violet-rgb),0.30),
+    0 0 42px rgba(var(--pp-y2k-ice-rgb),0.12);
+
+  --pp-y2k-glow-pink:
+    0 0 18px rgba(var(--pp-y2k-pink-rgb),0.22),
+    0 0 34px rgba(var(--pp-y2k-violet-rgb),0.18);
+
+  --pp-y2k-glow-chrome:
+    0 0 18px rgba(245,245,239,0.16),
+    0 0 24px rgba(var(--pp-y2k-violet-rgb),0.12),
+    inset 0 1px 0 rgba(255,255,255,0.54);
+
+  /* =======================================================
+     BORDERS
+     ======================================================= */
+
+  --pp-y2k-border-soft: 1px solid rgba(245,245,239,0.16);
+  --pp-y2k-border-mid: 1px solid rgba(245,245,239,0.28);
+  --pp-y2k-border-strong: 1px solid rgba(245,245,239,0.42);
+
+  --pp-y2k-border-violet: 1px solid rgba(var(--pp-y2k-violet-rgb),0.34);
+  --pp-y2k-border-ice: 1px solid rgba(var(--pp-y2k-ice-rgb),0.28);
+  --pp-y2k-border-pink: 1px solid rgba(var(--pp-y2k-pink-rgb),0.24);
+
+  /* =======================================================
+     TYPOGRAPHY DETAILS
+     ======================================================= */
+
+  --pp-y2k-letter-ui: 0.08em;
+  --pp-y2k-letter-wide: 0.14em;
+  --pp-y2k-letter-max: 0.22em;
+
+  --pp-y2k-title-size: clamp(28px, 5vw, 76px);
+  --pp-y2k-kicker-size: 11px;
+  --pp-y2k-meta-size: 12px;
+  --pp-y2k-card-title-size: 0.82rem;
+  --pp-y2k-card-sub-size: 0.76rem;
+
+  /* =======================================================
+     MOTIFS / DECORATION
+     ======================================================= */
+
+  --pp-y2k-star: "✦";
+  --pp-y2k-star-alt: "✧";
+  --pp-y2k-cross: "✚";
+  --pp-y2k-dot: "•";
+
+  --pp-y2k-deco-opacity: 0.22;
+  --pp-y2k-deco-opacity-soft: 0.11;
+
+  /* =======================================================
+     MOTION
+     ======================================================= */
+
+  --pp-y2k-ease: cubic-bezier(.25,.15,.25,1);
+  --pp-y2k-ease-out: cubic-bezier(.16,.84,.44,1);
+
+  --pp-y2k-fast: 0.18s;
+  --pp-y2k-mid: 0.28s;
+  --pp-y2k-slow: 0.60s;
+
+  --pp-y2k-hover-lift: -2px;
+  --pp-y2k-hover-scale: 1.025;
+
+  /* =======================================================
+     FILTERS
+     ======================================================= */
+
+  --pp-y2k-img-filter-hover:
+    contrast(1.04)
+    brightness(1.03)
+    saturate(1.02);
+
+  --pp-y2k-logo-filter-white:
+    brightness(0) invert(1)
+    drop-shadow(0 10px 26px rgba(var(--pp-y2k-violet-rgb),0.42));
+
+  --pp-y2k-logo-filter-soft:
+    drop-shadow(0 14px 30px rgba(0,0,0,0.55));
+}
+
+/* =========================================================
+   STREETWEAR · Y2K LUXURY ACTIVE LAYER
+   Aplica visualmente los tokens Y2K a la página
+   ========================================================= */
+
+/* HEADER + TOPBAR */
+body.streetwear-page .pp-topbar,
+body.streetwear-page .pp-header{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5,6,10,0.76),
+      rgba(5,6,10,0.48)
+    ) !important;
+
+  border-bottom: var(--pp-y2k-border-mid) !important;
+
+  box-shadow:
+    0 8px 18px rgba(245,245,239,0.12),
+    0 18px 42px rgba(0,0,0,0.52),
+    inset 0 -1px 0 rgba(var(--pp-y2k-violet-rgb),0.24) !important;
+
+  backdrop-filter: blur(12px) saturate(135%);
+  -webkit-backdrop-filter: blur(12px) saturate(135%);
+}
+
+/* Línea LED inferior header */
+body.streetwear-page .pp-header{
+  position: relative;
+}
+
+body.streetwear-page .pp-header::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+
+  height: 2px;
+  background: var(--pp-y2k-led-gradient-pop);
+  box-shadow: var(--pp-y2k-glow-led);
+  pointer-events: none;
+}
+
+/* HERO: glow Y2K sutil */
+body.streetwear-page .pp-hero.hero--two-cols::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 18% 35%, rgba(var(--pp-y2k-pink-rgb),0.10), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgba(var(--pp-y2k-ice-rgb),0.10), transparent 32%),
+    radial-gradient(circle at 50% 100%, rgba(var(--pp-y2k-violet-rgb),0.11), transparent 42%);
+
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Título del hero con detalle Y2K */
+body.streetwear-page .pp-hero__title{
+  color: var(--pp-y2k-ink) !important;
+  letter-spacing: 0.26em !important;
+  text-shadow:
+    0 0 12px rgba(var(--pp-y2k-violet-rgb),0.28),
+    0 0 24px rgba(var(--pp-y2k-ice-rgb),0.12);
+}
+
+body.streetwear-page .pp-hero__title::after{
+  content: var(--pp-y2k-star);
+  margin-left: 12px;
+
+  color: rgba(var(--pp-y2k-pink-rgb),0.82);
+  text-shadow:
+    0 0 10px rgba(var(--pp-y2k-pink-rgb),0.38),
+    0 0 22px rgba(var(--pp-y2k-violet-rgb),0.24);
+
+  opacity: 0.82;
+}
+
+/* Menú lateral hero */
+body.streetwear-page .pp-hero__list a{
+  color: var(--pp-y2k-ink-soft) !important;
+  text-shadow: 0 0 14px rgba(var(--pp-y2k-violet-rgb),0.10);
+}
+
+body.streetwear-page .pp-hero__list a:hover,
+body.streetwear-page .pp-hero__list a[aria-current="page"]{
+  color: var(--pp-y2k-ink) !important;
+  border-bottom-color: rgba(var(--pp-y2k-pink-rgb),0.62) !important;
+  text-shadow:
+    0 0 10px rgba(var(--pp-y2k-pink-rgb),0.24),
+    0 0 18px rgba(var(--pp-y2k-violet-rgb),0.20);
+}
+
+/* TOOLBAR / FILTROS */
+body.streetwear-page .pp-filters.container{
+  background:
+    linear-gradient(180deg, rgba(8,9,13,0.88), rgba(4,5,8,0.96)) !important;
+
+  border-top: var(--pp-y2k-border-mid) !important;
+  border-bottom: var(--pp-y2k-border-strong) !important;
+
+  box-shadow:
+    0 -6px 18px rgba(245,245,239,0.10),
+    0 8px 24px rgba(var(--pp-y2k-violet-rgb),0.16),
+    0 24px 52px rgba(0,0,0,0.50),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -1px 0 rgba(var(--pp-y2k-pink-rgb),0.18) !important;
+
+  position: sticky;
+}
+
+/* LEDs toolbar */
+body.streetwear-page .pp-filters.container::before,
+body.streetwear-page .pp-filters.container::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+
+  height: 2px;
+  background: var(--pp-y2k-led-gradient-pop);
+  pointer-events: none;
+}
+
+body.streetwear-page .pp-filters.container::before{
+  top: 0;
+  box-shadow:
+    0 -2px 10px rgba(245,245,239,0.28),
+    0 -10px 26px rgba(var(--pp-y2k-violet-rgb),0.22);
+}
+
+body.streetwear-page .pp-filters.container::after{
+  bottom: 0;
+  box-shadow:
+    0 2px 10px rgba(245,245,239,0.28),
+    0 12px 30px rgba(var(--pp-y2k-pink-rgb),0.20);
+}
+
+/* Botones filtros */
+body.streetwear-page .pp-btn,
+body.streetwear-page .pp-sort-trigger,
+body.streetwear-page .pp-check span{
+  color: var(--pp-y2k-ink-soft) !important;
+  transition:
+    color var(--pp-y2k-fast) var(--pp-y2k-ease),
+    text-shadow var(--pp-y2k-fast) var(--pp-y2k-ease),
+    transform var(--pp-y2k-fast) var(--pp-y2k-ease);
+}
+
+body.streetwear-page .pp-btn:hover,
+body.streetwear-page .pp-sort-trigger:hover{
+  color: #fff !important;
+  transform: translateY(-1px);
+  text-shadow:
+    0 0 10px rgba(var(--pp-y2k-pink-rgb),0.26),
+    0 0 18px rgba(var(--pp-y2k-violet-rgb),0.24);
+}
+
+/* Checkbox stock */
+body.streetwear-page .pp-check input[type="checkbox"]{
+  border-color: rgba(245,245,239,0.72) !important;
+  box-shadow:
+    0 0 10px rgba(var(--pp-y2k-violet-rgb),0.14),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+body.streetwear-page .pp-check input[type="checkbox"]:checked{
+  accent-color: #f5f5ef;
+  box-shadow:
+    0 0 12px rgba(245,245,239,0.34),
+    0 0 22px rgba(var(--pp-y2k-pink-rgb),0.24);
+}
+
+/* CARDS */
+body.streetwear-page #plp-grid .card-media,
+body.streetwear-page .pp-plp .card-media{
+  background: var(--pp-y2k-card-bg) !important;
+  border: var(--pp-y2k-border-soft) !important;
+
+  box-shadow: var(--pp-y2k-shadow-card) !important;
+
+  transition:
+    transform var(--pp-y2k-mid) var(--pp-y2k-ease),
+    border-color var(--pp-y2k-mid) var(--pp-y2k-ease),
+    box-shadow var(--pp-y2k-mid) var(--pp-y2k-ease),
+    background var(--pp-y2k-mid) var(--pp-y2k-ease);
+}
+
+body.streetwear-page #plp-grid .card:hover .card-media,
+body.streetwear-page .pp-plp .card:hover .card-media{
+  background: var(--pp-y2k-card-bg-hover) !important;
+  border-color: rgba(var(--pp-y2k-pink-rgb),0.34) !important;
+
+  box-shadow:
+    var(--pp-y2k-shadow-card-hover),
+    0 0 28px rgba(var(--pp-y2k-pink-rgb),0.10) !important;
+
+  transform: translateY(var(--pp-y2k-hover-lift));
+}
+
+body.streetwear-page #plp-grid .card:hover .card-media img,
+body.streetwear-page .pp-plp .card:hover .card-media img{
+  transform: scale(var(--pp-y2k-hover-scale)) !important;
+  filter: var(--pp-y2k-img-filter-hover);
+}
+
+/* Textos card */
+body.streetwear-page #plp-grid .card-title,
+body.streetwear-page .pp-plp .card-title{
+  color: var(--pp-y2k-ink) !important;
+}
+
+body.streetwear-page #plp-grid .card-sub,
+body.streetwear-page .pp-plp .card-sub{
+  color: var(--pp-y2k-ink-soft) !important;
+}
+
+body.streetwear-page #plp-grid .card-meta,
+body.streetwear-page .pp-plp .card-meta,
+body.streetwear-page #plp-grid .price,
+body.streetwear-page .pp-plp .price{
+  color: rgba(var(--pp-y2k-pink-rgb),0.88) !important;
+  text-shadow: 0 0 14px rgba(var(--pp-y2k-pink-rgb),0.14);
+}
+
+/* Wishlist button más chrome/Y2K */
+body.streetwear-page #plp-grid .save-btn,
+body.streetwear-page .pp-plp .save-btn,
+body.streetwear-page #plp-grid .icon-btn.save,
+body.streetwear-page .pp-plp .icon-btn.save{
+  background:
+    radial-gradient(circle at 30% 20%, #fff, rgba(245,245,239,0.86) 44%, rgba(217,217,230,0.88) 100%) !important;
+
+  color: #07080b !important;
+  border: 1px solid rgba(255,255,255,0.72) !important;
+
+  box-shadow:
+    0 12px 26px rgba(0,0,0,0.42),
+    0 0 18px rgba(245,245,239,0.18),
+    0 0 24px rgba(var(--pp-y2k-violet-rgb),0.16),
+    inset 0 1px 0 rgba(255,255,255,0.62) !important;
+}
+
+body.streetwear-page #plp-grid .save-btn:hover,
+body.streetwear-page .pp-plp .save-btn:hover,
+body.streetwear-page #plp-grid .icon-btn.save:hover,
+body.streetwear-page .pp-plp .icon-btn.save:hover{
+  transform: scale(1.06);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,0.48),
+    0 0 22px rgba(245,245,239,0.28),
+    0 0 34px rgba(var(--pp-y2k-pink-rgb),0.24) !important;
+}
+
+/* Sort dropdown Y2K */
+body.streetwear-page .pp-sort-menu{
+  background: rgba(8,9,12,0.96) !important;
+  border: var(--pp-y2k-border-violet) !important;
+  box-shadow:
+    0 18px 48px rgba(0,0,0,0.50),
+    0 0 26px rgba(var(--pp-y2k-violet-rgb),0.16) !important;
+}
+
+/* Footer LED un poco más Y2K */
+body.streetwear-page #footer::before,
+body.streetwear-page .site-footer::before{
+  background: var(--pp-y2k-led-gradient-pop) !important;
+  box-shadow: var(--pp-y2k-glow-led) !important;
+}
+
+/* =========================================================
+   STREETWEAR · MERGE BB-SPACER INTO HERO
+   Elimina el escalón sin tapar zebra fire flames
+   ========================================================= */
+
+body.streetwear-page{
+  --sw-hero-base-h: 260px;
+  --sw-hero-extra-space: clamp(40px, 6vw, 90px);
+}
+
+/* El hero ocupa también el espacio que antes ocupaba bb-spacer */
+body.streetwear-page .pp-hero.hero--two-cols{
+  min-height: calc(
+    var(--sw-hero-base-h) + var(--sw-hero-extra-space)
+  ) !important;
+
+  margin-bottom: 0 !important;
+
+  /* IMPORTANTE: no pintar fondo para no tapar zebra flames */
+  background: transparent !important;
+}
+
+/* El spacer desaparece, pero su altura ya vive dentro del hero */
+body.streetwear-page .bb-spacer{
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+}
+
+/* Toolbar justo después del hero */
+body.streetwear-page .pp-filters.container{
+  margin-top: 0 !important;
+}
+
+/* =========================================================
+   STREETWEAR · PP-HERO-TITLE ZONE BLEND
+   Rellena la franja del h3 vacío sin tocar grid ni zebra flames
+   ========================================================= */
+
+/* No tocar .pp-collection-page: puede afectar al grid */
+body.streetwear-page .pp-collection-page{
+  display: block !important;
+  background: transparent !important;
+}
+
+/* Solo la franja vacía bajo el hero */
+body.streetwear-page .pp-collection-hero.container{
+  max-width: none !important;
+  width: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  min-height: 34px; /* ajusta aquí el alto de esa zona */
+
+  box-sizing: border-box;
+
+  /* parecido al hero, pero muy sutil para no tapar zebra flames */
+  background:
+    radial-gradient(circle at 16% 0%, rgba(245,138,216,0.055), transparent 38%),
+    radial-gradient(circle at 78% 0%, rgba(83,168,255,0.055), transparent 42%),
+    radial-gradient(circle at 48% 100%, rgba(160,120,255,0.07), transparent 54%),
+    rgba(5,6,10,0.18) !important;
+}
+
+/* El h3 está vacío: que no añada margen ni altura extra */
+body.streetwear-page .pp-collection-hero #pp-hero-title,
+body.streetwear-page .pp-collection-hero .pp-hero-title{
+  margin: 0 !important;
+  padding: 0 !important;
+
+  height: 0 !important;
+  min-height: 0 !important;
+
+  font-size: 0 !important;
+  line-height: 0 !important;
+
+  overflow: hidden !important;
+}

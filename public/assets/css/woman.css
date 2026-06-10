@@ -1,0 +1,1080 @@
+/* ===========================
+   HERO TIPO Prophetia · MUJER
+   =========================== */
+
+/* Banda principal: logo + imagen editorial + panel lateral */
+.women-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(230px, 340px);
+  gap: clamp(18px, 4vw, 52px);
+  align-items: flex-start;
+  padding: clamp(10px, 1.5vw, 18px) 0 clamp(22px, 4vw, 40px);
+}
+
+.women-band__media {
+  position: relative;
+}
+
+/* Logo grande alineado con el header, como Prophetia */
+.women-band__logo {
+  display: block;
+  width: min(420px, 90%);
+  height: auto;
+  margin-bottom: clamp(8px, 1vw, 14px);
+}
+
+/* Marco de la imagen editorial */
+.women-band__image-frame {
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ddd;
+}
+
+.women-band__image-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  transform-origin: center;
+  transition: transform .8s cubic-bezier(.25,.15,.25,1);
+}
+
+.women-band__image-frame:hover img {
+  transform: scale(1.01);
+}
+
+
+/* Panel derecho “Mujer” — al mismo carril/altura que Hombre */
+.women-band__side{
+  position: sticky;
+  top: calc(var(--pp-header-h, 72px) + 18px);
+
+  margin-top: clamp(34px, 6vw, 84px);
+  justify-self: start;
+
+  transform: translateY(var(--women-side-y, 142px));
+
+  padding-right: clamp(6px, 1.2vw, 18px);
+  align-self: flex-start;
+}
+
+.women-band__title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(18px, 2.4vw, 22px);
+  margin: 0 0 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.women-band__nav {
+  font-size: .95rem;
+}
+
+.women-band__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.women-band__list a {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.women-band__list a:hover {
+  border-color: currentColor;
+}
+
+/* ===========================
+   TOOLBAR (Filtros / Ordenar / En stock / Vista)
+   =========================== */
+
+.women-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 0 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-size: .9rem;
+}
+
+.women-toolbar__left,
+.women-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.women-btn-ghost {
+  background: none;
+  border: 0;
+  padding: 6px 2px;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+.women-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.women-select select {
+  appearance: none;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+}
+
+.women-select::after {
+  content: "▾";
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  font-size: .7rem;
+}
+
+.women-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.women-view-toggle {
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.women-view-toggle[aria-pressed="true"] {
+  background: #111;
+  color: #fff;
+}
+
+/* ===========================
+   GRID MUJER (usa plp.css + ajuste vista)
+   =========================== */
+
+.women-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(18px, 2vw, 26px);
+}
+
+.women-grid.women-grid--compact {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+/* Vista lista opcional */
+body.view-list .women-grid {
+  grid-template-columns: 1fr;
+}
+
+body.view-list .women-grid .card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+/* ===========================
+   DRAWER DE FILTROS LOCAL · ESTILO Prophetia
+   =========================== */
+
+/* Overlay A PANTALLA COMPLETA */
+.women-filters-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease-out;
+  z-index: 2600;
+}
+
+.women-filters-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Panel derecho tipo Prophetia */
+.women-filters-drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  width: min(560px, 44vw);
+  background: #fff;
+  box-shadow: -18px 0 40px rgba(0,0,0,.18);
+  border-left: 1px solid rgba(0,0,0,.06);
+  transform: translateX(100%);
+  transition: transform .24s ease-out;
+  z-index: 2700;
+  display: flex;
+  flex-direction: column;
+}
+
+.women-filters-drawer.is-open {
+  transform: translateX(0);
+}
+
+/* Header del panel de filtros */
+.women-filters-head {
+  padding-block: 32px 16px;
+}
+
+.women-filters-head-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+}
+
+.women-filters-title {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: .04em;
+  text-transform: none;
+  margin: 0;
+}
+
+.women-filters-close {
+  border: 0;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Tabs COLOR / CATEGORÍA */
+.women-filters-tabs {
+  display: flex;
+  gap: 32px;
+  margin-top: 16px;
+}
+
+.women-filters-foot-inner {
+  padding: 16px 40px 24px;
+}
+
+/* Drawer padding lateral */
+.women-filters-drawer {
+  width: min(540px, 100%);
+  padding-inline: 48px;
+}
+
+.women-filters-head,
+.women-filters-body,
+.women-filters-foot-inner {
+  padding-inline: 0;
+}
+
+/* ===========================
+   LISTA DE COLORES · ESTILO Prophetia
+   =========================== */
+
+.women-swatch-list {
+  list-style: none;
+  padding: 0 0 0 12px;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 20px;
+}
+
+.women-swatch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .9rem;
+  cursor: pointer;
+  position: relative;
+  padding: 4px 0;
+}
+
+/* input accesible pero oculto visualmente */
+.women-swatch-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* puntito de color */
+.women-swatch-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.25);
+  display: inline-block;
+  box-shadow: 0 0 0 1px transparent;
+  transition:
+    box-shadow .18s ease,
+    transform .18s ease,
+    border-color .18s ease;
+}
+
+.women-swatch-label {
+  white-space: nowrap;
+}
+
+/* seleccionado */
+.women-swatch-input:checked + .women-swatch-dot {
+  box-shadow: 0 0 0 2px #111;
+  border-color: #111;
+  transform: translateY(-1px);
+}
+
+.women-swatch-input:checked ~ .women-swatch-label {
+  font-weight: 600;
+}
+
+/* Colores Prophetia */
+.women-swatch--white       { background: #fdfdfd; }
+.women-swatch--black       { background: #111111; }
+.women-swatch--beige       { background: #e4d4b4; }
+.women-swatch--green       { background: #4c7b4b; }
+.women-swatch--blue        { background: #4a7bbf; }
+.women-swatch--pink        { background: #f5b7c8; }
+.women-swatch--brown       { background: #8b5a33; }
+.women-swatch--red         { background: #d23a32; }
+.women-swatch--purple      { background: #b57fbf; }
+.women-swatch--orange      { background: #f18a3b; }
+.women-swatch--yellow      { background: #f2c232; }
+.women-swatch--grey        { background: #b8b8b8; }
+.women-swatch--gold        { background: #e4c77a; }
+.women-swatch--silver      { background: #d5d5dd; }
+.women-swatch--multi {
+  background: linear-gradient(90deg,
+    #f94144, #f3722c, #f9c74f, #90be6d, #577590);
+}
+.women-swatch--clear       { background: #ffffff; border-style:dashed; }
+.women-swatch--transparent { background: repeating-linear-gradient(
+    45deg,
+    #f5f5f5 0,
+    #f5f5f5 4px,
+    #e0e0e0 4px,
+    #e0e0e0 8px
+  ); }
+
+/* Botones footer */
+.women-filters-foot {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding: 0;
+}
+
+.women-filters-foot-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: stretch;
+  min-height: 64px;
+}
+
+.women-filters-clear {
+  width: 100%;
+  padding: .9rem 1.4rem;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-size: .85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.women-filters-count {
+  margin-left: .35rem;
+  opacity: .7;
+}
+
+.women-filters-cta {
+  width: 100%;
+  padding: .9rem 1.4rem;
+  border: 0;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: .9rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* PESTAÑAS COLOR / CATEGORÍA */
+.women-filters-tab {
+  border: 0;
+  background: none;
+  padding: 6px 0;
+  font: inherit;
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: .5;
+  position: relative;
+  transition: opacity .18s ease-out;
+}
+
+.women-filters-tab.is-active {
+  opacity: 1;
+}
+
+.women-filters-tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: #111;
+}
+
+.women-tab-count {
+  margin-left: .2rem;
+  font-size: .8em;
+}
+
+/* CUERPO DEL DRAWER */
+.women-filters-body {
+  padding: 12px 0 14px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+/* Paneles */
+.women-filters-panel {
+  display: none;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity .18s ease-out,
+    transform .18s ease-out;
+}
+
+.women-filters-panel.is-active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.women-filters-subtitle {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin: 0 0 12px;
+}
+
+/* PANEL CATEGORÍA VERTICAL */
+.women-filters-panel[data-panel="categoria"] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.women-filters-panel[data-panel="categoria"] .women-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .9rem;
+}
+
+/* Responsive drawer */
+@media (max-width: 768px) {
+  .women-filters-drawer {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px 18px 16px;
+  }
+
+  .women-filters-foot-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .women-filters-clear {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 960px) {
+  .women-band {
+    grid-template-columns: 1fr;
+  }
+
+  .women-band__side {
+    position: static;
+  }
+}
+
+
+
+/* Prophetia — Mujer · Comportamiento Prophetia */
+.women-page .plp-wrap > .container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+/* HERO WOMEN · MARCO Prophetia */
+.women-page .hero.hero--women {
+  padding: 0;
+}
+
+.women-page .hero.hero--women .hero-frame {
+  position: relative;
+  width: 100%;
+  max-width: 1248px;
+  aspect-ratio: 1248 / 702;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #000;
+}
+
+.women-page .hero.hero--women .hero-video {
+  position: absolute;
+  inset: 0;
+}
+
+/* layout global mujer */
+body.women-page main.pp-collection-page {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hero a la izquierda */
+.women-page .hero.hero--women .hero-frame {
+  margin-left: 0;
+  margin-right: auto;
+  transform: translateX(0);
+}
+
+.women-page .layout-women .hero-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.women-page .layout-women .hero-frame {
+  max-width: 1248px;
+  aspect-ratio: 1248 / 702;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+}
+
+/* ajuste hero mujer */
+.women-page .hero.hero--women {
+  padding-top: 20px;
+  padding-bottom: 0;
+  margin-bottom: 24px;
+}
+
+.women-page .hero.hero--women.layout-women {
+  margin-top: 0;
+}
+
+/* separación toolbar / grid */
+.women-page .plp-wrap {
+  margin-top: 24px;
+}
+
+/* Gutter único mujer */
+body.women-page {
+  --pp-edge-women: 40px;
+}
+
+/* HEADER: ancho completo, sin padding propio */
+.women-page .pp-header > .container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: 0;          /* aquí ya NO metemos gutter */
+  box-sizing: border-box;
+}
+
+/* TOPBAR: carril con gutter + flex interno */
+.women-page .pp-topbar {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-women);  /* mismo carril que el hero */
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.women-page .pp-left,
+.women-page .pp-right {
+  margin: 0;
+}
+/* Ajuste fino de posición dentro de la topbar */
+.women-page .pp-topbar .pp-left {
+  flex: 0 0 auto;          /* no se estira, queda pegado al gutter izquierdo */
+}
+
+
+
+/* HERO GRID alineado */
+.women-page .layout-women {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  padding: 20px var(--pp-edge-women) 0 var(--pp-edge-women);
+}
+
+/* TOOLBAR alineada */
+.women-page .women-toolbar.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-women);
+  box-sizing: border-box;
+}
+
+/* GRID alineado */
+.women-page .plp-wrap .container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-women);
+  box-sizing: border-box;
+}
+
+/* responsive hero / toolbar */
+@media (max-width: 960px) {
+  .women-page .hero.hero--women.layout-women {
+    padding: 12px 16px 0 16px;
+  }
+
+  .women-page .women-toolbar.container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Tarjetas producto */
+.women-grid .card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid var(--line, rgba(0,0,0,.08));
+  padding: 12px 12px 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tarjetas producto (markup real: .card-media / .card-body / .card-title / .card-price) */
+.women-grid .card{
+  background:#fff;
+  border-radius:10px;
+  border:1px solid var(--line, rgba(0,0,0,.08));
+  padding:12px 12px 16px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Media */
+.women-grid .card-media{
+  display:block;
+  width:100%;
+  position:relative;
+  margin-bottom:10px;
+  border-radius:10px;
+  overflow:hidden;
+  background:#f3f3f3;
+  aspect-ratio: 4 / 5; /* ajusta si quieres 3/4 o 1/1 */
+}
+
+.women-grid .card-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* Body */
+.women-grid .card-body{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+/* Tipos */
+.women-grid .card-title{
+  font-size:.92rem;
+  line-height:1.25;
+  margin:0;
+}
+
+.women-grid .card-price{
+  font-size:.92rem;
+  font-weight:500;
+  margin:0;
+}
+
+/* Hero-left structure */
+.women-page .hero-left {
+  display: flex;
+  flex-direction: column;
+}
+
+/* (opcional) clase para franja de logo específica de mujer */
+.women-page .hero-women-logo-band {
+  display: block;
+  line-height: 0;
+  margin-bottom: 12px;
+  pointer-events: auto;
+  transform: translateY(var(--women-logo-offset, 0px));
+}
+
+
+/* Ajuste del floating-logo */
+.women-page .floating-logo {
+  --logo-y: 10px;   /* SUBIR */
+  --logo-x: -75px;     /* Ajusta si necesitas mover en X */
+}
+/* =========================================================
+   MUJER · Mega menú alineado y de ancho completo
+   ========================================================= */
+
+/* El panel ocupa todo el ancho de la ventana */
+.women-page .mega-panel {
+    z-index: 4001; /* Ajusta según sea necesario */
+
+  overflow: visible !important; /* Asegura que el mega panel no se recorte */
+  position: fixed;
+}
+
+/* Contenedor interno del mega menú alineado al gutter de Mujer */
+.women-page .mega-panel .container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-women);  /* mismo carril que el hero */
+  box-sizing: border-box;
+}
+
+/* Si dentro hay alguna “tarjeta” o bloque con fondo propio, 
+   le quitamos el fondo para que todo dependa del panel */
+.women-page .mega-panel *[class*="panel-card"],
+.women-page .mega-panel *[class*="mega-card"] {
+  background: transparent;
+  box-shadow: none;
+}
+
+
+/* ===== MUJER: NO transforms en el header (rompen position:fixed del mega) ===== */
+.women-page .pp-topbar .pp-left,
+.women-page .pp-topbar .pp-right{
+  transform: none !important;
+}
+
+/* Ajuste fino SIN transform */
+.women-page .pp-topbar{
+  padding-inline: var(--pp-edge-women, 40px);
+}
+
+.women-page .pp-topbar .pp-right{
+  margin-left: auto;
+  padding-right: 10px;   /* ajusta 0–24px a gusto */
+}
+/* =========================================================
+   MUJER · Refinamiento tipográfico del mega menú
+   ========================================================= */
+
+/* Tamaño base del mega menú en Mujer */
+.women-page .mega-panel {
+  font-size: 0.9rem;        /* antes ~1rem */
+  line-height: 1.35;
+}
+
+/* Links principales */
+.women-page .mega-panel a {
+  font-size: 0.88rem;       /* más editorial */
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Columnas del mega menú */
+.women-page .mega-col {
+  gap: 10px;                /* reduce aire vertical */
+}
+
+/* Enlaces “Ver todo”, Favoritos, Novedades */
+.women-page .mega-col a:last-child {
+  font-size: 0.82rem;
+  opacity: 1;
+}
+
+/* Hover más fino (menos brusco) */
+.women-page .mega-panel a:hover {
+  opacity: 1;
+}
+/* =========================================================
+   MUJER · FIX GRID (evita tarjetas gigantes)
+   ========================================================= */
+.women-page #plp-grid.plp-grid,
+.women-page #plp-grid.women-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 320px));
+  gap: clamp(16px, 2vw, 24px);
+  justify-content: start;     /* no estirar a lo loco */
+  align-items: start;
+}
+
+/* Media consistente */
+.women-page #plp-grid .card-media{
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.women-page #plp-grid .card-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* =========================================================
+   MUJER · TIPOGRAFÍA CARD (evita H3 “editorial” en PLP)
+   ========================================================= */
+.women-page #plp-grid .card-title{
+  font-family: var(--font-ui);
+  font-size: .95rem;
+  font-weight: 500;
+  letter-spacing: .01em;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.women-page #plp-grid .card-title a{
+  color: inherit;
+  text-decoration: none;
+}
+.women-page #plp-grid .card-title a:hover{
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Sub y precio más premium/compacto */
+.women-page #plp-grid .card-sub{
+  font-size: .9rem;
+  line-height: 1.55;
+  color: rgba(0,0,0,.78);
+}
+.women-page #plp-grid .card-price{
+  font-size: .92rem;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   MUJER · CONTROLES CARD (prev/next + corazón estilo “Hombre”)
+   ========================================================= */
+
+/* Asegura overlay dentro del media */
+.women-page #plp-grid .card-media{ position: relative; }
+
+/* Botones prev/next */
+.women-page #plp-grid .card-media .nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.92);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease, background .18s ease;
+}
+
+.women-page #plp-grid .card-media:hover .nav{ opacity: 1; }
+
+.women-page #plp-grid .card-media .nav.prev{ left: 10px; }
+.women-page #plp-grid .card-media .nav.next{ right: 10px; }
+
+/* Flechas (sin depender de iconos externos) */
+.women-page #plp-grid .card-media .nav::before{
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #111;
+  border-bottom: 2px solid #111;
+  transform: rotate(135deg);
+}
+.women-page #plp-grid .card-media .nav.next::before{
+  transform: rotate(-45deg);
+}
+
+/* Hover más “premium” */
+.women-page #plp-grid .card-media .nav:hover{
+  background: rgba(255,255,255,.98);
+}
+
+/* Botón corazón */
+.women-page #plp-grid .ico-btn.save{
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.92);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.women-page #plp-grid .ico-btn.save svg{
+  width: 18px;
+  height: 18px;
+}
+
+body.women-page{
+  --pp-nav-logo: url("/assets/img/logo/emblemblanco.svg");
+  --pp-nav-size: 18px;
+  --pp-nav-rot-prev: 180deg;
+  --pp-nav-rot-next: 0deg;
+
+  --pp-nav-in: 240ms;
+  --pp-nav-hover: 200ms;
+  --pp-nav-ease: cubic-bezier(.2,.8,.2,1);
+}
+/* =========================================================
+   MUJER · Card carousel scoped
+   Evita contaminar otras páginas
+   ========================================================= */
+
+body.women-page .card .plp-media,
+body.women-page .card .card-media{
+  position: relative;
+}
+
+body.women-page .card .nav.prev,
+body.women-page .card .nav.next{
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(0,0,0,.14);
+  background-color: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+
+  background-image: var(--pp-nav-logo);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--pp-nav-size);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity var(--pp-nav-in) var(--pp-nav-ease),
+    transform var(--pp-nav-in) var(--pp-nav-ease),
+    box-shadow var(--pp-nav-hover) var(--pp-nav-ease),
+    border-color var(--pp-nav-hover) var(--pp-nav-ease),
+    background-size var(--pp-nav-hover) var(--pp-nav-ease);
+}
+
+body.women-page .card .nav.prev{
+  left: 10px;
+  transform: translateY(-50%) scale(.985) rotate(var(--pp-nav-rot-prev));
+}
+
+body.women-page .card .nav.next{
+  right: 10px;
+  transform: translateY(-50%) scale(.985) rotate(var(--pp-nav-rot-next));
+}
+
+body.women-page .card .plp-media:hover .nav,
+body.women-page .card .card-media:hover .nav{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.women-page .card .plp-media:hover .nav.prev,
+body.women-page .card .card-media:hover .nav.prev{
+  transform: translateY(-50%) scale(1) rotate(var(--pp-nav-rot-prev));
+}
+
+body.women-page .card .plp-media:hover .nav.next,
+body.women-page .card .card-media:hover .nav.next{
+  transform: translateY(-50%) scale(1) rotate(var(--pp-nav-rot-next));
+}
+
+body.women-page .card .nav.prev svg,
+body.women-page .card .nav.next svg{
+  display: none !important;
+}
+
+body.women-page .card .nav.prev:hover,
+body.women-page .card .nav.next:hover{
+  border-color: rgba(0,0,0,.22);
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  background-size: calc(var(--pp-nav-size) + 2px);
+}
+
+body.women-page .card .nav.prev:active,
+body.women-page .card .nav.next:active{
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+}

@@ -1,0 +1,454 @@
+/* ==========================================================
+   PROPHETIA · filters-drawer.css (NEUTRAL)
+   Drawer de filtros reutilizable (Hombre/Mujer/colecciones)
+   - Mantiene clases actuales: .men-filters-*
+   - No depende de men.css
+   - Sin duplicados ni overrides
+   ========================================================== */
+
+:root{
+  /* Overlay */
+  --pp-fd-overlay-bg: rgba(0,0,0,.25);
+  --pp-fd-overlay-z: 900;
+
+  /* Drawer */
+  --pp-fd-drawer-bg: #fff;
+  --pp-fd-drawer-z: 2700;
+  --pp-fd-shadow: -18px 0 40px rgba(0,0,0,.18);
+  --pp-fd-border: 1px solid rgba(0,0,0,.06);
+
+  /* Medidas */
+  --pp-fd-width: 540px;          /* como tu captura */
+  --pp-fd-pad-x: 48px;           /* padding inline Prophetia */
+  --pp-fd-head-pt: 32px;
+  --pp-fd-head-pb: 16px;
+
+  /* Tipografía */
+  --pp-fd-title-size: 18px;
+  --pp-fd-title-ls: .04em;
+
+  /* Tabs */
+  --pp-fd-tab-gap: 32px;
+  --pp-fd-tab-size: .85rem;
+  --pp-fd-tab-ls: .08em;
+
+  /* Body */
+  --pp-fd-body-pt: 12px;
+  --pp-fd-body-pb: 14px;
+  --pp-fd-body-gap: 24px;
+
+  /* Swatches */
+  --pp-fd-swatch-col-gap: 20px;
+  --pp-fd-swatch-row-gap: 10px;
+  --pp-fd-swatch-left-pad: 12px;
+  --pp-fd-dot: 16px;
+
+  /* Footer */
+  --pp-fd-foot-minh: 64px;
+}
+
+/* ===========================
+   OVERLAY
+   =========================== */
+
+:is(.men-filters-overlay, .women-filters-overlay){
+  position: fixed;
+  inset: 0;
+  background: var(--pp-fd-overlay-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: var(--pp-fd-overlay-z);
+}
+:is(.men-filters-overlay, .women-filters-overlay).is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+/* ===========================
+   DRAWER (panel)
+   =========================== */
+
+
+:is(.men-filters-drawer, .women-filters-drawer){
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+
+  width: min(var(--pp-fd-width), 100%);
+  padding-inline: var(--pp-fd-pad-x);
+
+  background: var(--pp-fd-drawer-bg);
+  box-shadow: var(--pp-fd-shadow);
+  border-left: var(--pp-fd-border);
+
+  transform: translateX(100%);
+  transition: transform .24s ease-out;
+
+  z-index: var(--pp-fd-drawer-z);
+
+  display: flex;
+  flex-direction: column;
+}
+:is(.men-filters-drawer, .women-filters-drawer).is-open{
+  transform: translateX(0);
+}
+
+
+/* ===========================
+   HEADER
+   =========================== */
+
+:is(.men-filters-head, .women-filters-head){ padding-block: var(--pp-fd-head-pt) var(--pp-fd-head-pb); }
+
+:is(.men-filters-head-top, .women-filters-head-top){
+  display:flex; justify-content:space-between; align-items:center; width:100%;
+}
+
+:is(.men-filters-title, .women-filters-title){
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: var(--pp-fd-title-size);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: var(--pp-fd-title-ls);
+  margin: 0;
+}
+
+:is(.men-filters-close, .women-filters-close){
+  border:0; background:transparent; font-size:22px; line-height:1; cursor:pointer; padding:0; color:#111;
+}
+
+:is(.men-filters-tabs, .women-filters-tabs){ display:flex; gap:var(--pp-fd-tab-gap); margin-top:16px; }
+
+:is(.men-filters-tab, .women-filters-tab){
+  border:0; background:none; padding:6px 0;
+  font: inherit;
+  font-size: var(--pp-fd-tab-size);
+  letter-spacing: var(--pp-fd-tab-ls);
+  text-transform: uppercase;
+  cursor:pointer;
+  opacity:.5;
+  position:relative;
+  transition: opacity .18s ease-out;
+}
+:is(.men-filters-tab, .women-filters-tab).is-active{ opacity:1; }
+:is(.men-filters-tab, .women-filters-tab).is-active::after{
+  content:""; position:absolute; left:0; right:0; bottom:-6px; height:2px; background:#111;
+}
+
+:is(.men-filters-body, .women-filters-body){
+  padding: var(--pp-fd-body-pt) 0 var(--pp-fd-body-pb);
+  flex: 1 1 auto;
+  display:flex; flex-direction:column;
+  gap: var(--pp-fd-body-gap);
+  overflow-y:auto;
+}
+
+:is(.men-filters-panel, .women-filters-panel){
+  display:none; opacity:0; transform:translateY(6px);
+  pointer-events:none; visibility:hidden;
+  transition: opacity .18s ease-out, transform .18s ease-out;
+}
+:is(.men-filters-panel, .women-filters-panel).is-active{
+  display:block; opacity:1; transform:translateY(0);
+  pointer-events:auto; visibility:visible;
+}
+
+/* Swatch list */
+:is(.men-swatch-list, .women-swatch-list){
+  list-style:none;
+  margin:0;
+  padding:0 0 0 var(--pp-fd-swatch-left-pad);
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pp-fd-swatch-row-gap) var(--pp-fd-swatch-col-gap);
+}
+
+:is(.men-swatch, .women-swatch){
+  display:flex; align-items:center; gap:10px;
+  font-size:.9rem; cursor:pointer; position:relative; padding:4px 0;
+}
+
+:is(.men-swatch-input, .women-swatch-input){
+  position:absolute; inset:0; opacity:0; pointer-events:none;
+}
+
+:is(.men-swatch-dot, .women-swatch-dot){
+  width: var(--pp-fd-dot);
+  height: var(--pp-fd-dot);
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.2);
+  flex-shrink: 0;
+}
+
+:is(.men-swatch-label, .women-swatch-label){ white-space:nowrap; }
+
+/* seleccionado por clase o por checked */
+:is(.men-swatch, .women-swatch).is-selected :is(.men-swatch-dot, .women-swatch-dot){
+  box-shadow: 0 0 0 2px #111, 0 0 0 4px #fff;
+}
+:is(.men-swatch-input, .women-swatch-input):checked + :is(.men-swatch-dot, .women-swatch-dot){
+  box-shadow: 0 0 0 2px #111, 0 0 0 4px #fff;
+}
+
+/* Checks */
+:is(.men-check, .women-check){
+  display:inline-flex; align-items:center; gap:8px;
+  margin-bottom:8px; font-size:.9rem;
+}
+
+/* Footer */
+:is(.men-filters-foot, .women-filters-foot){
+  margin-top:auto;
+  border-top: 1px solid var(--line, rgba(0,0,0,.10));
+  padding:0;
+}
+:is(.men-filters-foot-inner, .women-filters-foot-inner){
+  display:grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items:stretch;
+  min-height: var(--pp-fd-foot-minh);
+}
+:is(.men-filters-clear, .women-filters-clear){
+  width:100%;
+  padding:.9rem 1.4rem;
+  border:0;
+  border-right: 1px solid var(--line, rgba(0,0,0,.10));
+  background:#fff;
+  color:#111;
+  font:inherit;
+  font-size:.85rem;
+  text-align:left;
+  cursor:pointer;
+}
+:is(.men-filters-cta, .women-filters-cta){
+  width:100%;
+  padding:.9rem 1.4rem;
+  border:0;
+  background:#111;
+  color:#fff;
+  font:inherit;
+  font-size:.9rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  text-align:center;
+}
+
+
+/* ===========================
+   BODY / PANEL
+   =========================== */
+
+.men-filters-body{
+  padding: var(--pp-fd-body-pt) 0 var(--pp-fd-body-pb);
+  flex: 1 1 auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  gap: var(--pp-fd-body-gap);
+  overflow-y: auto;
+}
+
+.men-filters-panel{
+  display: none;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity .18s ease-out, transform .18s ease-out;
+}
+
+.men-filters-panel.is-active{
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* ===========================
+   SWATCH LIST (colores)
+   =========================== */
+
+.men-swatch-list{
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--pp-fd-swatch-left-pad);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pp-fd-swatch-row-gap) var(--pp-fd-swatch-col-gap);
+}
+
+.men-swatch{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .9rem;
+  cursor: pointer;
+  position: relative;
+  padding: 4px 0;
+}
+
+.men-swatch-input{
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.men-swatch-dot{
+  width: var(--pp-fd-dot);
+  height: var(--pp-fd-dot);
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.2);
+  flex-shrink: 0;
+}
+
+.men-swatch-label{
+  white-space: nowrap;
+}
+
+/* Estado seleccionado: por clase (tu JS) */
+.men-swatch.is-selected .men-swatch-dot{
+  box-shadow: 0 0 0 2px #111, 0 0 0 4px #fff;
+}
+
+/* (Opcional) si en algún momento quieres usar :checked */
+.men-swatch-input:checked + .men-swatch-dot{
+  box-shadow: 0 0 0 2px #111, 0 0 0 4px #fff;
+}
+
+/* ===========================
+   CHECKS (tallas/categorías)
+   =========================== */
+
+.men-check{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: .9rem;
+}
+
+/* ===========================
+   FOOTER / CTA
+   =========================== */
+
+.men-filters-foot{
+  margin-top: auto;
+  border-top: 1px solid var(--line, rgba(0,0,0,.10));
+  padding: 0;
+}
+
+.men-filters-foot-inner{
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: stretch;
+  min-height: var(--pp-fd-foot-minh);
+}
+
+.men-filters-clear{
+  width: 100%;
+  padding: .9rem 1.4rem;
+  border: 0;
+  border-right: 1px solid var(--line, rgba(0,0,0,.10));
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-size: .85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.men-filters-count{
+  margin-left: .35rem;
+  opacity: .7;
+}
+
+.men-filters-cta{
+  width: 100%;
+  padding: .9rem 1.4rem;
+  border: 0;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: .9rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px){
+  .men-filters-drawer{
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 18px;
+  }
+
+  .men-filters-foot-inner{
+    grid-template-columns: 1fr;
+  }
+
+  .men-filters-clear{
+    border-right: 0;
+    border-bottom: 1px solid var(--line, rgba(0,0,0,.10));
+  }
+}
+/* ==========================================================
+   SWATCH COLORS (shared) — men & women
+   ========================================================== */
+
+:is(.men-swatch--white, .women-swatch--white){ background:#ffffff; }
+:is(.men-swatch--black, .women-swatch--black){ background:#111111; }
+:is(.men-swatch--beige, .women-swatch--beige){ background:#d8c5a6; }
+:is(.men-swatch--green, .women-swatch--green){ background:#2ea96b; }
+:is(.men-swatch--blue,  .women-swatch--blue ){ background:#2f6fed; }
+:is(.men-swatch--red,   .women-swatch--red  ){ background:#d83a2e; }
+:is(.men-swatch--orange,.women-swatch--orange){ background:#f28c28; }
+
+:is(.men-swatch--multi, .women-swatch--multi){
+  background: conic-gradient(from 0deg, #d83a2e, #f28c28, #2ea96b, #2f6fed, #d83a2e);
+}
+
+/* extra: aro más legible en negro cuando esté checked */
+:is(.men-swatch-input, .women-swatch-input):checked + :is(.men-swatch--black, .women-swatch--black){
+  box-shadow: 0 0 0 2px #111, 0 0 0 4px #fff;
+}
+/* Colores swatch (women) */
+.women-swatch--white{ background:#ffffff; }
+.women-swatch--black{ background:#111111; }
+.women-swatch--beige{ background:#d8c5a6; }
+.women-swatch--green{ background:#2ea96b; }
+.women-swatch--blue{  background:#2f6fed; }
+.women-swatch--red{   background:#d83a2e; }
+.women-swatch--orange{background:#f28c28; }
+.women-swatch--pink{  background:#ff4fa3; }
+.women-swatch--brown{ background:#6b4b2a; }
+.women-swatch--gold{  background:#c8a24a; }
+.women-swatch--purple{background:#7b4ae2; }
+.women-swatch--yellow{background:#f2c94c; }
+.women-swatch--gray{  background:#9aa0a6; }
+.women-swatch--silver{background:#c0c0c0; }
+
+.women-swatch--multi{
+  background: conic-gradient(from 0deg, #d83a2e, #f28c28, #2ea96b, #2f6fed, #d83a2e);
+}
+
+/* “transparente / incoloro”: que se vea */
+.women-swatch--transparent,
+.women-swatch--clear{
+  background:
+    linear-gradient(45deg, #e8e8e8 25%, transparent 25%) 0 0/8px 8px,
+    linear-gradient(45deg, transparent 75%, #e8e8e8 75%) 0 0/8px 8px,
+    #fff;
+}

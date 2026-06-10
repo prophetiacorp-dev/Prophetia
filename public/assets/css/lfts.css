@@ -1,0 +1,550 @@
+/* =========================================================
+   PROPHETIA · LETTERS FROM THE SOUL (LFTS)
+   Página: /assets/collects/lfts
+   Estilo: pergamino editorial, tinta, lujo silencioso
+   ========================================================= */
+/* ===========================
+   LFTS · Calvus
+   =========================== */
+@font-face{
+  font-family: "Calvus";
+  src: url("../fonts/Calvus.ttf") format("truetype");
+  font-weight: 100 900; /* permite que 500/600 no sean “inventados” tan raro */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* ---------- Variables base LFTS ---------- */
+body.lfts-page{
+  --lfts-paper: #f4f1ea;              /* fondo pergamino */
+  --lfts-paper-2: #efe8dd;            /* variante cálida */
+  --lfts-ink: #121212;                /* tinta */
+  --lfts-muted: rgba(18,18,18,0.68);
+  --lfts-line: rgba(18,18,18,0.10);
+  --lfts-gold: #c6a264;               /* oro Prophetia suave */
+  --lfts-accent: rgba(198,162,100,0.22);
+
+  background:
+    radial-gradient(circle at 15% 0, rgba(198,162,100,0.18), transparent 55%),
+    radial-gradient(circle at 85% 10%, rgba(120,90,50,0.10), transparent 58%),
+    linear-gradient(to bottom, var(--lfts-paper), var(--lfts-paper-2) 42%, #f7f3ee 100%);
+  color: var(--lfts-ink);
+    --lfts-font-heading: "Calvus", "Cinzel", "Playfair Display", serif;
+  --lfts-font-ui: var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+/* Fuerza tipografías del sistema (header/mega usa estas vars con !important) */
+  --font-ui: "Calvus", Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Calvus", "Cinzel", "Playfair Display", serif;
+
+  /* Tus alias internos (si quieres seguir usándolos) */
+  --lfts-font-heading: var(--font-display);
+  --lfts-font-ui: var(--font-ui);
+}
+
+/* Velo sutil tipo “papel” para legibilidad/atmósfera */
+body.lfts-page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(0,0,0,0.06), transparent 62%),
+    radial-gradient(circle at 20% 50%, rgba(198,162,100,0.06), transparent 60%);
+  opacity: 1;
+}
+
+/* =========================================================
+   HEADER / TOPBAR · MODO LFTS (claro, editorial)
+   ========================================================= */
+
+/* Menú principal */
+body.lfts-page .pp-header nav a,
+body.lfts-page .pp-header .mega-toggle{
+  color: var(--lfts-ink);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+body.lfts-page .pp-header nav a:hover,
+body.lfts-page .pp-header .mega-toggle:hover{
+  color: #000;
+  text-decoration: none;
+}
+
+/* Iconos header */
+body.lfts-page .pp-header .icon-btn,
+body.lfts-page .pp-header .icon-btn svg{
+  color: var(--lfts-ink);
+  stroke: currentColor;
+}
+
+/* =========================================================
+   BRAND BAND
+   ========================================================= */
+.lfts-page .brand-band{
+  background: transparent;
+  border-bottom: 1px solid rgba(18,18,18,0.06);
+  margin-top: 0;
+}
+
+.lfts-page .brand-band .container{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: 40px;
+  box-sizing: border-box;
+}
+
+/* Logo grande, limpio */
+.lfts-page .brand-band .page-logo img{
+  height: 120px;
+  width: auto;
+  display: block;
+  margin-left: -60px; /* microajuste como en MS */
+}
+
+/* =========================================================
+   HERO · LFTS
+   ========================================================= */
+.lfts-page .pp-hero.hero--lfts{
+  padding: 78px 0 54px;
+  position: relative;
+}
+
+.lfts-page .hero-inner{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* halo suave detrás */
+.lfts-page .pp-hero.hero--lfts::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: radial-gradient(circle at 22% 12%, rgba(0,0,0,0.06), transparent 62%);
+}
+
+/* Bloque principal */
+.lfts-page .hero-main{
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+}
+
+.lfts-page .lfts-hero-title{
+  font-family: var(--lfts-font-heading);
+  font-weight: 600;
+  font-size: clamp(2.7rem, 4vw, 3.3rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+  color: var(--lfts-ink);
+}
+
+.lfts-page .lfts-hero-sub{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.98rem;
+  line-height: 1.95;
+  color: var(--lfts-muted);
+  max-width: 560px;
+}
+
+/* Badge editorial */
+.lfts-page .hero-side{
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.lfts-page .lfts-badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(18,18,18,0.16);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(18,18,18,0.88);
+}
+
+/* =========================================================
+   STORY
+   ========================================================= */
+.lfts-page .lfts-story{
+  padding: 38px 0 8px;
+}
+
+.lfts-page .lfts-story .container.narrow{
+  max-width: 860px;
+  margin: 0 auto;
+  padding-inline: 40px;
+  text-align: center;
+}
+
+
+.lfts-page .lfts-story-title{
+  font-family: var(--lfts-font-heading);
+  font-weight: 500;
+  font-size: 1.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 24px;
+  color: var(--lfts-ink);
+}
+
+.lfts-page .lfts-story-text{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.98rem;
+  line-height: 1.95;
+  color: var(--lfts-muted);
+  margin: 0 0 18px;
+}
+
+/* =========================================================
+   TILES · LFTS (papel + tinta)
+   ========================================================= */
+.lfts-page .lfts-tiles{
+  padding: 42px 0 30px;
+}
+
+.lfts-page .tiles--lfts{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: 40px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(24px, 3vw, 34px);
+}
+
+.lfts-page .tiles--lfts .tile{
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-radius: 24px;
+  overflow: hidden;
+  text-decoration: none;
+
+  background:
+    radial-gradient(circle at 60% 0, rgba(198,162,100,0.14), transparent 62%),
+    rgba(255,255,255,0.70);
+
+  border: 1px solid rgba(18,18,18,0.08);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.10);
+  color: var(--lfts-ink);
+
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.lfts-page .tiles--lfts .tile:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 24px 62px rgba(0,0,0,0.14);
+  border-color: var(--lfts-accent);
+}
+
+.lfts-page .tiles--lfts .tile-img{
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.lfts-page .tiles--lfts .tile-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.lfts-page .tiles--lfts .tile-body{
+  padding: 18px 20px 20px;
+}
+
+.lfts-page .tiles--lfts .tile-title{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-weight: 500;
+  font-size: 0.94rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+  color: rgba(18,18,18,0.92);
+}
+
+.lfts-page .tiles--lfts .tile-sub{
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: var(--lfts-muted);
+}
+
+/* =========================================================
+   CTA
+   ========================================================= */
+.lfts-page .lfts-cta{
+  padding: 40px 0 78px;
+}
+
+.lfts-page .lfts-cta .container.narrow.center{
+  max-width: 660px;
+  margin: 0 auto;
+  padding-inline: 40px;
+  text-align: center;
+}
+
+.lfts-page .lfts-cta-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(18,18,18,0.20);
+  text-decoration: none;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(18,18,18,0.92);
+  background: rgba(255,255,255,0.60);
+  transition: background .22s ease, transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.lfts-page .lfts-cta-btn:hover{
+  background: rgba(255,255,255,0.82);
+  border-color: var(--lfts-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+/* =========================================================
+   FOOTER · MODO LFTS
+   ========================================================= */
+
+body.lfts-page .site-footer a{
+  color: rgba(18,18,18,0.78);
+  text-decoration: none;
+}
+body.lfts-page .site-footer a:hover{
+  color: #000;
+}
+
+body.lfts-page .site-footer h5{
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(18,18,18,0.90);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 960px){
+  .lfts-page .hero-inner{
+    flex-direction: column;
+    gap: 26px;
+    padding-inline: 24px;
+  }
+  .lfts-page .hero-side{
+    justify-content: flex-start;
+  }
+  .lfts-page .lfts-story .container.narrow,
+  .lfts-page .tiles--lfts,
+  .lfts-page .lfts-cta .container.narrow.center{
+    padding-inline: 24px;
+  }
+}
+
+@media (max-width: 640px){
+  .lfts-page .lfts-hero-title{ font-size: 2.15rem; }
+  .lfts-page .tiles--lfts{ grid-template-columns: minmax(0, 1fr); }
+}
+/* Tile con 2 imágenes dentro (mini-grid) */
+.tiles--lfts .tile--duo .tile-img--duo{
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 imágenes lado a lado */
+  gap: 10px;
+  padding: 12px;                 /* aire editorial */
+  background: rgba(255,255,255,0.04); /* o transparente si prefieres */
+}
+
+/* Cada imagen ocupa su “celda” y mantiene look premium */
+.tiles--lfts .tile--duo .tile-img--duo img{
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;  /* uniforma el set */
+  object-fit: cover;    /* recorte elegante */
+  display: block;
+  border-radius: 14px;
+}
+/* =========================================================
+   LFTS · UNIFORMIDAD TOTAL (anti-seams / anti-recuadros)
+   Pegar AL FINAL de lfts.css
+   ========================================================= */
+
+html, body.lfts-page { min-height: 100%; }
+
+/* 1) El fondo vive en html (capa fija). Body queda “limpio”. */
+body.lfts-page{
+  background: none !important;
+}
+
+/* 2) Fondo pergamino global fijo (evita que se “parta” por secciones) */
+html::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 15% 0%, rgba(198,162,100,0.16), transparent 56%),
+    radial-gradient(circle at 85% 10%, rgba(120,90,50,0.10), transparent 60%),
+    radial-gradient(circle at 50% 8%, rgba(0,0,0,0.05), transparent 62%),
+    linear-gradient(
+      to bottom,
+      #f4f1ea 0%,
+      #efe8dd 42%,
+      #f7f3ee 100%
+    );
+}
+
+/* 3) Micro-textura (mata banding / cortes visuales sin “ruido sucio”) */
+html::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* 4) Neutraliza “cajas” típicas que meten cortes (fondos/bordes/sombras) */
+body.lfts-page main,
+body.lfts-page section,
+body.lfts-page .container,
+body.lfts-page .brand-band,
+body.lfts-page .pp-hero.hero--lfts,
+body.lfts-page .lfts-story,
+body.lfts-page .lfts-tiles,
+body.lfts-page .lfts-cta,
+body.lfts-page .site-footer,
+body.lfts-page .footer-inner,
+body.lfts-page .footer-bottom{
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Evita líneas por <hr> */
+body.lfts-page hr{
+  border: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* 5) HEADER/TOPBAR/BRAND-BAND: sin bordes ni “recuadros” */
+body.lfts-page .pp-header,
+body.lfts-page .pp-topbar,
+body.lfts-page .brand-band{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Un velo editorial suave (sin “caja” en los extremos) */
+body.lfts-page .pp-header{
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+body.lfts-page .pp-header::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 0 0, rgba(198,162,100,0.10), transparent 60%),
+    linear-gradient(to right, rgba(255,255,255,0.70), rgba(255,255,255,0.58));
+}
+
+/* Fusión visual con el hero (mata el seam bajo el header) */
+body.lfts-page .pp-header::after{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  bottom:-18px;
+  height:18px;
+  pointer-events:none;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.10), rgba(0,0,0,0.00));
+}
+
+/* Por si el corte viene por subpíxel: solapa 1px */
+body.lfts-page .pp-hero.hero--lfts{
+  margin-top: -1px;
+  padding-top: calc(78px + 1px);
+}
+
+/* 6) Footer: fundido suave sin borde superior */
+body.lfts-page .site-footer{
+  position: relative;
+  overflow: hidden;
+  margin-top: -1px;
+  padding-top: 1px;
+}
+
+body.lfts-page .site-footer::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  pointer-events:none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.00) 0%,
+    rgba(0,0,0,0.06) 22%,
+    rgba(0,0,0,0.10) 60%,
+    rgba(0,0,0,0.14) 100%
+  );
+}
+
+/* 7) Buscador: sin borde “negro” cantón */
+body.lfts-page .search-inline input{
+  border: 1px solid rgba(18,18,18,0.14) !important;
+  background: rgba(255,255,255,0.55) !important;
+  color: var(--lfts-ink) !important;
+  outline: none !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+}
+
+body.lfts-page .search-inline input::placeholder{
+  color: rgba(18,18,18,0.45) !important;
+}
+
+body.lfts-page .search-inline input:focus,
+body.lfts-page .search-inline input:focus-visible{
+  border-color: rgba(198,162,100,0.45) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.25),
+    0 0 0 3px rgba(198,162,100,0.14);
+}
+body.lfts-page .pp-header nav a,
+body.lfts-page .pp-header .mega-toggle{
+  text-transform: none;
+  letter-spacing: 0.08em; /* baja un poco si quitas uppercase */
+}

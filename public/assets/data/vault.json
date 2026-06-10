@@ -1,0 +1,57 @@
+[
+  {
+    "id": "vault-welcome",
+    "title": "Archivo Prophetia",
+    "eyebrow": "Tribe Member",
+    "type": "archive",
+    "requiredRankId": "tribe-member",
+    "status": "available",
+    "description": "Acceso base al archivo privado Prophetia Tribe. Tu recorrido empieza aquí.",
+    "href": "/my-content",
+    "cta": "Ver mi archivo"
+  },
+  {
+    "id": "atlas-early-access",
+    "title": "Atlas Early Access",
+    "eyebrow": "Oracle Access",
+    "type": "early-access",
+    "requiredRankId": "oracle",
+    "status": "locked",
+    "description": "Acceso anticipado a piezas seleccionadas antes de su lanzamiento público.",
+    "href": "/producto?id=atlas-seal",
+    "cta": "Ver pieza"
+  },
+  {
+    "id": "myth-series-preview",
+    "title": "Myth Series Preview",
+    "eyebrow": "Adeptus Access",
+    "type": "preview",
+    "requiredRankId": "adeptus",
+    "status": "locked",
+    "description": "Vista privada de próximas piezas editoriales dentro de Myth Series.",
+    "href": "/colecciones",
+    "cta": "Explorar colección"
+  },
+  {
+    "id": "oracle-calendar-window",
+    "title": "Oracle Calendar Window",
+    "eyebrow": "Oracle Access",
+    "type": "calendar",
+    "requiredRankId": "oracle",
+    "status": "locked",
+    "description": "Ventanas privadas de lanzamiento y recordatorios exclusivos dentro del calendario Prophetia.",
+    "href": "/drop-calendar",
+    "cta": "Abrir calendario"
+  },
+  {
+    "id": "prophet-private-window",
+    "title": "Prophet Private Window",
+    "eyebrow": "Prophet Access",
+    "type": "private-window",
+    "requiredRankId": "prophet",
+    "status": "locked",
+    "description": "Sala privada para miembros Prophet: drops exclusivos, ventanas anticipadas, beneficios superiores y acceso preferente al archivo privado Prophetia.",
+    "href": "/prophet-private",
+    "cta": "Entrar"
+  }
+]

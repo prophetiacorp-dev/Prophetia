@@ -1,0 +1,26 @@
+[
+  {
+    "id": "summer-archive-preview",
+    "title": "Summer Archive Preview",
+    "type": "drop",
+    "date": "2026-06-28",
+    "time": "10:00",
+    "status": "upcoming",
+    "visibility": "public",
+    "requiredRankId": null,
+    "description": "Vista previa editorial de próximas piezas del archivo de verano.",
+    "href": "/colecciones"
+  },
+  {
+    "id": "myth-series-restock",
+    "title": "Myth Series Restock",
+    "type": "restock",
+    "date": "2026-07-10",
+    "time": "12:00",
+    "status": "upcoming",
+    "visibility": "public",
+    "requiredRankId": null,
+    "description": "Reposición prevista de piezas seleccionadas de Myth Series.",
+    "href": "/colecciones"
+  }
+]

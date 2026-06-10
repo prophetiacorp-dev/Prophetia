@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mujer · PROPHETIA — Silent Luxury</title>
+  <meta name="description" content="Colección Mujer de PROPHETIA: camisetas, hoodies y sudaderas de punto. Silent Luxury editorial con inspiración mediterránea." />
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/assets/img/logo/propnegrovf.svg" type="image/svg+xml">
+<meta property="og:locale" content="es_ES">
+  <script>
+    document.documentElement.setAttribute('data-cc-prehide','1');
+  </script>
+
+  <!-- ===== Prophetia CSS · Silent Luxury Architecture ===== -->
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- HOME / HERO / TILES -->
+  <link rel="stylesheet" href="assets/css/home.css">
+  <link rel="stylesheet" href="assets/css/tiles.css">
+
+  <!-- CATÁLOGO / PRODUCTOS -->
+  <link rel="stylesheet" href="assets/css/catalog.css">
+  <link rel="stylesheet" href="assets/css/plp.css">
+  <link rel="stylesheet" href="assets/css/products.css">
+  <link rel="stylesheet" href="assets/css/pdp.css">
+
+  <!-- SECCIONES ESPECÍFICAS -->
+  <link rel="stylesheet" href="assets/css/camisetas.css">
+  <link rel="stylesheet" href="assets/css/hoodies.css">
+  <link rel="stylesheet" href="assets/css/colecciones.css">
+  <link rel="stylesheet" href="assets/css/wishlist.css">
+
+  <!-- PÁGINA MUJER ESPECÍFICA -->
+  <link rel="stylesheet" href="assets/css/woman.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS & FIXES -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="pp-collection-page women-page" data-page="women">
+  <!-- Header inyectado -->
+  <div id="header"></div>
+
+  <!-- ===== Contenido principal (recarga completa, sin Swup) ===== -->
+  <main class="pp-collection-page" tabindex="-1">
+    <!-- =======================
+         HERO TIPO Prophetia · MUJER
+         ======================= -->
+    <section class="hero hero--women layout-women">
+      <div class="hero-left">
+        <div class="hero-frame">
+          <!-- Logo flotante EXACTAMENTE como en index -->
+          <a class="floating-logo" href="/home" aria-label="Inicio Prophetia">
+            <img src="assets/img/logo/propblancovf.svg" alt="PROPHETIA">
+          </a>
+
+          <!-- Vídeo editorial Mujer (cambia el src al que tengas) -->
+          <div class="hero-video" aria-label="Vídeo colección Mujer">
+            <video class="hero-video__media" playsinline autoplay muted loop>
+              <source src="assets/video/heromujer.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-right women-band__side">
+        <h1 class="women-band__title">Mujer</h1>
+        <ul class="women-band__list">
+          <li><a href="streetwear-mujer">Streetwear</a></li>
+          <li><a href="camisetas-mujer">Camisetas de Punto</a></li>
+          <li><a href="hoodies-mujer">Hoodies</a></li>
+          <li><a href="sudaderas-punto-mujer">Sudaderas de punto</a></li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- =======================
+         TOOLBAR TIPO Prophetia
+         ======================= -->
+    <section class="container women-toolbar" role="region" aria-label="Herramientas de listado">
+      <div class="women-toolbar__left">
+        <button class="women-btn-ghost" id="womenOpenFilters">Filtros</button>
+
+        <div class="women-select">
+          <label class="sr-only" for="womenSortSelect">Ordenar por</label>
+          <select id="womenSortSelect" aria-label="Ordenar por">
+            <option value="relevance">Relevancia</option>
+            <option value="newest">Novedades</option>
+            <option value="price_asc">Precio: de menor a mayor</option>
+            <option value="price_desc">Precio: de mayor a menor</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="women-toolbar__right">
+        <label class="women-check">
+          <input type="checkbox" id="womenFilterStock">
+          <span>En stock</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- =======================
+         GRID DE PRODUCTOS
+         ======================= -->
+    <section class="plp-wrap" data-fade>
+      <div class="container">
+     <div id="plp-grid" class="plp-grid women-grid" data-gender="mujer" data-source="firestore" data-section="all"></div>
+
+
+        
+      </div>
+    </section>
+
+    <!-- =======================
+         DRAWER DE FILTROS
+         ======================= -->
+    <div id="womenFiltersOverlay"
+         class="women-filters-overlay"
+         aria-hidden="true"></div>
+
+    <aside id="womenFiltersDrawer"
+           class="women-filters-drawer"
+           aria-hidden="true"
+           aria-label="Filtros de mujer">
+      <header class="women-filters-head">
+        <div class="women-filters-head-top">
+          <span class="women-filters-title"
+                role="heading"
+                aria-level="2">
+            Filtros
+          </span>
+
+          <button class="women-filters-close"
+                  type="button"
+                  id="womenCloseFilters"
+                  aria-label="Cerrar filtros">
+            ×
+          </button>
+        </div>
+
+        <nav class="women-filters-tabs"
+             role="tablist"
+             aria-label="Tipo de filtros">
+          <button class="women-filters-tab is-active"
+                  type="button"
+                  data-tab="color"
+                  role="tab"
+                  aria-selected="true">
+            COLOR <span id="womenTabColorCount" class="women-tab-count"></span>
+          </button>
+
+          <button class="women-filters-tab"
+                  type="button"
+                  data-tab="categoria"
+                  role="tab"
+                  aria-selected="false">
+            CATEGORÍA <span id="womenTabCatCount" class="women-tab-count"></span>
+          </button>
+        </nav>
+      </header>
+
+      <div class="women-filters-body">
+        <!-- PANEL COLOR -->
+        <section class="women-filters-panel is-active"
+                 data-panel="color"
+                 role="tabpanel"
+                 aria-label="Filtrar por color">
+          <ul class="women-swatch-list">
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="rosa">
+                <span class="women-swatch-dot women-swatch--pink"></span>
+                <span class="women-swatch-label">Rosa</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="beige">
+                <span class="women-swatch-dot women-swatch--beige"></span>
+                <span class="women-swatch-label">Beige</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="marron">
+                <span class="women-swatch-dot women-swatch--brown"></span>
+                <span class="women-swatch-label">Marrón</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="verde">
+                <span class="women-swatch-dot women-swatch--green"></span>
+                <span class="women-swatch-label">Verde</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="azul">
+                <span class="women-swatch-dot women-swatch--blue"></span>
+                <span class="women-swatch-label">Azul</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="negro">
+                <span class="women-swatch-dot women-swatch--black"></span>
+                <span class="women-swatch-label">Negro</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="rojo">
+                <span class="women-swatch-dot women-swatch--red"></span>
+                <span class="women-swatch-label">Rojo</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="morado">
+                <span class="women-swatch-dot women-swatch--purple"></span>
+                <span class="women-swatch-label">Morado</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="naranja">
+                <span class="women-swatch-dot women-swatch--orange"></span>
+                <span class="women-swatch-label">Naranja</span>
+              </label>
+            </li>
+
+            <!-- Columna derecha -->
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="amarillo">
+                <span class="women-swatch-dot women-swatch--yellow"></span>
+                <span class="women-swatch-label">Amarillo</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="blanco">
+                <span class="women-swatch-dot women-swatch--white"></span>
+                <span class="women-swatch-label">Blanco</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="gris">
+                <span class="women-swatch-dot women-swatch--grey"></span>
+                <span class="women-swatch-label">Gris</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="dorado">
+                <span class="women-swatch-dot women-swatch--gold"></span>
+                <span class="women-swatch-label">Dorado</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="plata">
+                <span class="women-swatch-dot women-swatch--silver"></span>
+                <span class="women-swatch-label">Plata</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="multicolor">
+                <span class="women-swatch-dot women-swatch--multi"></span>
+                <span class="women-swatch-label">Multicolor</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="incoloro">
+                <span class="women-swatch-dot women-swatch--clear"></span>
+                <span class="women-swatch-label">Incoloro</span>
+              </label>
+            </li>
+            <li>
+              <label class="women-swatch">
+                <input class="women-swatch-input" type="checkbox" name="color" value="transparente">
+                <span class="women-swatch-dot women-swatch--transparent"></span>
+                <span class="women-swatch-label">Transparente</span>
+              </label>
+            </li>
+          </ul>
+        </section>
+
+        <!-- PANEL CATEGORÍA -->
+        <section class="women-filters-panel"
+                 data-panel="categoria"
+                 role="tabpanel"
+                 aria-label="Filtrar por categoría">
+          <label class="women-check women-check--cat women-check--camisetas">
+            <input type="checkbox" name="cat" value="camisetas-punto">
+            <span class="women-check-icon" aria-hidden="true"></span>
+            <span class="women-check-label">Camisetas de punto</span>
+          </label>
+
+          <label class="women-check women-check--cat women-check--streetwear">
+            <input type="checkbox" name="cat" value="streetwear">
+            <span class="women-check-icon" aria-hidden="true"></span>
+            <span class="women-check-label">Streetwear</span>
+          </label>
+
+          <label class="women-check women-check--cat women-check--hoodies">
+            <input type="checkbox" name="cat" value="hoodies">
+            <span class="women-check-icon" aria-hidden="true"></span>
+            <span class="women-check-label">Hoodies</span>
+          </label>
+
+          <label class="women-check women-check--cat women-check--sudaderas">
+            <input type="checkbox" name="cat" value="sudaderas-punto">
+            <span class="women-check-icon" aria-hidden="true"></span>
+            <span class="women-check-label">Sudaderas de punto</span>
+          </label>
+        </section>
+      </div>
+
+      <footer class="women-filters-foot">
+        <div class="women-filters-foot-inner">
+          <button id="womenClearFilters"
+                  class="women-filters-clear"
+                  type="button">
+            Eliminar filtros
+            <span id="womenActiveCount" class="women-filters-count"></span>
+          </button>
+
+          <button id="womenApplyFilters"
+                  class="women-filters-cta"
+                  type="button">
+            Ver <span id="womenResultsCount">0</span> resultados
+          </button>
+        </div>
+      </footer>
+    </aside>
+  </main>
+
+  <!-- Footer inyectado -->
+  <div id="footer"></div>
+
+  <!-- Toast -->
+  <div id="ppToast" hidden>
+    <span id="ppToastMsg">Añadido a artículos guardados</span>
+    <a id="ppToastAction" href="wishlist"" aria-label="Abrir Mi selección">Ver</a>
+  </div>
+
+  <!-- Área para popups -->
+  <div id="popup-area"></div>
+
+  <!-- Scripts globales -->
+  <script type="module" src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/firebase-auth.js"></script>
+<script defer src="/assets/js/header-init.js"></script>
+  <script src="assets/js/script.js" defer></script>
+  <script src="assets/js/popup.js" defer></script>
+  <script src="assets/js/cookies.js" defer></script>
+  <script src="assets/js/cart.js" defer></script>
+  <script src="assets/js/breadcrumbs.js" defer></script>
+  <script src="assets/js/filters-drawer.js" defer></script>
+
+
+
+  <!-- JS local Mujer: vista, filtros, sort, hook PLP -->
+  <script>
+    (function () {
+      const $  = (s, r = document) => r.querySelector(s);
+
+      const grid         = $('#plp-grid');
+      const sortSelect   = $('#womenSortSelect');
+      const stockCheck   = $('#womenFilterStock');
+      const overlay      = $('#womenFiltersOverlay');
+      const drawer       = $('#womenFiltersDrawer');
+      const openFilters  = $('#womenOpenFilters');
+      const closeFilters = $('#womenCloseFilters');
+      const applyFilters = $('#womenApplyFilters');
+
+      const colorInputs    = [...document.querySelectorAll('.women-swatch-input')];
+      const categoryInputs = [...document.querySelectorAll('input[name="cat"]')];
+
+      const tabColorCount   = document.getElementById('womenTabColorCount');
+      const tabCatCount     = document.getElementById('womenTabCatCount');
+      const activeCountSpan = document.getElementById('womenActiveCount');
+
+      const tabs   = [...document.querySelectorAll('.women-filters-tab')];
+      const panels = [...document.querySelectorAll('.women-filters-panel')];
+      const clearFiltersBtn = document.getElementById('womenClearFilters');
+
+      const formatter = new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2
+      });
+
+   })();
+  </script>
+
+      </body>
+      </html>

@@ -1,0 +1,896 @@
+/* =========================================================
+   PROPHETIA · ARCHIVE SUMMER
+   Estética: galería privada contemporánea en mansión de lujo
+   Scope: body.archive-page.archive-page--summer
+   ========================================================= */
+
+body.archive-page.archive-page--summer{
+  --archive-bg: #f4efe8;
+  --archive-bg-2: #efe8df;
+  --archive-ink: #111214;
+  --archive-muted: rgba(17,18,20,.62);
+  --archive-soft: rgba(17,18,20,.46);
+  --archive-line: rgba(17,18,20,.10);
+
+  --archive-surface: rgba(255,255,255,.56);
+  --archive-surface-strong: rgba(255,255,255,.74);
+  --archive-shadow: 0 18px 60px rgba(0,0,0,.07);
+  --archive-shadow-soft: 0 10px 30px rgba(0,0,0,.05);
+
+  --archive-max: 1180px;
+  --archive-edge: clamp(20px, 3.2vw, 44px);
+
+  --archive-title: clamp(42px, 7vw, 98px);
+  --archive-h2: clamp(26px, 3.2vw, 44px);
+  --archive-body: 15px;
+
+  color: var(--archive-ink);
+  background:
+    radial-gradient(1000px 520px at 82% -10%, rgba(196, 179, 152, .22), transparent 60%),
+    radial-gradient(760px 420px at 8% 10%, rgba(255,255,255,.58), transparent 56%),
+    linear-gradient(180deg, rgba(255,255,255,.36), rgba(255,255,255,0) 26%),
+    linear-gradient(180deg, var(--archive-bg), var(--archive-bg-2));
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body.archive-page.archive-page--summer::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.018) 0, transparent 12%, transparent 88%, rgba(0,0,0,.018) 100%),
+    radial-gradient(circle at 50% 20%, rgba(255,255,255,.22), transparent 36%);
+}
+
+/* =========================================================
+   HEADER / FOOTER INTEGRACIÓN
+   ========================================================= */
+
+body.archive-page.archive-page--summer .pp-header,
+body.archive-page.archive-page--summer .pp-topbar{
+  background: rgba(244,239,232,.76);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border-bottom: 1px solid rgba(17,18,20,.08);
+  box-shadow: 0 12px 36px rgba(0,0,0,.04);
+}
+
+body.archive-page.archive-page--summer .pp-header a,
+body.archive-page.archive-page--summer .pp-header button,
+body.archive-page.archive-page--summer .pp-topbar a,
+body.archive-page.archive-page--summer .pp-topbar button{
+  color: var(--archive-ink);
+}
+
+body.archive-page.archive-page--summer .search-inline input{
+  background: rgba(255,255,255,.44);
+  border-color: rgba(17,18,20,.14);
+  color: var(--archive-ink);
+}
+
+body.archive-page.archive-page--summer .search-inline input::placeholder{
+  color: rgba(17,18,20,.50);
+}
+
+body.archive-page.archive-page--summer .site-footer,
+body.archive-page.archive-page--summer #footer{
+  background: linear-gradient(to bottom, rgba(245,240,234,.75), rgba(233,226,216,.94));
+  color: var(--archive-ink);
+  border-top: 1px solid rgba(17,18,20,.08);
+}
+
+/* =========================================================
+   ESTRUCTURA GLOBAL
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-main{
+  padding-top: clamp(18px, 3vw, 34px);
+  padding-bottom: clamp(60px, 8vw, 120px);
+}
+
+body.archive-page.archive-page--summer .archive-shell{
+  width: min(100%, var(--archive-max));
+  margin-inline: auto;
+  padding-inline: var(--archive-edge);
+  box-sizing: border-box;
+}
+
+body.archive-page.archive-page--summer .archive-grid{
+  display: grid;
+  gap: clamp(18px, 2.6vw, 34px);
+}
+
+body.archive-page.archive-page--summer .archive-grid--intro{
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+  align-items: start;
+}
+
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-hero{
+  position: relative;
+  padding: clamp(34px, 5vw, 64px) 0 clamp(34px, 5vw, 52px);
+}
+
+body.archive-page.archive-page--summer .pp-hero__media{
+  width: min(100%, var(--archive-max));
+  margin: 0 auto;
+  padding-inline: var(--archive-edge);
+  box-sizing: border-box;
+  margin-bottom: 30px;
+}
+
+body.archive-page.archive-page--summer .floating-logo{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+body.archive-page.archive-page--summer .floating-logo img{
+  width: min(240px, 48vw);
+  height: auto;
+  display: block;
+  filter: none;
+  opacity: .96;
+}
+
+body.archive-page.archive-page--summer .archive-kicker{
+  margin: 0 0 12px;
+  font-family: var(--font-ui, "Inter", system-ui, sans-serif);
+  font-size: 12px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--archive-soft);
+  text-align: center;
+}
+
+body.archive-page.archive-page--summer .archive-title{
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-weight: 600;
+  font-size: var(--archive-title);
+  line-height: .95;
+  letter-spacing: -.035em;
+  color: var(--archive-ink);
+}
+
+body.archive-page.archive-page--summer .archive-lead{
+  width: min(100%, 760px);
+  margin: 22px auto 0;
+  text-align: center;
+  font-family: var(--font-ui, "Inter", system-ui, sans-serif);
+  font-size: clamp(15px, 1vw + 11px, 18px);
+  line-height: 1.9;
+  color: var(--archive-muted);
+}
+
+body.archive-page.archive-page--summer .archive-divider{
+  width: min(100%, 760px);
+  height: 1px;
+  margin: 26px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(17,18,20,.16), transparent);
+}
+
+body.archive-page.archive-page--summer .archive-meta{
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+}
+
+body.archive-page.archive-page--summer .archive-meta span{
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(17,18,20,.54);
+  position: relative;
+}
+
+body.archive-page.archive-page--summer .archive-meta span:not(:last-child)::after{
+  content: "";
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(17,18,20,.20);
+  transform: translateY(-50%);
+}
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-intro,
+body.archive-page.archive-page--summer .archive-salon,
+body.archive-page.archive-page--summer .archive-manifesto,
+body.archive-page.archive-page--summer .archive-closing,
+body.archive-page.archive-page--summer .archive-palette{
+  padding-top: clamp(26px, 4vw, 54px);
+}
+
+body.archive-page.archive-page--summer .archive-section-head{
+  margin-bottom: clamp(18px, 2.8vw, 28px);
+}
+
+body.archive-page.archive-page--summer .archive-section-head__kicker,
+body.archive-page.archive-page--summer .archive-panel__eyebrow,
+body.archive-page.archive-page--summer .archive-note__kicker,
+body.archive-page.archive-page--summer .archive-closing__kicker{
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: .20em;
+  text-transform: uppercase;
+  color: rgba(17,18,20,.52);
+}
+
+body.archive-page.archive-page--summer .archive-h2,
+body.archive-page.archive-page--summer .archive-closing__title{
+  margin: 0;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-weight: 600;
+  font-size: var(--archive-h2);
+  line-height: 1.08;
+  letter-spacing: -.025em;
+  color: var(--archive-ink);
+}
+
+/* =========================================================
+   PANELES / NOTAS
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-panel,
+body.archive-page.archive-page--summer .archive-note,
+body.archive-page.archive-page--summer .archive-card,
+body.archive-page.archive-page--summer .archive-column,
+body.archive-page.archive-page--summer .archive-swatch{
+  border: 1px solid rgba(17,18,20,.08);
+  background: var(--archive-surface);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: var(--archive-shadow-soft);
+}
+
+body.archive-page.archive-page--summer .archive-panel,
+body.archive-page.archive-page--summer .archive-column{
+  border-radius: 22px;
+  padding: clamp(18px, 2.4vw, 28px);
+}
+
+body.archive-page.archive-page--summer .archive-panel--soft{
+  background: rgba(255,255,255,.62);
+}
+
+body.archive-page.archive-page--summer .archive-panel p,
+body.archive-page.archive-page--summer .archive-note__text,
+body.archive-page.archive-page--summer .archive-card__copy,
+body.archive-page.archive-page--summer .archive-closing__copy,
+body.archive-page.archive-page--summer .archive-swatch p{
+  margin: 0;
+  font-family: var(--font-ui, "Inter", system-ui, sans-serif);
+  font-size: var(--archive-body);
+  line-height: 1.85;
+  color: var(--archive-muted);
+}
+
+body.archive-page.archive-page--summer .archive-panel p + p{
+  margin-top: 14px;
+}
+
+body.archive-page.archive-page--summer .archive-note{
+  border-radius: 22px;
+  padding: 24px 22px;
+  background: rgba(255,255,255,.78);
+  align-self: stretch;
+}
+
+body.archive-page.archive-page--summer .archive-note__text{
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(17,18,20,.66);
+}
+
+
+
+/* =========================================================
+   LISTA / QUOTE
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-list{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+body.archive-page.archive-page--summer .archive-list li{
+  position: relative;
+  padding-left: 18px;
+  font-size: 15px;
+  line-height: 1.72;
+  color: var(--archive-muted);
+}
+
+body.archive-page.archive-page--summer .archive-list li::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .72em;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(17,18,20,.22);
+}
+
+body.archive-page.archive-page--summer .archive-quote{
+  margin: 0;
+  padding: clamp(20px, 2.6vw, 32px);
+  border-radius: 24px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(17,18,20,.08);
+  box-shadow: var(--archive-shadow);
+}
+
+body.archive-page.archive-page--summer .archive-quote p{
+  margin: 0;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(20px, 2.1vw, 30px);
+  line-height: 1.36;
+  letter-spacing: -.02em;
+  color: rgba(17,18,20,.80);
+}
+
+/* =========================================================
+   PALETA
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-swatches{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 980px){
+  body.archive-page.archive-page--summer .archive-swatches{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px){
+  body.archive-page.archive-page--summer .archive-swatches{
+    grid-template-columns: 1fr;
+  }
+}
+
+body.archive-page.archive-page--summer .archive-swatch{
+  border-radius: 20px;
+  padding: 18px 18px 16px;
+  background: rgba(255,255,255,.72);
+}
+
+body.archive-page.archive-page--summer .archive-swatch__chip{
+  display: block;
+  width: 100%;
+  height: 72px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    0 8px 20px rgba(0,0,0,.04);
+}
+
+body.archive-page.archive-page--summer .archive-swatch h3{
+  margin: 0 0 8px;
+  font-size: 15px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--archive-ink);
+}
+
+/* =========================================================
+   CIERRE
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-closing__inner{
+  padding-top: clamp(18px, 3vw, 28px);
+  border-top: 1px solid rgba(17,18,20,.10);
+  text-align: center;
+}
+
+body.archive-page.archive-page--summer .archive-closing__copy{
+  width: min(100%, 720px);
+  margin: 16px auto 0;
+}
+
+/* =========================================================
+   ACCESIBILIDAD / INTERACCIONES
+   ========================================================= */
+
+body.archive-page.archive-page--summer a{
+  color: inherit;
+}
+
+body.archive-page.archive-page--summer :focus-visible{
+  outline: 2px solid rgba(17,18,20,.40);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 640px){
+  body.archive-page.archive-page--summer .archive-hero{
+    padding-top: 26px;
+  }
+
+  body.archive-page.archive-page--summer .pp-hero__media{
+    margin-bottom: 20px;
+  }
+
+  body.archive-page.archive-page--summer .archive-meta{
+    gap: 8px 12px;
+  }
+
+  body.archive-page.archive-page--summer .archive-card{
+    min-height: auto;
+  }
+}
+
+/* =========================================================
+   GALLERY GRID
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-gallery{
+  padding-top: clamp(30px, 5vw, 70px);
+}
+
+body.archive-page.archive-page--summer .archive-gallery-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 980px){
+  body.archive-page.archive-page--summer .archive-gallery-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px){
+  body.archive-page.archive-page--summer .archive-gallery-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+body.archive-page.archive-page--summer .archive-gallery-item{
+  margin: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(17,18,20,.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,.05);
+  transition: transform .3s ease, box-shadow .3s ease;
+  aspect-ratio: 4 / 5;
+}
+
+body.archive-page.archive-page--summer .archive-gallery-item:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.10);
+}
+
+body.archive-page.archive-page--summer .archive-gallery-item img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: rgba(255,255,255,.44);
+}
+
+/* =========================================================
+   ARCHIVE CARDS · MEDIA + CAROUSEL
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-grid--salons{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+@media (max-width: 1200px){
+  body.archive-page.archive-page--summer .archive-grid--salons{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px){
+  body.archive-page.archive-page--summer .archive-grid--salons{
+    grid-template-columns: 1fr;
+  }
+}
+
+body.archive-page.archive-page--summer .archive-card{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  min-height: 0;
+  border-radius: 24px;
+  border: 1px solid rgba(17,18,20,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.76), rgba(255,255,255,.48)),
+    radial-gradient(220px 140px at 100% 0%, rgba(196,179,152,.16), transparent 70%);
+  box-shadow: var(--archive-shadow-soft);
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease,
+    border-color .28s ease;
+}
+
+body.archive-page.archive-page--summer .archive-card::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.14), transparent 40%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.archive-page.archive-page--summer .archive-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.09);
+  border-color: rgba(17,18,20,.12);
+}
+
+body.archive-page.archive-page--summer .archive-card__media{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  min-height: 0;
+  overflow: hidden;
+  background: rgba(255,255,255,.72);
+  border-bottom: 1px solid rgba(17,18,20,.08);
+}
+
+body.archive-page.archive-page--summer .archive-card__media-link{
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+body.archive-page.archive-page--summer .archive-card__body{
+  position: relative;
+  z-index: 2;
+  padding: 22px 22px 24px;
+}
+
+body.archive-page.archive-page--summer .archive-card__index{
+  margin: 0 0 14px;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: 32px;
+  line-height: 1;
+  color: rgba(17,18,20,.20);
+}
+
+body.archive-page.archive-page--summer .archive-card__title{
+  margin: 0 0 10px;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: 24px;
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--archive-ink);
+}
+
+body.archive-page.archive-page--summer .archive-card__title a{
+  text-decoration: none;
+}
+
+body.archive-page.archive-page--summer .archive-card__copy{
+  margin: 0;
+  max-width: 26ch;
+}
+
+body.archive-page.archive-page--summer .archive-carousel__track{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+body.archive-page.archive-page--summer .archive-carousel__slide{
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .36s ease;
+}
+
+body.archive-page.archive-page--summer .archive-carousel__slide.is-active{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.archive-page.archive-page--summer .archive-carousel__slide img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: rgba(255,255,255,.44);
+}
+
+body.archive-page.archive-page--summer .archive-carousel__btn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  background: rgba(255,255,255,.70);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  color: rgba(17,18,20,.86);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform .22s ease,
+    background .22s ease,
+    border-color .22s ease,
+    opacity .22s ease;
+}
+
+body.archive-page.archive-page--summer .archive-carousel__btn:hover{
+  background: rgba(255,255,255,.90);
+}
+
+body.archive-page.archive-page--summer .archive-carousel__btn--prev{
+  left: 14px;
+}
+
+body.archive-page.archive-page--summer .archive-carousel__btn--next{
+  right: 14px;
+}
+
+body.archive-page.archive-page--summer .archive-carousel__btn span{
+  font-size: 24px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+body.archive-page.archive-page--summer .archive-carousel.is-single .archive-carousel__btn{
+  display: none;
+}
+
+/* =========================================================
+   ARCHIVE · Return logo
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-return{
+  display: flex;
+  justify-content: center;
+  padding: 34px 24px 10px;
+}
+
+body.archive-page.archive-page--summer .archive-return .floating-logo{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .22s ease, opacity .22s ease;
+}
+
+body.archive-page.archive-page--summer .archive-return .floating-logo:hover{
+  transform: translateY(-2px);
+  opacity: .88;
+}
+
+body.archive-page.archive-page--summer .archive-return .floating-logo img{
+  width: min(260px, 52vw);
+  height: auto;
+  display: block;
+}
+
+/* =========================================================
+   PROPHETIA CENTER LOGO
+   ========================================================= */
+
+body.archive-page.archive-page--summer{
+  --archive-center-logo-y: -795%;
+}
+
+.archive-center-logo{
+  position: absolute;
+  top: 50vh;
+  left: 50%;
+  transform: translate(-50%, var(--archive-center-logo-y));
+  z-index: 20;
+}
+
+body.archive-page.archive-page--summer .archive-center-logo a{
+  display: inline-block;
+  text-decoration: none;
+}
+
+body.archive-page.archive-page--summer .archive-center-logo img{
+  width: min(420px, 60vw);
+  height: auto;
+  display: block;
+  opacity: 0.95;
+  transition: transform .3s ease, opacity .3s ease;
+}
+
+body.archive-page.archive-page--summer .archive-center-logo img:hover{
+  transform: scale(1.03);
+  opacity: 1;
+}
+
+body.archive-page.archive-page--summer .archive-gallery-item{
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* =========================================================
+   ARCHIVE VERSION MODAL
+   ========================================================= */
+
+body.archive-page.archive-page--summer .archive-version-trigger{
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  text-align: inherit;
+  color: inherit;
+  font: inherit;
+}
+
+body.archive-page.archive-page--summer .archive-piece-link{
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+body.archive-page.archive-page--summer .archive-version-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .24s ease, visibility .24s ease;
+}
+
+body.archive-page.archive-page--summer .archive-version-modal.is-open{
+  opacity: 1;
+  visibility: visible;
+}
+
+body.archive-page.archive-page--summer .archive-version-modal__backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(17,18,20,.34);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body.archive-page.archive-page--summer .archive-version-modal__dialog{
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 620px);
+  border-radius: 24px;
+  padding: 30px 26px 26px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(17,18,20,.08);
+  box-shadow: 0 24px 80px rgba(0,0,0,.16);
+}
+
+body.archive-page.archive-page--summer .archive-version-modal__close{
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(17,18,20,.06);
+  color: var(--archive-ink);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+body.archive-page.archive-page--summer .archive-version-modal__eyebrow{
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(17,18,20,.52);
+}
+
+body.archive-page.archive-page--summer .archive-version-modal__title{
+  margin: 0 0 10px;
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.05;
+  font-weight: 600;
+  color: var(--archive-ink);
+}
+
+body.archive-page.archive-page--summer .archive-version-modal__text{
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--archive-muted);
+}
+
+body.archive-page.archive-page--summer .archive-version-modal__grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 640px){
+  body.archive-page.archive-page--summer .archive-version-modal__grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+body.archive-page.archive-page--summer .archive-version-option{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(17,18,20,.08);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+body.archive-page.archive-page--summer .archive-version-option:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.08);
+  border-color: rgba(17,18,20,.14);
+}
+
+body.archive-page.archive-page--summer .archive-version-option__label{
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--archive-ink);
+}
+
+body.archive-page.archive-page--summer .archive-version-option__meta{
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--archive-muted);
+}

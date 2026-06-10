@@ -1,0 +1,196 @@
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>PROPHETIA — Archive Piece</title>
+    <meta
+      name="description"
+      content="Archive Piece de PROPHETIA. Una presentación editorial de la pieza como obra visual."
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Base CSS del proyecto -->
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/typography.css" />
+    <link rel="stylesheet" href="../css/utilities.css" />
+
+    <!-- CSS específico -->
+    <link rel="stylesheet" href="../css/archive-piece.css" />
+  </head>
+  <body class="archive-piece-page">
+    <main class="piece" id="pieceRoot" data-piece-root>
+      <section class="piece-shell">
+        <!-- Intro -->
+        <header class="piece-hero" aria-labelledby="piece-title">
+          <div class="piece-hero__eyebrow">PROPHETIA</div>
+
+          <div class="piece-hero__copy">
+            <p class="piece-hero__kicker" data-piece-collection>
+              Summer Archive
+            </p>
+
+            <h1 class="piece-hero__title" id="piece-title" data-piece-title>
+              Archive Piece
+            </h1>
+
+            <p class="piece-hero__subtitle" data-piece-subtitle>
+              Archive Piece 01 — Summer Studies
+            </p>
+
+            <p class="piece-hero__lede" data-piece-lede>
+              Una lectura visual de la pieza, presentada como objeto editorial.
+            </p>
+          </div>
+        </header>
+
+        <!-- Imagen principal -->
+        <section class="piece-visual" aria-labelledby="piece-visual-title">
+          <div class="piece-section-head">
+            <p class="piece-section-head__label">Visual Study</p>
+            <h2 class="piece-section-head__title" id="piece-visual-title">
+              Pieza principal
+            </h2>
+          </div>
+
+          <figure class="piece-main-figure">
+            <img
+              src="../img/placeholders/piece-main.jpg"
+              alt="Mockup principal de la pieza"
+              class="piece-main-figure__img"
+              data-piece-main-image
+            />
+          </figure>
+        </section>
+
+        <!-- Bloque editorial -->
+        <section class="piece-editorial" aria-labelledby="piece-editorial-title">
+          <div class="piece-section-head piece-section-head--compact">
+            <p class="piece-section-head__label">Editorial Note</p>
+            <h2 class="piece-section-head__title" id="piece-editorial-title">
+              Contexto de la pieza
+            </h2>
+          </div>
+
+          <div class="piece-editorial__grid">
+            <article class="piece-editorial__block">
+              <h3 class="piece-editorial__heading">Historia</h3>
+              <p class="piece-editorial__text" data-piece-story>
+                Esta pieza nace como una observación del verano entendido no como
+                estación, sino como estado mental: más lento, más luminoso y más
+                sensorial.
+              </p>
+            </article>
+
+            <article class="piece-editorial__block">
+              <h3 class="piece-editorial__heading">Inspiración</h3>
+              <p class="piece-editorial__text" data-piece-inspiration>
+                El punto de partida mezcla códigos costeros, gesto urbano y una
+                lectura refinada del exceso cromático.
+              </p>
+            </article>
+
+            <article class="piece-editorial__block">
+              <h3 class="piece-editorial__heading">Tono artístico</h3>
+              <p class="piece-editorial__text" data-piece-tone>
+                La composición busca equilibrio entre espontaneidad gráfica y
+                contención editorial.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Galería -->
+        <section class="piece-gallery" aria-labelledby="piece-gallery-title">
+          <div class="piece-section-head">
+            <p class="piece-section-head__label">Archive Views</p>
+            <h2 class="piece-section-head__title" id="piece-gallery-title">
+              Galería de la pieza
+            </h2>
+          </div>
+
+          <div class="piece-gallery__grid" data-piece-gallery></div>
+        </section>
+
+        <!-- Notas -->
+        <section class="piece-notes" aria-labelledby="piece-notes-title">
+          <div class="piece-section-head piece-section-head--compact">
+            <p class="piece-section-head__label">Piece Notes</p>
+            <h2 class="piece-section-head__title" id="piece-notes-title">
+              Notas curatoriales
+            </h2>
+          </div>
+
+          <div class="piece-notes__grid">
+            <article class="piece-note-card">
+              <p class="piece-note-card__label">Color</p>
+              <p class="piece-note-card__value" data-piece-color>
+                Blanco óptico, rojo sandía, verde limpio y contraste negro.
+              </p>
+            </article>
+
+            <article class="piece-note-card">
+              <p class="piece-note-card__label">Intención</p>
+              <p class="piece-note-card__value" data-piece-intention>
+                Convertir una gráfica veraniega en una pieza con lectura adulta.
+              </p>
+            </article>
+
+            <article class="piece-note-card">
+              <p class="piece-note-card__label">Lenguaje visual</p>
+              <p class="piece-note-card__value" data-piece-language>
+                Trazo, aire, ritmo tipográfico y jerarquía editorial.
+              </p>
+            </article>
+          </div>
+        </section>
+
+      <!-- CTA -->
+  <section class="piece-cta" aria-labelledby="piece-cta-title">
+    <div class="piece-cta__inner">
+      <p class="piece-cta__eyebrow">Available as garment</p>
+      <h2 class="piece-cta__title" id="piece-cta-title">
+        La pieza continúa en formato prenda.
+      </h2>
+
+      <a
+        href="../../producto?id=somewhere"
+        class="piece-cta__button"
+        data-piece-cta
+      >
+        Adquirir pieza
+      </a>
+    </div>
+  </section>
+      </section>
+    </main>
+
+    <template id="galleryItemTemplate">
+      <figure class="piece-gallery-card">
+        <div class="piece-gallery-card__media">
+          <img
+            src=""
+            alt=""
+            class="piece-gallery-card__img"
+          />
+        </div>
+        <figcaption class="piece-gallery-card__meta">
+          <span class="piece-gallery-card__type"></span>
+        </figcaption>
+      </figure>
+    </template>
+
+    <script src="../js/archive-piece.js" defer></script>
+  </body>
+  </html>

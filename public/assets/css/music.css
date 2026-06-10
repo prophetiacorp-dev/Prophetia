@@ -1,0 +1,607 @@
+/* =========================================================
+   PROPHETIA · MUSIC (Silent Luxury editorial)
+   Scope: body.house-page.musica-page
+   ========================================================= */
+
+body.house-page.musica-page{
+  --music-max: 1040px;
+
+  /* Tinta editorial */
+  --music-ink: rgba(10,10,12,.92);
+  --music-muted: rgba(10,10,12,.62);
+
+  /* Superficies */
+  --music-surface: rgba(255,255,255,.72);
+  --music-surface-strong: rgba(255,255,255,.88);
+
+  /* Hairlines */
+  --music-line: rgba(10,10,12,.10);
+
+  /* Glow “AfterHour” controlado (frío, nada de neón) */
+  --music-glow: rgba(120,170,255,.14);
+  --music-glow-soft: rgba(120,170,255,.08);
+
+  /* Tipos */
+  --music-title: clamp(34px, 4.2vw, 56px);
+  --music-body: 15px;
+
+  color: var(--music-ink);
+  background:
+    radial-gradient(1100px 500px at 70% -10%, rgba(120,170,255,.10), transparent 60%),
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.03), transparent 55%),
+    #fff;
+}
+
+/* Contenedor */
+body.house-page.musica-page .music-wrap{
+  max-width: var(--music-max);
+  margin-inline: auto;
+  padding: 56px 24px 90px;
+}
+
+@media (max-width: 720px){
+  body.house-page.musica-page .music-wrap{ padding: 38px 18px 72px; }
+}
+
+/* Hero */
+body.house-page.musica-page .music-hero{
+  display: grid;
+  gap: 14px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--music-line);
+}
+
+body.house-page.musica-page .music-kicker{
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.55);
+}
+
+body.house-page.musica-page .music-title{
+  margin: 0;
+  font-family: var(--font-serif, "Playfair Display", serif);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: var(--music-title);
+  line-height: 1.05;
+}
+
+body.house-page.musica-page .music-lede{
+  margin: 0;
+  max-width: 72ch;
+  font-size: var(--music-body);
+  line-height: 1.75;
+  color: var(--music-muted);
+}
+
+/* Chips */
+body.house-page.musica-page .music-chips{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+body.house-page.musica-page .music-chip{
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(10,10,12,.10);
+  background: rgba(255,255,255,.80);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.78);
+  box-shadow: 0 10px 30px rgba(0,0,0,.04);
+}
+
+/* Layout */
+body.house-page.musica-page .music-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 22px;
+}
+
+@media (max-width: 980px){
+  .music-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px){
+  body.house-page.musica-page .music-grid{ grid-template-columns: 1fr; }
+}
+
+/* Cards */
+body.house-page.musica-page .music-card{
+  border: 1px solid rgba(10,10,12,.10);
+  border-radius: 18px;
+  background: var(--music-surface);
+  backdrop-filter: blur(10px) saturate(125%);
+  -webkit-backdrop-filter: blur(10px) saturate(125%);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.06),
+    0 0 30px var(--music-glow-soft);
+  overflow: hidden;
+}
+
+body.house-page.musica-page .music-card__head{
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid rgba(10,10,12,.08);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(to bottom, rgba(255,255,255,.65), rgba(255,255,255,.35));
+}
+
+body.house-page.musica-page .music-card__title{
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.72);
+}
+
+body.house-page.musica-page .music-card__meta{
+  font-size: 12px;
+  color: rgba(10,10,12,.55);
+  white-space: nowrap;
+}
+
+body.house-page.musica-page .music-card__body{
+  padding: 14px 16px 16px;
+}
+
+/* Spotify */
+body.house-page.musica-page .music-spotify{
+  border-radius: 14px;
+  overflow: hidden;
+  outline: 1px solid rgba(10,10,12,.10);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.08),
+    0 0 40px var(--music-glow);
+}
+
+/* Identidad sonora */
+body.house-page.musica-page .style-block{
+  display: grid;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px dashed rgba(10,10,12,.10);
+}
+
+body.house-page.musica-page .style-block:last-child{
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+body.house-page.musica-page .style-title{
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.82);
+}
+
+body.house-page.musica-page .style-copy{
+  margin: 0;
+  color: rgba(10,10,12,.64);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* Lista editorial */
+body.house-page.musica-page .music-list{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+body.house-page.musica-page .music-list li{
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(10,10,12,.08);
+  background: rgba(255,255,255,.65);
+  box-shadow: 0 14px 40px rgba(0,0,0,.05);
+}
+
+body.house-page.musica-page .music-list strong{
+  display: block;
+  font-size: 13px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.78);
+  margin-bottom: 6px;
+}
+
+body.house-page.musica-page .music-list span{
+  color: rgba(10,10,12,.60);
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   PROPHETIA · MUSIC INTERACTION
+   Feedback + propuestas comunidad
+   ========================================================= */
+
+body.house-page.musica-page .music-community{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+@media (max-width: 980px){
+  body.house-page.musica-page .music-community{
+    grid-template-columns: 1fr;
+  }
+}
+
+body.house-page.musica-page .music-feedback{
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(10,10,12,.08);
+  display: grid;
+  gap: 14px;
+}
+
+body.house-page.musica-page .music-feedback__head{
+  display: grid;
+  gap: 6px;
+}
+
+body.house-page.musica-page .music-feedback__title{
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.78);
+}
+
+body.house-page.musica-page .music-feedback__copy{
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--music-muted);
+}
+
+body.house-page.musica-page .music-tag-group{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+body.house-page.musica-page .music-tag{
+  appearance: none;
+  border: 1px solid rgba(10,10,12,.10);
+  background: rgba(255,255,255,.72);
+  color: rgba(10,10,12,.74);
+  border-radius: 999px;
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    color .18s ease,
+    box-shadow .18s ease;
+}
+
+body.house-page.musica-page .music-tag:hover{
+  transform: translateY(-1px);
+  border-color: rgba(10,10,12,.18);
+}
+
+body.house-page.musica-page .music-tag.is-active{
+  background: rgba(10,10,12,.92);
+  color: #fff;
+  border-color: rgba(10,10,12,.92);
+  box-shadow: 0 14px 34px rgba(0,0,0,.10);
+}
+
+body.house-page.musica-page .music-rating{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+body.house-page.musica-page .music-rating__label{
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.66);
+}
+
+body.house-page.musica-page .music-stars{
+  display: flex;
+  gap: 6px;
+}
+
+body.house-page.musica-page .music-star{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(10,10,12,.22);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: transform .18s ease, color .18s ease;
+}
+
+body.house-page.musica-page .music-star:hover{
+  transform: translateY(-1px) scale(1.04);
+}
+
+body.house-page.musica-page .music-star.is-active{
+  color: #111;
+}
+
+body.house-page.musica-page .music-feedback__actions{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+body.house-page.musica-page .music-action-btn{
+  appearance: none;
+  border: 1px solid rgba(10,10,12,.12);
+  background: rgba(10,10,12,.92);
+  color: #fff;
+  border-radius: 999px;
+  min-height: 42px;
+  padding: 0 18px;
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 16px 40px rgba(0,0,0,.10);
+  transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
+}
+
+body.house-page.musica-page .music-action-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 20px 48px rgba(0,0,0,.14);
+}
+
+body.house-page.musica-page .music-feedback__summary{
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+body.house-page.musica-page .music-feedback__summary strong{
+  font-size: 18px;
+  color: rgba(10,10,12,.86);
+}
+
+body.house-page.musica-page .music-feedback__summary span{
+  font-size: 13px;
+  color: rgba(10,10,12,.54);
+}
+
+/* Formulario */
+body.house-page.musica-page .music-form{
+  display: grid;
+  gap: 16px;
+}
+
+body.house-page.musica-page .music-form__grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 720px){
+  body.house-page.musica-page .music-form__grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+body.house-page.musica-page .music-field{
+  display: grid;
+  gap: 8px;
+}
+
+body.house-page.musica-page .music-field__label{
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.68);
+}
+
+body.house-page.musica-page .music-field input,
+body.house-page.musica-page .music-field select,
+body.house-page.musica-page .music-field textarea{
+  width: 100%;
+  border: 1px solid rgba(10,10,12,.10);
+  border-radius: 14px;
+  background: rgba(255,255,255,.82);
+  color: rgba(10,10,12,.88);
+  padding: 13px 14px;
+  font: inherit;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+body.house-page.musica-page .music-field textarea{
+  resize: vertical;
+  min-height: 120px;
+}
+
+body.house-page.musica-page .music-field input:focus,
+body.house-page.musica-page .music-field select:focus,
+body.house-page.musica-page .music-field textarea:focus{
+  border-color: rgba(10,10,12,.22);
+  box-shadow: 0 0 0 3px rgba(120,170,255,.10);
+}
+
+body.house-page.musica-page .music-form__actions{
+  display: grid;
+  gap: 10px;
+}
+
+body.house-page.musica-page .music-form__hint{
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(10,10,12,.56);
+}
+
+body.house-page.musica-page .music-form__status{
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(10,10,12,.08);
+  color: rgba(10,10,12,.72);
+  font-size: 14px;
+}
+
+/* Sugerencias */
+body.house-page.musica-page .music-suggestions{
+  display: grid;
+  gap: 12px;
+}
+
+body.house-page.musica-page .music-suggestion{
+  border: 1px solid rgba(10,10,12,.08);
+  border-radius: 16px;
+  background: rgba(255,255,255,.70);
+  padding: 14px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.05);
+}
+
+body.house-page.musica-page .music-suggestion__top{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+body.house-page.musica-page .music-suggestion__song{
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.78);
+}
+
+body.house-page.musica-page .music-suggestion__artist{
+  margin: 4px 0 0;
+  color: rgba(10,10,12,.58);
+  font-size: 14px;
+}
+
+body.house-page.musica-page .music-suggestion__badge{
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(10,10,12,.10);
+  background: rgba(255,255,255,.82);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(10,10,12,.62);
+  white-space: nowrap;
+}
+
+body.house-page.musica-page .music-suggestion__reason{
+  margin: 10px 0 0;
+  color: rgba(10,10,12,.60);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+body.house-page.musica-page .music-suggestion__foot{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+body.house-page.musica-page .music-vote-btn{
+  appearance: none;
+  border: 1px solid rgba(10,10,12,.10);
+  background: rgba(255,255,255,.82);
+  color: rgba(10,10,12,.78);
+  border-radius: 999px;
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .18s ease, background .18s ease, color .18s ease;
+}
+
+body.house-page.musica-page .music-vote-btn:hover{
+  transform: translateY(-1px);
+}
+
+body.house-page.musica-page .music-vote-btn.is-voted{
+  background: rgba(10,10,12,.92);
+  color: #fff;
+  border-color: rgba(10,10,12,.92);
+}
+
+body.house-page.musica-page .music-suggestion__votes{
+  font-size: 13px;
+  color: rgba(10,10,12,.56);
+}
+
+body.house-page.musica-page .music-empty{
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.64);
+  border: 1px dashed rgba(10,10,12,.10);
+  color: rgba(10,10,12,.58);
+  line-height: 1.7;
+}
+
+
+/* Variaciones por estilo musical */
+.music-card[data-playlist-id="prophetia-house"]{
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.06),
+    0 0 30px rgba(120,170,255,.10);
+}
+
+.music-card[data-playlist-id="urban-energy"]{
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.06),
+    0 0 30px rgba(255,120,120,.10);
+}
+
+.music-card[data-playlist-id="afterhour"]{
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.06),
+    0 0 30px rgba(160,120,255,.12);
+}
+
+.music-card[data-playlist-id="tribal"]{
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.06),
+    0 0 30px rgba(255,170,90,.12);
+}

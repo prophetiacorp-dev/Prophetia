@@ -1,0 +1,1463 @@
+
+    /* ===========================
+       HERO TIPO Prophetia · HOMBRE
+       =========================== */
+
+    /* Banda principal: logo + imagen editorial + panel lateral */
+    .men-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(230px, 340px);
+      gap: clamp(18px, 4vw, 52px);
+      align-items: flex-start;
+      padding: clamp(10px, 1.5vw, 18px) 0 clamp(22px, 4vw, 40px);
+    }
+
+    .men-band__media {
+      position: relative;
+    }
+
+    /* Logo grande alineado con el header, como Prophetia */
+    .men-band__logo {
+      display: block;
+      width: min(420px, 90%);
+      height: auto;
+      margin-bottom: clamp(8px, 1vw, 14px);
+    }
+
+    /* Marco de la imagen editorial */
+    .men-band__image-frame {
+      border-radius: 10px;
+      overflow: hidden;
+      background: #ddd;
+    }
+
+    .men-band__image-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      transform-origin: center;
+      transition: transform .8s cubic-bezier(.25,.15,.25,1);
+    }
+
+    .men-band__image-frame:hover img {
+      transform: scale(1.01);
+    }
+
+/* ===========================
+   HERO · Panel derecho (Hombre) — Prophetia-like
+   =========================== */
+
+/* Panel lateral “Hombre” */
+.men-band__side{
+  position: sticky;
+  top: calc(var(--pp-header-h, 72px) + 18px);
+
+  margin-top: clamp(34px, 6vw, 84px);
+  justify-self: start;
+
+  transform: translateY(var(--men-side-y, 142px));
+
+  padding-right: clamp(6px, 1.2vw, 18px);
+}
+
+
+/* Título “Hombre” más fino */
+.men-band__title{
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 18px;              /* más pequeño que antes */
+  font-weight: 400;
+  margin: 0 0 12px;
+  letter-spacing: .02em;        /* menos espaciado = más Prophetia */
+  text-transform: none;         /* Prophetia no grita */
+  color: #111;
+}
+
+/* Lista sin bullets, respiración editorial */
+.men-band__list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+/* Links: pequeños, negros, elegantes */
+.men-band__list a{
+  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: .01em;
+
+  color: #111;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+
+  display: inline-block;
+  padding: 2px 0;
+
+  opacity: .92;
+  transition: opacity .18s ease, border-color .18s ease;
+}
+
+.men-band__list a:hover{
+  opacity: 1;
+  border-color: rgba(0,0,0,.55);
+}
+
+
+    /* ===========================
+       TOOLBAR (Filtros / Ordenar / En stock / Vista)
+       =========================== */
+
+    .men-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 10px 0 16px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: .9rem;
+    }
+
+    .men-toolbar__left,
+    .men-toolbar__right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .men-btn-ghost {
+      background: none;
+      border: 0;
+      padding: 6px 2px;
+      text-decoration: underline;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .men-select {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .men-select select {
+      appearance: none;
+      padding: 8px 32px 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font: inherit;
+    }
+
+    .men-select::after {
+      content: "▾";
+      position: absolute;
+      right: 10px;
+      pointer-events: none;
+      font-size: .7rem;
+    }
+
+    .men-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .men-view-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      background: #fff;
+      font: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .men-view-toggle[aria-pressed="true"] {
+      background: #111;
+      color: #fff;
+    }
+
+    /* ===========================
+       GRID HOMBRE (usa plp.css + ajuste vista)
+       =========================== */
+
+
+
+    .men-grid.men-grid--compact {
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    /* Vista lista opcional (aprovecha tu body.view-list si lo quieres usar) */
+    body.view-list .men-grid {
+      grid-template-columns: 1fr;
+    }
+
+    body.view-list .men-grid .card {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+/* ===========================
+   DRAWER DE FILTROS LOCAL · ESTILO Prophetia
+   =========================== */
+
+/* Overlay a pantalla completa, por debajo del header */
+/* ===========================
+   DRAWER DE FILTROS LOCAL · ESTILO Prophetia
+   =========================== */
+
+/* Overlay A PANTALLA COMPLETA por encima del header */
+/* Estado base: overlay de filtros cerrado, NO debe interceptar clics */
+.men-filters-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;        /* CLAVE: no intercepta clics cuando está cerrado */
+  transition: opacity .25s ease;
+  z-index: 900;                /* por debajo del carrito */
+}
+
+/* Cuando abres los filtros (clase que ya usas en el JS) */
+.men-filters-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;        /* ahora sí debe tapar y aceptar clics */
+}
+
+
+/* Panel derecho tipo Prophetia */
+.men-filters-drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  width: min(540px, 100%);
+  height: 100vh;
+  padding-inline: 48px;
+
+  background: #fff;
+  box-shadow: -18px 0 40px rgba(0,0,0,.18);
+  border-left: 1px solid rgba(0,0,0,.06);
+
+  transform: translateX(100%);
+  transition: transform .24s ease-out;
+  z-index: 2700;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.men-filters-drawer.is-open {
+  transform: translateX(0);
+}
+
+.men-filters-head,
+.men-filters-body,
+.men-filters-foot-inner {
+  padding-inline: 0;
+}
+
+
+
+/* Botón principal = barra negra pegada a los bordes */
+.men-btn-primary {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  text-transform: none;
+}
+
+/* Mobile: que ocupe casi toda la pantalla */
+@media (max-width: 768px) {
+  .men-filters-drawer {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px 18px 16px;
+  }
+}
+
+
+/* PESTAÑAS COLOR / CATEGORÍA */
+
+
+.men-filters-tab {
+  border: 0;
+  background: none;
+  padding: 6px 0;
+  font: inherit;
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: .5;
+  position: relative;
+}
+
+.men-filters-tab.is-active {
+  opacity: 1;
+}
+
+.men-filters-tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: #111;
+}
+.men-tab-count {
+  margin-left: .2rem;
+  font-size: .8em;
+}
+
+/* CUERPO DEL DRAWER · CONTENIDO PEGADO ARRIBA, ESTILO Prophetia */
+.men-filters-body {
+  /* mucho menos aire arriba: el contenido pega bajo las pestañas */
+  padding: 12px 0 14px;
+
+  flex: 1 1 auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  gap: 24px;
+  overflow-y: auto;
+}
+
+
+
+/* Paneles con transición suave entre pestañas
+   Solo el activo ocupa espacio, el resto = display:none */
+.men-filters-panel {
+  display: none;              /* clave: no ocupa alto */
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity .18s ease-out,
+    transform .18s ease-out;
+}
+
+.men-filters-panel.is-active {
+  display: block;             /* ahora sí ocupa espacio */
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.men-filters-tab {
+  /* ya tienes font, etc. */
+  transition: opacity .18s ease-out;
+}
+
+.men-filters-tab.is-active {
+  opacity: 1;
+}
+
+
+.men-filters-subtitle {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin: 0 0 12px;
+}
+
+/* =========================================================
+   HOMBRE · LISTA DE COLORES / SWATCHES
+   Estructura limpia + paleta completa Prophetia
+   ========================================================= */
+
+.men-swatch-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 20px;
+}
+
+.men-swatch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .9rem;
+  cursor: pointer;
+  position: relative;
+  padding: 4px 0;
+}
+
+/* Input escondido: manejamos el estado con la clase .is-selected */
+.men-swatch-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Puntito de color */
+.men-swatch-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.2);
+  flex-shrink: 0;
+}
+
+/* Estado seleccionado tipo Prophetia */
+.men-swatch.is-selected .men-swatch-dot,
+.men-swatch-input:checked + .men-swatch-dot {
+  box-shadow:
+    0 0 0 2px #111,
+    0 0 0 4px #fff;
+  border-color: #111;
+}
+
+.men-swatch-input:checked ~ .men-swatch-label {
+  font-weight: 600;
+}
+
+.men-swatch-label {
+  white-space: nowrap;
+}
+
+/* Paleta completa */
+.men-swatch--white       { background: #fdfdfd; }
+.men-swatch--black       { background: #111111; }
+.men-swatch--beige       { background: #e4d4b4; }
+.men-swatch--green       { background: #4c7b4b; }
+.men-swatch--blue        { background: #4a7bbf; }
+.men-swatch--pink        { background: #f5b7c8; }
+.men-swatch--brown       { background: #8b5a33; }
+.men-swatch--red         { background: #d23a32; }
+.men-swatch--purple      { background: #b57fbf; }
+.men-swatch--orange      { background: #f18a3b; }
+.men-swatch--yellow      { background: #f2c232; }
+.men-swatch--grey        { background: #b8b8b8; }
+.men-swatch--gold        { background: #e4c77a; }
+.men-swatch--silver      { background: #d5d5dd; }
+
+.men-swatch--multi {
+  background: linear-gradient(
+    90deg,
+    #f94144,
+    #f3722c,
+    #f9c74f,
+    #90be6d,
+    #577590
+  );
+}
+
+.men-swatch--clear {
+  background: #ffffff;
+  border-style: dashed;
+}
+
+.men-swatch--transparent {
+  background: repeating-linear-gradient(
+    45deg,
+    #f5f5f5 0,
+    #f5f5f5 4px,
+    #e0e0e0 4px,
+    #e0e0e0 8px
+  );
+}
+
+/* FOOTER / CTA NEGRA INFERIOR */
+/* FOOTER / ESTILO Prophetia: IZQ “ELIMINAR”, DCHA “VER X RESULTADOS” */
+.men-filters-foot {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding: 0; /* controlamos padding en el inner */
+}
+
+.men-filters-foot-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr; /* izquierda más ancha */
+  align-items: stretch;
+  min-height: 64px;
+}
+
+/* Botón izquierdo: blanco con borde, texto normal */
+.men-filters-clear {
+  width: 100%;
+  padding: .9rem 1.4rem;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-size: .85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.men-filters-count {
+  margin-left: .35rem;
+  opacity: .7;
+}
+
+/* Botón derecho: barra negra full Prophetia */
+.men-filters-cta {
+  width: 100%;
+  padding: .9rem 1.4rem;
+  border: 0;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: .9rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Responsive: en móvil apila los dos botones uno encima de otro */
+@media (max-width: 768px) {
+  .men-filters-foot-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .men-filters-clear {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+
+    /* ===========================
+       RESPONSIVE
+       =========================== */
+
+@media (max-width: 960px) {
+  .men-band {
+    grid-template-columns: 1fr;
+  }
+
+  .men-band__side {
+    transform: none;
+    margin-top: 18px;
+  }
+}
+
+    
+
+
+/* Prophetia — Hombre · Comportamiento Prophetia */
+.men-page .plp-wrap > .container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+
+/* ==== PROPHETIA · CONTROL ABSOLUTO DEL LOGO DEL HERO ==== */
+
+.men-band__logo-link {
+  display: inline-block;
+  position: relative; /* no saca del flujo */
+}
+
+.men-band__logo {
+  position: relative;
+  transform: translate(var(--logo-x, 0px), var(--logo-y, 0px))
+             scale(var(--logo-scale, 1))
+             rotate(var(--logo-rot, 0deg));
+  transition: transform .25s ease;
+}
+
+/* Variables de ajuste rápido:
+   MODIFICA ESTOS VALORES HASTA QUE TE ENAMORE EL RESULTADO */
+
+
+/* =========================================================
+   HERO HOMBRE · MARCO EXACTO Prophetia (1248 × 702)
+   SOLO PARA .men-page
+   ========================================================= */
+
+.men-page .hero.hero--men {
+  padding: 0;
+}
+
+/* Marco Prophetia: igual que 1247.87 × 701.93 pero responsivo */
+.men-page .hero.hero--men .hero-frame {
+  position: relative;
+  width: 100%;
+  max-width: 1248px;
+  aspect-ratio: 1248 / 702;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #000;
+}
+
+/* El vídeo rellena el marco */
+.men-page .hero.hero--men .hero-video {
+  position: absolute;
+  inset: 0;
+}
+
+
+
+/* ===========================
+   LAYOUT GLOBAL PÁGINA HOMBRE
+   =========================== */
+
+/* En Hombre, el main debe ser de ancho completo,
+   sin max-width centrado */
+body.men-page main.pp-collection-page {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ================================
+   HERO HOMBRE — PEGADO A LA IZQUIERDA
+   ================================ */
+
+.men-page .hero.hero--men .hero-frame {
+  margin-left: 0;
+  margin-right: auto;
+  transform: translateX(0);
+}
+
+
+
+
+
+/* Hero a la izquierda ajustado */
+.men-page .layout-men .hero-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.men-page .layout-men .hero-frame {
+  max-width: 1248px;
+  aspect-ratio: 1248 / 702;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+}
+
+
+
+/* =========================================================
+   AJUSTE HERO HOMBRE · QUITAR HUECO BLANCO
+   ========================================================= */
+
+/* Anula el padding/margen genérico del hero de home */
+.men-page .hero.hero--men {
+  padding-top: 20px;          /* ya lo tienes en layout-men */
+  padding-bottom: 0;          /* quitamos huecazo */
+  margin-bottom: 24px;        /* separación elegante antes de Filtros */
+}
+
+/* El grid del hero ya manda, evitamos sorpresas */
+.men-page .hero.hero--men.layout-men {
+  margin-top: 0;
+}
+
+/* =========================================================
+   TOOLBAR HOMBRE · ALINEADA CON EL MARCO DEL HERO (ESTILO Prophetia)
+   ========================================================= */
+
+
+
+/* Por si algún CSS anterior mete separación extra antes de la toolbar */
+.men-page .plp-wrap {
+  margin-top: 24px;         /* desde la toolbar al grid, suave */
+}
+
+/* =========================================================
+   RESPONSIVE · EN MÓVIL TODO A 100% ANCHO
+   ========================================================= */
+@media (max-width: 960px) {
+  .men-page .hero.hero--men.layout-men {
+    padding: 12px 16px 0 16px;
+  }
+
+  .men-page .men-toolbar.container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+/* ================================================
+   CATEGORÍAS EN VERTICAL — ESTILO Prophetia PROPHETIA
+   ================================================ */
+
+
+/* PANEL CATEGORÍA · LISTA VERTICAL, INICIANDO ARRIBA */
+.men-filters-panel[data-panel="categoria"] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;          /* separación entre "Camisetas / Streetwear / Hoodies..." */
+  margin: 0;
+  padding: 0;
+}
+
+/* Cada opción de categoría: fila limpia con checkbox + texto */
+.men-filters-panel[data-panel="categoria"] .men-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .9rem;
+}
+
+/* ==========================================
+   PLP GRID ALINEADO CON HERO · ESTILO Prophetia
+   ========================================== */
+
+
+/* Mantener separación elegante respecto al hero */
+.men-page .plp-wrap {
+  margin-top: 24px;
+}
+
+
+/* ============================================
+   RESTAURA HEADER Y MEGAMENU COMO EN INDEX
+   SOLO EN PÁGINA HOMBRE
+   ============================================ */
+
+
+
+.men-page #header {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Megamenu: alineado a pantalla igual que index */
+.men-page .mega,
+.men-page .mega__inner {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding-inline: 32px;
+}
+
+/* El contenedor debajo del header NO debe empujar nada */
+.men-page main.pp-collection-page {
+  padding-top: 0 !important;
+}
+
+/* =========================================
+   TARJETAS DE PRODUCTO EN GRID HOMBRE
+   ========================================= */
+
+.men-grid .card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid var(--line, rgba(0,0,0,.08));
+  padding: 12px 12px 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.men-grid .card__media {
+  display: block;
+  width: 100%;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.men-grid .card__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.men-grid .card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.men-grid .card__title {
+  font-size: .9rem;
+  line-height: 1.3;
+}
+
+.men-grid .card__price {
+  font-size: .9rem;
+  font-weight: 500;
+}
+
+/* ============================================
+   HOMBRE · GUTTER ÚNICO PARA HEADER / HERO / GRID
+   ============================================ */
+
+/* Mismo carril para todo Hombre */
+body.men-page {
+  --pp-edge-men: 40px; /* si lo quieres un pelín más dentro: 36px o 32px */
+}
+
+/* HEADER alineado al hero (izquierda y derecha) */
+.men-page .pp-header > .container,
+.men-page .pp-topbar {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-men);  /* mismo gutter que el hero */
+  box-sizing: border-box;
+}
+
+.men-page .pp-left,
+.men-page .pp-right {
+  margin: 0;
+}
+
+.men-page .pp-left {
+  margin-left: -52px !important;  /* Ajusta este valor según lo necesites */
+}
+
+.men-page .pp-right {
+  margin-right: -25px !important;  /* Ajusta este valor según lo necesites */
+}
+
+/* HERO GRID alineado al mismo carril */
+.men-page .layout-men {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  padding: 20px var(--pp-edge-men) 0 var(--pp-edge-men);
+}
+
+/* TOOLBAR HOMBRE alineada a ese carril */
+.men-page .men-toolbar.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-men);
+  box-sizing: border-box;
+}
+
+
+
+/* Contenedor de productos */
+.men-page .plp-wrap .container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-men);
+  box-sizing: border-box;
+}
+
+
+/* ============================================
+   HERO HOMBRE · FRANJA DE LOGO TIPO Prophetia
+   (BANDA ESTABLE + LOGO CLICABLE)
+   ============================================ */
+
+/* Columna izquierda del hero: logo arriba, vídeo debajo */
+.men-page .hero-left {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Banda del logo (como la franja de camisetas) */
+.men-page .hero-men-logo-band {
+  display: block;
+  line-height: 0;
+  margin-bottom: 12px;          /* separación respecto al vídeo */
+  pointer-events: auto;         /* el clic llega bien al <a> */
+  transform: translateY(var(--men-logo-offset, 0px));
+}
+
+/* Ajustar el grid para que se aproveche mejor el espacio */
+.men-page .plp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Cambio para usar todo el espacio */
+  gap: 16px;  /* Reducir el espacio entre tarjetas */
+  width: 100%;
+  margin-left: 0;  /* Asegurar que el contenido esté alineado a la izquierda */
+  padding: 0 0 20px 0;  /* Asegurarse de que el padding no genere espacios innecesarios */
+}
+
+/* Opcional: asegúrate de que el contenedor de las tarjetas esté completamente alineado */
+.men-page .plp-grid .card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid var(--line, rgba(0,0,0,.08));
+  padding: 12px 12px 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;  /* Asegura que las tarjetas no se sobrepasen del tamaño del contenedor */
+  width: 100%;
+}
+
+
+
+/* Ajuste para móviles: menor tamaño de las tarjetas */
+@media (max-width: 768px) {
+  .men-page .plp-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Reducción de tamaño en móviles */
+    gap: 12px;  /* Menos espacio entre tarjetas en móvil */
+  }
+
+  .men-page .plp-grid .card-media img {
+    object-fit: cover; /* Asegura que las imágenes se ajusten correctamente en móvil */
+  }
+}
+
+/* =========================================
+   PLP · BOTÓN WISHLIST (icon-btn save)
+   ========================================= */
+
+/* Asegura contexto */
+.card .plp-media { position: relative; }
+
+/* Botón arriba-dcha, “float” editorial */
+.card .icon-btn.save{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(0,0,0,.14);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.card .icon-btn.save:hover{
+  transform: translateY(-1px);
+  border-color: rgba(0,0,0,.22);
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+}
+
+.card .icon-btn.save:active{
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+}
+
+.card .icon-btn.save:focus-visible{
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+/* Icono: controla grosor y “feel” */
+.card .icon-btn.save svg{
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Estado GUARDADO: aria-pressed="true" */
+.card .icon-btn.save[aria-pressed="true"]{
+  border-color: rgba(0,0,0,.28);
+  background: #111;
+}
+
+.card .icon-btn.save[aria-pressed="true"] svg{
+  stroke: #fff;
+}
+
+/* (Opcional) si quieres “relleno” al guardar */
+.card .icon-btn.save[aria-pressed="true"] svg path{
+  fill: #fff;
+}
+
+/* Mobile */
+@media (max-width: 768px){
+  .card .icon-btn.save{
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+  }
+}
+/* ==============================
+   NAV botones: logo PROPHETIA
+   ============================== */
+
+body.men-page{
+  --pp-nav-logo: url("/assets/img/logo/emblemblanco.svg");
+  --pp-nav-size: 18px;
+  --pp-nav-rot-prev: 0deg;
+  --pp-nav-rot-next: 0deg;
+}
+
+/* Botones circulares ya existentes */
+.card .nav.prev,
+.card .nav.next{
+  /* tu estilo actual se queda */
+  background-image: var(--pp-nav-logo);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--pp-nav-size);
+}
+
+/* Si tus botones tenían SVG o texto dentro, lo ocultamos */
+.card .nav.prev svg,
+.card .nav.next svg{
+  display: none !important;
+}
+
+/* Rotación: prev “mira” hacia atrás, next hacia delante */
+.card .nav.prev{ transform: translateY(-50%) rotate(var(--pp-nav-rot-prev)); }
+.card .nav.next{ transform: translateY(-50%) rotate(var(--pp-nav-rot-next)); }
+
+/* Hover premium */
+.card .nav.prev:hover,
+.card .nav.next:hover{
+  background-size: calc(var(--pp-nav-size) + 2px);
+}
+
+
+
+
+.men-page .plp-grid .card.has-carousel .card-media .nav.prev {
+  left: 10px;
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-prev));
+}
+
+.men-page .plp-grid .card.has-carousel .card-media .nav.next {
+  right: 10px;
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-next));
+}
+
+.men-page .plp-grid .card.has-carousel .card-media .nav.prev:hover,
+.men-page .plp-grid .card.has-carousel .card-media .nav.next:hover {
+  border-color: rgba(0,0,0,.28);
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  background-size: calc(var(--pp-nav-size) + 2px);
+}
+
+@media (hover: none) {
+  .men-page .plp-grid .card.has-carousel .card-media .nav.prev,
+  .men-page .plp-grid .card.has-carousel .card-media .nav.next {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* =========================================================
+   HOMBRE · PLP carousel final limpio
+   Botones fuera del enlace, posicionados sobre la imagen
+   ========================================================= */
+
+.men-page .plp-grid .card {
+  position: relative;
+}
+
+.men-page .plp-grid .card-media {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #f7f7f7;
+}
+
+.men-page .plp-grid .card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.men-page .plp-grid .card.has-carousel .nav.prev,
+.men-page .plp-grid .card.has-carousel .nav.next {
+  position: absolute;
+  top: 50%;
+  z-index: 30;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(0,0,0,.18);
+  background-color: rgba(255,255,255,.92);
+  background-image: var(--pp-nav-logo);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--pp-nav-size);
+
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+  cursor: pointer;
+  user-select: none;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background-size 160ms ease;
+}
+
+.men-page .plp-grid .card.has-carousel:hover .nav.prev,
+.men-page .plp-grid .card.has-carousel:hover .nav.next {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.men-page .plp-grid .card.has-carousel .nav.prev {
+  left: 10px;
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-prev));
+}
+
+.men-page .plp-grid .card.has-carousel .nav.next {
+  right: 10px;
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-next));
+}
+
+.men-page .plp-grid .card.has-carousel .nav.prev:hover,
+.men-page .plp-grid .card.has-carousel .nav.next:hover {
+  border-color: rgba(0,0,0,.28);
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  background-size: calc(var(--pp-nav-size) + 2px);
+}
+
+@media (hover: none) {
+  .men-page .plp-grid .card.has-carousel .nav.prev,
+  .men-page .plp-grid .card.has-carousel .nav.next {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+
+
+/* ============================================
+   HOMBRE · GUTTER ÚNICO HEADER / HERO / GRID
+   (OVERRIDE FINAL)
+   ============================================ */
+
+/* Un solo gutter para toda la página Hombre */
+body.men-page {
+  --pp-edge-men: 40px;              /* ajusta 32 / 36 si quieres variar */
+}
+
+/* HEADER: topbar y container alineados con el hero */
+body.men-page .pp-topbar,
+body.men-page .pp-header > .container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-men);  /* mismo inicio que el hero */
+  box-sizing: border-box;
+}
+
+/* Bloques flex del header: sin márgenes extra */
+body.men-page .pp-left,
+body.men-page .pp-right {
+  margin: 0;
+}
+
+/* HERO GRID alineado al mismo carril */
+body.men-page .layout-men {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 20px var(--pp-edge-men) 0 var(--pp-edge-men);
+  box-sizing: border-box;
+}
+
+/* TOOLBAR HOMBRE alineada al carril del hero */
+body.men-page .men-toolbar.container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-men);
+  box-sizing: border-box;
+}
+
+/* GRID PLP también al mismo carril */
+body.men-page .plp-wrap .container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--pp-edge-men);
+  box-sizing: border-box;
+}
+/* ============================================================
+   PROPHETIA · FIX DEFINITIVO HEADER HOMBRE
+   ============================================================ */
+
+/* 1) Eliminamos el padding del container del header SOLO en /hombre */
+body.men-page .pp-header > .container,
+body.men-page .pp-topbar {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 2) Ahora damos el padding REAL del hero */
+body.men-page .pp-left,
+body.men-page .pp-right {
+  padding-left: var(--pp-edge-men, 40px) !important;
+  padding-right: var(--pp-edge-men, 40px) !important;
+}
+
+/* 3) Ajuste fino: permitir mover pp-right un poco más hacia dentro */
+body.men-page .pp-right {
+  margin-right: -8px; /* puedes poner -12, -16, -20 */
+}
+
+/* 4) Ajuste fino: permitir mover pp-left más a la izquierda */
+body.men-page .pp-left {
+  margin-left: -28px;  /* prueba -4, -6 o -8 */
+}
+
+/* ===== HERO HOMBRE · MODO INDEX ===== */
+.men-page .hero-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+.men-page .hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+  /* ==== HOMBRE · Diales del floating logo (como index) ==== */
+body.men-page {
+  /* X = izquierda/derecha, Y = arriba/abajo */
+  --logo-x: -74px;   /* ajusta si quieres moverlo lateralmente */
+  --logo-y:  9px;   /* + baja el logo / - lo sube hacia el header */
+}
+
+
+
+/* ============================================
+   HOMBRE (men-page) · PLP GRID TYPO + LINKS
+   ============================================ */
+
+body.men-page .pp-plp .card-body > * { margin: 0; }
+
+/* Título (h3) del producto */
+body.men-page .pp-plp .card-title{
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-weight: 500;
+  font-size: 15px;            /* ← AJUSTA AQUÍ */
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+/* Link del título: quitar azul + controlar visitado */
+body.men-page .pp-plp .card-title a{
+  color: #111;
+  text-decoration: none;
+}
+
+body.men-page .pp-plp .card-title a:visited{
+  color: #111;                /* evita morado/azul en visitados */
+}
+
+body.men-page .pp-plp .card-title a:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Subtítulo / descripción */
+body.men-page .pp-plp .card-sub{
+  font-size: 12px;            /* ← AJUSTA AQUÍ */
+  line-height: 1.6;
+  color: rgba(0,0,0,.70);
+}
+
+/* Precio */
+body.men-page .pp-plp .card-price{
+  font-size: 12px;            /* ← AJUSTA AQUÍ */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.82);
+}
+
+/* =========================================================
+   HOMBRE · DRAWER FILTROS FINAL AUTHORITY
+   Header limpio + aire editorial + cierre funcional
+   ========================================================= */
+
+body.men-page .men-filters-drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  width: min(540px, 100%);
+  height: 100vh;
+  padding-inline: 48px;
+
+  background: #fff;
+  box-shadow: -18px 0 40px rgba(0,0,0,.18);
+  border-left: 1px solid rgba(0,0,0,.06);
+
+  transform: translateX(100%);
+  transition: transform .24s ease-out;
+  z-index: 2700;
+
+  display: flex;
+  flex-direction: column;
+}
+
+body.men-page .men-filters-drawer.is-open {
+  transform: translateX(0);
+}
+
+/* Header superior: Filtros izquierda / X derecha */
+body.men-page .men-filters-head {
+  flex: 0 0 auto;
+  padding: 34px 0 24px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+body.men-page .men-filters-head-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+body.men-page .men-filters-title {
+  margin: 0;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: .04em;
+  color: #111;
+}
+
+/* X de cierre elegante */
+body.men-page .men-filters-close {
+  width: 38px;
+  height: 38px;
+  margin: 0;
+  padding: 0;
+
+  display: inline-grid;
+  place-items: center;
+
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  color: #111;
+
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    opacity .18s ease;
+}
+
+body.men-page .men-filters-close:hover {
+  transform: rotate(90deg);
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+body.men-page .men-filters-close:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+/* Tabs debajo del header */
+body.men-page .men-filters-tabs {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+/* Cuerpo con aire elegante respecto al header */
+body.men-page .men-filters-body {
+  flex: 1 1 auto;
+  padding: 30px 0 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  gap: 26px;
+  overflow-y: auto;
+}
+
+/* Footer del drawer */
+body.men-page .men-filters-foot {
+  flex: 0 0 auto;
+  margin-top: auto;
+  border-top: 1px solid rgba(0,0,0,.10);
+  padding: 0;
+  background: #fff;
+}
+
+body.men-page .men-filters-foot-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: stretch;
+  min-height: 64px;
+  padding: 0;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  body.men-page .men-filters-drawer {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 18px;
+  }
+
+  body.men-page .men-filters-head {
+    padding: 24px 0 20px;
+  }
+
+  body.men-page .men-filters-body {
+    padding-top: 24px;
+  }
+
+  body.men-page .men-filters-foot-inner {
+    grid-template-columns: 1fr;
+  }
+}

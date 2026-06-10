@@ -1,0 +1,166 @@
+/* =========================================================
+   PROPHETIA · BRAND BAND
+   ========================================================= */
+.brand-band{ margin:0; padding:0; border:0; }
+.brand-band .container{ display:flex; align-items:flex-start; padding:0; }
+
+.brand-band--plp { margin:0; padding: clamp(22px, 4vw, 40px) 0 0; background:#fff; border-bottom:1px solid rgba(0,0,0,.08); }
+.brand-band--plp .container{ max-width:100%; padding-inline: var(--edge, 24px); }
+.page-logo{ line-height:0; display:inline-block; }
+.page-logo__img{ width: clamp(280px, 36vw, 520px); height:auto; display:block; }
+/* ==== Prophetia · PLP mast (franja logo + aside) ==== */
+:root{
+  --pp-header-h: 64px; /* ya lo tienes definido; lo reutilizamos */
+  --edge: clamp(16px, 3vw, 32px);
+  --band-padY: clamp(16px, 3vw, 28px);
+  --logo-maxw: 420px;
+}
+
+.plp-mast{
+  background:#fff;
+  margin-top: calc(var(--pp-header-h) + 12px); /* respeta la altura real del header inyectado */
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.plp-mast__inner{
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: var(--band-padY) var(--edge);
+  display: grid;
+  grid-template-columns: minmax(240px, var(--logo-maxw)) 1fr;
+  align-items: end;           /* alinea baseline inferior: logo y aside */
+  column-gap: clamp(24px, 6vw, 80px);
+}
+.plp-mast .page-logo__img{
+  width: min(42vw, var(--logo-maxw));
+  height: auto;
+  display: block;
+}
+
+/* Aside dentro de la franja */
+.bb-right{
+  align-self: end; /* asegura el mismo “pie” que el logo */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Migas + panel de enlaces (estética editorial limpia) */
+.pp-bc__list{
+  display: flex; flex-wrap: wrap; gap: 12px;
+  font-size: 14px; line-height: 1.5; margin: 0; padding: 0; list-style: none;
+}
+.pp-bc__list a{ color: inherit; text-decoration: none; }
+.pp-bc__list li[aria-current="page"]{ color: rgba(0,0,0,.55); }
+
+.pp-bc__panel{
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: flex-end;
+}
+.pp-bc__panel a{
+  text-decoration: none; color: inherit;
+  padding-bottom: 2px; border-bottom: 1px solid rgba(0,0,0,.12);
+}
+.pp-bc__panel a:hover{ border-bottom-color:#111; }
+
+/* Separador bajo la franja (como Prophetia) */
+.bb-spacer{ height: 56px; }
+
+/* Responsive */
+@media (max-width: 992px){
+  .plp-mast__inner{
+    grid-template-columns: 1fr; row-gap: 12px; align-items: start;
+  }
+  .pp-bc__panel{ justify-content: flex-start; }
+}
+
+/* (Opcional) Si quieres el aside “pegado” bajo el header al hacer scroll: */
+@media (min-width: 992px){
+  .bb-right{
+    position: sticky;
+    top: calc(var(--pp-header-h) + 0px);
+    background:#fff; /* evita traslucir */
+  }
+}
+/* ========== Prophetia · Brand Band (PLP) — alineada como Prophetia ========== */
+:root{
+  --pp-header-h: 64px; /* header-init.js puede sobreescribir */
+  --bb-gap: clamp(24px, 4vw, 64px);
+  --bb-right-w-min: 260px;
+  --bb-right-w-max: 420px;
+  --bb-logo-min: 280px;
+  --bb-logo-max: 520px;
+}
+
+/* contenedor de la franja */
+.brand-band{
+  position: relative;
+  z-index: 1;                 /* por debajo del header/mega (que subiremos) */
+  background: #fff;
+  border-bottom: 1px solid var(--line-weak, #eee);
+}
+
+/* interior en GRID: logo a la izq, aside a la dcha */
+.brand-band--plp .brand-band__inner{
+  display: grid;
+  grid-template-columns: minmax(var(--bb-logo-min), 42vw) minmax(var(--bb-right-w-min), var(--bb-right-w-max));
+  align-items: end;           /* alinear bases: logo y panel */
+  gap: var(--bb-gap);
+  padding-top: calc(var(--pp-header-h) + 12px);
+  padding-bottom: 24px;
+}
+
+/* logo editorial alineado a la izquierda */
+.brand-band--plp .page-logo__link{ display: inline-block; }
+.brand-band--plp .page-logo__img{
+  display: block;
+  width: clamp(var(--bb-logo-min), 34vw, var(--bb-logo-max));
+  height: auto;
+}
+
+/* bloque derecho: pegado a la derecha y con ritmo vertical */
+.brand-band--plp .bb-right{
+  justify-self: end;
+  align-self: end;
+}
+
+/* Migas */
+.pp-bc__list{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 10px 0;
+  padding: 0;
+  list-style: none;
+}
+.pp-bc__list li{ font: 400 14px/1.6 var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif); }
+.pp-bc__list li[aria-current="page"]{ color: #666; }
+
+/* Panel de categorías a la derecha */
+.pp-bc__panel{
+  display: grid;
+  gap: 8px;
+}
+.pp-bc__panel a{
+  font: 400 14px/1.6 var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+  text-decoration: none;
+  color: #111;
+}
+.pp-bc__panel a:hover,
+.pp-bc__panel a:focus{
+  text-decoration: underline;
+}
+
+/* Espaciador bajo la franja (como Prophetia) */
+.bb-spacer{ height: 32px; }
+
+/* Responsive */
+@media (max-width: 992px){
+  .brand-band--plp .brand-band__inner{
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 16px;
+  }
+  .brand-band--plp .page-logo__img{
+    width: clamp(220px, 48vw, 360px);
+  }
+}

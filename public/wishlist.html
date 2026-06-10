@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PROPHETIA · Mi selección</title>
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- HOME / HERO / TILES (algunas reglas comunes las puedes necesitar) -->
+  <link rel="stylesheet" href="assets/css/home.css">
+  <link rel="stylesheet" href="assets/css/tiles.css">
+
+  <!-- CATÁLOGO / PRODUCTOS -->
+  <link rel="stylesheet" href="assets/css/catalog.css">
+  <link rel="stylesheet" href="assets/css/plp.css">
+  <link rel="stylesheet" href="assets/css/products.css">
+  <link rel="stylesheet" href="assets/css/pdp.css">
+
+  <!-- SECCIONES ESPECÍFICAS -->
+  <link rel="stylesheet" href="assets/css/camisetas.css">
+  <link rel="stylesheet" href="assets/css/hoodies.css">
+  <link rel="stylesheet" href="assets/css/colecciones.css">
+  <link rel="stylesheet" href="assets/css/wishlist.css">
+
+  <!-- PÁGINA HOMBRE ESPECÍFICA (no molesta, por orden de especificidad) -->
+  <link rel="stylesheet" href="assets/css/men.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS & FIXES -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+
+<body class="wishlist-page">
+  <!-- HEADER parcial (se inyecta por JS) -->
+  <div id="header"></div>
+
+  <!-- ===== FRANJA LOGO PROPHETIA ===== -->
+  <div class="brand-band">
+    <div class="container">
+      <a class="page-logo" href="/home" aria-label="Inicio Prophetia">
+        <img src="assets/img/logo/propnegro.png" alt="PROPHETIA">
+      </a>
+    </div>
+  </div>
+
+<!-- ===== Sub-nav wishlist (Mi selección / Puede que te guste) ===== -->
+<nav class="wl-nav" aria-label="Wishlist secciones">
+  <div class="container">
+    <ul class="wl-nav__list" role="tablist">
+      <li>
+        <a
+          class="active"
+          href="#selection"
+          aria-current="page"
+          data-wl-tab="selection"
+        >
+          Mi selección
+        </a>
+      </li>
+
+      <li>
+        <a
+          href="#recommended"
+          data-wl-tab="recommended"
+        >
+          Puede que te guste
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="wl wl-layout">
+    <!-- HERO / contador -->
+    <section class="wl-hero container">
+      <h1 class="wl-title sr-only">Mi selección</h1>
+      <p class="wl-sub" aria-live="polite">
+        Tienes <span id="wlCount">0</span> productos en tu selección
+      </p>
+    </section>
+
+    <!-- Estado vacío tipo Prophetia (panel blanco grande) -->
+    <section class="wl-empty" hidden>
+      <div class="wl-empty__wrap">
+        <div class="wl-empty__icon" aria-hidden="true">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="5" width="14" height="10" rx="1.5" stroke="currentColor"/>
+            <rect x="9" y="16" width="12" height="3" rx="0.8" stroke="currentColor"/>
+          </svg>
+        </div>
+        <h3>No pierdas tu selección</h3>
+        <p>Inicia sesión o crea una cuenta para guardar tus artículos favoritos y verlos en cualquier dispositivo.</p>
+        <a class="btn btn-dark" href="login">Guardar mi selección</a>
+      </div>
+    </section>
+    <!-- RECOMENDACIONES -->
+<section
+  class="wl-recommended"
+  id="recommended"
+  data-wishlist-recommended
+  hidden
+>
+  <p class="wl-recommended__kicker">PROPHETIA SELECTION</p>
+
+  <h2 class="wl-recommended__title">
+    Puede que te guste
+  </h2>
+
+  <p class="wl-recommended__text" data-wishlist-recommended-text>
+    Explora piezas seleccionadas según tu experiencia Prophetia.
+  </p>
+
+  <div class="wl-recommended__links" data-wishlist-recommended-links>
+    <!-- JS pinta aquí las recomendaciones -->
+  </div>
+</section>
+
+    <!-- RESULTADOS -->
+    <section class="wl-results" id="selection" data-wishlist-selection>
+      <!-- Estado vacío “Tu selección está vacía” -->
+      <div id="wlEmpty" class="wl-empty" hidden>
+  <p class="wl-empty-title">Tu selección está vacía</p>
+  <p class="wl-empty-sub">Explora nuestras categorías y añade tus favoritos.</p>
+
+  <div class="wl-empty-actions">
+    <a class="btn btn--ghost" href="/mujer">Mujer</a>
+    <a class="btn btn--ghost" href="/hombre">Hombre</a>
+    <a class="btn btn--ghost" href="/colecciones">Colecciones</a>
+  </div>
+</div>
+
+
+      <!-- Grid de guardados -->
+      <div id="gridWishlist" class="products-grid wishlist-grid"></div>
+    </section>
+  </main>
+
+
+
+    <!-- FOOTER parcial -->
+  <div id="footer"></div>
+
+  <!-- Área para popups -->
+  <div id="popup-area"></div>
+
+
+
+  <!-- JS global Prophetia · IGUAL QUE EN MUJER -->
+<script src="/assets/js/wishlist.js" defer></script>
+
+<script type="module" src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/firebase-auth.js"></script>
+<script defer src="/assets/js/header-init.js"></script>
+<script src="/assets/js/popup.js" defer></script>
+<script src="/assets/js/cookies.js" defer></script>
+<script src="/assets/js/cart.js" defer></script>
+
+</body>
+</html>

@@ -1,8 +1,0 @@
-/* =========================================================
-   PROPHETIA · TILES (home quick links)
-   ========================================================= */
-.tiles.container{}
-.tile{ display:block; text-decoration:none; }
-.tile .tile-body{ padding: 16px 0; }
-.tile-title{ font-family: var(--font-display); }
-.tile-sub{ opacity:.8; }

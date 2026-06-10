@@ -1,0 +1,123 @@
+/* =========================================================
+   PROPHETIA · LAYOUT
+   Base responsive fluida
+   ========================================================= */
+
+.container {
+  width: min(100% - (var(--edge) * 2), 1440px);
+  margin-inline: auto;
+}
+
+.hero {
+  position: relative;
+  min-height: clamp(var(--hero-min), var(--hero-vw), var(--hero-max));
+  margin-bottom: clamp(56px, 10vw, 200px);
+}
+
+.hero-frame {
+  position: absolute;
+  inset: 0 var(--edge);
+  height: 100%;
+  overflow: clip;
+  background: #000;
+}
+
+.hero-video,
+.hero-video__media {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-video__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 0;
+}
+
+.floating-logo {
+  position: absolute;
+  left: var(--edge);
+  top: calc(var(--hdr-h) - 96.55px);
+  z-index: 20;
+  line-height: 0;
+  transform: translate(var(--logo-x), var(--logo-y)) scale(var(--logo-scale));
+  transform-origin: top left;
+}
+
+.floating-logo img {
+  height: clamp(72px, 13vw, 120px);
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .hero {
+    min-height: clamp(480px, 82dvh, 640px);
+    margin-bottom: clamp(48px, 14vw, 88px);
+  }
+
+  .hero-frame {
+    inset-inline: 0;
+  }
+
+  .floating-logo {
+    left: var(--edge);
+    top: var(--hdr-h);
+  }
+
+  .floating-logo img {
+    height: clamp(68px, 22vw, 92px);
+  }
+}
+
+/* Post-hero editorial block */
+.pp-post-hero {
+  padding: 0;
+  text-align: left;
+}
+.pp-ph-title { font-family: var(--font-display); font-size: clamp(26px, 4vw, 42px); line-height: 1.2; margin-bottom: .6rem; font-weight: 600; letter-spacing: -0.5px; }
+.pp-ph-sub { font-size: clamp(15px, 2vw, 18px); color: rgba(0,0,0,.65); max-width: 540px; margin-bottom: 1.6rem; }
+.pp-ph-links { display: flex; gap: 24px; flex-wrap: wrap; }
+.pp-ph-link { display:flex; align-items:center; gap:6px; font-size:15px; text-decoration:none; color:rgba(0,0,0,.85); position:relative; padding-right:20px; }
+.pp-ph-link::after { content:""; width:6px; height:6px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg); position:absolute; right:0; }
+.pp-ph-hairline { width:100%; height:1px; background:rgba(0,0,0,.10); margin-top: clamp(28px, 6vw, 60px); }
+
+
+
+
+
+/* ===== Prophetia · Section gap (global, limpio) ===== */
+.section-gap{
+  padding: clamp(48px, 7vw, 96px) 0;
+  background: transparent;               /* sin gradientes aquí */
+  border-top: 1px solid rgba(0,0,0,.06); /* hairline editorial */
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+/* ===== Prophetia · Gallery layout ===== */
+.pp-gallery-section{
+  padding-block: min(11vh, 120px);
+  padding-inline: var(--edge);
+  border-bottom: 1px solid color-mix(in srgb, var(--line, #e5e5e5) 60%, transparent);
+}
+
+.pp-gallery-section:last-of-type{
+  border-bottom: none;
+}
+
+/* Títulos tipo sala */
+.pp-section-title{
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: clamp(1.6rem, 1.2rem + 0.9vw, 2.1rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.pp-section-sub{
+  max-width: 52ch;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--text, #111) 72%, #999 28%);
+}

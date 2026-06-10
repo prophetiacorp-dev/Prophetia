@@ -1,0 +1,106 @@
+/* =========================================================
+   PROPHETIA · Painted Curtain Loader
+   No sobreescribe nada existente.
+   ========================================================= */
+
+#ppPaintLoader {
+  position: fixed;
+  inset: 0;
+  z-index: 1600;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  pointer-events: none;
+  /* Lienzo tipo lino + luz cálida, como tus fotos */
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 80% 90%, rgba(0,0,0,.08), transparent 60%),
+    #f3e7d8;
+  transition:
+    opacity 1.20s ease,
+    transform 1s cubic-bezier(.19,1,.22,1);
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.pp-paint-inner {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* El lienzo de trazos */
+.pp-paint-svg {
+  width: min(70vw, 900px);
+  height: auto;
+  filter: drop-shadow(0 22px 60px rgba(0,0,0,.22));
+}
+
+/* Trazos base: carbón */
+.pp-stroke {
+  fill: none;
+  stroke: #222;               /* carbón */
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Animación de escritura */
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  animation: pp-stroke-draw 1.6s ease-out forwards;
+}
+
+/* Pequeña variación entre trazos */
+.pp-stroke--2 {
+  stroke-width: 7;
+  animation-delay: .25s;
+}
+.pp-stroke--3 {
+  stroke-width: 9;
+  animation-delay: .45s;
+}
+
+/* Acentos pastel rojo/óxido */
+.pp-stroke--accent {
+  stroke: #cf5a3a;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: pp-stroke-draw-accent 1.2s ease-out forwards;
+  animation-delay: .7s;
+}
+
+/* Estado después de carga: el lienzo se eleva y se desvanece */
+html.pp-loaded #ppPaintLoader {
+  opacity: 0;
+  transform: translateY(-8%);
+}
+
+/* Opcional: ligero eco de textura sólo en la primera visita */
+html.pp-loaded #ppPaintLoader {
+  pointer-events: none;
+}
+
+/* ================== Keyframes ================== */
+
+@keyframes pp-stroke-draw {
+  0%   { stroke-dashoffset: 900; opacity: 0; }
+  10%  { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes pp-stroke-draw-accent {
+  0%   { stroke-dashoffset: 600; opacity: 0; }
+  20%  { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* Móvil: lienzo algo más pequeño para no saturar */
+@media (max-width: 768px) {
+  .pp-paint-svg {
+    width: min(86vw, 520px);
+  }
+}

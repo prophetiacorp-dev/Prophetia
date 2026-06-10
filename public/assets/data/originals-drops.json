@@ -1,0 +1,19 @@
+{
+  "currentDrop": {
+    "id": "y2k-originals",
+    "title": "Y2K Originals",
+    "subtitle": "Inspirado en la moda de los 2000",
+    "status": "Disponible por tiempo limitado",
+    "pieces": [
+      {
+        "id": "broken-gods",
+        "title": "Broken Gods",
+        "description": "Camiseta oversize negra con gráfica Y2K inspirada en los 2000: estatua rota, chrome, brillos rosa/violeta y energía urbana Prophetia.",
+        "tag": "Gráfica 2000s",
+        "price": 68,
+        "image": "/assets/img/originals/y2k/broken-gods-mockup.png",
+        "href": "/producto?id=broken-gods&g=hombre"
+      }
+    ]
+  }
+}

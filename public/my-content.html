@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Mi contenido — PROPHETIA</title>
+  <meta name="description" content="Área personal de PROPHETIA. Gestiona tu contenido guardado, pedidos, reservas y preferencias." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#f7f4ee" />
+
+  <!-- BASE -->
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+
+  <!-- HEADER & NAV -->
+  <link rel="stylesheet" href="assets/css/header.css">
+  <link rel="stylesheet" href="assets/css/megamenu.css">
+  <link rel="stylesheet" href="assets/css/brand-band.css">
+
+  <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+  <link rel="stylesheet" href="assets/css/footer.css">
+
+  <!-- UTILS -->
+  <link rel="stylesheet" href="assets/css/utilities.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+  <link rel="stylesheet" href="assets/css/cookies.css">
+  <link rel="stylesheet" href="assets/css/overrides.css">
+
+  <!-- Página cuenta -->
+  <link rel="stylesheet" href="assets/css/account-content.css">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="account-page my-content-page" data-page="my-content">
+
+  <div id="header"></div>
+
+  <main id="swup" class="account-layout" tabindex="-1">
+
+    <!-- LOGO / BRAND BAND -->
+    <section class="account-brand" aria-label="PROPHETIA">
+      <div class="container">
+       <a class="account-brand__logo" href="/home" aria-label="Inicio Prophetia">
+  <img src="/assets/img/logo/propnegrovf.svg" alt="PROPHETIA">
+</a>
+      </div>
+    </section>
+
+    <!-- NAV CUENTA -->
+    <nav class="account-nav" aria-label="Área de cliente">
+      <div class="container account-nav__inner">
+        <div class="account-nav__links">
+          <a href="/my-content" aria-current="page">Mi contenido</a>
+          <a href="/drop-calendar">Mi calendario</a>
+          <a href="/vault">Vault</a>
+          <a href="/pedidos">Pedidos</a>
+          <a href="/reservas">Reservas</a>
+          <a href="/wishlist">Lista de deseos</a>
+          <a href="/account">Cuenta</a>
+          <a href="/addresses">Libro de direcciones</a>
+          <a href="/my-services">Mis servicios</a>
+        </div>
+
+        <button class="account-nav__logout" type="button" data-pp-logout>
+          Cerrar sesión
+        </button>
+      </div>
+    </nav>
+
+    <!-- HERO CUENTA -->
+    <section class="account-hero">
+      <div class="container account-hero__grid">
+        <div class="account-hero__copy">
+          <p class="account-kicker">PROPHETIA ACCOUNT</p>
+
+          <h1 class="account-title">
+            Mi contenido
+          </h1>
+
+          <p class="account-lede">
+            Tu espacio personal dentro de Prophetia. Aquí se reúnen tus piezas guardadas,
+            accesos, pedidos y contenido relacionado con tu experiencia en la marca.
+          </p>
+        </div>
+
+       <aside class="account-hero__panel" aria-label="Estado de cuenta">
+  <p class="account-panel__eyebrow">Sesión activa</p>
+  <p class="account-panel__name" id="ppAccountPageName">Cliente Prophetia</p>
+  <p class="account-panel__mail" id="ppAccountPageEmail">Cuenta registrada</p>
+
+  <div class="account-preference" data-account-preference>
+    <p class="account-preference__label">Preferencia de exploración</p>
+
+    <div class="account-preference__options" role="group" aria-label="Preferencia de exploración">
+     <button type="button" data-pref-shop="women" aria-pressed="false">Mujer</button>
+<button type="button" data-pref-shop="men" aria-pressed="false">Hombre</button>
+<button type="button" data-pref-shop="all" aria-pressed="false">Todo Prophetia</button>
+    </div>
+
+     <p class="account-preference__note">
+      Puedes cambiarlo cuando quieras.
+    </p>
+  </div>
+
+  <section
+    class="account-tribe"
+    data-tribe-profile-card
+    aria-label="Estado Prophetia Tribe"
+  >
+   <div class="account-tribe__head">
+  <div class="account-tribe__identity">
+    <div class="account-tribe__copy">
+      <p class="account-tribe__eyebrow">Prophetia Tribe</p>
+<p class="account-tribe__rank" data-tribe-rank>Archivo abierto</p>
+<p class="account-tribe__prestige" data-tribe-prestige>Tribe Member</p>
+    </div>
+
+    <div class="account-tribe__emblem" aria-hidden="true">
+      <span class="account-tribe__emblemAura"></span>
+<img
+  src="/assets/img/logo/propnegro.png"
+  alt=""
+  data-tribe-emblem
+  loading="eager"
+  decoding="async"
+>
+    </div>
+  </div>
+</div>
+
+    <p class="account-tribe__text" data-tribe-summary>
+      Tu archivo personal dentro de Prophetia empieza aquí.
+    </p>
+
+    <div class="account-tribe__bar" aria-label="Progreso Prophetia Tribe">
+      <span class="account-tribe__barFill" data-tribe-progress style="width:0%"></span>
+    </div>
+
+  <div class="account-tribe__meta">
+  <span data-tribe-points>0 LP</span>
+  <span data-tribe-next>Próximo emblema por revelar</span>
+</div>
+
+    <div class="account-tribe__details">
+      <p>
+        <span>Legacy Points</span>
+<strong data-tribe-lifetime>0 LP</strong>
+      </p>
+
+      <p>
+        <span>Restante</span>
+        <strong data-tribe-remaining>100 LP</strong>
+      </p>
+    </div>
+
+    <p class="account-tribe__benefit" data-tribe-benefit>
+      Beneficio actual: bienvenida pendiente.
+    </p>
+    <section
+  class="account-tribe__missions"
+  data-tribe-missions
+  aria-label="Misiones Prophetia Tribe"
+>
+  <div class="account-tribe__missionsHead">
+    <p>Misiones Tribe</p>
+    <span data-tribe-missions-summary>Objetivos privados del archivo</span>
+  </div>
+
+  <div class="account-tribe__missionsList" data-tribe-missions-list></div>
+</section>
+    <div class="account-tribe__guide" aria-label="Cómo funciona Prophetia Tribe">
+  <p class="account-tribe__guideTitle">Cómo funciona Prophetia Tribe</p>
+
+  <p>
+    Cada compra confirmada puede sumar LP a tu archivo personal. Tus LP revelan progresivamente
+    nuevos emblemas, rangos y beneficios privados dentro de PROPHETIA.
+  </p>
+
+  <p>
+    Los rangos no se muestran como una tabla pública: se descubren dentro de tu cuenta a medida
+    que tu recorrido evoluciona.
+  </p>
+
+  <a href="/faqs">Leer preguntas frecuentes</a>
+</div>
+  </section>
+</aside>
+      </div>
+ 
+    </section>
+<!-- TEASER CALENDARIO -->
+<section class="account-calendar-preview" aria-label="Calendario Prophetia">
+  <div class="container account-calendar-preview__inner">
+    <div class="account-calendar-preview__copy">
+      <p class="account-kicker">PRIVATE CALENDAR</p>
+
+      <h2>Tu próximo movimiento</h2>
+
+      <p data-account-calendar-summary>
+        Cargando calendario privado...
+      </p>
+    </div>
+
+    <div class="account-calendar-preview__side">
+      <p data-account-calendar-next>
+        Próxima fecha por revelar.
+      </p>
+
+      <a href="/drop-calendar" class="account-calendar-preview__link">
+        Abrir calendario
+      </a>
+    </div>
+  </div>
+</section>
+<!-- TEASER VAULT -->
+<section class="account-vault-preview" aria-label="Vault Prophetia">
+  <div class="container account-vault-preview__inner">
+    <div class="account-vault-preview__copy">
+      <p class="account-kicker">PRIVATE VAULT</p>
+
+      <h2>Tu archivo desbloqueado</h2>
+
+      <p data-account-vault-summary>
+        Consultando accesos privados...
+      </p>
+    </div>
+
+    <div class="account-vault-preview__side">
+      <p data-account-vault-next>
+        Próximo acceso por revelar.
+      </p>
+
+      <a href="/vault" class="account-vault-preview__link">
+        Abrir Vault
+      </a>
+    </div>
+  </div>
+</section>
+    <!-- GRID CONTENIDO -->
+    <section class="account-content">
+      <div class="container">
+
+        <div class="account-section-head">
+          <p class="account-kicker">PRIVATE ARCHIVE</p>
+          <h2>Tu archivo Prophetia</h2>
+        </div>
+
+        <div class="account-cards">
+
+          <a class="account-card" href="/wishlist">
+            <span class="account-card__number">01</span>
+            <h3>Lista de deseos</h3>
+            <p>Piezas que has guardado para ver más tarde o comprar cuando el cuerpo diga “hoy sí”.</p>
+          </a>
+
+          <a class="account-card" href="/pedidos">
+            <span class="account-card__number">02</span>
+            <h3>Pedidos</h3>
+            <p>Consulta el estado de tus compras, historial y próximas entregas.</p>
+          </a>
+
+          <a class="account-card" href="/reservas">
+            <span class="account-card__number">03</span>
+            <h3>Reservas</h3>
+            <p>Acceso a piezas reservadas, drops limitados o futuras cápsulas Prophetia.</p>
+          </a>
+
+          <a class="account-card" href="/account">
+            <span class="account-card__number">04</span>
+            <h3>Cuenta</h3>
+            <p>Gestiona tus datos personales, preferencias de comunicación y configuración.</p>
+          </a>
+
+          <a class="account-card" href="/addresses">
+            <span class="account-card__number">05</span>
+            <h3>Direcciones</h3>
+            <p>Guarda tus direcciones para que el checkout sea más rápido y limpio.</p>
+          </a>
+
+          <a class="account-card" href="/my-services">
+            <span class="account-card__number">06</span>
+            <h3>Mis servicios</h3>
+            <p>Servicios asociados a tu experiencia Prophetia: beneficios, asistencia y atención personalizada.</p>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ESTADO EDITORIAL -->
+    <section class="account-empty">
+      <div class="container account-empty__inner">
+        <p class="account-kicker">EDITORIAL NOTE</p>
+        <h2>Aún estás construyendo tu archivo.</h2>
+        <p>
+          Guarda piezas, explora colecciones y vuelve aquí para encontrar todo tu universo Prophetia reunido.
+        </p>
+
+   <a
+  href="/colecciones"
+  class="account-empty__link"
+  data-profile-explore-link
+>
+  Explorar piezas
+</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer"></div>
+  <div id="popup-area"></div>
+
+ <script type="module" src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/firebase-auth.js"></script>
+<script defer src="/assets/js/header-init.js"></script>
+<script src="/assets/js/cart.js" defer></script>
+<script src="/assets/js/script.js" defer></script>
+<script src="/assets/js/account-content.js" defer></script>
+<script src="/assets/js/popup.js" defer></script>
+<script src="/assets/js/cookies.js" defer></script>
+
+</body>
+</html>

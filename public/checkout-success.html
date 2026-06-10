@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pedido confirmado — PROPHETIA</title>
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/checkout-success.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="checkout-success-page">
+  <main class="success-shell">
+    <a class="success-logo-link" href="/home" aria-label="Inicio Prophetia">
+      <img class="success-logo" src="assets/img/logo/propnegro.png" alt="PROPHETIA">
+    </a>
+
+    <section class="success-card">
+      <p class="success-kicker">Pedido confirmado</p>
+
+      <h1 class="success-title">Gracias por tu pedido</h1>
+
+      <p id="status" class="success-status">Comprobando pago...</p>
+<section id="ppSuccessXp" class="success-xp" hidden aria-live="polite"></section>
+
+<section
+  id="ppSuccessRewards"
+  class="success-rewards"
+  hidden
+  aria-live="polite"
+></section>
+
+<section id="orderSummary" class="success-summary" aria-live="polite"></section>
+
+      <section id="orderItems" class="success-items" aria-label="Productos del pedido"></section>
+
+      <pre id="orderBox" class="success-raw"></pre>
+
+      <div class="success-actions">
+        <a
+  id="ppGoHomeWithXpSound"
+  class="success-btn"
+  href="/home"
+  data-pp-xp-sound-nav
+>
+  Volver al inicio
+</a>
+        <a class="success-btn success-btn--ghost" href="pedidos">Ver mis pedidos</a>
+      </div>
+    </section>
+  </main>
+<script type="module" src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/firebase-auth.js"></script>
+<script src="/assets/js/checkout-success.js" defer></script>
+</body>
+</html>
