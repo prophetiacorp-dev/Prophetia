@@ -45,6 +45,7 @@
 
     const message = banner.querySelector('[data-prelaunch-message]');
     if (message) message.textContent = state.message;
+    banner.setAttribute('aria-label', `${state.label}. ${state.message}`);
     return banner;
   }
 

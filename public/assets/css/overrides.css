@@ -2304,11 +2304,32 @@ body.men-page .pp-plp .card-body {
 
 @media (max-width: 640px) {
   .pp-prelaunch-banner {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 3px;
-    padding: 9px 16px;
-    text-align: left;
+    min-height: 34px;
+    align-items: center;
+    flex-direction: row;
+    gap: 7px;
+    padding: 7px 10px;
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .pp-prelaunch-banner strong {
+    flex: 0 0 auto;
+    font-size: 9px;
+    letter-spacing: .14em;
+  }
+
+  .pp-prelaunch-banner [data-prelaunch-message] {
+    display: none;
+  }
+
+  .pp-prelaunch-banner::after {
+    content: 'Primer drop Atlas · Activa el aviso';
+    min-width: 0;
+    overflow: hidden;
+    font-size: 10px;
+    text-overflow: ellipsis;
   }
 }
 
@@ -2334,13 +2355,13 @@ body.men-page .pp-plp .card-body {
     overflow: hidden;
   }
 
-  body.pp-mobile-dock-active .pp-header {
+  .pp-header {
     height: 0 !important;
     min-height: 0 !important;
     overflow: visible !important;
   }
 
-  body.pp-mobile-dock-active .pp-header > .container {
+  .pp-header > .container {
     display: none !important;
   }
 

@@ -4110,7 +4110,11 @@ app.use(express.static(PUBLIC_DIR, {
       return;
     }
 
-    if (/\.(js|css|png|jpg|jpeg|webp|svg|woff2?)$/i.test(filePath)) {
+    if (/\.(js|css)$/i.test(filePath)) {
+      // CSS y JS deben revalidarse en cada carga para no mezclar una
+      // parcial nueva con estilos o comportamiento de un despliegue anterior.
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    } else if (/\.(png|jpg|jpeg|webp|svg|woff2?)$/i.test(filePath)) {
       res.setHeader('Cache-Control', 'public, max-age=3600');
     }
   }
