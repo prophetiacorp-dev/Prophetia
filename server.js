@@ -4519,11 +4519,12 @@ function findVariant(product, item) {
   const wantedSize = normalize(item.size);
   const wantedCut = normalize(item.cut);
 
-  const findByOptions = () => variants.find((variant) => {
+  const findByOptions = (cutOverride = wantedCut) => variants.find((variant) => {
     const sameOptions =
       normalize(variant.color) === wantedColor &&
       normalize(variant.size) === wantedSize;
-    const sameCut = !wantedCut || normalize(variant.cut) === wantedCut;
+    const normalizedCut = normalize(cutOverride);
+    const sameCut = !normalizedCut || normalize(variant.cut) === normalizedCut;
 
     return sameOptions && sameCut;
   }) || null;
@@ -4549,9 +4550,13 @@ function findVariant(product, item) {
     // Compatibilidad con cestas creadas antes de corregir la PDP. Durante esa
     // versión el cliente construía un SKU editorial que incluía corte y versión,
     // aunque el catálogo ya tenía un SKU real para la misma combinación.
+    const requestedVersion = (Array.isArray(product.versions) ? product.versions : [])
+      .find((version) => String(version.id || '').trim() === String(item.version || '').trim());
+    const legacyCut = item.cut || requestedVersion?.cut || 'default';
+
     const legacyVersionSku = [
       product.id,
-      item.cut || 'default',
+      legacyCut,
       item.version,
       item.color,
       item.size
@@ -4571,7 +4576,7 @@ function findVariant(product, item) {
       return null;
     }
 
-    return findByOptions();
+    return findByOptions(legacyCut);
   }
 
   return findByOptions();
