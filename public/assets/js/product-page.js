@@ -742,12 +742,18 @@ function getSelectionSku(color = state.color, size = state.size){
     return item.color === selectedColor && item.size === selectedSize;
   });
 
+  // El SKU del catálogo es la referencia autoritativa de stock. Las versiones
+  // editoriales se validan por separado y no forman parte del SKU de variante.
+  if (variant?.sku) {
+    return variant.sku;
+  }
+
   if (activeVersion && activeVersion.virtual !== true) {
     return `${prod.id}_${activeCut?.id || 'default'}_${activeVersion.id}_${selectedColor}_${selectedSize}`
       .replace(/\s+/g, '-');
   }
 
-  return variant?.sku || `${prod.id}_${selectedColor}_${selectedSize}`.replace(/\s+/g, '-');
+  return `${prod.id}_${selectedColor}_${selectedSize}`.replace(/\s+/g, '-');
 }
 
 function getActiveVariants(){

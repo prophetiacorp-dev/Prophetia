@@ -1598,6 +1598,7 @@ function buildCartSummaryPayload() {
       id: String(item.id || '').trim(),
       slug: item.slug ? String(item.slug).trim() : '',
       sku: String(item.sku || '').trim(),
+      cut: item.cut ? String(item.cut).trim() : null,
       version: item.version ? String(item.version).trim() : null,
       color: item.color ? String(item.color).trim() : '',
       size: item.size ? String(item.size).trim() : '',
@@ -1649,6 +1650,7 @@ return {
   cart: cart.map((item) => ({
     id: String(item.id || '').trim(),
     sku: String(item.sku || '').trim(),
+    cut: item.cut ? String(item.cut).trim() : null,
     version: item.version ? String(item.version).trim() : null,
     color: item.color ? String(item.color).trim() : '',
     size: item.size ? String(item.size).trim() : '',

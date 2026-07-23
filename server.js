@@ -4519,6 +4519,15 @@ function findVariant(product, item) {
   const wantedSize = normalize(item.size);
   const wantedCut = normalize(item.cut);
 
+  const findByOptions = () => variants.find((variant) => {
+    const sameOptions =
+      normalize(variant.color) === wantedColor &&
+      normalize(variant.size) === wantedSize;
+    const sameCut = !wantedCut || normalize(variant.cut) === wantedCut;
+
+    return sameOptions && sameCut;
+  }) || null;
+
   if (!variants.length) {
     return {
       sku: `${product.id}_${item.color || 'default'}_${item.size || 'default'}`,
@@ -4528,22 +4537,44 @@ function findVariant(product, item) {
     };
   }
 
-  // Si el cliente envía SKU, ese identificador es autoritativo. No se hace
-  // fallback por color/talla: dos cortes pueden compartir ambas opciones.
+  // Si el cliente envía SKU, ese identificador es autoritativo. Solo se acepta
+  // fallback para los dos formatos antiguos generados por nuestra propia PDP.
   if (wantedSku) {
-    return variants.find((variant) => {
+    const exactVariant = variants.find((variant) => {
       return String(variant.sku || '').trim() === wantedSku;
     }) || null;
+
+    if (exactVariant) return exactVariant;
+
+    // Compatibilidad con cestas creadas antes de corregir la PDP. Durante esa
+    // versión el cliente construía un SKU editorial que incluía corte y versión,
+    // aunque el catálogo ya tenía un SKU real para la misma combinación.
+    const legacyVersionSku = [
+      product.id,
+      item.cut || 'default',
+      item.version,
+      item.color,
+      item.size
+    ].filter((part) => part !== null && part !== undefined && part !== '')
+      .map((part) => String(part).trim())
+      .join('_')
+      .replace(/\s+/g, '-');
+
+    const legacyBasicSku = `${product.id}_${item.color || ''}_${item.size || ''}`
+      .replace(/\s+/g, '-');
+
+    const isRecognizedLegacySku =
+      wantedSku === legacyVersionSku ||
+      wantedSku === legacyBasicSku;
+
+    if (!isRecognizedLegacySku || !wantedColor || !wantedSize) {
+      return null;
+    }
+
+    return findByOptions();
   }
 
-  return variants.find((variant) => {
-    const sameOptions =
-      normalize(variant.color) === wantedColor &&
-      normalize(variant.size) === wantedSize;
-    const sameCut = !wantedCut || normalize(variant.cut) === wantedCut;
-
-    return sameOptions && sameCut;
-  }) || null;
+  return findByOptions();
 }
 
 function findVersion(product, item) {
