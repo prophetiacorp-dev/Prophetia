@@ -205,7 +205,7 @@
 }
 
 /* =========================================================
-   PROPHETIA · Mega highlight — Prophetia Originals Drops
+   PROPHETIA · Mega highlight — Prophetia Originals
    ========================================================= */
 
 .mega .mega-grid--collections {
@@ -310,4 +310,410 @@
   font-size: clamp(28px, 10vw, 40px);
   line-height: .86;
 }
+}
+/* =========================================================
+   PROPHETIA · Mega menu canonical UX firewall
+   Mantiene el megamenú consistente aunque cada página tenga tema propio.
+   ========================================================= */
+
+body .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  position: fixed !important;
+  inset: var(--pp-header-h, var(--hdr-h, 68px)) clamp(14px, 1.8vw, 36px) auto !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: min(68dvh, 520px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  display: block !important;
+  padding: clamp(24px, 3vw, 42px) clamp(28px, 4.8vw, 78px) !important;
+
+  border: 1px solid rgba(18, 18, 18, .10) !important;
+  border-top-color: rgba(18, 18, 18, .07) !important;
+  border-radius: 0 0 8px 8px !important;
+
+  background:
+    linear-gradient(180deg, rgba(252, 250, 246, .985), rgba(244, 240, 232, .975)) !important;
+  color: #111 !important;
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, .12),
+    inset 0 1px 0 rgba(255, 255, 255, .78) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.04) !important;
+  backdrop-filter: blur(10px) saturate(1.04) !important;
+
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translate3d(0, 10px, 0) !important;
+
+  transition:
+    opacity 220ms cubic-bezier(.22,.61,.36,1),
+    transform 260ms cubic-bezier(.22,.61,.36,1),
+    visibility 0s linear 220ms !important;
+
+  z-index: 3200 !important;
+  text-rendering: geometricPrecision !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+body .pp-header .mega[data-prop-mega].is-open .mega-panel[data-mega] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translate3d(0, 0, 0) !important;
+  transition-delay: 0s !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-panel[data-mega][hidden] {
+  display: block !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .panel[role="tabpanel"][hidden] {
+  display: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .panel[role="tabpanel"] {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-grid {
+  display: grid !important;
+  grid-template-columns: minmax(150px, .88fr) minmax(130px, .66fr) minmax(170px, .9fr) minmax(210px, 1.05fr) !important;
+  align-items: start !important;
+  gap: clamp(28px, 6vw, 112px) !important;
+  width: min(100%, 1180px) !important;
+  margin: 0 auto !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-grid.columns-1 {
+  grid-template-columns: minmax(180px, 320px) !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-grid--collections {
+  grid-template-columns: minmax(180px, 280px) minmax(230px, 1fr) !important;
+  align-items: center !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col {
+  display: grid !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col a {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+
+  color: rgba(17, 17, 17, .70) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.42 !important;
+  letter-spacing: .005em !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+
+  opacity: 1 !important;
+  transition:
+    color 180ms ease,
+    transform 180ms ease !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col a:hover,
+body .pp-header .mega[data-prop-mega] .mega-col a:focus-visible {
+  color: #050505 !important;
+  transform: translateX(2px) !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col a:focus-visible,
+body .pp-header .mega[data-prop-mega] .mega-toggle:focus-visible,
+body .pp-header .mega[data-prop-mega] .mega-originals:focus-visible {
+  outline: 1px solid rgba(17, 17, 17, .34) !important;
+  outline-offset: 5px !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col a::after {
+  bottom: -2px !important;
+  height: 1px !important;
+  opacity: .55 !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals {
+  justify-self: end !important;
+  align-self: end !important;
+  width: min(100%, 270px) !important;
+  padding: 0 0 1px !important;
+  margin: 0 !important;
+  color: #9f1721 !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  transform: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals__kicker {
+  margin: 0 0 9px !important;
+  color: rgba(17, 17, 17, .46) !important;
+  font: 600 9px/1 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals strong {
+  color: #9f1721 !important;
+  font-family: Haettenschweiler, "Arial Narrow", Impact, sans-serif !important;
+  font-size: clamp(24px, 2.15vw, 38px) !important;
+  font-weight: 400 !important;
+  line-height: .86 !important;
+  letter-spacing: .045em !important;
+  text-transform: uppercase !important;
+  text-shadow: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals:hover strong,
+body .pp-header .mega[data-prop-mega] .mega-originals:focus-visible strong {
+  color: #7d1018 !important;
+  transform: translateY(-1px) !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-toggle[aria-expanded="true"] {
+  color: currentColor !important;
+}
+
+@media (max-width: 1024px) {
+  body .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+    inset-inline: 12px !important;
+    padding: 24px clamp(20px, 4vw, 42px) 30px !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-grid,
+  body .pp-header .mega[data-prop-mega] .mega-grid--collections {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 26px 42px !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-originals {
+    justify-self: start !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+    inset: var(--pp-header-h, var(--hdr-h, 60px)) 0 auto !important;
+    max-height: calc(100dvh - var(--pp-header-h, var(--hdr-h, 60px))) !important;
+    padding: 18px var(--edge, 18px) 28px !important;
+    border-inline: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-grid,
+  body .pp-header .mega[data-prop-mega] .mega-grid--collections,
+  body .pp-header .mega[data-prop-mega] .mega-grid.columns-1 {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    width: 100% !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-col {
+    gap: 0 !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-col a {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: space-between !important;
+    border-bottom: 1px solid rgba(17, 17, 17, .08) !important;
+    font-size: 13px !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-col li:last-child a {
+    border-bottom: 0 !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-originals {
+    width: 100% !important;
+    padding-top: 10px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .pp-header .mega[data-prop-mega] .mega-panel[data-mega],
+  body .pp-header .mega[data-prop-mega] .mega-col a,
+  body .pp-header .mega[data-prop-mega] .mega-originals strong {
+    transition: none !important;
+  }
+}
+/* =========================================================
+   PROPHETIA · Mega menu Loewe-like persistent structure
+   Full-width navigation layer. It closes only on Escape or outside click.
+   ========================================================= */
+
+body .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  inset: var(--pp-header-h, var(--hdr-h, 68px)) 0 auto 0 !important;
+  min-height: clamp(360px, 43vh, 520px) !important;
+  max-height: calc(100dvh - var(--pp-header-h, var(--hdr-h, 68px))) !important;
+  padding: clamp(34px, 5vh, 56px) clamp(24px, 1.65vw, 36px) clamp(42px, 6vh, 68px) !important;
+
+  border-inline: 0 !important;
+  border-radius: 0 !important;
+  border-top: 1px solid rgba(17, 17, 17, .10) !important;
+  border-bottom: 1px solid rgba(17, 17, 17, .10) !important;
+
+  background: #f4f1ea !important;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, .10) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-grid {
+  width: 100% !important;
+  max-width: none !important;
+  grid-template-columns:
+    minmax(150px, .92fr)
+    minmax(150px, .82fr)
+    minmax(190px, .95fr)
+    minmax(220px, 1.08fr) !important;
+  column-gap: clamp(64px, 9.4vw, 190px) !important;
+  row-gap: 30px !important;
+  margin: 0 !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-grid--collections {
+  grid-template-columns: minmax(190px, .8fr) minmax(260px, 1.2fr) !important;
+  column-gap: clamp(96px, 16vw, 280px) !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-grid.columns-1 {
+  grid-template-columns: minmax(190px, 320px) !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col {
+  gap: 12px !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col a {
+  min-height: 20px !important;
+  color: rgba(17, 17, 17, .68) !important;
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-col a:hover,
+body .pp-header .mega[data-prop-mega] .mega-col a:focus-visible {
+  color: #000 !important;
+  transform: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals {
+  display: grid !important;
+  gap: 9px !important;
+  justify-self: start !important;
+  align-self: start !important;
+  width: min(100%, 360px) !important;
+  margin-top: 0 !important;
+  padding-top: 2px !important;
+  color: #111 !important;
+  text-decoration: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals__kicker {
+  margin: 0 0 4px !important;
+  color: rgba(17, 17, 17, .48) !important;
+  font: 600 9px/1 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals strong {
+  color: #111 !important;
+  font-family: var(--font-display, Georgia, "Times New Roman", serif) !important;
+  font-size: clamp(28px, 2.35vw, 44px) !important;
+  font-weight: 500 !important;
+  line-height: .98 !important;
+  letter-spacing: -.035em !important;
+  text-transform: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals small {
+  display: block !important;
+  max-width: 34ch !important;
+  color: rgba(17, 17, 17, .58) !important;
+  font: 400 12px/1.55 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals em {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin-top: 8px !important;
+  padding-bottom: 3px !important;
+  color: #9f1721 !important;
+  border-bottom: 1px solid rgba(159, 23, 33, .34) !important;
+  font: 600 10px/1 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-style: normal !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  transition: transform 180ms ease, border-color 180ms ease, color 180ms ease !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals:hover strong,
+body .pp-header .mega[data-prop-mega] .mega-originals:focus-visible strong {
+  color: #111 !important;
+  transform: none !important;
+}
+
+body .pp-header .mega[data-prop-mega] .mega-originals:hover em,
+body .pp-header .mega[data-prop-mega] .mega-originals:focus-visible em {
+  color: #7d1018 !important;
+  border-bottom-color: rgba(125, 16, 24, .62) !important;
+  transform: translateX(2px) !important;
+}
+
+@media (max-width: 1024px) {
+  body .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+    min-height: auto !important;
+    padding-inline: clamp(22px, 4vw, 44px) !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-grid,
+  body .pp-header .mega[data-prop-mega] .mega-grid--collections {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: clamp(38px, 8vw, 86px) !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-originals {
+    margin-top: 6px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+    min-height: 0 !important;
+    padding: 18px var(--edge, 18px) 28px !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-grid,
+  body .pp-header .mega[data-prop-mega] .mega-grid--collections,
+  body .pp-header .mega[data-prop-mega] .mega-grid.columns-1 {
+    grid-template-columns: 1fr !important;
+    row-gap: 18px !important;
+  }
+
+  body .pp-header .mega[data-prop-mega] .mega-col {
+    gap: 0 !important;
+  }
 }

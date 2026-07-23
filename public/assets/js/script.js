@@ -26,6 +26,35 @@
     window.pp$ = $; window.pp$$ = $$;
   })();
 
+  /* ========== Account-gated actions ========== */
+  (() => {
+    if (window.__PP_ACCOUNT_ACTION_GUARD__) return;
+    window.__PP_ACCOUNT_ACTION_GUARD__ = true;
+
+    window.ppGetCurrentUser = window.ppGetCurrentUser || (() => (
+      window.__ppAuthCurrentUser ||
+      window.__ppLastUser ||
+      window.__ppFirebaseAuth?.currentUser ||
+      null
+    ));
+
+    window.ppHasAccountSession = window.ppHasAccountSession || (() => !!window.ppGetCurrentUser?.());
+
+    window.ppPromptAccountAccess = window.ppPromptAccountAccess || ((message = "Inicia sesion para continuar", href = "/account") => {
+      if (typeof window.ppToast === "function" && document.getElementById("ppToast")) {
+        window.ppToast(message, href);
+      } else {
+        window.ppTopNotice?.(message);
+      }
+
+      if (typeof window.ppOpenAuth === "function") {
+        window.ppOpenAuth();
+      } else {
+        document.getElementById("ppAuthLogoBtn")?.click();
+      }
+    });
+  })();
+
   /* ========== Debug switch (solo si localStorage.pp_debug=1) ========== */
   (() => {
     window.ppDebugOn = () => String(localStorage.getItem('pp_debug') || '') === '1';
@@ -97,35 +126,19 @@
 
   })();
 
-  /* ========== Cart storage + badges ========== */
-  (() => {
-    const CART_KEY = 'pp_cart_v2';
-    const money = (n=0) => {
-      try { return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n); }
-      catch { return `${(+n).toFixed(2)} €`; }
-    };
-    const load  = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
-    const save  = (cart) => localStorage.setItem(CART_KEY, JSON.stringify(cart||[]));
-    const sum   = (c) => c.reduce((a,i)=>a+(i.price*i.qty),0);
-    const count = (c) => c.reduce((a,i)=>a+i.qty,0);
-
-    function updateBadges(){
-      const c = load(); const n = count(c);
-      const ids = window.__PP_IDS || {};
-      if (ids.cartCountHd)     ids.cartCountHd.textContent     = n;
-      if (ids.cartCount)       ids.cartCount.textContent       = n;
-      if (ids.cartCountDrawer) ids.cartCountDrawer.textContent = n;
-      if (ids.cartTotal)       ids.cartTotal.textContent       = money(sum(c));
-
-    }
-
-    window.ppCart = { load, save, sum, count, money, updateBadges, CART_KEY };
-    document.addEventListener('DOMContentLoaded', updateBadges);
-  })();
 
   /* ========== Click universal de card → producto ========== */
   document.addEventListener('click', (e) => {
-    if (e.target.closest('.save-btn, .cart-add, [data-save], [data-cart-open], .nav, .icon-btn.save, #loadMoreBtn, .card-wish')) return;
+   if (
+  e.target.closest(
+    '.save-btn, .cart-add, [data-save], [data-cart-open], ' +
+    '.nav, .icon-btn.save, #loadMoreBtn, .card-wish, ' +
+    '.pp-quick-add, [data-quick-add], [data-plp-reserve], ' +
+    '[data-stock-notify], [data-plp-collection-pill]'
+  )
+) {
+  return;
+}
     const card = e.target.closest('.product-card, .card');
     if (!card) return;
 
@@ -151,8 +164,17 @@
   /* ========== Wishlist (global) ========== */
   (() => {
     const KEY = 'pp_wishlist_v1';
-    const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } };
-    const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+    const unlocked = () => !!window.ppHasAccountSession?.();
+    const promptLogin = () => window.ppPromptAccountAccess?.('Inicia sesion para guardar tu seleccion', '/wishlist');
+    const load = () => {
+      if (!unlocked()) return [];
+      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; }
+    };
+    const save = (arr) => {
+      if (!unlocked()) return false;
+      localStorage.setItem(KEY, JSON.stringify(arr));
+      return true;
+    };
     const find = (id, arr) => arr.find(x => String(x.id) === String(id));
 
     function syncSavedState() {
@@ -170,6 +192,13 @@
       const btn = ev.target.closest('[data-save]');
       if(!btn) return;
       if (btn.closest('#plp-grid, #gridCamisetas')) return; // PLP se gestiona abajo
+      if (!unlocked()) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        promptLogin();
+        syncSavedState();
+        return;
+      }
      const card = btn.closest('.card, .product-card');
 
 const item = {
@@ -205,12 +234,14 @@ if (!item.id) {
       let list = load();
       const hit = find(item.id, list);
       list = hit ? list.filter(x => String(x.id) !== String(item.id)) : [...list, item];
-      save(list);
+      if (!save(list)) return;
       syncSavedState();
       document.dispatchEvent(new CustomEvent('pp:wishlist:changed'));
     });
 
     window.addEventListener('partials:ready', syncSavedState);
+    window.addEventListener('pp:auth-changed', syncSavedState);
+    window.addEventListener('pp:auth-ready', syncSavedState);
     document.addEventListener('DOMContentLoaded', syncSavedState);
     const grid = document.getElementById('gridCamisetas');
     if (grid) new MutationObserver(syncSavedState).observe(grid, { childList:true, subtree:true });
@@ -219,8 +250,17 @@ if (!item.id) {
   /* ========== Wishlist (PLP) + inyección botón ❤️ ========== */
   (() => {
     const KEY='pp_wishlist_v1';
-    const load = () => { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; } };
-    const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+    const unlocked = () => !!window.ppHasAccountSession?.();
+    const promptLogin = () => window.ppPromptAccountAccess?.('Inicia sesion para guardar tu seleccion', '/wishlist');
+    const load = () => {
+      if (!unlocked()) return [];
+      try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; }
+    };
+    const save = (arr) => {
+      if (!unlocked()) return false;
+      localStorage.setItem(KEY, JSON.stringify(arr));
+      return true;
+    };
     const exists = (id, arr) => arr.some(x => String(x.id) === String(id));
 
     function makeBtn(data){
@@ -277,6 +317,12 @@ if (!item.id) {
       ev.preventDefault();
       ev.stopPropagation();
 
+      if (!unlocked()) {
+        promptLogin();
+        syncState();
+        return;
+      }
+
       const item = {
         id: btn.getAttribute('data-id'),
         title: btn.getAttribute('data-title') || 'Producto Prophetia',
@@ -292,7 +338,7 @@ if (!item.id) {
         ? list.filter(x => String(x.id) !== String(item.id))
         : [...list, item];
 
-      save(list);
+      if (!save(list)) return;
       syncState();
       document.dispatchEvent(new CustomEvent('pp:wishlist:changed'));
 
@@ -308,6 +354,8 @@ if (!item.id) {
 
     document.addEventListener('DOMContentLoaded', injectButtons);
     window.addEventListener('partials:ready', injectButtons);
+    window.addEventListener('pp:auth-changed', syncState);
+    window.addEventListener('pp:auth-ready', syncState);
   })();
 
   /* ========== Top notice (Prophetia-style) ========== */
@@ -320,6 +368,9 @@ if (!item.id) {
       const txt = document.getElementById('ppTopNoticeMsg');
       const btn = document.getElementById('ppTopNoticeClose');
       if (!box || !txt) return;
+      if (box.parentElement !== document.body) {
+        document.body.appendChild(box);
+      }
 
       txt.textContent = msg;
 
@@ -345,7 +396,7 @@ if (!item.id) {
   /* ========== Toast helper ========== */
   (() => {
     const TOAST_TIME = 2600;
-    let t; window.ppToast = (msg='Añadido a artículos guardados', href='wishlist.html')=>{
+    let t; window.ppToast = (msg='Añadido a artículos guardados', href='/wishlist')=>{
       const box = document.getElementById('ppToast'); if(!box) return;
       box.hidden = false;
       box.querySelector('#ppToastMsg').textContent = msg;
@@ -384,11 +435,16 @@ if (!item.id) {
   /* ========== Wishlist badge en header ========== */
   (() => {
     const KEY='pp_wishlist_v1'; const a=document.getElementById('ppSavedBtn'); if(!a) return;
-    const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}};
+    const load=()=>{
+      if (!window.ppHasAccountSession?.()) return [];
+      try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}
+    };
     const update=()=>{ a.dataset.count = String(load().length); };
     document.addEventListener('storage', update);
     document.addEventListener('DOMContentLoaded', update);
     document.addEventListener('pp:wishlist:changed', update);
+    window.addEventListener('pp:auth-changed', update);
+    window.addEventListener('pp:auth-ready', update);
     update();
   })();
 
@@ -399,7 +455,10 @@ if (!item.id) {
     const $empty = document.querySelector('.wl-empty');
     const $grid  = document.querySelector('.wishlist-grid') || document.querySelector('.wl-results');
     const getCountDOM = () => document.querySelectorAll('.wishlist-grid .product-card, .wishlist-grid .card').length;
-    const getCountLS  = () => { try{ const ls=JSON.parse(localStorage.getItem('pp_wishlist_v1')||'[]'); return Array.isArray(ls)?ls.length:0; }catch{ return 0; } };
+    const getCountLS  = () => {
+      if (!window.ppHasAccountSession?.()) return 0;
+      try{ const ls=JSON.parse(localStorage.getItem('pp_wishlist_v1')||'[]'); return Array.isArray(ls)?ls.length:0; }catch{ return 0; }
+    };
     const render = () => {
       const n = Math.max(getCountDOM(), getCountLS());
       if ($count) $count.textContent = n;
@@ -536,6 +595,19 @@ function resolveMedia(p){
   }
 
 
+
+    const getVariants = (p) => Array.isArray(p.variants) ? p.variants : [];
+    const variantColors = (p) => [...new Set(getVariants(p).map(v => norm(v.color)).filter(Boolean))];
+    const variantSizes = (p) => [...new Set(getVariants(p).map(v => upper(v.size)).filter(Boolean))];
+    const variantStock = (p) => getVariants(p).reduce((sum, v) => sum + (Number(v.stock) || 0), 0);
+    const productStock = (p) => getVariants(p).length ? variantStock(p) : (p.inStock === false ? 0 : Number(p.stock ?? 1));
+    const productDate = (p) => {
+      const raw = p.createdAt?.seconds ? p.createdAt.seconds * 1000 : (p.createdAt || p.date || p.publishedAt || 0);
+      const value = typeof raw === 'number' ? raw : Date.parse(raw);
+      return Number.isFinite(value) ? value : 0;
+    };
+    const productSales = (p) => Number(p.sales ?? p.sold ?? p.orderCount ?? p.sortSales ?? 0) || 0;
+
     let raw;
     try {
       raw = await fetchCatalog();
@@ -577,23 +649,42 @@ function resolveMedia(p){
         _gender: norm(p.gender),
         _fit: norm(p.fit),
         _color: norm(p.color || ''),
-        _sizes: Array.isArray(p.sizes) ? p.sizes.map(upper) : []
+        _colors: [...new Set([norm(p.color || ''), ...variantColors(p)].filter(Boolean))],
+        _sizes: [...new Set([...(Array.isArray(p.sizes) ? p.sizes.map(upper) : []), ...variantSizes(p)].filter(Boolean))],
+        _stock: productStock(p),
+        inStock: getVariants(p).length ? productStock(p) > 0 : p.inStock
       }));
 
     const BY_ID = new Map(PRODUCTS.map(p => [p._id, p]));
 
     const ACTIVE = window.__PP_ACTIVE_FILTERS__ || (window.__PP_ACTIVE_FILTERS__ = {});
     const state = { page: 1, sort: 'relevance' };
+    const normalizeSortMode = (mode = 'relevance') => {
+      const value = String(mode || 'relevance').trim();
+      if (value === 'featured') return 'relevance';
+      if (value === 'price_asc') return 'price-asc';
+      if (value === 'price_desc') return 'price-desc';
+      return value || 'relevance';
+    };
+
 
     const sortMap = {
+      relevance:  (a,b) => (Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0)),
       price_asc:  (a,b) => (a.price ?? 0) - (b.price ?? 0),
       price_desc: (a,b) => (b.price ?? 0) - (a.price ?? 0),
-      newest:     (a,b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)
+      'price-asc':  (a,b) => (a.price ?? 0) - (b.price ?? 0),
+      'price-desc': (a,b) => (b.price ?? 0) - (a.price ?? 0),
+      'name-asc': (a,b) => String(a.title || '').localeCompare(String(b.title || ''), 'es', { sensitivity: 'base' }),
+      'name-desc': (a,b) => String(b.title || '').localeCompare(String(a.title || ''), 'es', { sensitivity: 'base' }),
+      'best-selling': (a,b) => productSales(b) - productSales(a),
+      newest:     (a,b) => productDate(b) - productDate(a),
+      oldest:     (a,b) => productDate(a) - productDate(b),
+      availability: (a,b) => productStock(b) - productStock(a)
     };
 
     function applyFilters(list, f){
       let out = list.slice();
-      if (f.inStock) out = out.filter(p => p.inStock !== false);
+      if (f.inStock) out = out.filter(p => p._stock > 0 && p.inStock !== false);
       if (f.isNew)   out = out.filter(p => !!p.isNew);
 
       if (Array.isArray(f.collections) && f.collections.length){
@@ -602,7 +693,7 @@ function resolveMedia(p){
       }
       if (Array.isArray(f.colors) && f.colors.length){
         const want = f.colors.map(norm);
-        out = out.filter(p => want.includes(p._color));
+        out = out.filter(p => (p._colors || [p._color]).some(color => want.includes(color)));
       }
       if (Array.isArray(f.sizes) && f.sizes.length){
         const want = f.sizes.map(upper);
@@ -629,17 +720,23 @@ function resolveMedia(p){
     <article class="card ${hasNav ? 'has-carousel' : ''}"
             data-id="${p._id}"
             data-images="${dataImages}"
-            data-img-index="0">
+            data-img-index="0"
+            data-sort-order="${Number(p.sortOrder ?? 0) || 0}"
+            data-sales="${productSales(p)}"
+            data-date="${productDate(p)}"
+            data-price="${Number(p.price ?? 0) || 0}">
 
-      <a class="card-media" href="${url}" aria-label="${p.title || 'Producto Prophetia'}" data-id="${p._id}">
-        <img loading="lazy" src="${imgs[0]}" alt="${p.title || 'Producto Prophetia'}">
-        <div class="card-badges">${badge}</div>
-      </a>
+      <div class="plp-media">
+        <a class="card-media" href="${url}" aria-label="${p.title || 'Producto Prophetia'}" data-id="${p._id}">
+          <img loading="lazy" src="${imgs[0]}" alt="${p.title || 'Producto Prophetia'}">
+          <div class="card-badges">${badge}</div>
+        </a>
 
-      ${hasNav ? `
-        <button class="nav prev" type="button" aria-label="Imagen anterior"></button>
-        <button class="nav next" type="button" aria-label="Imagen siguiente"></button>
-      ` : ''}
+        ${hasNav ? `
+          <button class="nav prev" type="button" aria-label="Imagen anterior"></button>
+          <button class="nav next" type="button" aria-label="Imagen siguiente"></button>
+        ` : ''}
+      </div>
 
       <div class="card-body">
         <h3 class="card-title">
@@ -657,7 +754,8 @@ function resolveMedia(p){
 
     function render(){
       const filtered = applyFilters(PRODUCTS, ACTIVE);
-      const sorted = (state.sort in sortMap) ? filtered.slice().sort(sortMap[state.sort]) : filtered;
+      const sortMode = normalizeSortMode(state.sort);
+      const sorted = (sortMode in sortMap) ? filtered.slice().sort(sortMap[sortMode]) : filtered;
 
       const visible = sorted.slice(0, state.page * PAGE_SIZE);
   if (!visible.length) {
@@ -673,10 +771,39 @@ function resolveMedia(p){
 
   
 
-    // API pública para drawer / contadores
-    window.ppPLP = window.ppPLP || {};
-    window.ppPLP.count = (draft = {}) => applyFilters(PRODUCTS, { ...ACTIVE, ...draft }).length;
-    window.ppPLP.apply = (draft = {}) => { Object.assign(ACTIVE, draft); state.page = 1; render(); };
+// API pública para filtros y módulos asociados al PLP
+window.ppPLP = window.ppPLP || {};
+
+window.ppPLP.count = (draft = {}) => {
+  return applyFilters(PRODUCTS, {
+    ...ACTIVE,
+    ...draft
+  }).length;
+};
+
+window.ppPLP.apply = (draft = {}) => {
+  Object.assign(ACTIVE, draft);
+  state.page = 1;
+  render();
+};
+
+window.ppPLP.sort = (mode = 'relevance') => {
+  state.sort = normalizeSortMode(mode);
+  state.page = 1;
+  render();
+};
+
+window.ppPLP.getState = () => ({ ...state, filters: { ...ACTIVE } });
+
+window.ppPLP.getProduct = (productId) => {
+  const id = String(productId || '').trim();
+
+  if (!id) {
+    return null;
+  }
+
+  return BY_ID.get(id) || null;
+};
 
     document.addEventListener('pp:plp:filter', (ev) => window.ppPLP.apply(ev.detail || {}));
 
@@ -779,11 +906,26 @@ document.addEventListener('pp:plp:rendered', () => {
 
   // 1) Cerrar SIEMPRE todos los mega-panels al entrar/recargar
   function ppCloseMegaAll(){
-    document.querySelectorAll('.mega-toggle').forEach(b => b.setAttribute('aria-expanded','false'));
+    document.body.classList.remove('pp-mega-open');
+document.querySelectorAll('.mega').forEach(mega => {
+      mega.classList.remove('is-open');
+      mega.removeAttribute('data-active-panel');
+    });
+
+    document.querySelectorAll('.mega-toggle').forEach(b => {
+      b.classList.remove('is-active');
+      b.setAttribute('aria-expanded','false');
+      b.setAttribute('aria-selected','false');
+    });
+
     document.querySelectorAll('.mega-panel').forEach(p => {
       p.hidden = true;
       p.classList.remove('open','is-open');
       p.setAttribute('aria-hidden','true');
+    });
+
+    document.querySelectorAll('.mega .panel[role="tabpanel"]').forEach(panel => {
+      panel.hidden = true;
     });
   }
   document.addEventListener('DOMContentLoaded', ppCloseMegaAll);
@@ -920,3 +1062,178 @@ document.addEventListener('pp:plp:rendered', () => {
     }
   })();
 
+
+/* =========================================================
+   PROPHETIA - Shared PLP toolbar controls
+   Sort, stock and view support for clothing PLPs.
+   ========================================================= */
+(() => {
+  if (window.__PP_SHARED_PLP_TOOLBAR__) return;
+  window.__PP_SHARED_PLP_TOOLBAR__ = true;
+
+  const body = document.body;
+
+  const normalizeSort = (mode = 'relevance') => {
+    const value = String(mode || 'relevance').trim();
+    if (value === 'featured') return 'relevance';
+    if (value === 'price_asc') return 'price-asc';
+    if (value === 'price_desc') return 'price-desc';
+    return value || 'relevance';
+  };
+
+  const getCards = () => Array.from(document.querySelectorAll('#plp-grid .card, #plp-grid .product-card'));
+
+  const getTitle = (card) => (
+    card.querySelector('.card-title, .product-card__title, [data-title]')?.dataset?.title ||
+    card.querySelector('.card-title, .product-card__title, [data-title]')?.textContent ||
+    ''
+  ).trim().toLowerCase();
+
+  const getPrice = (card) => {
+    const node = card.querySelector('.price, .card-price, .product-card__price, [data-price]');
+    const raw = String(card.dataset.price || node?.dataset?.price || node?.textContent || '')
+      .replace(/\s/g, '')
+      .replace(/[^\d,.-]/g, '')
+      .replace(/\.(?=\d{3})/g, '')
+      .replace(',', '.');
+    const value = Number.parseFloat(raw);
+    return Number.isFinite(value) ? value : 0;
+  };
+
+  const getCardNumber = (card, keys) => {
+    for (const key of keys) {
+      const value = Number.parseFloat(card.dataset[key] || '');
+      if (Number.isFinite(value)) return value;
+    }
+    return 0;
+  };
+
+  const getSortOrder = (card) => getCardNumber(card, ['sortOrder']);
+  const getSales = (card) => getCardNumber(card, ['sales', 'sold', 'orderCount', 'sortSales']);
+  const getDate = (card) => getCardNumber(card, ['date', 'createdAt', 'publishedAt']);
+
+  const sortDomGrid = (mode) => {
+    const grid = document.getElementById('plp-grid');
+    if (!grid) return;
+
+    const cards = getCards();
+    if (!cards.length) return;
+
+    cards.forEach((card, index) => {
+      if (!card.dataset.originalIndex) card.dataset.originalIndex = String(index);
+    });
+
+    cards.sort((a, b) => {
+      const original = Number(a.dataset.originalIndex || 0) - Number(b.dataset.originalIndex || 0);
+      if (mode === 'price-asc') return getPrice(a) - getPrice(b) || original;
+      if (mode === 'price-desc') return getPrice(b) - getPrice(a) || original;
+      if (mode === 'name-asc') return getTitle(a).localeCompare(getTitle(b), 'es', { sensitivity: 'base' }) || original;
+      if (mode === 'name-desc') return getTitle(b).localeCompare(getTitle(a), 'es', { sensitivity: 'base' }) || original;
+      if (mode === 'best-selling') return getSales(b) - getSales(a) || original;
+      if (mode === 'newest') return getDate(b) - getDate(a) || original;
+      if (mode === 'oldest') return getDate(a) - getDate(b) || original;
+      if (mode === 'relevance') return getSortOrder(a) - getSortOrder(b) || original;
+      return original;
+    });
+
+    const fragment = document.createDocumentFragment();
+    cards.forEach((card) => fragment.appendChild(card));
+    grid.appendChild(fragment);
+  };
+
+  const applySort = (mode) => {
+    const normalized = normalizeSort(mode);
+    if (window.ppPLP && typeof window.ppPLP.sort === 'function') {
+      window.ppPLP.sort(normalized);
+    } else {
+      sortDomGrid(normalized);
+    }
+  };
+
+  const setSortLabel = (root, option) => {
+    const label = option.textContent.trim();
+    const trigger = root.querySelector('.pp-sort-trigger');
+    if (!trigger || !label) return;
+    trigger.textContent = label;
+  };
+
+  const setSortActive = (root, option) => {
+    root.querySelectorAll('.pp-sort-option').forEach((item) => {
+      const active = item === option;
+      item.classList.toggle('is-active', active);
+      if (item.hasAttribute('aria-selected') || item.getAttribute('role') === 'option') {
+        item.setAttribute('aria-selected', active ? 'true' : 'false');
+      }
+    });
+  };
+
+  const closeSort = (root) => {
+    root.classList.remove('is-open');
+    if (root.tagName.toLowerCase() === 'details') root.open = false;
+
+    const trigger = root.querySelector('.pp-sort-trigger[aria-expanded]');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+
+    const menu = root.querySelector('.pp-sort-menu');
+    if (menu && root.tagName.toLowerCase() !== 'details') menu.hidden = true;
+  };
+
+  const toggleCustomSort = (root) => {
+    const isOpen = root.classList.toggle('is-open');
+    const trigger = root.querySelector('.pp-sort-trigger[aria-expanded]');
+    const menu = root.querySelector('.pp-sort-menu');
+
+    if (trigger) trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (menu) menu.hidden = !isOpen;
+  };
+
+  document.addEventListener('click', (event) => {
+    if (event.defaultPrevented) return;
+
+    const customTrigger = event.target.closest('.pp-sort-trigger');
+    const customRoot = customTrigger?.closest('.pp-sort');
+    if (customRoot && customRoot.tagName.toLowerCase() !== 'details') {
+      event.preventDefault();
+      toggleCustomSort(customRoot);
+      return;
+    }
+
+    const option = event.target.closest('.pp-sort-option');
+    const sortRoot = option?.closest('.pp-sort');
+    if (option && sortRoot) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      setSortActive(sortRoot, option);
+      setSortLabel(sortRoot, option);
+      applySort(option.dataset.sort || 'relevance');
+      closeSort(sortRoot);
+      return;
+    }
+
+    const viewButton = event.target.closest('.pp-view-toggle, .pp-filter-right .pp-btn[aria-pressed]');
+    if (!viewButton || !viewButton.closest('.pp-filters')) return;
+
+    if (viewButton.id === 'menViewToggle' && body.classList.contains('men-page') && body.classList.contains('camisetas-page')) {
+      return;
+    }
+
+    event.preventDefault();
+    viewButton.classList.add('pp-view-toggle');
+
+    const dense = !body.classList.contains('is-plp-dense-view');
+    body.classList.toggle('is-plp-dense-view', dense);
+    viewButton.setAttribute('aria-pressed', dense ? 'true' : 'false');
+    viewButton.textContent = dense ? 'Vista normal' : 'Vista';
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    document.querySelectorAll('.pp-sort.is-open').forEach((root) => {
+      if (!root.contains(event.target)) closeSort(root);
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('.pp-sort.is-open, details.pp-sort[open]').forEach(closeSort);
+  });
+})();

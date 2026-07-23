@@ -157,6 +157,128 @@ body.checkout-success-page {
   white-space: nowrap;
 }
 
+.success-guest-account {
+  margin-top: 28px;
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid rgba(0, 0, 0, .16);
+  background: rgba(255, 255, 255, .56);
+}
+
+.success-guest-account[hidden] {
+  display: none !important;
+}
+
+.success-guest-account__copy {
+  max-width: 660px;
+}
+
+.success-guest-account__kicker {
+  margin: 0 0 12px;
+  color: var(--success-muted);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.success-guest-account h2 {
+  margin: 0;
+  font-family: var(--font-display, "Playfair Display", Georgia, serif);
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+.success-guest-account p {
+  margin: 12px 0 0;
+  color: var(--success-muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.success-guest-account__copy strong {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--success-ink);
+  word-break: break-word;
+}
+
+.success-guest-account__form {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.success-guest-account__field {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, .58);
+}
+
+.success-guest-account__field input {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .38);
+  border-radius: 0;
+  background: transparent;
+  color: var(--success-ink);
+  font: 500 15px/1 var(--font-ui, Inter, sans-serif);
+  outline: none;
+}
+
+.success-guest-account__field input:focus {
+  border-color: #111;
+}
+
+.success-guest-account__check,
+.success-guest-account__message {
+  grid-column: 1 / -1;
+}
+
+.success-guest-account__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--success-muted);
+}
+
+.success-guest-account__check input {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: #111;
+}
+
+.success-guest-account__form .success-btn {
+  width: fit-content;
+}
+
+.success-guest-account__message {
+  min-height: 20px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.success-guest-account__message[data-type="success"] {
+  color: #22563d;
+}
+
+.success-guest-account__message[data-type="error"] {
+  color: #7a1b1b;
+}
 .success-actions {
   margin-top: 38px;
   display: flex;
@@ -1847,7 +1969,7 @@ box-shadow:
   100% {
     text-shadow: none;
   }
-  
+
 }
 @keyframes ppSuccessPainiteEmblemFloat {
   0%, 100% {
@@ -2069,4 +2191,451 @@ box-shadow:
   --success-rank-bar-bg: linear-gradient(180deg, rgba(14,7,5,.96), rgba(55,22,14,.90));
   --success-rank-bar-fill: linear-gradient(90deg, #120807 0%, #5d1f18 28%, #a43f2b 54%, #d2824c 76%, #fff0b8 100%);
   --success-rank-bar-glow: rgba(194,79,51,.44);
+}
+/* PROPHETIA SUCCESS XP BAR CLEAN CLIP */
+.success-xp__bar {
+  overflow: hidden !important;
+  contain: paint !important;
+  clip-path: inset(0 round 999px);
+}
+
+.success-xp__bar::before {
+  inset: 0 !important;
+  z-index: 0 !important;
+  border-radius: inherit !important;
+  filter: none !important;
+  opacity: .16 !important;
+}
+
+.success-xp__bar.is-charging::before,
+.success-xp--legacy.is-prestige-up .success-xp__bar::before,
+.success-xp--legacy.is-level-up .success-xp__bar::before {
+  opacity: .28 !important;
+  filter: none !important;
+}
+
+.success-xp__bar::after {
+  inset: 0 !important;
+  border-radius: inherit !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,232,170,.26),
+    inset 0 0 10px rgba(212,175,100,.16) !important;
+}
+
+.success-xp__bar.is-charging::after {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,232,170,.38),
+    inset 0 0 14px rgba(212,175,100,.24) !important;
+}
+
+.success-xp__segments,
+.success-xp__fill,
+.success-xp__fill::after,
+.success-xp__gloss {
+  border-radius: inherit !important;
+}
+
+.success-xp__fill {
+  overflow: hidden !important;
+  box-shadow:
+    inset 0 1px 4px rgba(255,255,255,.18),
+    inset 0 -3px 7px rgba(0,0,0,.28),
+    0 0 12px var(--success-rank-bar-glow) !important;
+}
+
+.success-xp__fill::before {
+  right: 0 !important;
+  width: 38px !important;
+  height: 38px !important;
+  filter: blur(6px) !important;
+  transform: translate(38%, -50%) scale(.72) !important;
+}
+/* PROPHETIA SUCCESS XP EMBLEM SCALE */
+.success-xp__rankEmblem {
+  flex-basis: 128px !important;
+  width: 128px !important;
+  height: 128px !important;
+}
+
+.success-xp__rankEmblem img {
+  width: 94px !important;
+  height: 94px !important;
+}
+
+.success-xp__rankEmblem img[data-rank-emblem="prophet"],
+.success-xp__rankEmblem img[data-rank-emblem="prestige-i"],
+.success-xp__rankEmblem img[data-rank-emblem="prophet-prestige-1"] {
+  width: 126px !important;
+  height: 126px !important;
+}
+
+@media (max-width: 720px) {
+  .success-xp__rankEmblem {
+    flex-basis: 86px !important;
+    width: 86px !important;
+    height: 86px !important;
+  }
+
+  .success-xp__rankEmblem img {
+    width: 76px !important;
+    height: 76px !important;
+  }
+
+  .success-xp__rankEmblem img[data-rank-emblem="prophet"],
+  .success-xp__rankEmblem img[data-rank-emblem="prestige-i"],
+  .success-xp__rankEmblem img[data-rank-emblem="prophet-prestige-1"] {
+    width: 92px !important;
+    height: 92px !important;
+  }
+}
+/* PROPHETIA ARCHIVIST EMBLEM STABILITY */
+.success-xp__rankEmblem img[data-rank-emblem="archivist"] {
+  width: 112px !important;
+  height: 112px !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform-origin: center center !important;
+  animation: ppSuccessArchivistEmblemFloat 5200ms ease-in-out infinite !important;
+  filter:
+    saturate(1.04)
+    contrast(1.03)
+    drop-shadow(0 5px 8px rgba(80, 52, 26, .16))
+    drop-shadow(0 14px 24px rgba(80, 52, 26, .10))
+    drop-shadow(0 0 18px rgba(235, 215, 178, .30)) !important;
+}
+
+.success-xp--legacy.is-level-up .success-xp__rankEmblem img[data-rank-emblem="archivist"] {
+  animation: ppSuccessArchivistRankUp 1450ms cubic-bezier(.22, 1, .36, 1) both !important;
+}
+
+.success-xp__nextRankEmblem img[data-rank-emblem="archivist"] {
+  width: 78px !important;
+  height: 78px !important;
+  transform: none !important;
+}
+
+@keyframes ppSuccessArchivistEmblemFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1);
+  }
+}
+
+@keyframes ppSuccessArchivistRankUp {
+  0% {
+    opacity: .96;
+    transform: translateY(0) scale(1);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.075);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .success-xp__rankEmblem img[data-rank-emblem="archivist"] {
+    width: 86px !important;
+    height: 86px !important;
+  }
+}
+
+/* PROPHETIA RANK 3D ASCENSION */
+.success-xp__rankEmblem,
+.pp-xpToast__emblem {
+  perspective: 980px;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  isolation: isolate;
+}
+
+.success-xp__rankEmblem img,
+.pp-xpToast__emblem img {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transform-origin: center center;
+  will-change: transform, filter, opacity;
+}
+
+.success-xp--legacy.is-level-up .success-xp__rankEmblem,
+.pp-xpToast.is-level-up .pp-xpToast__emblem {
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+  animation: ppRankEmblemStage3D 1450ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+.success-xp--legacy.is-level-up .success-xp__rankEmblemAura,
+.pp-xpToast.is-level-up .pp-xpToast__emblemAura {
+  will-change: transform, opacity, filter;
+  animation: ppRankAura3DImpact 1450ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+.success-xp--legacy.is-level-up.rank-initiate .success-xp__rankEmblem img[data-rank-emblem="initiate"],
+.pp-xpToast.is-level-up.rank-initiate .pp-xpToast__emblem img[data-rank-emblem="initiate"] {
+  animation: ppRankAscendInitiate3D 1450ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+.success-xp--legacy.is-level-up.rank-adeptus .success-xp__rankEmblem img[data-rank-emblem="adeptus"],
+.pp-xpToast.is-level-up.rank-adeptus .pp-xpToast__emblem img[data-rank-emblem="adeptus"] {
+  animation: ppRankAscendAdeptus3D 1480ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+.success-xp--legacy.is-level-up.rank-oracle .success-xp__rankEmblem img[data-rank-emblem="oracle"],
+.pp-xpToast.is-level-up.rank-oracle .pp-xpToast__emblem img[data-rank-emblem="oracle"] {
+  animation: ppRankAscendOracle3D 1520ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+.success-xp--legacy.is-level-up.rank-archivist .success-xp__rankEmblem img[data-rank-emblem="archivist"],
+.pp-xpToast.is-level-up.rank-archivist .pp-xpToast__emblem img[data-rank-emblem="archivist"] {
+  animation: ppRankAscendArchivist3D 1500ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+.success-xp--legacy.is-level-up.rank-prophet .success-xp__rankEmblem img[data-rank-emblem="prophet"],
+.pp-xpToast.is-level-up.rank-prophet .pp-xpToast__emblem img[data-rank-emblem="prophet"] {
+  animation: ppRankAscendProphet3D 1560ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+.success-xp--legacy.is-level-up.rank-prestige-i .success-xp__rankEmblem img[data-rank-emblem="prestige-i"],
+.success-xp--legacy.is-level-up.rank-prestige-i .success-xp__rankEmblem img[data-rank-emblem="prophet-prestige-1"],
+.success-xp--legacy.is-level-up.rank-prophet-prestige-1 .success-xp__rankEmblem img[data-rank-emblem="prestige-i"],
+.success-xp--legacy.is-level-up.rank-prophet-prestige-1 .success-xp__rankEmblem img[data-rank-emblem="prophet-prestige-1"],
+.pp-xpToast.is-level-up.rank-prestige-i .pp-xpToast__emblem img[data-rank-emblem="prestige-i"],
+.pp-xpToast.is-level-up.rank-prophet-prestige-1 .pp-xpToast__emblem img[data-rank-emblem="prophet-prestige-1"] {
+  animation: ppRankAscendPrestige3D 1620ms cubic-bezier(.16, 1, .3, 1) both !important;
+}
+
+@keyframes ppRankEmblemStage3D {
+  0% {
+    transform: matrix3d(.94,0,0,0,0,.94,0,0,0,0,1,0,0,10,0,1) rotate3d(1, .18, 0, -10deg);
+    filter: brightness(.98) saturate(.98);
+  }
+
+  34% {
+    transform: translate3d(0, -5px, 34px) rotate3d(.42, .9, .16, 13deg) scale(1.055);
+    filter: brightness(1.12) saturate(1.08);
+  }
+
+  64% {
+    transform: translate3d(0, 1px, 18px) rotate3d(-.25, .58, .12, -5deg) scale(1.018);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg) scale(1);
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@keyframes ppRankAura3DImpact {
+  0% {
+    opacity: .18;
+    transform: translateZ(-12px) scale(.78);
+    filter: blur(18px);
+  }
+
+  38% {
+    opacity: .92;
+    transform: translateZ(42px) scale(1.48);
+    filter: blur(13px) brightness(1.16);
+  }
+
+  68% {
+    opacity: .64;
+    transform: translateZ(14px) scale(1.10);
+    filter: blur(15px);
+  }
+
+  100% {
+    opacity: .58;
+    transform: translateZ(0) scale(1);
+    filter: blur(15px);
+  }
+}
+
+@keyframes ppRankAscendInitiate3D {
+  0% {
+    opacity: .82;
+    transform: matrix3d(.90,.02,0,0,-.02,.92,0,0,0,0,1,0,0,14,0,1) rotate3d(1, .25, 0, -18deg);
+    filter: blur(1.45px) brightness(.92) saturate(.96);
+  }
+
+  32% {
+    opacity: 1;
+    transform: translate3d(0, -8px, 38px) rotate3d(.82, .34, .14, 17deg) scale(1.075);
+    filter: blur(.18px) brightness(1.18) saturate(1.14);
+  }
+
+  62% {
+    transform: translate3d(0, 2px, 18px) rotate3d(-.32, .76, .18, -8deg) scale(1.024);
+    filter: blur(0) brightness(1.07) saturate(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg) scale(1);
+    filter: blur(0) brightness(1) saturate(1);
+  }
+}
+
+@keyframes ppRankAscendAdeptus3D {
+  0% {
+    opacity: .84;
+    transform: translate3d(0, 11px, -10px) rotate3d(.45, 1, .12, -20deg) scale(.92);
+    filter: blur(1.1px) brightness(.94) saturate(.95);
+  }
+
+  36% {
+    opacity: 1;
+    transform: translate3d(0, -9px, 44px) rotate3d(.62, 1, .22, 16deg) scale(1.082);
+    filter: blur(.12px) brightness(1.18) saturate(1.18) contrast(1.03);
+  }
+
+  68% {
+    transform: translate3d(0, 1px, 18px) rotate3d(-.18, .72, .08, -6deg) scale(1.018);
+    filter: blur(0) brightness(1.06) saturate(1.06);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg) scale(1);
+    filter: blur(0) brightness(1) saturate(1);
+  }
+}
+
+@keyframes ppRankAscendOracle3D {
+  0% {
+    opacity: .78;
+    transform: translate3d(0, 12px, -16px) rotate3d(.18, 1, .82, -22deg) scale(.93);
+    filter: blur(1.25px) brightness(.98) saturate(.92) contrast(1.02);
+  }
+
+  34% {
+    opacity: 1;
+    transform: translate3d(0, -7px, 48px) rotate3d(.22, 1, .72, 15deg) scale(1.06);
+    filter: blur(.1px) brightness(1.24) saturate(1.03) contrast(1.08);
+  }
+
+  60% {
+    transform: translate3d(0, 1px, 22px) rotate3d(-.16, .88, .46, -7deg) scale(1.018);
+    filter: blur(0) brightness(1.08) saturate(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg) scale(1);
+    filter: blur(0) brightness(1) saturate(1);
+  }
+}
+
+@keyframes ppRankAscendArchivist3D {
+  0% {
+    opacity: .86;
+    transform: translate3d(0, 9px, -10px) rotate3d(.35, .72, .08, -14deg) scale(.965);
+    filter: blur(.85px) brightness(.96) saturate(.98);
+  }
+
+  38% {
+    opacity: 1;
+    transform: translate3d(0, -6px, 34px) rotate3d(.28, .74, .12, 10deg) scale(1.045);
+    filter: blur(.08px) brightness(1.16) saturate(1.08);
+  }
+
+  66% {
+    transform: translate3d(0, 1px, 14px) rotate3d(-.18, .52, .08, -4deg) scale(1.01);
+    filter: blur(0) brightness(1.06) saturate(1.03);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg) scale(1);
+    filter: blur(0) brightness(1) saturate(1);
+  }
+}
+
+@keyframes ppRankAscendProphet3D {
+  0% {
+    opacity: .80;
+    transform: translate3d(0, 13px, -18px) rotate3d(.82, .28, .12, -18deg) scale(.90);
+    filter: blur(1.25px) brightness(.94) saturate(.98);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translate3d(0, -12px, 56px) rotate3d(.86, .32, .2, 18deg) scale(1.095);
+    filter: blur(.12px) brightness(1.24) saturate(1.16);
+  }
+
+  58% {
+    transform: translate3d(0, 2px, 24px) rotate3d(-.26, .55, .12, -8deg) scale(1.026);
+    filter: blur(0) brightness(1.08) saturate(1.06);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg) scale(1);
+    filter: blur(0) brightness(1) saturate(1);
+  }
+}
+
+@keyframes ppRankAscendPrestige3D {
+  0% {
+    opacity: .76;
+    transform: matrix3d(.88,.04,0,0,-.04,.90,0,0,0,0,1,0,0,16,0,1) rotate3d(.36, 1, .72, -24deg);
+    filter: blur(1.35px) brightness(.94) saturate(1.02);
+  }
+
+  28% {
+    opacity: 1;
+    transform: translate3d(0, -12px, 58px) rotate3d(.48, 1, .84, 22deg) scale(1.10);
+    filter: blur(.1px) brightness(1.26) saturate(1.24) contrast(1.04);
+  }
+
+  54% {
+    transform: translate3d(0, 2px, 28px) rotate3d(-.22, .92, .42, -10deg) scale(1.032);
+    filter: blur(0) brightness(1.12) saturate(1.10);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(0, 0, 1, 0deg) scale(1);
+    filter: blur(0) brightness(1) saturate(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success-xp--legacy.is-level-up .success-xp__rankEmblem,
+  .success-xp--legacy.is-level-up .success-xp__rankEmblemAura,
+  .success-xp--legacy.is-level-up .success-xp__rankEmblem img,
+  .pp-xpToast.is-level-up .pp-xpToast__emblem,
+  .pp-xpToast.is-level-up .pp-xpToast__emblemAura,
+  .pp-xpToast.is-level-up .pp-xpToast__emblem img {
+    animation-duration: 1ms !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+.success-guest-account__form .success-btn:disabled {
+  opacity: .62;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 720px) {
+  .success-guest-account__form {
+    grid-template-columns: 1fr;
+  }
+
+  .success-guest-account__form .success-btn {
+    width: 100%;
+  }
 }

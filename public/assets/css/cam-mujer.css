@@ -7,14 +7,14 @@
 body.women-page.camisetas-page{
   --pp-edge-camw: 40px;
   --hdr-h: var(--pp-header-h, 64px);
+  --pp-nav-icon: url("/assets/img/logo/emblem.svg");
+  --pp-nav-icon-size: 18px;
+  --pp-nav-rot-prev: 180deg;
+  --pp-nav-rot-next: 0deg;
 
   --logo-x-camw: -30px;
-  --logo-y-camw: -90px;
-  --logo-w-camw: 766px;
-
-  --bc-gap-camw: 32px;
-  --bc-x-camw: 740px;        /* empuje extra en X */
-  --bc-y-camw: 0px;
+  --logo-y-camw: -105px;
+  --logo-size-camw: 918px;
 
   font-size: 14px;
 }
@@ -43,19 +43,6 @@ body.women-page.camisetas-page .pp-hero__media{
   overflow: visible;
 }
 
-body.women-page.camisetas-page .pp-hero__media .floating-logo{
-  position: absolute;
-  left: var(--logo-x-camw);
-  top: calc(var(--hdr-h) + var(--logo-y-camw));
-  transform: none;
-}
-
-body.women-page.camisetas-page .pp-hero__media .floating-logo img{
-  height: 100px;
-  width: auto;
-  display: block;
-  object-fit: contain;
-}
 
 /* =========================
    BREADCRUMB (a la derecha del logo)
@@ -225,11 +212,98 @@ body.women-page.camisetas-page #plp-grid .card-media img{
   display: block;
 }
 
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save,
+body.women-page.camisetas-page #plp-grid .card-media > .icon-btn.save,
+body.women-page.camisetas-page #plp-grid .plp-media > .icon-btn.save{
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 40;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  padding: 0;
+  margin: 0;
+  border: 1px solid rgba(0,0,0,.16);
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  color: rgba(0,0,0,.82);
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  line-height: 0;
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save:hover,
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save:focus-visible{
+  transform: translateY(-1px);
+  border-color: rgba(0,0,0,.28);
+  background: rgba(255,255,255,.98);
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+  color: #000;
+}
+
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save svg{
+  width: 18px;
+  height: 18px;
+  display: block;
+  pointer-events: none;
+}
+
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save.is-saved,
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save[aria-pressed="true"]{
+  color: #000;
+  background: rgba(255,255,255,.98);
+}
+
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save.is-saved svg path,
+body.women-page.camisetas-page #plp-grid .card .icon-btn.save[aria-pressed="true"] svg path{
+  fill: currentColor;
+}
+
+body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media{
+  position: relative;
+}
+
+body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media > .nav.prev,
+body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media > .nav.next{
+  background-image: var(--pp-nav-icon);
+  background-size: var(--pp-nav-icon-size) var(--pp-nav-icon-size);
+  z-index: 30;
+}
+
+body.women-page.camisetas-page #plp-grid .card.has-carousel:hover .plp-media > .nav.prev,
+body.women-page.camisetas-page #plp-grid .card.has-carousel:hover .plp-media > .nav.next,
+body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media:focus-within > .nav.prev,
+body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media:focus-within > .nav.next{
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+@media (hover: none){
+  body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media > .nav.prev,
+  body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media > .nav.next{
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
+
 /* Responsive */
 @media (max-width: 640px){
-  body.women-page.camisetas-page{
-    --logo-w-camw: 520px;
-  }
 
   body.women-page.camisetas-page .pp-breadcrumb--hero{
     position: relative;
@@ -248,17 +322,9 @@ body.women-page.camisetas-page #plp-grid .card-media img{
    Fuente real: cam-mujer.css, no overrides.css
    ========================================================= */
 
-body.women-page.camisetas-page {
-  --logo-x-camw: -30px;       /* + derecha / - izquierda */
-  --logo-y-camw: -105px;       /* + abajo / - arriba */
-  --logo-size-camw: 918px;    /* ancho real del logo */
-  --logo-w-camw: 838px;       /* para cálculo del breadcrumb */
-}
 
-body.women-page.camisetas-page .pp-hero__media {
-  position: relative;
-  overflow: visible;
-}
+
+
 
 body.women-page.camisetas-page .pp-hero__media .floating-logo {
   position: absolute !important;

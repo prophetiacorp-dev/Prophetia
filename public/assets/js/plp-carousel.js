@@ -61,27 +61,34 @@
     const wrap = ensureMediaWrap(card);
     if (!wrap) return;
 
-    // Crear botones
-    const prev = document.createElement("button");
-    prev.type = "button";
-    prev.className = "nav prev";
-    prev.setAttribute("aria-label", "Imagen anterior");
-    prev.innerHTML = svgLeft;
+    const makeNav = (direction, svg, label) => {
+      const existing =
+        wrap.querySelector(`:scope > .nav.${direction}`) ||
+        card.querySelector(`:scope > .nav.${direction}`) ||
+        document.createElement("button");
 
-    const next = document.createElement("button");
-    next.type = "button";
-    next.className = "nav next";
-    next.setAttribute("aria-label", "Imagen siguiente");
-    next.innerHTML = svgRight;
+      existing.type = "button";
+      existing.className = `nav ${direction}`;
+      existing.setAttribute("aria-label", label);
+      if (!existing.innerHTML.trim()) existing.innerHTML = svg;
+      return existing;
+    };
 
-    // Solo se muestran si hay +1 imagen
-    if (images.length < 2) {
-      prev.hidden = true;
-      next.hidden = true;
-    }
+    const prev = makeNav("prev", svgLeft, "Imagen anterior");
+    const next = makeNav("next", svgRight, "Imagen siguiente");
 
-    wrap.appendChild(prev);
-    wrap.appendChild(next);
+    prev.hidden = images.length < 2;
+    next.hidden = images.length < 2;
+
+    if (prev.parentElement !== wrap) wrap.appendChild(prev);
+    if (next.parentElement !== wrap) wrap.appendChild(next);
+
+    card.querySelectorAll(".nav.prev").forEach((btn) => {
+      if (btn !== prev) btn.remove();
+    });
+    card.querySelectorAll(".nav.next").forEach((btn) => {
+      if (btn !== next) btn.remove();
+    });
 
     card.__ppCarouselReady = true;
   }

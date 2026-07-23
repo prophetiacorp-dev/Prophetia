@@ -64,7 +64,7 @@
       if (!pieces.length) {
         grid.innerHTML = `
           <p class="po-empty">
-            El próximo drop temporal de PROPHETIA está en preparación.
+            La próxima selección Prophetia Originals está en preparación.
           </p>
         `;
         return;
@@ -76,7 +76,7 @@
 
       grid.innerHTML = `
         <p class="po-empty">
-          No se ha podido cargar el drop actual.
+          No se ha podido cargar la selección actual.
         </p>
       `;
     }
@@ -86,8 +86,8 @@
 })();
 
 /* =========================================================
-   PROPHETIA ORIGINALS · Y2K BACKGROUND FX
-   Sparkles + CD light sweep, ligero y sin WebGL
+   PROPHETIA ORIGINALS · BACKGROUND FX
+   Light sweep editorial, ligero y sin WebGL
    ========================================================= */
 
 (() => {
@@ -98,7 +98,7 @@
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const canvas = document.createElement("canvas");
-  canvas.id = "poY2kFx";
+  canvas.id = "poOriginalsFx";
   canvas.setAttribute("aria-hidden", "true");
 
   document.body.prepend(canvas);

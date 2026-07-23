@@ -3,15 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "type": "commonjs",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-  "dev": "NODE_ENV=development node server.js",
-  "start": "NODE_ENV=production node server.js"
-},
+    "dev": "node server.js",
+    "start": "node server.js",
+    "sync:stock": "node scripts/sync-launch-stock.js",
+    "check": "node --experimental-vm-modules scripts/validate-production.js",
+    "check:technical": "node --experimental-vm-modules scripts/validate-production.js --allow-legal-placeholder"
+  },
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^8.5.2",
-    "firebase-admin": "^13.10.0",
+    "firebase-admin": "^14.2.0",
     "helmet": "^8.1.0",
     "resend": "^6.12.3",
     "stripe": "^17.5.0"

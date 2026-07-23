@@ -26,7 +26,7 @@
     "initiate": "Initiate",
     "adeptus": "Adeptus",
     "oracle": "Oracle",
-    "seer": "Seer",
+    "seer": "Archivist",
     "archivist": "Archivist",
     "prophet": "Prophet",
     "prophet-i": "Prophet I",
@@ -49,10 +49,12 @@
   }
 
   function normalizeRankId(rankId = "") {
-    return String(rankId || "tribe-member")
+    const clean = String(rankId || "tribe-member")
       .trim()
       .toLowerCase()
       .replace(/\s+/g, "-");
+
+    return clean === "seer" ? "archivist" : clean;
   }
 
   function getRankLevel(rankId = "") {
@@ -196,13 +198,13 @@
       if (rankSlot) rankSlot.textContent = "Sesión requerida";
       if (summarySlot) {
         summarySlot.textContent =
-          "Inicia sesión con tu cuenta Prophetia para consultar el Vault privado.";
+          "Inicia sesión para ver tu archivo privado, tus ventajas y los accesos asociados a tu rango.";
       }
       if (pointsSlot) pointsSlot.textContent = "—";
       if (earlySlot) earlySlot.textContent = "Privado";
       if (statusSlot) {
         statusSlot.textContent =
-          "El Vault se desbloquea según tu rango Prophetia Tribe.";
+          "Vault se organiza por rango: cuanto más avanzas en Prophetia Tribe, más accesos y ventajas puedes consultar aquí.";
       }
 
       return;
@@ -224,7 +226,7 @@
       summarySlot.textContent =
         member.rankMessage ||
         member.objective ||
-        "Tu archivo privado Prophetia se actualiza con cada rango desbloqueado.";
+        "Tu archivo privado se actualiza con tu rango, tus LP y las misiones verificadas de tu perfil.";
     }
 
     if (pointsSlot) {
@@ -237,7 +239,7 @@
 
     if (statusSlot) {
       statusSlot.textContent =
-        "Accesos disponibles según tu rango actual. Las piezas bloqueadas se revelarán al progresar dentro de Tribe.";
+        "Accesos disponibles según tu rango actual. Las entradas bloqueadas muestran qué necesitas para desbloquearlas.";
     }
   }
 
@@ -374,7 +376,7 @@
 
     if (lockedNoteSlot) {
       lockedNoteSlot.textContent = lockedItems.length
-        ? "Nuevos accesos aparecerán al progresar dentro de Prophetia Tribe."
+        ? "Nuevas entradas aparecerán cuando subas de rango o completes misiones verificadas de Prophetia Tribe."
         : "Todo el Vault actual está desbloqueado.";
     }
 

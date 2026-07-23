@@ -99,7 +99,8 @@
   cursor: pointer;
 
   font-family: var(--font-ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
-  font-size: 12.5px;     /* ⬅️ más lujo */
+  font-size: var(--pp-header-nav-font-size);
+  /*font-size: 12.5px;     /* ⬅️ más lujo */
   line-height: 1.35;
   font-weight: 500;
   letter-spacing: .02em;
@@ -114,7 +115,7 @@
 
 /* activo: un toque de “peso”, pero sin mazacote */
 .pp-header .mega-toggle.is-active{
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Subrayado editorial: cae justo bajo la palabra */
@@ -162,8 +163,8 @@
 }
 .search-inline .search-input:focus{
   outline: none;
-  border-bottom-width: 2px;
-  width: 280px;
+  border-bottom-width: 1px;
+  width: 200px;
 }
 
 /* -----------------------------
@@ -171,21 +172,25 @@
    - Área clicable accesible 44×44
    - Icono interno 18×18
    ----------------------------- */
+
 .pp-header .pp-right .icon-btn,
 .pp-header .pp-right button,
 .pp-header .pp-right a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;   /* <= elige 32 o 36, pero lo mismo para todos */
-  height: 52px;
+
+  width: var(--pp-header-action-size);
+  height: var(--pp-header-action-size);
+  min-width: var(--pp-header-action-size);
+
   padding: 0;
   background: transparent;
   border: 0;
   line-height: 0;
-  
-  
 }
+
+
 
 
 /* Anula márgenes heredados para que todos los iconos tengan el mismo “pegado” */
@@ -198,17 +203,15 @@
 /* Normalización de iconografía (Prophetia-like)
    Fuerza mismo ancho visual entre iconos */
 .pp-header .pp-right .icon-btn svg {
-  width: 18px;
-  height: 18px;
+  width: var(--pp-header-icon-size);
+  height: var(--pp-header-icon-size);
   display: block;
   object-fit: contain;
-  margin: 0 auto;          /* centra visualmente */
+  margin: 0 auto;
+  flex: 0 0 auto;
 }
 
 /* Ajuste fino solo para el carrito (icono más ancho por diseño) */
-#cartOpen svg {
-  transform: scale(1.14);   /* 0.85–0.90 según gusto */
-}
 
 /* Asegura tipografía en los tabs del mega aunque existan resets externos */
 .pp-header .mega-tabs,
@@ -244,25 +247,29 @@
    Auth logo (emblema) dentro de .pp-right
    - SIN píldora ni blur; solo icono 18×18 dentro de caja 44×44
    ----------------------------- */
-.pp-header .pp-right #ppAuthLogoBtn.brand-compact{
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  min-width: auto !important;
-  height: auto !important;
-  backdrop-filter: none !important;
+.pp-header .pp-right #ppAuthLogoBtn.brand-compact {
+  width: var(--pp-header-action-size);
+  height: var(--pp-header-action-size);
+  min-width: var(--pp-header-action-size);
+
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 /* Garantiza que la imagen del auth respete 18×18 */
-.pp-header .pp-right #ppAuthLogoBtn.brand-compact img{
-  width: 18px;
-  height: 18px;
+.pp-header .pp-right #ppAuthLogoBtn.brand-compact img {
+  width: var(--pp-header-icon-size);
+  height: var(--pp-header-icon-size);
+  max-width: var(--pp-header-icon-size);
+  max-height: var(--pp-header-icon-size);
+
   display: block;
   object-fit: contain;
 }
-
 /* -----------------------------
    Utilidad de accesibilidad para labels invisibles
    ----------------------------- */
@@ -346,7 +353,7 @@
   border-radius: 999px;
   border: 1px solid rgba(0,0,0,.12);
   background: rgba(255,255,255,.85);
-  font-size: 12px;
+  font-size: var(--pp-header-nav-font-size);
   cursor: pointer;
 }
 #ppAuthLogoBtn.is-logged img {
@@ -488,8 +495,8 @@
 #ppTopNoticeClose{
   all: unset;
   cursor: pointer;
-  width: 44px;
-  height: 44px;
+width: var(--pp-header-action-size);
+height: var(--pp-header-action-size);
   display: grid;
   place-items: center;
   border-radius: 999px;
@@ -613,8 +620,8 @@ html:has(#ppTopNotice[aria-hidden="false"]) #ppTopNotice{
 
   .pp-header .pp-right .icon-btn svg,
   .pp-header .pp-right #ppAuthLogoBtn.brand-compact img {
-    width: 17px;
-    height: 17px;
+width: var(--pp-header-icon-size);
+height: var(--pp-header-icon-size);
   }
 
   .mega .mega-panel {
@@ -632,14 +639,14 @@ html:has(#ppTopNotice[aria-hidden="false"]) #ppTopNotice{
 
   .pp-header button,
   .pp-header .mega-toggle {
-    font-size: 11.5px;
+    font-size: var(--pp-header-nav-font-size);
   }
 
   .pp-header .pp-right .icon-btn,
   .pp-header .pp-right button,
   .pp-header .pp-right a {
-    width: 40px;
-    height: 40px;
+width: var(--pp-header-action-size);
+height: var(--pp-header-action-size);
   }
 }
 
@@ -650,9 +657,9 @@ html:has(#ppTopNotice[aria-hidden="false"]) #ppTopNotice{
 
 /* Base visual del chip, SIN forzar display */
 .pp-header .pp-right #ppProfileChip {
-  width: 52px !important;
-  height: 52px !important;
-  min-width: 52px !important;
+width: var(--pp-header-action-size) !important;
+height: var(--pp-header-action-size) !important;
+min-width: var(--pp-header-action-size) !important;
   padding: 0 !important;
   margin: 0 !important;
 
@@ -701,10 +708,10 @@ body.pp-auth-logged .pp-header .pp-right [data-pp-profile] {
 
 /* Solo emblema SVG */
 .pp-header .pp-right #ppProfileChip > img {
-  width: 18px !important;
-  height: 18px !important;
-  max-width: 18px !important;
-  max-height: 18px !important;
+width: var(--pp-header-icon-size) !important;
+height: var(--pp-header-icon-size) !important;
+max-width: var(--pp-header-icon-size) !important;
+max-height: var(--pp-header-icon-size) !important;
   display: block !important;
   object-fit: contain !important;
   flex: 0 0 auto !important;
@@ -719,3 +726,404 @@ body.pp-auth-logged .pp-header .pp-right [data-pp-profile] {
 }
 
 
+/* =========================================================
+   PROPHETIA · Bolsa del header y contador interior
+   ========================================================= */
+
+.pp-header #ppCartBtn {
+  position: relative;
+
+  display: inline-grid;
+  place-items: center;
+
+  width: var(--pp-header-action-size, 50px);
+  height: var(--pp-header-action-size, 50px);
+  min-width: var(--pp-header-action-size, 50px);
+
+  padding: 0;
+  overflow: visible;
+}
+
+.pp-header #ppCartBtn .pp-cart-icon {
+  display: block;
+
+  width: 25px;
+  height: 25px;
+
+  overflow: visible;
+  color: currentColor;
+  pointer-events: none;
+}
+
+/*
+ * Número centrado dentro del cuerpo de la bolsa.
+ */
+.pp-header #ppCartBtn .pp-cart-count {
+  position: absolute;
+
+  left: 50%;
+  top: 58%;
+  z-index: 3;
+
+  min-width: 10px;
+  height: 10px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  margin: 0;
+
+  font-family:
+    var(--font-ui, Inter, system-ui, sans-serif);
+
+  font-size: 8.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "kern" 1;
+
+  color: currentColor;
+  text-shadow: none;
+
+  background: transparent;
+  border: 0;
+
+  opacity: .72;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+
+  transform:
+    translate(-50%, -50%)
+    scale(1);
+
+  transform-origin: center;
+
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pp-header #ppCartBtn .pp-cart-count[hidden] {
+  display: none;
+}
+
+.pp-header #ppCartBtn .pp-cart-count.is-counting {
+  animation:
+    ppCartCountUpdate
+    380ms
+    cubic-bezier(.2, .8, .2, 1);
+}
+
+@keyframes ppCartCountUpdate {
+  0% {
+    opacity: 0;
+
+    transform:
+      translate(-50%, calc(-50% + 2px))
+      scale(.94);
+  }
+
+  55% {
+    opacity: 1;
+
+    transform:
+      translate(-50%, calc(-50% - 1px))
+      scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .pp-header #ppCartBtn .pp-cart-count {
+    top: 58%;
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-header #ppCartBtn .pp-cart-count.is-counting {
+    animation: none;
+  }
+}
+/* =========================================================
+   PROPHETIA - Header definition while mega menu is open
+   Loewe-like: crisp top bar, clear separation, dark UI.
+   ========================================================= */
+
+html body.pp-mega-open .pp-header.pp-header {
+  position: relative !important;
+  z-index: 3400 !important;
+  background: #fff !important;
+  color: #050505 !important;
+  border-bottom: 1px solid rgba(5, 5, 5, .18) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header > .container {
+  width: 100% !important;
+  max-width: none !important;
+  padding-inline: 22px !important;
+  background: transparent !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .pp-topbar {
+  height: var(--hdr-h, 68px) !important;
+  min-height: 0 !important;
+  gap: 28px !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .mega-tabs {
+  gap: 28px !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .mega-toggle {
+  color: #050505 !important;
+  opacity: 1 !important;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+  font-size: var(--pp-header-nav-font-size) !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: .01em !important;
+  text-shadow: none !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .mega-toggle.is-active,
+html body.pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"] {
+  font-weight: 500 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .mega-toggle.is-active::after,
+html body.pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"]::after {
+  bottom: -9px !important;
+  height: 1px !important;
+  background: #050505 !important;
+  opacity: 1 !important;
+  transform: scaleX(1) !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .pp-right {
+  gap: 16px !important;
+  color: #050505 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .search-inline .search-input {
+  width: 200px !important;
+  max-width: 28vw !important;
+  color: #050505 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(5, 5, 5, .78) !important;
+  box-shadow: none !important;
+  font-size: var(--pp-header-nav-font-size) !important;
+  font-weight: 400 !important;
+  letter-spacing: .01em !important;
+  opacity: 1 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .search-inline .search-input::placeholder {
+  color: rgba(5, 5, 5, .62) !important;
+  opacity: 1 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .search-inline .search-input:focus {
+  width: 200px !important;
+  border-bottom-color: #050505 !important;
+  border-bottom-width: 1px !important;
+  outline: none !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .pp-right svg,
+html body.pp-mega-open .pp-header.pp-header .pp-right svg path,
+html body.pp-mega-open .pp-header.pp-header #ppCartBtn svg,
+html body.pp-mega-open .pp-header.pp-header #ppSavedBtn svg {
+  color: #050505 !important;
+  stroke: currentColor !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header .pp-right .icon-btn,
+html body.pp-mega-open .pp-header.pp-header .pp-right button,
+html body.pp-mega-open .pp-header.pp-header .pp-right a {
+  color: #050505 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header #ppAuthLogoBtn img,
+html body.pp-mega-open .pp-header.pp-header #ppProfileChip img {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header #ppCartBtn .pp-cart-count {
+  color: #050505 !important;
+  opacity: .8 !important;
+  text-shadow: none !important;
+}
+
+@media (max-width: 760px) {
+  html body.pp-mega-open .pp-header.pp-header > .container {
+    padding-inline: var(--edge, 18px) !important;
+  }
+
+  html body.pp-mega-open .pp-header.pp-header .mega-tabs {
+    gap: 18px !important;
+  }
+
+  html body.pp-mega-open .pp-header.pp-header .mega-toggle {
+    font-size: var(--pp-header-nav-font-size) !important;
+  }
+}
+
+/* =========================================================
+   PROPHETIA - Cart badge Loewe-like final
+   Empty: bag icon. With items: black SVG disc + centered number.
+   ========================================================= */
+.pp-header #ppCartBtn.pp-header-cart-btn {
+  position: relative;
+  isolation: isolate;
+}
+
+.pp-header #ppCartBtn .pp-cart-icon {
+  transform-origin: center;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.pp-header #ppCartBtn.has-items .pp-cart-icon {
+  opacity: 0;
+  transform: scale(.72);
+}
+
+.pp-header #ppCartBtn .pp-cart-count {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 4 !important;
+
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  color: #fff !important;
+  background: transparent !important;
+  border: 0 !important;
+  opacity: 1 !important;
+
+  transform: translate(-50%, -50%) scale(1) !important;
+  transform-origin: center !important;
+  pointer-events: none !important;
+}
+
+.pp-header #ppCartBtn .pp-cart-count[hidden] {
+  display: none !important;
+}
+
+.pp-header #ppCartBtn .pp-cart-count__disc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: #050505;
+  fill: #050505;
+}
+
+.pp-header #ppCartBtn .pp-cart-count__disc circle {
+  fill: currentColor;
+}
+
+.pp-header #ppCartBtn .pp-cart-count__value {
+  position: relative;
+  z-index: 1;
+  display: block;
+
+  min-width: 0;
+  max-width: 19px;
+  overflow: hidden;
+
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.pp-header #ppCartBtn .pp-cart-count.is-long .pp-cart-count__value {
+  font-size: 9px;
+  max-width: 21px;
+}
+
+.pp-header #ppCartBtn .pp-cart-count.is-counting {
+  animation: ppCartBadgePop 380ms cubic-bezier(.2, .8, .2, 1) !important;
+}
+
+@keyframes ppCartBadgePop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 2px)) scale(.78);
+  }
+
+  58% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+html body.pp-mega-open .pp-header.pp-header #ppCartBtn .pp-cart-count {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+html body.pp-mega-open .pp-header.pp-header #ppCartBtn .pp-cart-count__disc {
+  color: #050505 !important;
+  fill: #050505 !important;
+}
+
+@media (max-width: 760px) {
+  .pp-header #ppCartBtn .pp-cart-count {
+    width: 23px !important;
+    height: 23px !important;
+    min-width: 23px !important;
+  }
+
+  .pp-header #ppCartBtn .pp-cart-count__value {
+    font-size: 10.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-header #ppCartBtn .pp-cart-icon,
+  .pp-header #ppCartBtn .pp-cart-count.is-counting {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -38,6 +38,7 @@
   <link rel="stylesheet" href="assets/css/hoodies.css">
 
   <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/quick-add.css">
   <link rel="stylesheet" href="assets/css/auth.css">
   <link rel="stylesheet" href="assets/css/cart.css">
   <link rel="stylesheet" href="assets/css/footer.css">
@@ -47,6 +48,7 @@
   <link rel="stylesheet" href="assets/css/popup.css">
   <link rel="stylesheet" href="assets/css/cookies.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+  <link rel="stylesheet" href="assets/css/plp-ui-universal.css">
 
 
   <!-- FONTS -->
@@ -55,7 +57,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="pp-collection-page men-page" data-page="men">
+<body data-quick-add-enabled data-quick-add-theme="light" class="pp-collection-page men-page" data-page="men">
   <!-- Header inyectado -->
   <div id="header"></div>
 
@@ -84,10 +86,10 @@
   <aside class="hero-right men-band__side">
     <h1 class="men-band__title">Hombre</h1>
     <ul class="men-band__list">
-      <li><a /camisetas-punto-hombre">Camisetas de Punto</a></li>
+      <li><a href="/camisetas-punto-hombre">Camisetas de Punto</a></li>
       <li><a href="sudaderas-punto-hombre">Sudaderas de punto</a></li>
       <li><a href="/streetwear-hombre">Streetwear</a></li>
-      <li><a href="hoodies">Hoodies</a></li>
+<li><a href="/hoodies">Hoodies</a></li>
     </ul>
   </aside>
 </section>
@@ -283,20 +285,6 @@
                 <span class="men-swatch-label">Multicolor</span>
               </label>
             </li>
-            <li>
-              <label class="men-swatch">
-                <input class="men-swatch-input" type="checkbox" name="color" value="incoloro">
-                <span class="men-swatch-dot men-swatch--clear"></span>
-                <span class="men-swatch-label">Incoloro</span>
-              </label>
-            </li>
-            <li>
-              <label class="men-swatch">
-                <input class="men-swatch-input" type="checkbox" name="color" value="transparente">
-                <span class="men-swatch-dot men-swatch--transparent"></span>
-                <span class="men-swatch-label">Transparente</span>
-              </label>
-            </li>
           </ul>
         </section>
 
@@ -354,9 +342,9 @@
 <section class="pp-plp container" aria-live="polite">
   <div id="plp-grid"
        class="plp-grid"
-       data-source="firestore"
+       data-source="json"
        data-catalog="assets/data/catalog.json"
-       data-page-size="12"
+       data-page-size="24"
        data-section=""
        data-gender="hombre"></div>
 </section>
@@ -514,7 +502,7 @@
       <div class="cc-text">
         Utilizamos cookies propias y de terceros, y otras tecnologías similares para mejorar su experiencia y analizar el uso.
         Puede aceptar todas, rechazarlas o configurar sus preferencias.
-        Consulte nuestro <a href="#" class="cc-link">Aviso legal sobre privacidad</a>.
+Consulte nuestra <a href="/privacy" class="cc-link">política de privacidad</a>.
       </div>
 
       <div class="cc-actions">
@@ -540,5 +528,7 @@
     <!-- mismo contenido que en home.html -->
   </div>
 
+  <script src="assets/js/quick-add.js" defer></script>
+  <script type="module" src="/assets/js/plp-reservations.js"></script>
 </body>
 </html>

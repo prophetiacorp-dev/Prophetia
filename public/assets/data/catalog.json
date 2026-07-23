@@ -2,108 +2,554 @@
   {
     "id": "atlas-seal",
     "active": true,
-
-    
     "earlyAccess": {
-  "enabled": true,
-  "requiredRankId": "oracle",
-  "label": "Early Access",
-  "message": "Acceso anticipado disponible para miembros Oracle o superior.",
-  "publicReleaseAt": "2026-06-30T10:00:00+02:00"},
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+      "enabled": true,
+      "requiredRankId": "oracle",
+      "label": "Early Access",
+      "message": "Acceso anticipado disponible para miembros Oracle o superior.",
+      "publicReleaseAt": "2026-06-30T10:00:00+02:00"
+    },
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "section": "streetwear",
     "type": "tshirt",
     "title": "Atlas by Prophetia",
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "oversized",
-    "price": 59.0,
+    "price": 59,
     "inStock": true,
+    "defaultCut": "oversize",
+    "cuts": [
+      {
+        "id": "classic",
+        "label": "Clásico",
+        "description": "Stanley/Stella Creator 2.0",
+        "fit": "regular",
+        "colors": [
+          "beige",
+          "latte",
+          "rosa",
+          "white"
+        ],
+        "versions": [
+          "normal",
+          "logo"
+        ],
+        "defaultVersion": "normal"
+      },
+      {
+        "id": "oversize",
+        "label": "Oversize",
+        "description": "Corte amplio streetwear",
+        "fit": "oversized",
+        "colors": [
+          "beige",
+          "white"
+        ],
+        "versions": [
+          "oversize-normal",
+          "oversize-word"
+        ],
+        "defaultVersion": "oversize-normal"
+      }
+    ],
     "short": "Composición editorial inspirada en Atlas. Silencio y fuerza.",
+    "versions": [
+      {
+        "id": "normal",
+        "label": "Prophetia",
+        "cut": "classic",
+        "price": 59,
+        "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png",
+          "/assets/img/streetwear/Hombre/atlas/atlastrasbeige.png"
+        ],
+        "mediaByColor": {
+          "hombre": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasbeige.png"
+              ]
+            },
+            "latte": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontlatte.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontlatte.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastraslatte.png"
+              ]
+            },
+            "rosa": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontrosa.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontrosa.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasrosa.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontwhite.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontwhite.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastraswhite.png"
+              ]
+            }
+          },
+          "mujer": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontbeigr.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontbeigr.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasbeige.png"
+              ]
+            },
+            "latte": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontlatte.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontlatte.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastraslatte.png"
+              ]
+            },
+            "rosa": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontrosa.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontrosa.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasrosa.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontwhite.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontwhite.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastraswhite.png"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "logo",
+        "label": "Logo",
+        "cut": "classic",
+        "price": 59,
+        "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogobeige.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogobeige.png",
+          "/assets/img/streetwear/Hombre/atlas/atlastrasbeige.png"
+        ],
+        "mediaByColor": {
+          "hombre": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogobeige.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogobeige.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasbeige.png"
+              ]
+            },
+            "latte": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogolatte.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogolatte.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastraslatte.png"
+              ]
+            },
+            "rosa": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogorosa.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogorosa.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasrosa.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogowhite.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogowhite.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastraswhite.png"
+              ]
+            }
+          },
+          "mujer": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogobeige.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogobeige.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasbeige.png"
+              ]
+            },
+            "latte": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogolatte.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogolatte.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastraslatte.png"
+              ]
+            },
+            "rosa": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogorosa.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogorosa.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasrosa.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogowhite.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontversionlogowhite.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastraswhite.png"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "oversize-normal",
+        "label": "Logo",
+        "cut": "oversize",
+        "price": 59,
+        "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
+          "/assets/img/streetwear/Hombre/atlas/atlastrasoversizebeige.png"
+        ],
+        "mediaByColor": {
+          "hombre": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasoversizebeige.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasoversizewhite.png"
+              ]
+            }
+          },
+          "mujer": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizebeige.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizebeige.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasoversizebeige.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizewhite.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizewhite.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasoversizewhite.png"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "oversize-word",
+        "label": "Prophetia",
+        "cut": "oversize",
+        "price": 59,
+        "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabrabeige.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabrabeige.png",
+          "/assets/img/streetwear/Hombre/atlas/atlastrasoversizebeige.png"
+        ],
+        "mediaByColor": {
+          "hombre": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabrabeige.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabrabeige.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasoversizebeige.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabra.png",
+              "images": [
+                "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabra.png",
+                "/assets/img/streetwear/Hombre/atlas/atlastrasoversizewhite.png"
+              ]
+            }
+          },
+          "mujer": {
+            "beige": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizeversionpalabrabeige.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizeversionpalabrabeige.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasoversizebeige.png"
+              ]
+            },
+            "white": {
+              "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizeversionpalabra.png",
+              "images": [
+                "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizeversionpalabra.png",
+                "/assets/img/streetwear/Mujer/atlas/atlastrasoversizewhite.png"
+              ]
+            }
+          }
+        }
+      }
+    ],
     "media": {
       "hombre": {
-        "cover": "assets/img/streetwear/Hombre/atlas/atlas1.png",
+        "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
         "images": [
-          "assets/img/streetwear/Hombre/atlas/atlas1.png",
-          "assets/img/streetwear/Hombre/atlas/atlas2.png",
-          "assets/img/streetwear/Hombre/atlas/atlas3.png",
-          "assets/img/streetwear/Hombre/atlas/atlas4.png"
+          "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
+          "/assets/img/streetwear/Hombre/atlas/atlastrasoversizebeige.png",
+          "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png",
+          "/assets/img/streetwear/Hombre/atlas/atlastrasoversizewhite.png"
         ]
       },
       "mujer": {
-        "cover": "assets/img/streetwear/Mujer/atlas/atlas1-mujer.png",
+        "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizebeige.png",
         "images": [
-          "assets/img/streetwear/Mujer/atlas/atlas1-mujer.png",
-          "assets/img/streetwear/Mujer/atlas/atlas2-mujer.png"
+          "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizebeige.png",
+          "/assets/img/streetwear/Mujer/atlas/atlastrasoversizebeige.png",
+          "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizewhite.png",
+          "/assets/img/streetwear/Mujer/atlas/atlastrasoversizewhite.png"
         ]
+      }
+    },
+    "mediaByColor": {
+      "hombre": {
+        "beige": {
+          "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
+          "images": [
+            "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
+            "/assets/img/streetwear/Hombre/atlas/atlastrasoversizebeige.png"
+          ]
+        },
+        "white": {
+          "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png",
+          "images": [
+            "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png",
+            "/assets/img/streetwear/Hombre/atlas/atlastrasoversizewhite.png"
+          ]
+        }
+      },
+      "mujer": {
+        "beige": {
+          "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizebeige.png",
+          "images": [
+            "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizebeige.png",
+            "/assets/img/streetwear/Mujer/atlas/atlastrasoversizebeige.png"
+          ]
+        },
+        "white": {
+          "cover": "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizewhite.png",
+          "images": [
+            "/assets/img/streetwear/Mujer/atlas/atlasfrontoversizewhite.png",
+            "/assets/img/streetwear/Mujer/atlas/atlastrasoversizewhite.png"
+          ]
+        }
       }
     },
     "variants": [
       {
-        "sku": "atlas-seal_black_S",
-        "color": "black",
+        "sku": "atlas-seal_beige_S",
+        "cut": "classic",
+        "color": "beige",
         "size": "S",
-        "stock": 12,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png"
       },
       {
-        "sku": "atlas-seal_black_M",
-        "color": "black",
+        "sku": "atlas-seal_beige_M",
+        "cut": "classic",
+        "color": "beige",
         "size": "M",
-        "stock": 8,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png"
       },
       {
-        "sku": "atlas-seal_black_L",
-        "color": "black",
+        "sku": "atlas-seal_beige_L",
+        "cut": "classic",
+        "color": "beige",
         "size": "L",
-        "stock": 3,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png"
       },
       {
-        "sku": "atlas-seal_black_XL",
-        "color": "black",
+        "sku": "atlas-seal_beige_XL",
+        "cut": "classic",
+        "color": "beige",
         "size": "XL",
         "stock": 0,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas1.png"
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png"
+      },
+      {
+        "sku": "atlas-seal_latte_S",
+        "cut": "classic",
+        "color": "latte",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontlatte.png"
+      },
+      {
+        "sku": "atlas-seal_latte_M",
+        "cut": "classic",
+        "color": "latte",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontlatte.png"
+      },
+      {
+        "sku": "atlas-seal_latte_L",
+        "cut": "classic",
+        "color": "latte",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontlatte.png"
+      },
+      {
+        "sku": "atlas-seal_latte_XL",
+        "cut": "classic",
+        "color": "latte",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontlatte.png"
+      },
+      {
+        "sku": "atlas-seal_rosa_S",
+        "cut": "classic",
+        "color": "rosa",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontrosa.png"
+      },
+      {
+        "sku": "atlas-seal_rosa_M",
+        "cut": "classic",
+        "color": "rosa",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontrosa.png"
+      },
+      {
+        "sku": "atlas-seal_rosa_L",
+        "cut": "classic",
+        "color": "rosa",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontrosa.png"
+      },
+      {
+        "sku": "atlas-seal_rosa_XL",
+        "cut": "classic",
+        "color": "rosa",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontrosa.png"
       },
       {
         "sku": "atlas-seal_white_S",
+        "cut": "classic",
         "color": "white",
         "size": "S",
-        "stock": 6,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas2.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontwhite.png"
       },
       {
         "sku": "atlas-seal_white_M",
+        "cut": "classic",
         "color": "white",
         "size": "M",
-        "stock": 4,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas2.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontwhite.png"
       },
       {
         "sku": "atlas-seal_white_L",
+        "cut": "classic",
         "color": "white",
         "size": "L",
-        "stock": 2,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas2.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontwhite.png"
       },
       {
         "sku": "atlas-seal_white_XL",
+        "cut": "classic",
         "color": "white",
         "size": "XL",
-        "stock": 1,
-        "img": "assets/img/streetwear/Hombre/atlas/atlas2.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontwhite.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_beige_S",
+        "cut": "oversize",
+        "color": "beige",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_beige_M",
+        "cut": "oversize",
+        "color": "beige",
+        "size": "M",
+        "stock": 8,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_beige_L",
+        "cut": "oversize",
+        "color": "beige",
+        "size": "L",
+        "stock": 3,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_beige_XL",
+        "cut": "oversize",
+        "color": "beige",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_white_S",
+        "cut": "oversize",
+        "color": "white",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_white_M",
+        "cut": "oversize",
+        "color": "white",
+        "size": "M",
+        "stock": 4,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_white_L",
+        "cut": "oversize",
+        "color": "white",
+        "size": "L",
+        "stock": 2,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png"
+      },
+      {
+        "sku": "atlas-seal_oversize_white_XL",
+        "cut": "oversize",
+        "color": "white",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizewhite.png"
       }
     ],
     "slug": "atlas-seal",
     "collectionLabel": "Myth Series",
-    "color": "black",
+    "color": "beige",
     "colors": [
-      "black",
+      "beige",
+      "latte",
+      "rosa",
       "white"
     ],
     "sizes": [
@@ -123,14 +569,15 @@
     ],
     "long": "Camiseta editorial inspirada en Atlas: una composición de peso simbólico, silencio visual y fuerza contenida.",
     "details": [
-      "Corte oversized",
+      "Disponible en corte clásico y oversize",
       "Cuello redondo",
       "Manga corta",
       "Diseño gráfico inspirado en Atlas",
       "Pieza de la colección Myth Series"
     ],
     "specs": {
-      "Color": "Black / White",
+      "Corte": "Clásico / Oversize",
+      "Color": "Beige / Latte / Rosa / White",
       "Material principal": "100% algodón",
       "Peso": "0,25 kg",
       "Fabricado en": "Portugal"
@@ -156,19 +603,19 @@
   },
   {
     "id": "calyra-ego",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "section": "streetwear",
     "type": "tshirt",
     "title": "Calyra’s Ego by Prophetia",
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "oversized",
-    "price": 64.0,
-    "inStock": true,
+    "price": 64,
+    "inStock": false,
     "short": "Figura mitológica estilizada con ritmo geométrico.",
     "sizes": [
       "S",
@@ -178,34 +625,68 @@
     ],
     "media": {
       "hombre": {
-        "cover": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png",
+        "cover": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png",
         "images": [
-          "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png",
-          "assets/img/streetwear/Hombre/calyra/cal1-amarilla-hombre.png",
-          "assets/img/streetwear/Hombre/calyra/cal1-hombre.png",
-          "assets/img/streetwear/Hombre/calyra/cal1-negro.png",
-          "assets/img/streetwear/Hombre/calyra/cal2-amarilla.png",
-          "assets/img/streetwear/Hombre/calyra/cal2-amarilla-hombre.png",
-          "assets/img/streetwear/Hombre/calyra/cal2-negro.png",
-          "assets/img/streetwear/Hombre/calyra/cal3-amarilla.png",
-          "assets/img/streetwear/Hombre/calyra/cal3-negro.png",
-          "assets/img/streetwear/Hombre/calyra/cal4-negro.png"
+          "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png",
+          "/assets/img/streetwear/Hombre/calyra/calyratrascorteclas.png",
+          "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasbluenavy.png",
+          "/assets/img/streetwear/Hombre/calyra/calyratrascorteclasbluenavy.png",
+          "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasnegro.png",
+          "/assets/img/streetwear/Hombre/calyra/calyratrascorteclasnegro.png",
+          "/assets/img/streetwear/Hombre/calyra/calyrafrontoversizebluenavy.png",
+          "/assets/img/streetwear/Hombre/calyra/calyratrasoversizebluenavy.png",
+          "/assets/img/streetwear/Hombre/calyra/calyrafrontoversizecrema.png",
+          "/assets/img/streetwear/Hombre/calyra/calyratrasoversizecrema.png"
         ]
       },
       "mujer": {
-        "cover": "assets/img/streetwear/Mujer/calyra/cal1-amarilla-mujer.png",
+        "cover": "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclas.png",
         "images": [
-          "assets/img/streetwear/Mujer/calyra/cal1-amarilla.png",
-          "assets/img/streetwear/Mujer/calyra/cal1-amarilla-mujer.png",
-          "assets/img/streetwear/Mujer/calyra/cal1-mujer.png",
-          "assets/img/streetwear/Mujer/calyra/cal1-negro.png",
-          "assets/img/streetwear/Mujer/calyra/cal2-amarilla.png",
-          "assets/img/streetwear/Mujer/calyra/cal2-amarilla-mujer.png",
-          "assets/img/streetwear/Mujer/calyra/cal2-negro.png",
-          "assets/img/streetwear/Mujer/calyra/cal3-amarilla.png",
-          "assets/img/streetwear/Mujer/calyra/cal3-negro.png",
-          "assets/img/streetwear/Mujer/calyra/cal4-negro.png"
+          "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclas.png",
+          "/assets/img/streetwear/Mujer/calyra/calyratrascorteclas.png",
+          "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclasbluenavy.png",
+          "/assets/img/streetwear/Mujer/calyra/calyratrascorteclasbluenavy.png",
+          "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclasnegro.png",
+          "/assets/img/streetwear/Mujer/calyra/calyratrascorteclasnegro.png",
+          "/assets/img/streetwear/Mujer/calyra/calyrafrontoversizebluenavy.png",
+          "/assets/img/streetwear/Mujer/calyra/calyratrasoversizebluenavy.png",
+          "/assets/img/streetwear/Mujer/calyra/calyrafrontoversizecrema.png",
+          "/assets/img/streetwear/Mujer/calyra/calyratrasoversizecrema.png"
         ]
+      }
+    },
+    "mediaByColor": {
+      "hombre": {
+        "yellow": {
+          "cover": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png",
+          "images": [
+            "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png",
+            "/assets/img/streetwear/Hombre/calyra/calyratrascorteclas.png"
+          ]
+        },
+        "black": {
+          "cover": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasnegro.png",
+          "images": [
+            "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasnegro.png",
+            "/assets/img/streetwear/Hombre/calyra/calyratrascorteclasnegro.png"
+          ]
+        }
+      },
+      "mujer": {
+        "yellow": {
+          "cover": "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclas.png",
+          "images": [
+            "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclas.png",
+            "/assets/img/streetwear/Mujer/calyra/calyratrascorteclas.png"
+          ]
+        },
+        "black": {
+          "cover": "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclasnegro.png",
+          "images": [
+            "/assets/img/streetwear/Mujer/calyra/calyrafrontcorteclasnegro.png",
+            "/assets/img/streetwear/Mujer/calyra/calyratrascorteclasnegro.png"
+          ]
+        }
       }
     },
     "slug": "calyra-ego",
@@ -261,67 +742,875 @@
         "sku": "calyra-ego_yellow_S",
         "color": "yellow",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png"
       },
       {
         "sku": "calyra-ego_yellow_M",
         "color": "yellow",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png"
       },
       {
         "sku": "calyra-ego_yellow_L",
         "color": "yellow",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png"
       },
       {
         "sku": "calyra-ego_yellow_XL",
         "color": "yellow",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclas.png"
       },
       {
         "sku": "calyra-ego_black_S",
         "color": "black",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasnegro.png"
       },
       {
         "sku": "calyra-ego_black_M",
         "color": "black",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasnegro.png"
       },
       {
         "sku": "calyra-ego_black_L",
         "color": "black",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasnegro.png"
       },
       {
         "sku": "calyra-ego_black_XL",
         "color": "black",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/streetwear/Hombre/calyra/cal1-amarilla.png"
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/calyra/calyrafrontcorteclasnegro.png"
+      }
+    ]
+  },
+  {
+    "id": "prophetia-basic-bordada",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
+    "slug": "prophetia-basic-bordada",
+    "section": "camisetas-punto",
+    "type": "tshirt",
+    "title": "Prophetia Basic Bordada",
+    "collection": "prophetia-originals",
+    "collectionLabel": "Prophetia Originals",
+    "gender": "unisex",
+    "fit": "relaxed",
+    "price": 39,
+    "inStock": false,
+    "isNew": true,
+    "sortOrder": -22,
+    "createdAt": "2026-07-13",
+    "color": "beige",
+    "colors": [
+      "beige",
+      "blue-ice",
+      "off-white",
+      "white"
+    ],
+    "sizes": [
+      "XXS",
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "3XL"
+    ],
+    "short": "Basic relaxed fit con bordado Prophetia y algodón orgánico de 215 GSM.",
+    "media": {
+      "hombre": {
+        "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+        "images": [
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/trasbeige.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/trasblueice.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/trasoffwhite.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/traswhite.png"
+        ]
+      },
+      "mujer": {
+        "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+        "images": [
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/trasbeige.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/trasblueice.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/trasoffwhite.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png",
+          "/assets/img/camisetas-punto/Hombre/basic/bordado/traswhite.png"
+        ]
+      }
+    },
+    "mediaByColor": {
+      "hombre": {
+        "beige": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/trasbeige.png"
+          ]
+        },
+        "blue-ice": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/trasblueice.png"
+          ]
+        },
+        "off-white": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/trasoffwhite.png"
+          ]
+        },
+        "white": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/traswhite.png"
+          ]
+        }
+      },
+      "mujer": {
+        "beige": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/trasbeige.png"
+          ]
+        },
+        "blue-ice": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/trasblueice.png"
+          ]
+        },
+        "off-white": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/trasoffwhite.png"
+          ]
+        },
+        "white": {
+          "cover": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png",
+            "/assets/img/camisetas-punto/Hombre/basic/bordado/traswhite.png"
+          ]
+        }
+      }
+    },
+    "labels": [
+      "Novedad",
+      "Bordado"
+    ],
+    "badges": [
+      {
+        "type": "new",
+        "label": "Novedad"
+      }
+    ],
+    "long": "Camiseta relaxed fit con bordado Prophetia, base de algodón orgánico de 215 GSM y lectura limpia para uso diario.",
+    "details": [
+      "Relaxed Fit",
+      "Canalé 1x1 en el cuello",
+      "Cinta de refuerzo en el cuello del mismo tejido",
+      "Manga montada",
+      "Pespunte de doble aguja en puños y bajo",
+      "Tallas XXS - 3XL"
+    ],
+    "specs": {
+      "Fit": "Relaxed Fit",
+      "Tallas": "XXS - 3XL",
+      "Peso del tejido": "215 GSM",
+      "Color": "Beige, Blue Ice, Off White, White",
+      "Composición": "100% algodón orgánico ring-spun cardado",
+      "País de origen": "Por confirmar"
+    },
+    "materialsMain": "100% algodón orgánico ring-spun cardado - 215 GSM",
+    "materialsSections": [
+      {
+        "title": "Base",
+        "text": "Shell: punto jersey sencillo de punto suelto. Algodón orgánico ring-spun cardado de 215 GSM."
+      },
+      {
+        "title": "Acabado",
+        "text": "Acabado desgastado con bordado Prophetia y etiqueta propia de la marca."
+      },
+      {
+        "title": "Cuidados",
+        "text": "Lavar juntos los colores similares. No planchar la parte estampada o bordada. Lavar y planchar del revés."
+      }
+    ],
+    "materialsText": "Lavar juntos los colores similares. No planchar la parte estampada o bordada. Lavar y planchar del revés.",
+    "packagingText": "Packaging editorial Prophetia: papel seda, etiqueta de pieza y embalaje protector.",
+    "shippingText": "España: 2-7 días laborables. Devoluciones online en 30 días para prendas sin uso y con etiquetas.",
+    "seo": {
+      "title": "Prophetia Basic Bordada | PROPHETIA",
+      "description": "Basic relaxed fit con bordado Prophetia y algodón orgánico de 215 GSM."
+    },
+    "variants": [
+      {
+        "sku": "prophetia-basic-bordada_beige_XXS",
+        "color": "beige",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_beige_XS",
+        "color": "beige",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_beige_S",
+        "color": "beige",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_beige_M",
+        "color": "beige",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_beige_L",
+        "color": "beige",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_beige_XL",
+        "color": "beige",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_beige_XXL",
+        "color": "beige",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_beige_3XL",
+        "color": "beige",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/beigefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_XXS",
+        "color": "blue-ice",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_XS",
+        "color": "blue-ice",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_S",
+        "color": "blue-ice",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_M",
+        "color": "blue-ice",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_L",
+        "color": "blue-ice",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_XL",
+        "color": "blue-ice",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_XXL",
+        "color": "blue-ice",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_blue-ice_3XL",
+        "color": "blue-ice",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/frontblueice.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_XXS",
+        "color": "off-white",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_XS",
+        "color": "off-white",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_S",
+        "color": "off-white",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_M",
+        "color": "off-white",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_L",
+        "color": "off-white",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_XL",
+        "color": "off-white",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_XXL",
+        "color": "off-white",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_off-white_3XL",
+        "color": "off-white",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_XXS",
+        "color": "white",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_XS",
+        "color": "white",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_S",
+        "color": "white",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_M",
+        "color": "white",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_L",
+        "color": "white",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_XL",
+        "color": "white",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_XXL",
+        "color": "white",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-basic-bordada_white_3XL",
+        "color": "white",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/basic/bordado/guitarwhitefront.png"
+      }
+    ]
+  },
+  {
+    "id": "prophetia-guitar",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
+    "slug": "prophetia-guitar",
+    "section": "camisetas-punto",
+    "type": "tshirt",
+    "title": "Guitar by Prophetia",
+    "collection": "prophetia-originals",
+    "collectionLabel": "Prophetia Originals",
+    "gender": "unisex",
+    "fit": "relaxed",
+    "price": 45,
+    "inStock": false,
+    "isNew": true,
+    "sortOrder": -21,
+    "createdAt": "2026-07-13",
+    "color": "beige",
+    "colors": [
+      "beige",
+      "blue-ice",
+      "off-white",
+      "white"
+    ],
+    "sizes": [
+      "XXS",
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "3XL"
+    ],
+    "short": "Camiseta relaxed fit con gráfica Guitar y algodón orgánico de 215 GSM.",
+    "media": {
+      "hombre": {
+        "cover": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
+        "images": [
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigetras.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/GUITARTRAS.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitetras.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitetras.png"
+        ]
+      },
+      "mujer": {
+        "cover": "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
+        "images": [
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigetras.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/GUITARFRONT.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/GUITARTRAS.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitaroffwhitefront.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitaroffwhitetras.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarwhitefront.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarwhitetras.png"
+        ]
+      }
+    },
+    "mediaByColor": {
+      "hombre": {
+        "beige": {
+          "cover": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigetras.png"
+          ]
+        },
+        "blue-ice": {
+          "cover": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/GUITARTRAS.png"
+          ]
+        },
+        "off-white": {
+          "cover": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitetras.png"
+          ]
+        },
+        "white": {
+          "cover": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitetras.png"
+          ]
+        }
+      },
+      "mujer": {
+        "beige": {
+          "cover": "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigetras.png"
+          ]
+        },
+        "blue-ice": {
+          "cover": "/assets/img/camisetas-punto/Mujer/guitar/GUITARFRONT.png",
+          "images": [
+            "/assets/img/camisetas-punto/Mujer/guitar/GUITARFRONT.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/GUITARTRAS.png"
+          ]
+        },
+        "off-white": {
+          "cover": "/assets/img/camisetas-punto/Mujer/guitar/guitaroffwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Mujer/guitar/guitaroffwhitefront.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitaroffwhitetras.png"
+          ]
+        },
+        "white": {
+          "cover": "/assets/img/camisetas-punto/Mujer/guitar/guitarwhitefront.png",
+          "images": [
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarwhitefront.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarwhitetras.png"
+          ]
+        }
+      }
+    },
+    "labels": [
+      "Novedad",
+      "Guitar"
+    ],
+    "badges": [
+      {
+        "type": "new",
+        "label": "Novedad"
+      }
+    ],
+    "long": "Camiseta relaxed fit con gráfica Guitar by Prophetia, base de algodón orgánico de 215 GSM y acabado desgastado.",
+    "details": [
+      "Relaxed Fit",
+      "Canalé 1x1 en el cuello",
+      "Cinta de refuerzo en el cuello del mismo tejido",
+      "Manga montada",
+      "Pespunte de doble aguja en puños y bajo",
+      "Tallas XXS - 3XL"
+    ],
+    "specs": {
+      "Fit": "Relaxed Fit",
+      "Tallas": "XXS - 3XL",
+      "Peso del tejido": "215 GSM",
+      "Color": "Beige, Blue Ice, Off White, White",
+      "Composición": "100% algodón orgánico ring-spun cardado",
+      "País de origen": "Por confirmar"
+    },
+    "materialsMain": "100% algodón orgánico ring-spun cardado - 215 GSM",
+    "materialsSections": [
+      {
+        "title": "Base",
+        "text": "Shell: punto jersey sencillo de punto suelto. Algodón orgánico ring-spun cardado de 215 GSM."
+      },
+      {
+        "title": "Acabado",
+        "text": "Acabado desgastado con gráfica Guitar y etiqueta propia Prophetia."
+      },
+      {
+        "title": "Cuidados",
+        "text": "Lavar juntos los colores similares. No planchar la parte estampada. Lavar y planchar del revés."
+      }
+    ],
+    "materialsText": "Lavar juntos los colores similares. No planchar la parte estampada. Lavar y planchar del revés.",
+    "packagingText": "Packaging editorial Prophetia: papel seda, etiqueta de pieza y embalaje protector.",
+    "shippingText": "España: 2-7 días laborables. Devoluciones online en 30 días para prendas sin uso y con etiquetas.",
+    "seo": {
+      "title": "Guitar by Prophetia | PROPHETIA",
+      "description": "Camiseta relaxed fit con gráfica Guitar y algodón orgánico de 215 GSM."
+    },
+    "variants": [
+      {
+        "sku": "prophetia-guitar_beige_XXS",
+        "color": "beige",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_beige_XS",
+        "color": "beige",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_beige_S",
+        "color": "beige",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_beige_M",
+        "color": "beige",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_beige_L",
+        "color": "beige",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_beige_XL",
+        "color": "beige",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_beige_XXL",
+        "color": "beige",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_beige_3XL",
+        "color": "beige",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_XXS",
+        "color": "blue-ice",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_XS",
+        "color": "blue-ice",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_S",
+        "color": "blue-ice",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_M",
+        "color": "blue-ice",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_L",
+        "color": "blue-ice",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_XL",
+        "color": "blue-ice",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_XXL",
+        "color": "blue-ice",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_blue-ice_3XL",
+        "color": "blue-ice",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_XXS",
+        "color": "off-white",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_XS",
+        "color": "off-white",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_S",
+        "color": "off-white",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_M",
+        "color": "off-white",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_L",
+        "color": "off-white",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_XL",
+        "color": "off-white",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_XXL",
+        "color": "off-white",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_off-white_3XL",
+        "color": "off-white",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_XXS",
+        "color": "white",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_XS",
+        "color": "white",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_S",
+        "color": "white",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_M",
+        "color": "white",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_L",
+        "color": "white",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_XL",
+        "color": "white",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_XXL",
+        "color": "white",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
+      },
+      {
+        "sku": "prophetia-guitar_white_3XL",
+        "color": "white",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png"
       }
     ]
   },
   {
     "id": "mascaras-del-mediterraneo",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "section": "camisetas-punto",
     "color": "orange",
     "type": "tshirt",
@@ -330,7 +1619,7 @@
     "gender": "unisex",
     "fit": "regular",
     "price": 89,
-    "inStock": true,
+    "inStock": false,
     "sizes": [
       "S",
       "M",
@@ -341,11 +1630,11 @@
     "short": "Iconografía mediterránea con contraste gráfico y textura editorial.",
     "media": {
       "hombre": {
-        "cover": "assets/img/camisetas-punto/Hombre/mascaras/mask1.png",
+        "cover": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png",
         "images": [
-          "assets/img/camisetas-punto/Hombre/mascaras/mask1.png",
-          "assets/img/camisetas-punto/Hombre/mascaras/mask2.png",
-          "assets/img/camisetas-punto/Hombre/mascaras/mask3.png"
+          "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png",
+          "/assets/img/camisetas-punto/Hombre/mascaras/mask2.png",
+          "/assets/img/camisetas-punto/Hombre/mascaras/mask3.png"
         ]
       }
     },
@@ -400,46 +1689,46 @@
         "sku": "mascaras-del-mediterraneo_orange_S",
         "color": "orange",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_M",
         "color": "orange",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_L",
         "color": "orange",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_XL",
         "color": "orange",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_XXL",
         "color": "orange",
         "size": "XXL",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
       }
     ]
   },
   {
     "id": "like-gods",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "long": "Sudadera editorial Prophetia. Silencio, poder y elegancia mediterránea en una pieza de lectura limpia y presencia contundente.",
     "details": [
       "Corte regular, largo regular",
@@ -464,7 +1753,7 @@
     "gender": "unisex",
     "fit": "regular",
     "price": 88,
-    "inStock": true,
+    "inStock": false,
     "color": "black",
     "sizes": [
       "S",
@@ -476,21 +1765,21 @@
     "short": "Sudadera editorial Prophetia. Silencio, poder y elegancia mediterránea.",
     "media": {
       "hombre": {
-        "cover": "assets/img/hoodies/hombre/likegods/likegods1.png",
+        "cover": "/assets/img/hoodies/hombre/likegods/likegods1.png",
         "images": [
-          "assets/img/hoodies/hombre/likegods/likegods1.png",
-          "assets/img/hoodies/hombre/likegods/likegods2.png",
-          "assets/img/hoodies/hombre/likegods/likegods3.png",
-          "assets/img/hoodies/hombre/likegods/likegods4.png"
+          "/assets/img/hoodies/hombre/likegods/likegods1.png",
+          "/assets/img/hoodies/hombre/likegods/likegods2.png",
+          "/assets/img/hoodies/hombre/likegods/likegods3.png",
+          "/assets/img/hoodies/hombre/likegods/likegods4.png"
         ]
       },
       "mujer": {
-        "cover": "assets/img/hoodies/mujer/likegods/likegods1-mujer.png",
+        "cover": "/assets/img/hoodies/mujer/likegods/likemujer1.png",
         "images": [
-          "assets/img/hoodies/mujer/likegods/likemujer1.png",
-          "assets/img/hoodies/mujer/likegods/likemujer2.png",
-          "assets/img/hoodies/mujer/likegods/likemujer3.png",
-          "assets/img/hoodies/mujer/likegods/likemujer4.png"
+          "/assets/img/hoodies/mujer/likegods/likemujer1.png",
+          "/assets/img/hoodies/mujer/likegods/likemujer2.png",
+          "/assets/img/hoodies/mujer/likegods/likemujer3.png",
+          "/assets/img/hoodies/mujer/likegods/likemujer4.png"
         ]
       }
     },
@@ -528,46 +1817,46 @@
         "sku": "like-gods_black_S",
         "color": "black",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/hoodies/hombre/likegods/likegods1.png"
+        "stock": 0,
+        "img": "/assets/img/hoodies/hombre/likegods/likegods1.png"
       },
       {
         "sku": "like-gods_black_M",
         "color": "black",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/hoodies/hombre/likegods/likegods1.png"
+        "stock": 0,
+        "img": "/assets/img/hoodies/hombre/likegods/likegods1.png"
       },
       {
         "sku": "like-gods_black_L",
         "color": "black",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/hoodies/hombre/likegods/likegods1.png"
+        "stock": 0,
+        "img": "/assets/img/hoodies/hombre/likegods/likegods1.png"
       },
       {
         "sku": "like-gods_black_XL",
         "color": "black",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/hoodies/hombre/likegods/likegods1.png"
+        "stock": 0,
+        "img": "/assets/img/hoodies/hombre/likegods/likegods1.png"
       },
       {
         "sku": "like-gods_black_XXL",
         "color": "black",
         "size": "XXL",
-        "stock": 10,
-        "img": "assets/img/hoodies/hombre/likegods/likegods1.png"
+        "stock": 0,
+        "img": "/assets/img/hoodies/hombre/likegods/likegods1.png"
       }
     ]
   },
   {
     "id": "atlas-hoodie",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "section": "sudaderas-punto",
     "type": "sweatshirt",
     "title": "Atlas Sweatshirt by Prophetia",
@@ -575,7 +1864,7 @@
     "gender": "unisex",
     "fit": "regular",
     "price": 88,
-    "inStock": true,
+    "inStock": false,
     "color": "white",
     "sizes": [
       "S",
@@ -587,25 +1876,25 @@
     "short": "Sudadera Atlas: mito, peso y calma editorial.",
     "media": {
       "hombre": {
-        "cover": "assets/img/sudaderas-punto/Hombre/atlas/atlas1.png",
+        "cover": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png",
         "images": [
-          "assets/img/sudaderas-punto/Hombre/atlas/atlas1.png",
-          "assets/img/sudaderas-punto/Hombre/atlas/atlas2.png",
-          "assets/img/sudaderas-punto/Hombre/atlas/atlas3.png",
-          "assets/img/sudaderas-punto/Hombre/atlas/atlas4.png",
-          "assets/img/sudaderas-punto/Hombre/atlas/atlas5.png",
-          "assets/img/sudaderas-punto/Hombre/atlas/atlas6.png",
-          "assets/img/sudaderas-punto/Hombre/atlas/atlas7.png"
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas2.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas3.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas4.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas5.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas6.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas7.png"
         ]
       },
       "mujer": {
-        "cover": "assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
+        "cover": "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
         "images": [
-          "assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
-          "assets/img/sudaderas-punto/Mujer/atlas/atlas2-mujer.png",
-          "assets/img/sudaderas-punto/Mujer/atlas/atlas3-mujer.png",
-          "assets/img/sudaderas-punto/Mujer/atlas/atlas4-mujer.png",
-          "assets/img/sudaderas-punto/Mujer/atlas/atlas5-mujer.png"
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas2-mujer.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas3-mujer.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas4-mujer.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas5-mujer.png"
         ]
       }
     },
@@ -660,46 +1949,46 @@
         "sku": "atlas-hoodie_white_S",
         "color": "white",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
       },
       {
         "sku": "atlas-hoodie_white_M",
         "color": "white",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
       },
       {
         "sku": "atlas-hoodie_white_L",
         "color": "white",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
       },
       {
         "sku": "atlas-hoodie_white_XL",
         "color": "white",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
       },
       {
         "sku": "atlas-hoodie_white_XXL",
         "color": "white",
         "size": "XXL",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
       }
     ]
   },
   {
     "id": "letter-for-self",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "section": "sudaderas-punto",
     "type": "sweatshirt",
     "title": "I Forgave Myself by Prophetia",
@@ -707,7 +1996,7 @@
     "gender": "unisex",
     "fit": "regular",
     "price": 88,
-    "inStock": true,
+    "inStock": false,
     "color": "white",
     "sizes": [
       "S",
@@ -719,19 +2008,19 @@
     "short": "Mantra urbano: perdón propio, presencia y lujo silencioso.",
     "media": {
       "hombre": {
-        "cover": "assets/img/sudaderas-punto/Hombre/forgave/forgave1.png",
+        "cover": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png",
         "images": [
-          "assets/img/sudaderas-punto/Hombre/forgave/forgave1.png",
-          "assets/img/sudaderas-punto/Hombre/forgave/forgave2.png",
-          "assets/img/sudaderas-punto/Hombre/forgave/forgave3.png",
-          "assets/img/sudaderas-punto/Hombre/forgave/forgave4.png"
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png",
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgave2.png",
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgave3.png",
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgave4.png"
         ]
       },
       "mujer": {
-        "cover": "assets/img/sudaderas-punto/Mujer/forgave/forgave1.png",
+        "cover": "/assets/img/sudaderas-punto/Mujer/forgave/forgave1.png",
         "images": [
-          "assets/img/sudaderas-punto/Mujer/forgave/forgave1.png",
-          "assets/img/sudaderas-punto/Mujer/forgave/forgave2.png"
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgave1.png",
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgave2.png"
         ]
       }
     },
@@ -786,46 +2075,46 @@
         "sku": "letter-for-self_white_S",
         "color": "white",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
       },
       {
         "sku": "letter-for-self_white_M",
         "color": "white",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
       },
       {
         "sku": "letter-for-self_white_L",
         "color": "white",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
       },
       {
         "sku": "letter-for-self_white_XL",
         "color": "white",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
       },
       {
         "sku": "letter-for-self_white_XXL",
         "color": "white",
         "size": "XXL",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
       }
     ]
   },
   {
     "id": "letter",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "section": "sudaderas-punto",
     "type": "sweatshirt",
     "title": "Letter by Prophetia",
@@ -833,7 +2122,7 @@
     "gender": "unisex",
     "fit": "regular",
     "price": 88,
-    "inStock": true,
+    "inStock": false,
     "color": "navy",
     "sizes": [
       "S",
@@ -845,19 +2134,19 @@
     "short": "Texto editorial, calma nocturna, lujo silencioso.",
     "media": {
       "hombre": {
-        "cover": "assets/img/sudaderas-punto/Hombre/letter/letter1.png",
+        "cover": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png",
         "images": [
-          "assets/img/sudaderas-punto/Hombre/letter/letter1.png",
-          "assets/img/sudaderas-punto/Hombre/letter/letter2.png",
-          "assets/img/sudaderas-punto/Hombre/letter/letter3.png"
+          "/assets/img/sudaderas-punto/Hombre/letter/letter1.png",
+          "/assets/img/sudaderas-punto/Hombre/letter/letter2.png",
+          "/assets/img/sudaderas-punto/Hombre/letter/letter3.png"
         ]
       },
       "mujer": {
-        "cover": "assets/img/sudaderas-punto/Mujer/letter/letter1.png",
+        "cover": "/assets/img/sudaderas-punto/Mujer/letter/letter1.png",
         "images": [
-          "assets/img/sudaderas-punto/Mujer/letter/letter1.png",
-          "assets/img/sudaderas-punto/Mujer/letter/letter2.png",
-          "assets/img/sudaderas-punto/Mujer/letter/letter3.png"
+          "/assets/img/sudaderas-punto/Mujer/letter/letter1.png",
+          "/assets/img/sudaderas-punto/Mujer/letter/letter2.png",
+          "/assets/img/sudaderas-punto/Mujer/letter/letter3.png"
         ]
       }
     },
@@ -912,66 +2201,84 @@
         "sku": "letter_navy_S",
         "color": "navy",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
       },
       {
         "sku": "letter_navy_M",
         "color": "navy",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
       },
       {
         "sku": "letter_navy_L",
         "color": "navy",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
       },
       {
         "sku": "letter_navy_XL",
         "color": "navy",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
       },
       {
         "sku": "letter_navy_XXL",
         "color": "navy",
         "size": "XXL",
-        "stock": 10,
-        "img": "assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "stock": 0,
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
       }
     ]
   },
   {
     "id": "gaia-pulse",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "slug": "gaia-pulse",
     "title": "Gaia’s Pulse",
     "short": "Composición editorial inspirada en Gaia. Silencio y fuerza.",
     "price": 42,
     "media": {
       "hombre": {
-        "cover": "assets/img/camisetas-punto/Hombre/gaia/gaia1.png",
+        "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
         "images": [
-          "assets/img/camisetas-punto/Hombre/gaia/gaia1.png",
-          "assets/img/camisetas-punto/Hombre/gaia/gaia2.png",
-          "assets/img/camisetas-punto/Hombre/gaia/gaia3-blanco-hombre.png",
-          "assets/img/camisetas-punto/Hombre/gaia/gaia4-blanco-hombre.png"
+          "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
+          "/assets/img/camisetas-punto/Hombre/gaia/gaia2-blanco.png"
         ]
       },
       "mujer": {
-        "cover": "assets/img/camisetas-punto/Mujer/gaia/gaia1.png",
+        "cover": "/assets/img/camisetas-punto/Mujer/gaia/gaia1-blanco.png",
         "images": [
-          "assets/img/camisetas-punto/Mujer/gaia/gaia1.png",
-          "assets/img/camisetas-punto/Mujer/gaia/gaia2.png"
+          "/assets/img/camisetas-punto/Mujer/gaia/gaia1-blanco.png",
+          "/assets/img/camisetas-punto/Mujer/gaia/gaia2-blanco.png"
         ]
+      }
+    },
+    "mediaByColor": {
+      "hombre": {
+        "white": {
+          "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
+          "images": [
+            "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
+            "/assets/img/camisetas-punto/Hombre/gaia/gaia2-blanco.png"
+          ]
+        }
+      },
+      "mujer": {
+        "white": {
+          "cover": "/assets/img/camisetas-punto/Mujer/gaia/gaia1-blanco.png",
+          "images": [
+            "/assets/img/camisetas-punto/Mujer/gaia/gaia1-blanco.png",
+            "/assets/img/camisetas-punto/Mujer/gaia/gaia2-blanco.png"
+          ]
+        }
       }
     },
     "section": "camisetas-punto",
@@ -979,7 +2286,7 @@
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "regular",
-    "inStock": true,
+    "inStock": false,
     "color": "white",
     "colors": [
       "white"
@@ -1037,39 +2344,39 @@
         "sku": "gaia-pulse_white_S",
         "color": "white",
         "size": "S",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/gaia/gaia1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
       },
       {
         "sku": "gaia-pulse_white_M",
         "color": "white",
         "size": "M",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/gaia/gaia1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
       },
       {
         "sku": "gaia-pulse_white_L",
         "color": "white",
         "size": "L",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/gaia/gaia1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
       },
       {
         "sku": "gaia-pulse_white_XL",
         "color": "white",
         "size": "XL",
-        "stock": 10,
-        "img": "assets/img/camisetas-punto/Hombre/gaia/gaia1.png"
+        "stock": 0,
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
       }
     ]
   },
   {
     "id": "somewhere",
-      "active": true,
-"requiresShipping": true,
-"shippingProfile": "standard-spain",
-"taxCategory": "clothing",
-"currency": "EUR",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
     "slug": "somewhere",
     "section": "camisetas-punto",
     "type": "tshirt",
@@ -1078,7 +2385,7 @@
     "gender": "unisex",
     "fit": "oversized",
     "price": 59,
-    "inStock": true,
+    "inStock": false,
     "color": "white",
     "sizes": [
       "S",
@@ -1092,33 +2399,76 @@
         "id": "full-color",
         "label": "Full Color",
         "price": 59,
-        "cover": "assets/img/archive/summer/somewhere/fullcolor.png",
+        "cover": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
         "images": [
-          "assets/img/archive/summer/somewhere/fullcolor.png",
-          "assets/img/archive/summer/somewhere/Hombre/fullcolorhombre1.png",
-          "assets/img/archive/summer/somewhere/Hombre/fullcolorhombre2.png"
-        ]
+          "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+          "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png"
+        ],
+        "mediaByColor": {
+          "hombre": {
+            "white": {
+              "cover": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+              "images": [
+                "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+                "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png"
+              ]
+            }
+          },
+          "mujer": {
+            "white": {
+              "cover": "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+              "images": [
+                "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+                "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png"
+              ]
+            }
+          }
+        }
       },
       {
-        "id": "final-bubble",
-        "label": "Final Bubble",
+        "id": "luxury",
+        "label": "Luxury",
         "price": 79,
-        "cover": "assets/img/archive/summer/somewhere/Finalbubble.png",
-        "images": [
-          "assets/img/archive/summer/somewhere/Finalbubble.png",
-          "assets/img/archive/summer/somewhere/Hombre/hombre1.png",
-          "assets/img/archive/summer/somewhere/Hombre/hombre2.png"
-        ]
+        "available": false,
+        "comingSoon": true,
+        "cover": "",
+        "images": []
       }
     ],
     "media": {
       "hombre": {
-        "cover": "assets/img/archive/summer/somewhere/fullcolor.png",
+        "cover": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
         "images": [
-          "assets/img/archive/summer/somewhere/fullcolor.png",
-          "assets/img/archive/summer/somewhere/Hombre/fullcolorhombre1.png",
-          "assets/img/archive/summer/somewhere/Hombre/fullcolorhombre2.png"
+          "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+          "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png"
         ]
+      },
+      "mujer": {
+        "cover": "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+        "images": [
+          "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+          "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png"
+        ]
+      }
+    },
+    "mediaByColor": {
+      "hombre": {
+        "white": {
+          "cover": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+          "images": [
+            "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+            "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png"
+          ]
+        }
+      },
+      "mujer": {
+        "white": {
+          "cover": "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+          "images": [
+            "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+            "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png"
+          ]
+        }
       }
     },
     "variants": [
@@ -1126,29 +2476,29 @@
         "sku": "somewhere_white_S",
         "color": "white",
         "size": "S",
-        "stock": 8,
-        "img": "assets/img/archive/summer/somewhere/fullcolor.png"
+        "stock": 0,
+        "img": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png"
       },
       {
         "sku": "somewhere_white_M",
         "color": "white",
         "size": "M",
-        "stock": 8,
-        "img": "assets/img/archive/summer/somewhere/fullcolor.png"
+        "stock": 0,
+        "img": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png"
       },
       {
         "sku": "somewhere_white_L",
         "color": "white",
         "size": "L",
-        "stock": 6,
-        "img": "assets/img/archive/summer/somewhere/fullcolor.png"
+        "stock": 0,
+        "img": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png"
       },
       {
         "sku": "somewhere_white_XL",
         "color": "white",
         "size": "XL",
-        "stock": 4,
-        "img": "assets/img/archive/summer/somewhere/fullcolor.png"
+        "stock": 0,
+        "img": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png"
       }
     ],
     "collectionLabel": "Summer Archive",
@@ -1170,7 +2520,7 @@
       "Cuello redondo",
       "Manga corta",
       "Diseño de espalda con estética veraniega",
-      "Disponible en versiones Full Color y Final Bubble"
+      "Versiones Full Color y Luxury (próximamente)"
     ],
     "specs": {
       "Color": "White",
@@ -1197,137 +2547,500 @@
       "description": "Estudio visual de verano con gesto gráfico, nostalgia suave y lectura editorial."
     }
   },
-
-
-{
-  "id": "broken-gods",
-  "active": true,
-  "requiresShipping": true,
-  "shippingProfile": "standard-spain",
-  "taxCategory": "clothing",
-  "currency": "EUR",
-
-  "section": "streetwear",
-  "type": "tshirt",
-  "title": "Broken Gods by Prophetia",
-  "collection": "prophetia-originals",
-  "gender": "unisex",
-  "fit": "oversized",
-  "price": 68,
-  "inStock": true,
-
-  "slug": "broken-gods",
-  "collectionLabel": "Prophetia Originals",
-  "color": "black",
-  "colors": [
-    "black"
-  ],
-  "sizes": [
-    "S",
-    "M",
-    "L",
-    "XL"
-  ],
-
-  "short": "Camiseta oversize negra con gráfica Y2K inspirada en la estética de los 2000.",
-  "long": "Broken Gods reinterpreta la estética Y2K de los 2000 desde el lenguaje Prophetia: gráfica contundente, estatua clásica fragmentada, brillos chrome, energía urbana y una lectura premium pensada para destacar.",
-
-  "media": {
-    "hombre": {
-      "cover": "assets/img/originals/y2k/broken-gods/broken-gods-1.png",
-      "images": [
-        "assets/img/originals/y2k/broken-gods/broken-gods-1.png"
+  {
+    "id": "broken-gods",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
+    "section": "streetwear",
+    "type": "tshirt",
+    "title": "Broken Gods by Prophetia",
+    "collection": "prophetia-originals",
+    "gender": "unisex",
+    "fit": "oversized",
+    "price": 68,
+    "inStock": false,
+    "slug": "broken-gods",
+    "collectionLabel": "Prophetia Originals",
+    "color": "white",
+    "colors": [
+      "white"
+    ],
+    "sizes": [
+      "XXS",
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "3XL"
+    ],
+    "short": "Camiseta unisex boxy blanca de 200 GSM con algodón reciclado y orgánico, insignia frontal y gráfica Broken Gods en espalda.",
+    "long": "Broken Gods reinterpreta la estética Y2K desde el lenguaje Prophetia: una silueta boxy oversized, distintivo frontal y una gráfica trasera de gran formato con estatua clásica fragmentada, brillos chrome y energía urbana.",
+    "media": {
+      "hombre": {
+        "cover": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
+          "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png"
+        ]
+      },
+      "mujer": {
+        "cover": "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
+        "images": [
+          "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
+          "/assets/img/streetwear/Mujer/brokengods/brokengodsboxytras.png"
+        ]
+      }
+    },
+    "mediaByColor": {
+      "hombre": {
+        "white": {
+          "cover": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
+          "images": [
+            "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
+            "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png"
+          ]
+        }
+      },
+      "mujer": {
+        "white": {
+          "cover": "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
+          "images": [
+            "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
+            "/assets/img/streetwear/Mujer/brokengods/brokengodsboxytras.png"
+          ]
+        }
+      }
+    },
+    "labels": [
+      "Prophetia Originals",
+      "Novedad",
+      "Boxy Fit"
+    ],
+    "badges": [
+      {
+        "type": "new",
+        "label": "Novedad"
+      },
+      {
+        "type": "collection",
+        "label": "Originals"
+      }
+    ],
+    "details": [
+      "Corte boxy oversized unisex",
+      "Canalé 1x1 en el cuello",
+      "Cinta de refuerzo en el cuello del mismo tejido",
+      "Manga montada con costuras del hombro adelantadas",
+      "Pespunte de doble aguja en puños y bajo",
+      "Punto de jersey sencillo con tejido lavado",
+      "Distintivo frontal y gráfica de gran formato en espalda",
+      "Tallas XXS–3XL"
+    ],
+    "specs": {
+      "Silueta": "Boxy oversized unisex",
+      "Color": "White",
+      "Tallas": "XXS–3XL",
+      "Peso del tejido": "200 GSM",
+      "Tejido": "Punto de jersey sencillo",
+      "Composición": "50% algodón reciclado ring-spun cardado, 50% algodón orgánico ring-spun cardado",
+      "Acabado": "Tejido lavado",
+      "Tejido producido en": "Bangladesh",
+      "Teñido en": "Bangladesh",
+      "Confeccionado en": "Bangladesh"
+    },
+    "materialsMain": "50% algodón reciclado ring-spun cardado, 50% algodón orgánico ring-spun cardado — 200 GSM",
+    "materialsSections": [
+      {
+        "title": "Tejido y composición",
+        "text": "Punto de jersey sencillo de 200 GSM con tejido lavado. 50% algodón reciclado ring-spun cardado y 50% algodón orgánico ring-spun cardado."
+      },
+      {
+        "title": "Construcción",
+        "text": "Canalé 1x1 y cinta de refuerzo del mismo tejido en el cuello. Manga montada con costuras del hombro adelantadas y pespunte de doble aguja en puños y bajo."
+      },
+      {
+        "title": "Cuidados",
+        "text": "Lavar junto a colores similares. No planchar la parte estampada. Lavar y planchar del revés."
+      },
+      {
+        "title": "Trazabilidad",
+        "text": "Tejido, teñido y confección realizados en Bangladesh."
+      }
+    ],
+    "sizeGuide": {
+      "unit": "cm",
+      "columns": [
+        "XXS",
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL",
+        "3XL"
+      ],
+      "rows": [
+        {
+          "label": "A · Medio contorno de pecho",
+          "values": [
+            59,
+            61,
+            63,
+            67,
+            70,
+            73,
+            77,
+            81
+          ]
+        },
+        {
+          "label": "B · Largo del cuerpo",
+          "values": [
+            56,
+            58,
+            64,
+            68,
+            70,
+            72,
+            74,
+            76
+          ]
+        },
+        {
+          "label": "C · Largo de manga",
+          "values": [
+            20.5,
+            21.5,
+            23,
+            24.5,
+            25,
+            25.5,
+            26,
+            26.5
+          ]
+        }
       ]
     },
-    "mujer": {
-      "cover": "assets/img/originals/y2k/broken-gods/broken-gods-1.png",
-      "images": [
-        "assets/img/originals/y2k/broken-gods/broken-gods-1.png"
-      ]
-    }
+    "packagingText": "Packaging editorial Prophetia: papel seda, etiqueta de pieza y embalaje protector.",
+    "shippingText": "España: 2–7 días laborables. Devoluciones online en 30 días para prendas sin uso y con etiquetas.",
+    "materialsText": "Lavar junto a colores similares. No planchar la parte estampada. Lavar y planchar del revés.",
+    "seo": {
+      "title": "Broken Gods by Prophetia | PROPHETIA",
+      "description": "Camiseta unisex boxy blanca de 200 GSM con algodón reciclado y orgánico, insignia frontal y gráfica Broken Gods en espalda."
+    },
+    "variants": [
+      {
+        "sku": "broken-gods_white_XXS",
+        "color": "white",
+        "size": "XXS",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      },
+      {
+        "sku": "broken-gods_white_XS",
+        "color": "white",
+        "size": "XS",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      },
+      {
+        "sku": "broken-gods_white_S",
+        "color": "white",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      },
+      {
+        "sku": "broken-gods_white_M",
+        "color": "white",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      },
+      {
+        "sku": "broken-gods_white_L",
+        "color": "white",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      },
+      {
+        "sku": "broken-gods_white_XL",
+        "color": "white",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      },
+      {
+        "sku": "broken-gods_white_XXL",
+        "color": "white",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      },
+      {
+        "sku": "broken-gods_white_3XL",
+        "color": "white",
+        "size": "3XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png"
+      }
+    ]
   },
-
-  "labels": [
-    "Prophetia Originals",
-    "Drop temporal"
-  ],
-  "badges": [
-    {
-      "type": "limited",
-      "label": "Drop temporal"
+  {
+    "id": "freestyler-drift",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
+    "section": "streetwear",
+    "type": "sweatshirt",
+    "title": "Freestyler Drift by Prophetia",
+    "collection": "afterhour",
+    "gender": "unisex",
+    "fit": "regular",
+    "price": 88,
+    "inStock": false,
+    "slug": "freestyler-drift",
+    "collectionLabel": "AfterHour Prophetia",
+    "color": "black",
+    "colors": [
+      "black"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "short": "Sudadera AfterHour inspirada en drifting nocturno, club cerrado y fuga elegante.",
+    "long": "Freestyler Drift by Prophetia pertenece al universo AfterHour: una pieza nocturna creada para cuando el plan cambia de sitio, el club se cierra y la carretera empieza a hablar. Drift, silencio, velocidad contenida y presencia urbana.",
+    "media": {
+      "hombre": {
+        "cover": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
+          "/assets/img/streetwear/Hombre/after/freestyler-drift-trasera.png"
+        ]
+      },
+      "mujer": {
+        "cover": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
+          "/assets/img/streetwear/Hombre/after/freestyler-drift-trasera.png"
+        ]
+      }
     },
-    {
-      "type": "collection",
-      "label": "Originals"
-    }
-  ],
-
-  "details": [
-    "Corte oversized",
-    "Cuello redondo",
-    "Manga corta",
-    "Gráfica grande en espalda",
-    "Inspirada en la estética de los 2000",
-    "Pieza del drop Prophetia Originals"
-  ],
-
-  "specs": {
-    "Color": "Black",
-    "Material principal": "100% algodón",
-    "Peso": "0,25 kg",
-    "Fabricado en": "Portugal"
+    "labels": [
+      "AfterHour Prophetia",
+      "Nocturnal Drop"
+    ],
+    "badges": [
+      {
+        "type": "limited",
+        "label": "Nocturnal Drop"
+      },
+      {
+        "type": "collection",
+        "label": "AfterHour"
+      }
+    ],
+    "details": [
+      "Corte regular",
+      "Cuello redondo",
+      "Puños y bajo en canalé",
+      "Diseño frontal y trasero",
+      "Pieza de la cápsula AfterHour Prophetia"
+    ],
+    "specs": {
+      "Color": "Black",
+      "Material principal": "100% algodón",
+      "Peso": "0,85 kg",
+      "Fabricado en": "Portugal"
+    },
+    "materialsMain": "100% algodón",
+    "materialsSections": [
+      {
+        "title": "Sudadera de algodón",
+        "text": "Sudadera PROPHETIA pensada para mantener presencia visual, comodidad y lectura gráfica nocturna."
+      },
+      {
+        "title": "Cuidado",
+        "text": "Lavar del revés a 30ºC. No usar lejía. No usar secadora. Planchar a baja temperatura evitando el área de impresión."
+      }
+    ],
+    "packagingText": "Packaging editorial Prophetia: papel seda, etiqueta de pieza y embalaje protector.",
+    "shippingText": "España: 2–7 días laborables. Devoluciones online en 30 días para prendas sin uso y con etiquetas.",
+    "materialsText": "Lavar del revés a 30ºC. No usar lejía. No usar secadora. Planchar a baja temperatura evitando el área de impresión.",
+    "seo": {
+      "title": "Freestyler Drift by Prophetia | PROPHETIA",
+      "description": "Sudadera AfterHour inspirada en drifting nocturno, club cerrado y fuga elegante."
+    },
+    "variants": [
+      {
+        "sku": "freestyler-drift_black_S",
+        "color": "black",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+      },
+      {
+        "sku": "freestyler-drift_black_M",
+        "color": "black",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+      },
+      {
+        "sku": "freestyler-drift_black_L",
+        "color": "black",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+      },
+      {
+        "sku": "freestyler-drift_black_XL",
+        "color": "black",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+      },
+      {
+        "sku": "freestyler-drift_black_XXL",
+        "color": "black",
+        "size": "XXL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+      }
+    ]
   },
-
-  "materialsMain": "100% algodón",
-  "materialsSections": [
-    {
-      "title": "Camiseta de algodón",
-      "text": "Camiseta PROPHETIA de corte oversized con gráfica de espalda, pensada para mantener presencia visual, comodidad y lectura urbana premium."
+  {
+    "id": "break-negra",
+    "active": true,
+    "requiresShipping": true,
+    "shippingProfile": "standard-spain",
+    "taxCategory": "clothing",
+    "currency": "EUR",
+    "section": "streetwear",
+    "type": "tshirt",
+    "title": "Break Negra by Prophetia",
+    "collection": "afterhour",
+    "gender": "unisex",
+    "fit": "oversized",
+    "price": 68,
+    "inStock": false,
+    "slug": "break-negra",
+    "collectionLabel": "AfterHour Prophetia",
+    "color": "black",
+    "colors": [
+      "black"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "short": "Camiseta nocturna inspirada en el breakbeat andaluz, la cultura after y los planes que empiezan cuando la sala cierra.",
+    "long": "Break Negra by Prophetia pertenece al universo AfterHour: una pieza creada para noches largas, parkineo, segundos planes y música que no pide permiso. Inspirada en el breakbeat andaluz y en todos los sonidos que sostienen la fiesta: house, techno, reggaetón, hardstyle y cultura club.",
+    "media": {
+      "hombre": {
+        "cover": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
+          "/assets/img/streetwear/Hombre/after/TRASERA-BREAK-NEGRO.png"
+        ]
+      },
+      "mujer": {
+        "cover": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
+        "images": [
+          "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
+          "/assets/img/streetwear/Hombre/after/TRASERA-BREAK-NEGRO.png"
+        ]
+      }
     },
-    {
-      "title": "Cuidado",
-      "text": "Lavar del revés a 30ºC. No usar lejía. No usar secadora. Planchar a baja temperatura evitando el área de impresión."
-    }
-  ],
-
-  "packagingText": "Packaging editorial Prophetia: papel seda, etiqueta de pieza y embalaje protector.",
-  "shippingText": "España: 2–7 días laborables. Devoluciones online en 30 días para prendas sin uso y con etiquetas.",
-  "materialsText": "Lavar del revés a 30ºC. No usar lejía. No usar secadora. Planchar a baja temperatura evitando el área de impresión.",
-
-  "seo": {
-    "title": "Broken Gods by Prophetia | PROPHETIA",
-    "description": "Camiseta oversize negra con gráfica Y2K inspirada en la estética de los 2000."
-  },
-
-  "variants": [
-    {
-      "sku": "broken-gods_black_S",
-      "color": "black",
-      "size": "S",
-      "stock": 10,
-      "img": "assets/img/originals/y2k/broken-gods/broken-gods-1.png"
+    "labels": [
+      "AfterHour Prophetia",
+      "Breakbeat"
+    ],
+    "badges": [
+      {
+        "type": "limited",
+        "label": "AfterHour"
+      },
+      {
+        "type": "collection",
+        "label": "Breakbeat"
+      }
+    ],
+    "details": [
+      "Corte oversized",
+      "Cuello redondo",
+      "Manga corta",
+      "Diseño frontal y trasero",
+      "Inspirada en la cultura breakbeat andaluza",
+      "Pieza de la sección AfterHour Prophetia"
+    ],
+    "specs": {
+      "Color": "Black",
+      "Material principal": "100% algodón",
+      "Peso": "0,25 kg",
+      "Fabricado en": "Portugal"
     },
-    {
-      "sku": "broken-gods_black_M",
-      "color": "black",
-      "size": "M",
-      "stock": 10,
-      "img": "assets/img/originals/y2k/broken-gods/broken-gods-1.png"
+    "materialsMain": "100% algodón",
+    "materialsSections": [
+      {
+        "title": "Camiseta de algodón",
+        "text": "Camiseta PROPHETIA de corte cómodo y lectura nocturna, pensada para mantener presencia visual durante toda la noche."
+      },
+      {
+        "title": "Cuidado",
+        "text": "Lavar del revés a 30ºC. No usar lejía. No usar secadora. Planchar a baja temperatura evitando el área de impresión."
+      }
+    ],
+    "packagingText": "Packaging editorial Prophetia: papel seda, etiqueta de pieza y embalaje protector.",
+    "shippingText": "España: 2–7 días laborables. Devoluciones online en 30 días para prendas sin uso y con etiquetas.",
+    "materialsText": "Lavar del revés a 30ºC. No usar lejía. No usar secadora. Planchar a baja temperatura evitando el área de impresión.",
+    "seo": {
+      "title": "Break Negra by Prophetia | PROPHETIA",
+      "description": "Camiseta nocturna inspirada en el breakbeat andaluz, la cultura after y los planes que empiezan cuando la sala cierra."
     },
-    {
-      "sku": "broken-gods_black_L",
-      "color": "black",
-      "size": "L",
-      "stock": 10,
-      "img": "assets/img/originals/y2k/broken-gods/broken-gods-1.png"
-    },
-    {
-      "sku": "broken-gods_black_XL",
-      "color": "black",
-      "size": "XL",
-      "stock": 10,
-      "img": "assets/img/originals/y2k/broken-gods/broken-gods-1.png"
-    }
-  ]
-}
+    "variants": [
+      {
+        "sku": "break-negra_black_S",
+        "color": "black",
+        "size": "S",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+      },
+      {
+        "sku": "break-negra_black_M",
+        "color": "black",
+        "size": "M",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+      },
+      {
+        "sku": "break-negra_black_L",
+        "color": "black",
+        "size": "L",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+      },
+      {
+        "sku": "break-negra_black_XL",
+        "color": "black",
+        "size": "XL",
+        "stock": 0,
+        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+      }
+    ]
+  }
 ]

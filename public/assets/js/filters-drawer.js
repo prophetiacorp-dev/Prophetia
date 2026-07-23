@@ -30,7 +30,7 @@ const COLOR_MAP = {
   negro:'black', blanco:'white', azul:'blue', marino:'navy', marron:'brown', beige:'beige',
   rojo:'red', naranja:'orange', amarillo:'yellow', verde:'green', morado:'purple',
   gris:'gray', plata:'silver', dorado:'gold', rosa:'pink',
-  multicolor:'multicolor', transparente:'transparent', incoloro:'clear'
+  multicolor:'multicolor'
 };
 
 const norm = (v='') => String(v ?? '').trim().toLowerCase();
@@ -61,7 +61,7 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
   const applyBtn        = $id('ApplyFilters');
 
   // Toggle stock (si existe)
-  const inStockToggle   = document.getElementById('ppInStockToggle');
+  const inStockToggle   = document.getElementById('ppInStockToggle') || document.querySelector('.pp-filters .pp-check input[type="checkbox"]');
 
   function openDrawer() {
     overlay.classList.add('is-open');
@@ -146,7 +146,19 @@ function getState() {
 
   // Inputs
   [...colorInputs, ...sizeInputs].forEach(input => input.addEventListener('change', updateCounts));
-  if (inStockToggle) inStockToggle.addEventListener('change', updateCounts);
+  if (inStockToggle) {
+    inStockToggle.addEventListener('change', () => {
+      updateCounts();
+      const draft = getState();
+      if (window.ppPLP && typeof window.ppPLP.apply === 'function') {
+        window.ppPLP.apply(draft);
+      } else {
+        document.dispatchEvent(new CustomEvent('pp:plp:filter', { detail: draft }));
+      }
+    });
+  }
+
+  document.addEventListener('pp:plp:rendered', updateCounts);
 
   // Clear
   if (clearBtn) clearBtn.addEventListener('click', (e) => {
@@ -154,6 +166,12 @@ function getState() {
     [...colorInputs, ...sizeInputs].forEach(i => (i.checked = false));
     if (inStockToggle) inStockToggle.checked = false;
     updateCounts();
+    const draft = getState();
+    if (window.ppPLP && typeof window.ppPLP.apply === 'function') {
+      window.ppPLP.apply(draft);
+    } else {
+      document.dispatchEvent(new CustomEvent('pp:plp:filter', { detail: draft }));
+    }
     emit('pp:filters:apply');
   });
 

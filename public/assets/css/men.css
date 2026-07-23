@@ -894,8 +894,8 @@ body.men-page {
 /* Ajustar el grid para que se aproveche mejor el espacio */
 .men-page .plp-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Cambio para usar todo el espacio */
-  gap: 16px;  /* Reducir el espacio entre tarjetas */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
   width: 100%;
   margin-left: 0;  /* Asegurar que el contenido esté alineado a la izquierda */
   padding: 0 0 20px 0;  /* Asegurarse de que el padding no genere espacios innecesarios */
@@ -1290,8 +1290,7 @@ body.men-page .pp-plp .card-title a:visited{
 }
 
 body.men-page .pp-plp .card-title a:hover{
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration: none;
 }
 
 /* Subtítulo / descripción */
@@ -1460,4 +1459,15 @@ body.men-page .men-filters-foot-inner {
   body.men-page .men-filters-foot-inner {
     grid-template-columns: 1fr;
   }
+}
+
+/* Tallas verticales en cualquier drawer de hombre */
+.men-filters-panel[data-panel="talla"].is-active {
+  display: block;
+}
+
+.men-filters-panel[data-panel="talla"] .men-check {
+  display: flex;
+  align-items: center;
+  width: max-content;
 }

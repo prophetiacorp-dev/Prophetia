@@ -1,4 +1,4 @@
-// assets/js/tribe-xp-toast.js
+﻿// assets/js/tribe-xp-toast.js
 // =====================================================
 // PROPHETIA · Tribe XP Toast
 // Muestra barra de experiencia tras una compra pagada
@@ -7,6 +7,10 @@
 (() => {
   const STORAGE_KEY = 'pp_tribe_xp_event';
   const MAX_EVENT_AGE_MS = 1000 * 60 * 30;
+  const SHOWN_KEY_PREFIX = 'pp_tribe_xp_shown:';
+  let lastShownSignature = '';
+  let claimFetchInFlight = false;
+  let claimCheckedUid = '';
 
   function safeParse(raw) {
     try {
@@ -34,6 +38,93 @@ function formatLegacyPoints(value = 0) {
 function replaceXpWithLp(value = '') {
   return String(value || '').replace(/\bXP\b/g, 'LP');
 }
+  function getRawToastUser() {
+    return window.__ppFirebaseAuth?.currentUser || window.__ppAuthCurrentUser || window.__ppLastUser || null;
+  }
+
+  function getVerifiedToastUser(rawUser = getRawToastUser()) {
+    const uid = String(rawUser?.uid || '').trim();
+    const email = String(rawUser?.email || '').trim().toLowerCase();
+
+    if (!uid || !email || rawUser.emailVerified === false) return null;
+
+    return { rawUser, uid, email };
+  }
+
+  function isGuestToastEvent(event = {}) {
+    const customerType = String(event.customerType || event.checkoutMode || '').trim().toLowerCase();
+
+    return customerType === 'guest' || event.guestCheckout === true || event.guestCheckout === 'yes';
+  }
+
+  function toastEventBelongsToUser(event = {}, user = null) {
+    if (!user || isGuestToastEvent(event)) return false;
+
+    const eventEmail = String(event.email || event.customerEmail || event.userEmail || '').trim().toLowerCase();
+    const eventUid = String(event.firebaseUid || event.uid || event.userId || '').trim();
+
+    if (eventUid && eventUid !== user.uid) return false;
+    if (eventEmail && eventEmail !== user.email) return false;
+
+    return Boolean(eventUid || eventEmail);
+  }
+
+  function getShownEventKey(event = {}, user = null) {
+    if (!user) return '';
+
+    return `${SHOWN_KEY_PREFIX}${user.uid}:${getXpEventSignature(event)}`;
+  }
+
+  function hasEventBeenShownForUser(event = {}, user = null) {
+    const key = getShownEventKey(event, user);
+    if (!key) return false;
+
+    try {
+      return localStorage.getItem(key) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  function markEventShownForUser(event = {}, user = null) {
+    const key = getShownEventKey(event, user);
+    if (!key) return;
+
+    try {
+      localStorage.setItem(key, '1');
+    } catch {}
+  }
+
+  async function tryShowClaimedXpAfterLogin() {
+    const user = getVerifiedToastUser();
+
+    if (!user || !user.rawUser?.getIdToken || claimFetchInFlight || claimCheckedUid === user.uid) return;
+
+    claimFetchInFlight = true;
+    claimCheckedUid = user.uid;
+
+    try {
+      const token = await user.rawUser.getIdToken();
+      const response = await fetch('/api/tribe/me', {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store'
+      });
+
+      if (!response.ok) return;
+
+      const data = await response.json();
+      const claimedEvents = Array.isArray(data.claimedXpEvents) ? data.claimedXpEvents : [];
+      const claimedEvent = data.claimedXpEvent || claimedEvents[claimedEvents.length - 1] || null;
+
+      if (claimedEvent) {
+        showToastEvent(claimedEvent);
+      }
+    } catch (error) {
+      console.warn('[tribe-xp-toast] No se pudo consultar LP pendientes:', error);
+    } finally {
+      claimFetchInFlight = false;
+    }
+  }
  function wait(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
@@ -379,9 +470,9 @@ if (!steps.length) {
   barEl?.classList.remove('is-charging');
   barEl?.classList.add('is-settled');
 
-  window.setTimeout(() => {
-    barEl?.classList.remove('is-settled');
-  }, 850);
+  await wait(850);
+
+  barEl?.classList.remove('is-settled');
 
 rankEl.textContent =
   progress.currentRankId === 'prophet' && progress.prestigeLabel
@@ -626,7 +717,7 @@ const rankDisplay = isProphet && prestigeLabel
   ? `Prophet · ${prestigeLabel}`
   : rankTheme.id === 'member'
     ? 'Prophetia Member'
-    : rank;
+    : rankTheme.label || rank;
 const titleMarkup = initiationUnlocked
   ? 'Initiate activado'
   : `+<span data-xp-count>0</span> LP añadidos`;
@@ -750,13 +841,19 @@ window.setTimeout(() => {
 playProphetiaSound(getToastSoundType(event), toast);
 animateCount();
 
-  animateToastXp({
+  const animationPromise = animateToastXp({
     toast,
     event,
     fill,
     rankEl,
     metaXpEl,
     noteEl
+  }).catch((error) => {
+    console.warn('[Prophetia Tribe] No se pudo completar la animación XP:', error);
+  });
+
+  animationPromise.then(() => {
+    window.setTimeout(remove, 1400);
   });
 }, 40);
 
@@ -773,13 +870,14 @@ animateCount();
 
   close?.addEventListener('click', remove);
 
-  window.setTimeout(remove, 9800);
 }
 function normalizeRankId(rank) {
-  return String(rank || 'member')
+  const clean = String(rank || 'member')
     .trim()
     .toLowerCase()
     .replace(/\s+/g, '-');
+
+  return clean === 'seer' ? 'archivist' : clean;
 }
 
 function getRankEmblemSrc(rank) {
@@ -937,21 +1035,102 @@ function getRankTheme(rank) {
     }
   }
 
+  function getXpEventSignature(event = {}) {
+    return [
+      event.createdAt || event.storedAt || '',
+      event.missionId || event.orderId || event.orderDraftId || '',
+      event.pointsEarned || 0,
+      event.previousLifetimePoints || 0,
+      event.newLifetimePoints || 0
+    ].join('|');
+  }
+
+  function normalizeToastEvent(detail = {}) {
+    const event = detail.missionEvent || detail.xpEvent || detail.tribeXpEvent || detail;
+
+    if (!event || typeof event !== 'object') return null;
+    if (Number(event.pointsEarned || 0) <= 0) return null;
+
+    return {
+      ...event,
+      storedAt: Number(event.storedAt || 0) || Date.now()
+    };
+  }
+
+  function clearStoredXpEventSoon() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {}
+
+    window.setTimeout(() => {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {}
+    }, 160);
+  }
+
+  function showToastEvent(event) {
+    const normalizedEvent = normalizeToastEvent(event);
+
+    if (!normalizedEvent) return;
+
+    const user = getVerifiedToastUser();
+
+    if (!toastEventBelongsToUser(normalizedEvent, user)) return;
+
+    const signature = getXpEventSignature(normalizedEvent);
+
+    if (signature && signature === lastShownSignature) return;
+    if (hasEventBeenShownForUser(normalizedEvent, user)) {
+      clearStoredXpEventSoon();
+      return;
+    }
+
+    lastShownSignature = signature;
+    markEventShownForUser(normalizedEvent, user);
+    clearStoredXpEventSoon();
+    createToast(normalizedEvent);
+  }
+
+  function handleMissionCompleted(event) {
+    const detail = event.detail || {};
+
+    if (detail.completedNow === false && !detail.missionEvent) return;
+
+    showToastEvent(detail);
+  }
+
   function initXpToast() {
     const event = safeParse(localStorage.getItem(STORAGE_KEY));
 
-    if (!event) return;
+    if (!event) {
+      tryShowClaimedXpAfterLogin();
+      return;
+    }
 
-    const storedAt = Number(event.storedAt || 0);
+    const storedAt = Number(event.storedAt || 0) || Date.parse(event.createdAt || '');
 
     if (!storedAt || Date.now() - storedAt > MAX_EVENT_AGE_MS) {
       localStorage.removeItem(STORAGE_KEY);
       return;
     }
 
-    localStorage.removeItem(STORAGE_KEY);
-    createToast(event);
+    const user = getVerifiedToastUser();
+
+    if (!user) return;
+
+    if (!toastEventBelongsToUser(event, user)) {
+      localStorage.removeItem(STORAGE_KEY);
+      tryShowClaimedXpAfterLogin();
+      return;
+    }
+
+    showToastEvent(event);
   }
+
+  window.addEventListener('pp:tribe-mission-completed', handleMissionCompleted);
+  window.addEventListener('pp:tribe-xp-earned', (event) => showToastEvent(event.detail || {}));
+  window.addEventListener('pp:auth-changed', () => initXpToast());
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initXpToast, { once: true });

@@ -33,7 +33,18 @@
 
   const WISHLIST_KEY = 'pp_wishlist_v1';
 
+function hasAccountSession() {
+  return !!(
+    window.ppHasAccountSession?.() ||
+    window.__ppAuthCurrentUser ||
+    window.__ppLastUser ||
+    window.__ppFirebaseAuth?.currentUser
+  );
+}
+
 function readWishlist() {
+  if (!hasAccountSession()) return [];
+
   try {
     const data = JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]');
     return Array.isArray(data) ? data.filter(item => item && item.id) : [];
@@ -43,6 +54,8 @@ function readWishlist() {
 }
 
 function writeWishlist(items) {
+  if (!hasAccountSession()) return false;
+
   localStorage.setItem(WISHLIST_KEY, JSON.stringify(Array.isArray(items) ? items : []));
 
   window.dispatchEvent(new CustomEvent('pp:wishlist-updated', {
@@ -50,6 +63,8 @@ function writeWishlist(items) {
       count: readWishlist().length
     }
   }));
+
+  return true;
 }
 
 function isWishlisted(id) {
@@ -63,7 +78,7 @@ function toggleWishlist(item) {
   const exists = list.some(entry => String(entry.id) === String(item.id));
 
   if (exists) {
-    writeWishlist(list.filter(entry => String(entry.id) !== String(item.id)));
+    if (!writeWishlist(list.filter(entry => String(entry.id) !== String(item.id)))) return false;
     return false;
   }
 
@@ -77,7 +92,7 @@ function toggleWishlist(item) {
     url: PRODUCT_URL(item.id, PAGE_GENDER)
   });
 
-  writeWishlist(list);
+  if (!writeWishlist(list)) return false;
   return true;
 }
 
@@ -169,9 +184,9 @@ function toggleWishlist(item) {
     if (!cover) return null;
 
     const article = document.createElement('article');
-    article.className = 'card has-carousel';
+    article.className = images.length > 1 ? 'card has-carousel' : 'card';
     article.dataset.id = item.id;
-    article.dataset.index = '0';
+    article.dataset.imgIndex = '0';
     article.dataset.images = JSON.stringify(images);
 
     article.innerHTML = `
@@ -179,22 +194,24 @@ function toggleWishlist(item) {
         <a class="card-link" href="${PRODUCT_URL(item.id, PAGE_GENDER)}" aria-label="${escapeHtml(item.title)}">
           <img loading="lazy" src="${cover}" alt="${escapeHtml(item.title)}">
         </a>
-        <div class="plp-media card-media">
-  <a class="card-link" href="${PRODUCT_URL(item.id, PAGE_GENDER)}" aria-label="${escapeHtml(item.title)}">
-    <img loading="lazy" src="${cover}" alt="${escapeHtml(item.title)}">
-  </a>
 
-  <button
-    class="save-btn ${isWishlisted(item.id) ? 'is-saved' : ''}"
-    type="button"
-    data-plp-wishlist
-    aria-label="${isWishlisted(item.id) ? 'Quitar de favoritos' : 'Guardar en favoritos'}"
-  >
-    <svg class="icon-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12.1 20.1C11.8 20.1 4 14.7 3.2 9.6C2.8 6.8 4.9 4.5 7.5 4.5c1.7 0 3.2.9 4.1 2.3A5 5 0 0 1 19 4.5c2.6 0 4.7 2.3 4.3 5.1c-.8 5.1-8.6 10.5-9.1 10.5z"
-        stroke="currentColor" stroke-width="1.5"/>
-    </svg>
-  </button>
+        <button
+          class="icon-btn save ${isWishlisted(item.id) ? 'is-saved' : ''}"
+          type="button"
+          data-save
+          data-id="${escapeHtml(item.id)}"
+          data-title="${escapeHtml(item.title || 'Producto Prophetia')}"
+          data-price="${escapeHtml(item.price || '')}"
+          data-image="${escapeHtml(cover)}"
+          data-url="${PRODUCT_URL(item.id, PAGE_GENDER)}"
+          aria-label="${isWishlisted(item.id) ? 'Quitar de favoritos' : 'Guardar en favoritos'}"
+          aria-pressed="${isWishlisted(item.id) ? 'true' : 'false'}"
+          title="${isWishlisted(item.id) ? 'En Mi selección' : 'Guardar en Mi selección'}"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 10.5c0-2.6 2-4.5 4.5-4.5 1.6 0 3 .9 4 2 1-1.1 2.4-2 4-2 2.5 0 4.5 1.9 4.5 4.5 0 4.4-8.5 9.5-8.5 9.5S3 14.9 3 10.5Z"></path>
+          </svg>
+        </button>
 
         ${images.length > 1 ? `
           <button class="nav prev" type="button" aria-label="Imagen anterior"></button>
@@ -219,27 +236,13 @@ function toggleWishlist(item) {
       const setIndex = (idx) => {
         const n = images.length;
         const safe = ((idx % n) + n) % n;
-        article.dataset.index = String(safe);
+        article.dataset.imgIndex = String(safe);
         img.src = images[safe];
       };
 
-      prev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); setIndex(Number(article.dataset.index) - 1); });
-      next.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); setIndex(Number(article.dataset.index) + 1); });
+      prev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); setIndex(Number(article.dataset.imgIndex) - 1); });
+      next.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); setIndex(Number(article.dataset.imgIndex) + 1); });
     }
-const wishlistBtn = article.querySelector('[data-plp-wishlist]');
-
-wishlistBtn?.addEventListener('click', (event) => {
-  event.preventDefault();
-  event.stopPropagation();
-
-  const saved = toggleWishlist(item);
-
-  wishlistBtn.classList.toggle('is-saved', saved);
-  wishlistBtn.setAttribute(
-    'aria-label',
-    saved ? 'Quitar de favoritos' : 'Guardar en favoritos'
-  );
-});
     return article;
   };
 
@@ -260,6 +263,45 @@ wishlistBtn?.addEventListener('click', (event) => {
   // Estado
   let CATALOG = [];
   let ACTIVE_FILTERS = { colors: [], sizes: [], inStock: false, scope: 'women' };
+  let ACTIVE_SORT = 'relevance';
+
+  const normalizeSort = (mode = 'relevance') => {
+    const value = String(mode || 'relevance').trim();
+    if (value === 'featured') return 'relevance';
+    if (value === 'price_asc') return 'price-asc';
+    if (value === 'price_desc') return 'price-desc';
+    return value || 'relevance';
+  };
+
+  const itemDate = (item) => {
+    const raw = item.createdAt?.seconds ? item.createdAt.seconds * 1000 : (item.createdAt || item.date || item.publishedAt || 0);
+    const value = typeof raw === 'number' ? raw : Date.parse(raw);
+    return Number.isFinite(value) ? value : 0;
+  };
+
+  const itemSales = (item) => Number(item.sales ?? item.sold ?? item.orderCount ?? item.sortSales ?? 0) || 0;
+
+  const sortItems = (items) => {
+    const sorted = items.slice();
+    const mode = normalizeSort(ACTIVE_SORT);
+
+    sorted.forEach((item, index) => {
+      if (item.__ppOriginalIndex == null) item.__ppOriginalIndex = index;
+    });
+
+    sorted.sort((a, b) => {
+      if (mode === 'price-asc') return (Number(a.price) || 0) - (Number(b.price) || 0);
+      if (mode === 'price-desc') return (Number(b.price) || 0) - (Number(a.price) || 0);
+      if (mode === 'name-asc') return String(a.title || '').localeCompare(String(b.title || ''), 'es', { sensitivity: 'base' });
+      if (mode === 'name-desc') return String(b.title || '').localeCompare(String(a.title || ''), 'es', { sensitivity: 'base' });
+      if (mode === 'best-selling') return itemSales(b) - itemSales(a);
+      if (mode === 'newest') return itemDate(b) - itemDate(a);
+      if (mode === 'oldest') return itemDate(a) - itemDate(b);
+      return Number(a.__ppOriginalIndex || 0) - Number(b.__ppOriginalIndex || 0);
+    });
+
+    return sorted;
+  };
 
   const applyAndRender = () => {
     grid.innerHTML = '';
@@ -269,16 +311,26 @@ wishlistBtn?.addEventListener('click', (event) => {
       .filter(matchesGender)
       .filter(item => matchesFilters(item, ACTIVE_FILTERS));
 
+    const sortedItems = sortItems(items);
+
     // Render
     const frag = document.createDocumentFragment();
-    items.forEach(item => {
+    sortedItems.forEach(item => {
       const card = renderCard(item);
       if (card) frag.appendChild(card);
     });
     grid.appendChild(frag);
 
     // Notifica recuento para UI (si algún día lo usas)
-    window.dispatchEvent(new CustomEvent('pp:plp:count', { detail: { count: items.length } }));
+    window.dispatchEvent(new CustomEvent('pp:plp:count', { detail: { count: sortedItems.length } }));
+    document.dispatchEvent(new CustomEvent('pp:plp:rendered', {
+      detail: {
+        source: 'json',
+        count: sortedItems.length,
+        section: SECTION,
+        gender: PAGE_GENDER
+      }
+    }));
   };
 
   // API para filters-drawer.js
@@ -294,6 +346,19 @@ wishlistBtn?.addEventListener('click', (event) => {
       .filter(matchesGender)
       .filter(item => matchesFilters(item, f))
       .length;
+  };
+  window.ppPLP.sort = (mode = 'relevance') => {
+    ACTIVE_SORT = normalizeSort(mode);
+    applyAndRender();
+  };
+
+  window.ppPLP.getProduct = (productId) => {
+    const id = String(productId || '').trim();
+    if (!id) return null;
+
+    return CATALOG.find((item) => {
+      return String(item?.id || '') === id || String(item?._id || '') === id;
+    }) || null;
   };
 
   // Escucha eventos del drawer (por si decides usar eventos en vez de llamar apply)

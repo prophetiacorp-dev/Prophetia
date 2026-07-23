@@ -53,6 +53,7 @@
   <link rel="stylesheet" href="assets/css/hoodies-mujer.css">
 
 
+  <link rel="stylesheet" href="assets/css/quick-add.css">
   <link rel="stylesheet" href="assets/css/auth.css">
   <link rel="stylesheet" href="assets/css/cart.css">
   <link rel="stylesheet" href="assets/css/footer.css">
@@ -61,13 +62,16 @@
   <link rel="stylesheet" href="assets/css/popup.css">
   <link rel="stylesheet" href="assets/css/cookies.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+  <link rel="stylesheet" href="assets/css/gender-hero-side.css">
+  <link rel="stylesheet" href="assets/css/plp-hero-spacing.css">
+  <link rel="stylesheet" href="assets/css/plp-ui-universal.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="women-page hoodies-page"
+<body data-quick-add-enabled class="women-page hoodies-page"
       data-page="women-hoodies"
       data-bc-root-label="Mujer"
       data-bc-root-href="/mujer"
@@ -78,22 +82,23 @@
 
   <div id="header" role="banner" aria-label="Cabecera"></div>
 
-  <main id="main" tabindex="-1">
+<main id="main" tabindex="-1">
+  <h1 class="sr-only">Hoodies de lujo para mujer</h1>
     <section class="pp-hero hero--two-cols" aria-label="Hoodies mujer">
       <div class="pp-hero__media">
         <a class="floating-logo" href="/home" aria-label="Inicio Prophetia">
-          <img src="assets/img/logo/propblancovf.svg" alt="PROPHETIA Hoodies">
+          <img src="assets/img/logo/propnegrovf.svg" alt="PROPHETIA Hoodies">
         </a>
       </div>
         <nav class="pp-breadcrumb pp-breadcrumb--hero" aria-label="breadcrumbs"></nav>
 
       <aside class="pp-hero__side">
-        <h2 class="pp-hero__title">HOODIES</h2>
+        <h2 class="pp-hero__title">Hoodies</h2>
         <nav class="pp-hero__nav" aria-label="Categorías">
           <ul class="pp-hero__list">
-            <li><a href="streetwear-mujer">STREETWEAR</a></li>
-            <li><a href="camisetas-punto-mujer">CAMISETAS DE PUNTO</a></li>
-            <li><a href="sudaderas-punto-mujer">SUDADERAS DE PUNTO</a></li>
+            <li><a href="streetwear-mujer">Streetwear</a></li>
+            <li><a href="camisetas-punto-mujer">Camisetas de punto</a></li>
+            <li><a href="sudaderas-punto-mujer">Sudaderas de punto</a></li>
           </ul>
         </nav>
       </aside>
@@ -118,16 +123,21 @@
     >
       Filtros
     </button>
-    <details class="pp-sort">
-  <summary class="pp-sort-trigger">Ordenar</summary>
-
-  <div class="pp-sort-menu" role="menu" aria-label="Ordenar productos">
-    <button type="button" class="pp-sort-option" data-sort="featured">Relevancia</button>
-    <button type="button" class="pp-sort-option" data-sort="price-asc">Precio: menor a mayor</button>
-    <button type="button" class="pp-sort-option" data-sort="price-desc">Precio: mayor a menor</button>
-    <button type="button" class="pp-sort-option" data-sort="name-asc">Nombre: A-Z</button>
+<div id="womenSortControl" class="pp-sort">
+  <button id="womenSortButton" type="button" class="pp-btn pp-sort-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="womenSortMenu">
+    Ordenar por
+  </button>
+  <div id="womenSortMenu" class="pp-sort-menu" role="listbox" aria-labelledby="womenSortButton" hidden>
+    <button type="button" role="option" class="pp-sort-option is-active" data-sort="relevance" aria-selected="true">Destacados</button>
+    <button type="button" role="option" class="pp-sort-option" data-sort="best-selling" aria-selected="false">Más vendidos</button>
+    <button type="button" role="option" class="pp-sort-option" data-sort="name-asc" aria-selected="false">Alfabéticamente, A-Z</button>
+    <button type="button" role="option" class="pp-sort-option" data-sort="name-desc" aria-selected="false">Alfabéticamente, Z-A</button>
+    <button type="button" role="option" class="pp-sort-option" data-sort="price-asc" aria-selected="false">Precio, menor a mayor</button>
+    <button type="button" role="option" class="pp-sort-option" data-sort="price-desc" aria-selected="false">Precio, mayor a menor</button>
+    <button type="button" role="option" class="pp-sort-option" data-sort="oldest" aria-selected="false">Fecha, antiguos primero</button>
+    <button type="button" role="option" class="pp-sort-option" data-sort="newest" aria-selected="false">Fecha, recientes primero</button>
   </div>
-</details>
+</div>
   </div>
 
   <div class="pp-filter-right">
@@ -240,9 +250,14 @@
 <script src="assets/js/cart.js" defer></script>
 <script src="assets/js/breadcrumbs.js" defer></script>
 <script src="assets/js/breadcrumbs-auto.js" defer></script>
+
+<!-- PLP productos + carrusel -->
+<script src="assets/js/plp-json.js" defer></script>
+<script src="assets/js/plp-carousel.js" defer></script>
+<script src="assets/js/plp-sort.js" defer></script>
 <script src="assets/js/filters-drawer.js" defer></script>
 
-
-
+  <script src="assets/js/quick-add.js" defer></script>
+  <script type="module" src="/assets/js/plp-reservations.js"></script>
 </body>
 </html>

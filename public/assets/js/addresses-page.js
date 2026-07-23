@@ -248,7 +248,7 @@ function validateAddressPayload(payload) {
   );
 }
 async function completeFirstAddressMission() {
-  if (!currentUser?.getIdToken) return;
+  if (!currentUser?.getIdToken) return null;
 
   try {
     const token = await currentUser.getIdToken(true);
@@ -268,7 +268,7 @@ async function completeFirstAddressMission() {
 
     if (!response.ok) {
       console.warn("[ADDRESSES] Misión first-address no completada:", data.error || response.status);
-      return;
+      return null;
     }
 
     window.dispatchEvent(new CustomEvent("pp:tribe-mission-completed", {
@@ -276,8 +276,11 @@ async function completeFirstAddressMission() {
     }));
 
     console.info("[ADDRESSES] Misión first-address comprobada:", data);
+
+    return data;
   } catch (error) {
     console.warn("[ADDRESSES] No se pudo comprobar misión first-address:", error);
+    return null;
   }
 }
 
@@ -317,6 +320,7 @@ async function saveAddress(event) {
 
 let savedAddressId = addressId;
 let createdNewAddress = false;
+const wasFirstAddress = !addressId && addressCache.size === 0;
 
 if (addressId) {
   const addressRef = doc(db, "users", currentUser.uid, "addresses", addressId);
@@ -338,7 +342,7 @@ if (addressId) {
   }
 }
 
-if (createdNewAddress && savedAddressId) {
+if (createdNewAddress && savedAddressId && wasFirstAddress) {
   await completeFirstAddressMission();
 }
 

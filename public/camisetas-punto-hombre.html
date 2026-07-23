@@ -50,8 +50,10 @@
 <link rel="stylesheet" href="assets/css/hoodies.css">
 <link rel="stylesheet" href="assets/css/colecciones.css">
 <link rel="stylesheet" href="assets/css/wishlist.css">
- <link rel="stylesheet" href="assets/css/men.css">
- <link rel="stylesheet" href="assets/css/camisetas.css">
+<link rel="stylesheet" href="assets/css/men.css">
+<link rel="stylesheet" href="assets/css/camisetas.css">
+<link rel="stylesheet" href="assets/css/quick-add.css">
+
 
 
 <!-- PANEL, LOGIN Y CARRITO -->
@@ -63,6 +65,9 @@
 <link rel="stylesheet" href="assets/css/popup.css">
 <link rel="stylesheet" href="assets/css/cookies.css">
 <link rel="stylesheet" href="assets/css/overrides.css">
+<link rel="stylesheet" href="assets/css/punto-filters-drawer.css">
+<link rel="stylesheet" href="assets/css/plp-hero-spacing.css">
+<link rel="stylesheet" href="assets/css/plp-ui-universal.css">
 
 <!-- FONTS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,8 +77,11 @@
 
 </head>
 
-<body class="men-page camisetas-page"
+<body
+      class="men-page camisetas-page"
       data-page="men-camisetas"
+      data-quick-add-enabled
+      data-quick-add-theme="light"
       data-bc-root-label="Hombre"
       data-bc-root-href="/hombre"
       data-bc-cat-label="Camisetas de punto"
@@ -83,7 +91,8 @@
 
   <!-- ====== Header (inyectado por parciales) ====== -->
 <div id="header" role="banner" aria-label="Cabecera"></div>
-  <main id="main" tabindex="-1">
+<main id="main" tabindex="-1">
+  <h1 class="sr-only">Camisetas de lujo para hombre</h1>
 
     <!-- ====================== HERO · PROPHETIA-LIKE ====================== -->
      
@@ -126,14 +135,34 @@
         >
           Filtros
         </button>
-        <button type="button" class="pp-btn">Ordenar</button>
+        <div class="pp-sort" id="menSortControl">
+          <button
+            id="menSortButton"
+            type="button"
+            class="pp-btn pp-sort-trigger"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="menSortMenu">
+            Ordenar por
+          </button>
+          <div id="menSortMenu" class="pp-sort-menu" role="listbox" aria-labelledby="menSortButton" hidden>
+            <button type="button" class="pp-sort-option is-active" role="option" aria-selected="true" data-sort="relevance">Destacados</button>
+            <button type="button" class="pp-sort-option" role="option" aria-selected="false" data-sort="best-selling">Más vendidos</button>
+            <button type="button" class="pp-sort-option" role="option" aria-selected="false" data-sort="name-asc">Alfabéticamente, A-Z</button>
+            <button type="button" class="pp-sort-option" role="option" aria-selected="false" data-sort="name-desc">Alfabéticamente, Z-A</button>
+            <button type="button" class="pp-sort-option" role="option" aria-selected="false" data-sort="price-asc">Precio, menor a mayor</button>
+            <button type="button" class="pp-sort-option" role="option" aria-selected="false" data-sort="price-desc">Precio, mayor a menor</button>
+            <button type="button" class="pp-sort-option" role="option" aria-selected="false" data-sort="oldest">Fecha, antiguos primero</button>
+            <button type="button" class="pp-sort-option" role="option" aria-selected="false" data-sort="newest">Fecha, recientes primero</button>
+          </div>
+        </div>
       </div>
       <div class="pp-filter-right">
        <label class="pp-check">
   <input id="ppInStockToggle" type="checkbox" /> <span>En stock</span>
 </label>
 
-        <button type="button" class="pp-btn" aria-pressed="false">Vista</button>
+        <button id="menViewToggle" type="button" class="pp-btn pp-view-toggle" aria-pressed="false">Vista</button>
       </div>
     </section>
 
@@ -247,14 +276,6 @@
               </label>
             </li>
 
-            <li>
-              <label class="men-swatch">
-                <input class="men-swatch-input" type="checkbox" value="transparente">
-                <span class="men-swatch-dot men-swatch--transparent"></span>
-                <span class="men-swatch-label">Transparente</span>
-              </label>
-            </li>
-
             <!-- Columna 2 (mismas clases que en hombre.html) -->
             <li>
               <label class="men-swatch">
@@ -312,13 +333,6 @@
               </label>
             </li>
 
-            <li>
-              <label class="men-swatch">
-                <input class="men-swatch-input" type="checkbox" value="incoloro">
-                <span class="men-swatch-dot men-swatch--clear"></span>
-                <span class="men-swatch-label">Incoloro</span>
-              </label>
-            </li>
           </ul>
         </section>
 
@@ -354,7 +368,7 @@
 
     <!-- GRID PRODUCTOS -->
     <section class="pp-plp container" aria-live="polite">
-<div id="plp-grid" class="plp-grid" data-section="camisetas-punto" data-gender="hombre" data-source="firestore"></div>
+<div id="plp-grid" class="plp-grid" data-section="camisetas-punto" data-gender="hombre" data-source="json" data-catalog="assets/data/catalog.json"></div>
     </section>
 
   <!-- ======================= TOAST / AVISO ======================= -->
@@ -448,16 +462,19 @@
 <script defer src="/assets/js/header-init.js"></script>
 <script src="assets/js/cart.js" defer></script>
 <script src="assets/js/filters-drawer.js" defer></script>
+<script src="assets/js/men-camisetas-controls.js" defer></script>
 
 <script src="assets/js/breadcrumbs.js" defer></script>
 <script src="assets/js/breadcrumbs-auto.js" defer></script>
 <script src="/assets/js/bg-canvas-camisetas.js" defer></script>
 
 <script src="assets/js/script.js" defer></script>
+<script src="assets/js/quick-add.js" defer></script>
+<script type="module" src="/assets/js/plp-reservations.js"></script>
 <script src="assets/js/popup.js" defer></script>
 <script src="assets/js/cookies.js" defer></script>
 
-<script src="assets/js/firebase-config.js"></script>
+
 <script type="module" src="assets/js/plp-firestore.js"></script>
 
 

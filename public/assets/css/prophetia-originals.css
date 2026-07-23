@@ -1,6 +1,6 @@
 /* =========================================================
    PROPHETIA ORIGINALS
-   Drop temporal · Y2K 2000s · Clean v2
+   Selección editorial · Moda actual elegante/urbana
    ========================================================= */
 
 /* =========================================================
@@ -76,7 +76,7 @@ body.originals-page::after{
   mix-blend-mode: screen;
 }
 
-#poY2kFx{
+#poOriginalsFx{
   position: fixed;
   inset: 0;
   z-index: -1;
@@ -90,8 +90,7 @@ body.originals-page::after{
 
 /* =========================================================
    02 · HEADER SAFE SKIN
-   No reconstruye header, mega menú, cuenta ni carrito.
-   Solo color y luz.
+   Header claro y legible sobre fondo visual.
    ========================================================= */
 
 body.originals-page #header,
@@ -107,23 +106,16 @@ body.originals-page #header{
 
 body.originals-page .pp-header,
 body.originals-page .pp-topbar{
-  color: var(--po-ink) !important;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(5,6,10,0.92),
-      rgba(5,6,10,0.78)
-    ) !important;
-
-  border-bottom: 1px solid rgba(245,245,239,0.22) !important;
+  color: #111 !important;
+  background: rgba(255,255,255,0.96) !important;
+  border-bottom: 1px solid rgba(17,17,17,0.10) !important;
 
   box-shadow:
-    0 14px 34px rgba(0,0,0,0.44),
-    inset 0 -1px 0 rgba(var(--po-violet-rgb),0.24) !important;
+    0 14px 34px rgba(0,0,0,0.12),
+    inset 0 -1px 0 rgba(255,255,255,0.76) !important;
 
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(110%);
+  -webkit-backdrop-filter: blur(12px) saturate(110%);
 }
 
 /* Evita extremos de distinto color */
@@ -146,64 +138,54 @@ body.originals-page .pp-header a,
 body.originals-page .pp-header button,
 body.originals-page .pp-topbar a,
 body.originals-page .pp-topbar button{
-  color: rgba(245,245,239,0.92) !important;
+  color: rgba(17,17,17,0.82) !important;
 }
 
 body.originals-page .pp-header svg,
 body.originals-page .pp-topbar svg{
-  color: rgba(245,245,239,0.92) !important;
+  color: rgba(17,17,17,0.86) !important;
   stroke: currentColor !important;
 }
 
 body.originals-page .search-inline input{
-  background: rgba(255,255,255,0.035) !important;
-  color: var(--po-ink) !important;
+  background: transparent !important;
+  color: #111 !important;
 
   border: 0 !important;
-  border-bottom: 1px solid rgba(245,245,239,0.38) !important;
+  border-bottom: 1px solid rgba(17,17,17,0.42) !important;
 
   box-shadow: none !important;
 }
 
 body.originals-page .search-inline input::placeholder{
-  color: rgba(245,245,239,0.62) !important;
+  color: rgba(17,17,17,0.54) !important;
 }
 
-/* Mega menú: solo color. La estructura la mantiene megamenu.css */
+/* Mega menú: misma piel clara del resto de la web. */
 body.originals-page .mega-panel,
 body.originals-page .pp-mega,
 body.originals-page .mega-menu{
-  color: var(--po-ink) !important;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(5,6,10,0.96),
-      rgba(5,6,10,0.88)
-    ),
-    radial-gradient(circle at 16% 0%, rgba(var(--po-pink-rgb),0.10), transparent 34%),
-    radial-gradient(circle at 84% 0%, rgba(var(--po-blue-rgb),0.09), transparent 36%) !important;
-
-  border-color: rgba(245,245,239,0.16) !important;
+  color: #111 !important;
+  background: #f4f1ea !important;
+  border-color: rgba(17,17,17,0.10) !important;
 
   box-shadow:
-    0 24px 58px rgba(0,0,0,0.56),
-    0 0 28px rgba(var(--po-violet-rgb),0.10) !important;
+    0 18px 38px rgba(0,0,0,0.10) !important;
 }
 
 body.originals-page .mega-panel a,
 body.originals-page .pp-mega a,
 body.originals-page .mega-menu a{
-  color: rgba(245,245,239,0.84) !important;
+  color: rgba(17,17,17,0.72) !important;
 }
 
 body.originals-page .mega-panel a:hover,
 body.originals-page .pp-mega a:hover,
 body.originals-page .mega-menu a:hover{
-  color: #fff !important;
+  color: #050505 !important;
 }
 
-/* Cuenta, auth, carrito: que no hereden estilos Y2K de la página */
+/* Cuenta, auth, carrito: que no hereden estilos visuales de la página */
 body.originals-page .pp-account,
 body.originals-page .account-panel,
 body.originals-page .auth-modal,
@@ -835,14 +817,14 @@ body.originals-page [data-auth-modal]{
 
 /* =========================================================
    09 · ACCOUNT PANEL SAFE FIX
-   Originals: icono visible + panel global protegido
+   Originals: panel global protegido sin heredar el fondo visual
    ========================================================= */
 
-/* Botón de cuenta visible sobre header oscuro */
+/* Botón de cuenta visible sobre header claro */
 body.originals-page #ppProfileChip,
 body.originals-page .pp-account-btn,
 body.originals-page .pp-account-btn--user{
-  color: rgba(245,245,239,0.94) !important;
+  color: rgba(17,17,17,0.84) !important;
   background: transparent !important;
   border: 0 !important;
 
@@ -850,28 +832,25 @@ body.originals-page .pp-account-btn--user{
   visibility: visible !important;
 }
 
-/* Emblema blanco visible */
+/* Emblema sin inversión: header claro */
 body.originals-page #ppProfileChip img,
 body.originals-page .pp-account-btn img,
 body.originals-page .pp-account-btn--user img{
-  filter:
-    brightness(0) invert(1)
-    drop-shadow(0 0 10px rgba(var(--po-violet-rgb),0.34)) !important;
+  filter: none !important;
 
-  opacity: 0.96 !important;
+  opacity: 0.88 !important;
 }
 
 /* Avatar inicial */
 body.originals-page .pp-profile-avatar{
-  background: rgba(245,245,239,0.92) !important;
-  color: #06070b !important;
+  background: rgba(17,17,17,0.06) !important;
+  color: #111 !important;
 
   box-shadow:
-    0 0 0 1px rgba(245,245,239,0.20),
-    0 0 16px rgba(var(--po-violet-rgb),0.18) !important;
+    0 0 0 1px rgba(17,17,17,0.10) !important;
 }
 
-/* El dialog de cuenta debe ir por encima del fondo Y2K */
+/* El dialog de cuenta debe ir por encima del fondo visual */
 body.originals-page #ppAccountPanel{
   z-index: 9000 !important;
 }
@@ -908,9 +887,4 @@ body.originals-page #ppAccountPanel .pp-accountpanel-link:hover{
 /* Botón cerrar */
 body.originals-page #ppAccountPanel .pp-accountpanel-close{
   color: #111 !important;
-}
-
-/* Si la imagen del panel no existe, que no deje un bloque feo */
-body.originals-page #ppAccountPanel .pp-accountpanel-hero-right img{
-  background: rgba(17,17,17,0.04);
 }

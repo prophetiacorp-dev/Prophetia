@@ -39,12 +39,12 @@
       },
       {
         type: "Garment Mockup 01",
-        src: "../img/archive/summer/somewhere/fullcolor-mockup01.png",
+        src: "../img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
         alt: "Mockup frontal de Somewhere in Summer Full Color"
       },
       {
         type: "Garment Mockup 02",
-        src: "../img/archive/summer/somewhere/fullcolor-mockup2.png",
+        src: "../img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png",
         alt: "Mockup trasero de Somewhere in Summer Full Color"
       }
     ]

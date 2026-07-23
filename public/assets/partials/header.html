@@ -16,16 +16,18 @@
       <nav class="pp-left" aria-label="Primary">
         <div class="mega" data-prop-mega>
           <ul class="mega-tabs" role="tablist" aria-label="Navegación principal">
-           <li> <button class="mega-toggle" role="tab" aria-selected="false" aria-controls="panel-mujer" id="tab-mujer" data-panel="mujer">Mujer</button></li>
-            <li><button class="mega-toggle" role="tab" aria-selected="false" aria-controls="panel-hombre" id="tab-hombre" data-panel="hombre">Hombre</button></li>
-            <li><button class="mega-toggle" role="tab" aria-selected="false" aria-controls="panel-colecciones" id="tab-colecciones" data-panel="colecciones">Colecciones</button></li>
+           <li> <button class="mega-toggle" type="button" role="tab" aria-selected="false" aria-expanded="false" aria-controls="panel-mujer" id="tab-mujer" data-panel="mujer">Mujer</button></li>
+            <li><button class="mega-toggle" type="button" role="tab" aria-selected="false" aria-expanded="false" aria-controls="panel-hombre" id="tab-hombre" data-panel="hombre">Hombre</button></li>
+            <li><button class="mega-toggle" type="button" role="tab" aria-selected="false" aria-expanded="false" aria-controls="panel-colecciones" id="tab-colecciones" data-panel="colecciones">Colecciones</button></li>
             <li>
    <button
      class="mega-toggle"
+     type="button"
      role="tab"
      id="tab-house"
      data-panel="house"
      aria-selected="false"
+     aria-expanded="false"
      aria-controls="panel-house">
      Prophetia House
    </button>
@@ -38,8 +40,8 @@
           <section id="panel-mujer" class="panel" role="tabpanel" aria-labelledby="tab-mujer" hidden>
   <div class="mega-grid mega-grid--with-originals" aria-label="Categorías Mujer">
                 <ul class="mega-col">
-                  <li><a href="/sudaderas-punto-mujer">Sudaderas de Punto</a></li>
-                  <li><a href="/camisetas-punto-mujer">Camisetas de Punto</a></li>
+                  <li><a href="/camisetas-punto-mujer">Camisetas de punto</a></li>
+                  <li><a href="/sudaderas-punto-mujer">Sudaderas de punto</a></li>
                   <li><a href="/streetwear-mujer">Streetwear</a></li>
                   <li><a href="/hoodies-mujer">Hoodies</a></li>
                   <li><a href="/mujer">Ver todo</a></li>
@@ -47,7 +49,7 @@
 
                 <ul class="mega-col">
                   <li><a href="/wishlist">Favoritos</a></li>
-                  <li><a href="/novedades">Novedades</a></li>
+                  <li><a href="/colecciones">Novedades</a></li>
                 </ul>
 
                 <ul class="mega-col">
@@ -57,8 +59,10 @@
                   <li><a href="/assets/collects/archive-summer">Archive</a></li>
                 </ul>
                 <a class="mega-originals" href="/prophetia-originals" aria-label="Ver Prophetia Originals">
-  <span class="mega-originals__kicker">Novedad</span>
-  <strong>PROPHETIA ORIGINALS</strong>
+  <span class="mega-originals__kicker">Selección editorial</span>
+  <strong>Prophetia Originals</strong>
+  <small>Piezas con originalidad, moda actual y lectura urbana elegante.</small>
+  <em>Ver selección</em>
 </a>
               </div>
             </section>
@@ -77,7 +81,7 @@
 
     <ul class="mega-col">
       <li><a href="/wishlist">Favoritos</a></li>
-      <li><a href="/novedades">Novedades</a></li>
+      <li><a href="/colecciones">Novedades</a></li>
     </ul>
 
     <ul class="mega-col">
@@ -87,8 +91,10 @@
       <li><a href="/assets/collects/archive-summer">Archive</a></li>
     </ul>
     <a class="mega-originals" href="/prophetia-originals" aria-label="Ver Prophetia Originals">
-  <span class="mega-originals__kicker">Novedad</span>
-  <strong>PROPHETIA ORIGINALS</strong>
+  <span class="mega-originals__kicker">Selección editorial</span>
+  <strong>Prophetia Originals</strong>
+  <small>Piezas con originalidad, moda actual y lectura urbana elegante.</small>
+  <em>Ver selección</em>
 </a>
   </div>
 </section>
@@ -105,8 +111,10 @@
     </ul>
 
     <a class="mega-originals" href="/prophetia-originals" aria-label="Ver Prophetia Originals">
-      <span class="mega-originals__kicker">Novedad</span>
-      <strong>PROPHETIA ORIGINALS</strong>
+      <span class="mega-originals__kicker">Selección editorial</span>
+      <strong>Prophetia Originals</strong>
+      <small>Piezas con originalidad, moda actual y lectura urbana elegante.</small>
+      <em>Ver selección</em>
     </a>
   </div>
 </section>
@@ -170,7 +178,7 @@
 
     <!-- Header: solo cerrar (como Prophetia) -->
     <div class="pp-accountpanel-head">
-      <button class="pp-accountpanel-close" type="button" aria-label="Cerrar panel" onclick="ppCloseAccount()">
+      <button class="pp-accountpanel-close" type="button" aria-label="Cerrar panel" data-pp-accountpanel-close>
         <span aria-hidden="true">✕</span>
       </button>
     </div>
@@ -185,31 +193,32 @@
           Gestiona tu información personal y establece tus preferencias de comunicación.
         </p>
 
-        <a class="pp-accountpanel-hero" href="/account">
-          <div class="pp-accountpanel-hero-left">
-            <p class="pp-accountpanel-hero-cta">
-              <span class="pp-accountpanel-play" aria-hidden="true">▶</span>
-              <span>Editar</span>
-            </p>
-          </div>
-          <div class="pp-accountpanel-hero-right">
-            <img src="/assets/img/account/panel-hero.jpg" alt="" loading="lazy" decoding="async">
-          </div>
-        </a>
+        <div
+          class="pp-accountpanel-first-access"
+          data-pp-account-first-access
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          <span class="pp-accountpanel-first-access__eyebrow">PRIMER ACCESO</span>
+          <strong data-pp-account-first-access-title>Tu archivo Prophetia está abierto</strong>
+          <p data-pp-account-first-access-message></p>
+        </div>
+
       </div>
 
-      <nav class="pp-accountpanel-links" aria-label="Mi contenido">
-        <a class="pp-accountpanel-link" href="/my-content">Mi contenido</a>
+      <nav class="pp-accountpanel-links" aria-label="Mi perfil">
+        <a class="pp-accountpanel-link" href="/my-content">Mi perfil</a>
         <a class="pp-accountpanel-link" href="/pedidos">Pedidos</a>
         <a class="pp-accountpanel-link" href="/reservas">Reservas</a>
         <a class="pp-accountpanel-link" href="/wishlist">Lista de deseos</a>
-        <a class="pp-accountpanel-link" href="/account">Cuenta</a>
+        <a class="pp-accountpanel-link" href="/account">Datos de cuenta</a>
         <a class="pp-accountpanel-link" href="/addresses">Libro de direcciones</a>
         <a class="pp-accountpanel-link" href="/my-services">Mis servicios</a>
 
-        <a class="pp-accountpanel-link pp-accountpanel-logout" href="#" data-pp-logout>
+        <button class="pp-accountpanel-link pp-accountpanel-logout" type="button" data-pp-logout>
           Cerrar sesión
-        </a>
+        </button>
       </nav>
     </div>
 
@@ -226,16 +235,58 @@
 <!-- carrito -->
 <button
   id="ppCartBtn"
-  class="icon-btn js-open-cart"
+  class="icon-btn pp-header-cart-btn"
   type="button"
-  aria-label="Abrir cesta"
+  aria-label="Abrir cesta, vacía"
   aria-controls="ppCartDrawer"
   aria-expanded="false"
-  data-cart-open>
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M6 7h12l-1.2 12.5a2 2 0 0 1-2 1.5H9.2a2 2 0 0 1-2-1.5L6 7Z" stroke="currentColor" stroke-width="1.5"/>
-    <path d="M9 7a3 3 0 1 1 6 0" stroke="currentColor" stroke-width="1.5"/>
+  data-cart-open
+>
+  <svg
+    class="pp-cart-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      d="M6.75 8.25h10.5l.76 10.08a1.75 1.75 0 0 1-1.75 1.92H7.74a1.75 1.75 0 0 1-1.75-1.92l.76-10.08Z"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+    />
+
+    <path
+      d="M9.1 9V6.75a2.9 2.9 0 0 1 5.8 0V9"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+    />
   </svg>
+
+  <span
+    id="ppCartCount"
+    class="pp-cart-count"
+    data-cart-count
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    hidden
+  >
+    <svg
+      class="pp-cart-count__disc"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="12" cy="12" r="12"></circle>
+    </svg>
+    <span class="pp-cart-count__value" data-cart-count-value>0</span>
+  </span>
 </button>
       </div>
 
@@ -340,22 +391,32 @@
 
   <p class="auth-required-note">* Indica un campo obligatorio</p>
 
-  <div class="pp-register-field">
-    <label for="ppRegEmail">Dirección de correo electrónico *</label>
-    <input
-      id="ppRegEmail"
-      name="emailVisible"
-      type="email"
-      autocomplete="email"
-      required
-    >
-  </div>
+<div class="pp-register-field">
+  <label for="ppRegEmail">
+    Dirección de correo electrónico *
+  </label>
 
-  <input type="hidden" id="ppRegEmailHidden" name="email" value="">
+  <input
+    id="ppRegEmail"
+    name="emailVisible"
+    type="email"
+    autocomplete="email"
+    required
+  >
+</div>
 
-  <p class="auth-error" data-auth-error hidden></p>
+<input
+  type="hidden"
+  id="ppRegEmailHidden"
+  name="email"
+  value=""
+>
 
+<p class="auth-error" data-auth-error hidden></p>
+
+<div class="pp-register-field">
   <label for="ppRegGender">Género *</label>
+
   <select id="ppRegGender" name="gender" required>
     <option value="" selected>Selecciona una opción</option>
     <option value="female">Mujer</option>
@@ -363,44 +424,273 @@
     <option value="other">Otro</option>
     <option value="na">Prefiero no decirlo</option>
   </select>
+</div>
 
+<div class="pp-register-field">
   <label for="ppRegFirstName">Nombre *</label>
-  <input id="ppRegFirstName" name="firstName" type="text" autocomplete="given-name" required>
 
+  <input
+    id="ppRegFirstName"
+    name="firstName"
+    type="text"
+    autocomplete="given-name"
+    required
+  >
+</div>
+
+<div class="pp-register-field">
   <label for="ppRegLastName">Apellidos *</label>
-  <input id="ppRegLastName" name="lastName" type="text" autocomplete="family-name" required>
 
-  <label for="ppRegBirth">Fecha de nacimiento</label>
-  <input id="ppRegBirth" name="birth" type="text" placeholder="DD/MM/AAAA" inputmode="numeric" autocomplete="bday">
+  <input
+    id="ppRegLastName"
+    name="lastName"
+    type="text"
+    autocomplete="family-name"
+    required
+  >
+</div>
 
-  <label for="ppRegCountry">País/región de residencia *</label>
+
+
+
+<div class="pp-register-field pp-register-field--date">
+  <label for="ppRegBirth">
+    Fecha de nacimiento
+  </label>
+
+  <div class="pp-date-control">
+    <input
+      id="ppRegBirth"
+      name="birth"
+      type="text"
+      placeholder="DD/MM/AAAA"
+      inputmode="numeric"
+      autocomplete="bday"
+      maxlength="10"
+      aria-describedby="ppRegBirthHint ppRegBirthError"
+    >
+
+    <button
+      id="ppRegBirthOpen"
+      class="pp-date-control__button"
+      type="button"
+      aria-label="Seleccionar fecha de nacimiento"
+      aria-controls="ppRegBirthPicker"
+      aria-expanded="false"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <rect
+          x="3.5"
+          y="5.5"
+          width="17"
+          height="15"
+          rx="1.5"
+          stroke="currentColor"
+          stroke-width="1.4"
+        />
+
+        <path
+          d="M7.5 3.5v4M16.5 3.5v4M3.5 9.5h17"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Selector Prophetia: no depende del calendario del navegador -->
+  <div
+    id="ppRegBirthPicker"
+    class="pp-date-picker"
+    role="dialog"
+    aria-label="Seleccionar fecha de nacimiento"
+    hidden
+  >
+    <div class="pp-date-picker__head">
+      <div>
+        <span class="pp-date-picker__kicker">
+          Fecha de nacimiento
+        </span>
+
+        <strong class="pp-date-picker__title">
+          Selecciona tu fecha
+        </strong>
+      </div>
+
+      <button
+        class="pp-date-picker__close"
+        type="button"
+        data-birth-picker-close
+        aria-label="Cerrar selector de fecha"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="pp-date-picker__selectors">
+      <label>
+        <span>Día</span>
+
+        <select
+          id="ppRegBirthDay"
+          aria-label="Día de nacimiento"
+        >
+          <option value="">DD</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Mes</span>
+
+        <select
+          id="ppRegBirthMonth"
+          aria-label="Mes de nacimiento"
+        >
+          <option value="">Mes</option>
+          <option value="1">Enero</option>
+          <option value="2">Febrero</option>
+          <option value="3">Marzo</option>
+          <option value="4">Abril</option>
+          <option value="5">Mayo</option>
+          <option value="6">Junio</option>
+          <option value="7">Julio</option>
+          <option value="8">Agosto</option>
+          <option value="9">Septiembre</option>
+          <option value="10">Octubre</option>
+          <option value="11">Noviembre</option>
+          <option value="12">Diciembre</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Año</span>
+
+        <select
+          id="ppRegBirthYear"
+          aria-label="Año de nacimiento"
+        >
+          <option value="">AAAA</option>
+        </select>
+      </label>
+    </div>
+
+    <p
+      class="pp-date-picker__error"
+      data-birth-picker-error
+      role="status"
+      aria-live="polite"
+      hidden
+    ></p>
+
+    <div class="pp-date-picker__actions">
+      <button
+        class="pp-date-picker__cancel"
+        type="button"
+        data-birth-picker-cancel
+      >
+        Cancelar
+      </button>
+
+      <button
+        class="pp-date-picker__confirm"
+        type="button"
+        data-birth-picker-confirm
+      >
+        Confirmar fecha
+      </button>
+    </div>
+  </div>
+
+  <p
+    id="ppRegBirthHint"
+    class="pp-date-control__hint"
+  >
+    Escribe la fecha o selecciónala en el calendario.
+  </p>
+
+  <p
+    id="ppRegBirthError"
+    class="pp-date-control__error"
+    aria-live="polite"
+    hidden
+  ></p>
+</div>
+
+<div class="pp-register-field">
+  <label for="ppRegCountry">
+    País/región de residencia *
+  </label>
+
   <select id="ppRegCountry" name="country" required>
     <option value="ES" selected>España</option>
   </select>
+</div>
 
+<div class="pp-register-field pp-register-field--phone">
   <label for="ppRegPhone">Teléfono *</label>
+
   <div class="pp-phone-row">
-    <select id="ppRegPhoneCode" name="phoneCode" aria-label="Prefijo" required>
+    <select
+      id="ppRegPhoneCode"
+      name="phoneCode"
+      aria-label="Prefijo telefónico"
+      required
+    >
       <option value="+34" selected>+34</option>
     </select>
-    <input id="ppRegPhone" name="phone" type="tel" autocomplete="tel" required>
+
+    <input
+      id="ppRegPhone"
+      name="phone"
+      type="tel"
+      autocomplete="tel"
+      required
+    >
   </div>
+</div>
+
+<div class="pp-register-field pp-register-field--password">
+  <label for="ppRegPass">Contraseña *</label>
 
   <div class="sp-password">
-    <label for="ppRegPass">Contraseña *</label>
-    <input id="ppRegPass" name="password" type="password" autocomplete="new-password" required minlength="8">
-    <button type="button" class="toggle-pass" aria-label="Mostrar contraseña" aria-pressed="false">👁</button>
-    <p class="pp-helper">La contraseña debe contener al menos 8 caracteres</p>
+    <input
+      id="ppRegPass"
+      name="password"
+      type="password"
+      autocomplete="new-password"
+      required
+      minlength="8"
+    >
+
+    <button
+      type="button"
+      class="toggle-pass"
+      aria-label="Mostrar contraseña"
+      aria-pressed="false"
+    >
+      👁
+    </button>
   </div>
+
+  <p class="pp-helper">
+    La contraseña debe contener al menos 8 caracteres.
+  </p>
+</div>
 
   <label class="pp-check">
     <input id="ppRegTerms" type="checkbox" required>
-    <span>PROPHETIA utilizará la información para gestionar tu compra y optimizar la experiencia. <a href="#" class="sp-link">Ver más</a></span>
+    <span>PROPHETIA utilizará la información para gestionar tu cuenta y optimizar la experiencia. <a href="/privacy" class="sp-link">Ver más</a></span>
   </label>
 
   <label class="pp-check">
     <input id="ppRegNewsletter" type="checkbox">
-    <span>Deseo suscribirme a la Newsletter y autorizo la personalización. <a href="#" class="sp-link">Ver más</a></span>
+    <span>Deseo suscribirme a la Newsletter y autorizo la personalización. <a href="/privacy" class="sp-link">Ver más</a></span>
   </label>
   <button type="button" class="sp-cta" data-pp-google style="margin-top:12px;">
   Registrarme con Google
@@ -418,7 +708,7 @@
 <div class="auth-bottom">
     <div class="auth-benefits" data-auth-benefits>
     <a href="/wishlist" class="sp-benefit-link">Lista de deseos</a>
-    <a href="/benefits" class="sp-benefit-link">Beneficios y servicios</a>
+    <a href="/my-services" class="sp-benefit-link">Beneficios y servicios</a>
     <a href="/pedidos" class="sp-benefit-link">Seguimiento de pedido</a>
   </div>
 
@@ -443,7 +733,3 @@
 </section>
   </div>
 </dialog>
-
-
-
-

@@ -60,6 +60,48 @@ function normalizeHeaderAuthIcons() {
     profileBtn.setAttribute("aria-hidden", isLogged ? "false" : "true");
   }
 }
+
+function initFooterTribeForm() {
+  const form = document.querySelector('[data-footer-tribe-form]');
+  if (!form || form.dataset.footerTribeBound === 'true') return;
+
+  form.dataset.footerTribeBound = 'true';
+  const emailInput = form.querySelector('input[type="email"]');
+  const submit = form.querySelector('button[type="submit"]');
+  const status = form.querySelector('[data-footer-tribe-status]');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!emailInput?.checkValidity()) {
+      emailInput?.reportValidity();
+      return;
+    }
+
+    const email = String(emailInput.value || '').trim().toLowerCase();
+    const modalEmail = document.getElementById('tribeEmail');
+    if (modalEmail) modalEmail.value = email;
+
+    if (submit) submit.disabled = true;
+    if (status) status.textContent = 'Abriendo la inscripción segura…';
+
+    try {
+      const openTribe = await waitForGlobalFn('ppTribeOpen', 1800);
+      if (!openTribe) throw new Error('El formulario de inscripción no está disponible.');
+
+      await Promise.resolve(openTribe({ source: 'footer' }));
+      const liveModalEmail = document.getElementById('tribeEmail');
+      if (liveModalEmail) liveModalEmail.value = email;
+      if (status) status.textContent = 'Completa tus datos para terminar la inscripción.';
+    } catch (error) {
+      if (status) {
+        status.textContent = error?.message || 'No se ha podido abrir la inscripción.';
+      }
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  });
+}
  // --- DESPUÉS ---
 async function injectHeaderFooter() {
   if (partialsInjected) return;
@@ -76,6 +118,7 @@ async function injectHeaderFooter() {
 
     await injectPartial('footer', t.f);
     console.log('[partials] footer OK:', t.f);
+    initFooterTribeForm();
 
     await injectPartial('popup-area', t.p);
     console.log('[partials] popup OK:', t.p);
@@ -162,6 +205,127 @@ async function injectHeaderFooter() {
 (function defineAuthBinder(){
   const state = { step: 'email', email: '', loginMode: 'password' }; // password | google
   const q = (sel, root=document) => root.querySelector(sel);
+
+  /* =========================================================
+     PROPHETIA · FECHA HÍBRIDA
+     Visible: DD/MM/AAAA
+     Firestore: AAAA-MM-DD
+     ========================================================= */
+
+  const padDatePart = (value) => String(value).padStart(2, '0');
+
+
+
+  function parseBirthDisplay(rawValue) {
+    const original = String(rawValue || '').trim();
+
+    if (!original) {
+      return {
+        valid: true,
+        empty: true,
+        display: '',
+        iso: ''
+      };
+    }
+
+    let day;
+    let month;
+    let year;
+
+    const separated = original.match(
+      /^(\d{1,2})\s*[\/.-]\s*(\d{1,2})\s*[\/.-]\s*(\d{4})$/
+    );
+
+    if (separated) {
+      day = Number(separated[1]);
+      month = Number(separated[2]);
+      year = Number(separated[3]);
+    } else {
+      const digits = original.replace(/\D/g, '');
+
+      if (!/^\d{8}$/.test(digits)) {
+        return {
+          valid: false,
+          message: 'Utiliza el formato DD/MM/AAAA.'
+        };
+      }
+
+      day = Number(digits.slice(0, 2));
+      month = Number(digits.slice(2, 4));
+      year = Number(digits.slice(4, 8));
+    }
+
+    if (year < 1900) {
+      return {
+        valid: false,
+        message: 'Introduce un año igual o posterior a 1900.'
+      };
+    }
+
+    const date = new Date(year, month - 1, day);
+
+    const isRealDate =
+      !Number.isNaN(date.getTime()) &&
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day;
+
+    if (!isRealDate) {
+      return {
+        valid: false,
+        message: 'Introduce una fecha de nacimiento válida.'
+      };
+    }
+
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+
+    if (date > today) {
+      return {
+        valid: false,
+        message: 'La fecha de nacimiento no puede ser futura.'
+      };
+    }
+
+    return {
+      valid: true,
+      empty: false,
+      display:
+        `${padDatePart(day)}/${padDatePart(month)}/${year}`,
+      iso:
+        `${year}-${padDatePart(month)}-${padDatePart(day)}`
+    };
+  }
+
+  function setBirthFieldError(root, message = '') {
+    const field = q('.pp-register-field--date', root);
+    const input = q('#ppRegBirth', root);
+    const error = q('#ppRegBirthError', root);
+
+    const hasError = Boolean(message);
+
+    field?.classList.toggle('is-invalid', hasError);
+
+    if (input) {
+      if (hasError) {
+        input.setAttribute('aria-invalid', 'true');
+      } else {
+        input.removeAttribute('aria-invalid');
+      }
+    }
+
+    if (error) {
+      error.textContent = message;
+      error.hidden = !hasError;
+    }
+  }
+
+function normalizeBirthControl( root, { focusOnError = false } = {} ) { const displayInput = q('#ppRegBirth', root); const result = parseBirthDisplay( displayInput?.value || '' ); if (!result.valid) { setBirthFieldError(root, result.message); if (focusOnError) { displayInput?.focus({ preventScroll: true }); } return result; } setBirthFieldError(root); if (result.empty) { if (displayInput) { displayInput.value = ''; } return result; } if (displayInput) { displayInput.value = result.display; } return result; } function bindBirthDateControl(modal) { const registerForm = q('#ppRegisterForm', modal); if (!registerForm) return; const field = q( '.pp-register-field--date', registerForm ); const displayInput = q( '#ppRegBirth', registerForm ); const openButton = q( '#ppRegBirthOpen', registerForm ); const picker = q( '#ppRegBirthPicker', registerForm ); const daySelect = q( '#ppRegBirthDay', registerForm ); const monthSelect = q( '#ppRegBirthMonth', registerForm ); const yearSelect = q( '#ppRegBirthYear', registerForm ); const pickerError = q( '[data-birth-picker-error]', registerForm ); const confirmButton = q( '[data-birth-picker-confirm]', registerForm ); const cancelButton = q( '[data-birth-picker-cancel]', registerForm ); const closeButton = q( '[data-birth-picker-close]', registerForm ); if ( !field || !displayInput || !openButton || !picker || !daySelect || !monthSelect || !yearSelect || displayInput.__ppBirthBound ) { return; } displayInput.__ppBirthBound = true; const currentYear = new Date().getFullYear(); /* Generar años una sola vez */ if (yearSelect.options.length === 1) { for ( let year = currentYear; year >= 1900; year -= 1 ) { yearSelect.add( new Option(String(year), String(year)) ); } } function setPickerError(message = '') { if (!pickerError) return; pickerError.textContent = message; pickerError.hidden = !message; } function renderDays() { const month = Number(monthSelect.value); const year = Number(yearSelect.value); const previousDay = daySelect.value; const totalDays = month && year ? new Date(year, month, 0).getDate() : 31; daySelect.innerHTML = '<option value="">DD</option>'; for ( let day = 1; day <= totalDays; day += 1 ) { daySelect.add( new Option( padDatePart(day), String(day) ) ); } if ( previousDay && Number(previousDay) <= totalDays ) { daySelect.value = previousDay; } } function syncPickerFromInput() { const current = parseBirthDisplay( displayInput.value ); if ( current.valid && !current.empty ) { const [ day, month, year ] = current.display.split('/'); monthSelect.value = String( Number(month) ); yearSelect.value = year; renderDays(); daySelect.value = String( Number(day) ); return; } daySelect.value = ''; monthSelect.value = ''; yearSelect.value = ''; renderDays(); } function closePicker({ restoreFocus = false } = {}) { picker.classList.remove('is-open'); picker.hidden = true; field.classList.remove('is-picker-open'); openButton.setAttribute( 'aria-expanded', 'false' ); setPickerError(); if (restoreFocus) { openButton.focus({ preventScroll: true }); } } function openPicker() { syncPickerFromInput(); const rect = openButton.getBoundingClientRect(); const shouldOpenAbove = window.innerHeight - rect.bottom < 310 && rect.top > 310; picker.classList.toggle( 'is-above', shouldOpenAbove ); picker.hidden = false; field.classList.add('is-picker-open'); openButton.setAttribute( 'aria-expanded', 'true' ); requestAnimationFrame(() => { picker.classList.add('is-open'); daySelect.focus({ preventScroll: true }); }); } openButton.addEventListener( 'click', (event) => { event.preventDefault(); event.stopPropagation(); if (!picker.hidden) { closePicker({ restoreFocus: true }); return; } openPicker(); } ); monthSelect.addEventListener( 'change', () => { renderDays(); setPickerError(); } ); yearSelect.addEventListener( 'change', () => { renderDays(); setPickerError(); } ); daySelect.addEventListener( 'change', () => { setPickerError(); } ); confirmButton?.addEventListener( 'click', () => { const day = Number(daySelect.value); const month = Number(monthSelect.value); const year = Number(yearSelect.value); if (!day || !month || !year) { setPickerError( 'Selecciona el día, el mes y el año.' ); return; } displayInput.value = `${padDatePart(day)}/` + `${padDatePart(month)}/` + `${year}`; const result = normalizeBirthControl( registerForm, { focusOnError: true } ); if (!result.valid) { setPickerError(result.message); return; } displayInput.dispatchEvent( new Event( 'change', { bubbles: true } ) ); closePicker({ restoreFocus: true }); } ); cancelButton?.addEventListener( 'click', () => { closePicker({ restoreFocus: true }); } ); closeButton?.addEventListener( 'click', () => { closePicker({ restoreFocus: true }); } ); displayInput.addEventListener( 'input', () => { const sanitized = displayInput.value .replace(/[^\d/.-]/g, '') .slice(0, 10); if ( displayInput.value !== sanitized ) { displayInput.value = sanitized; } setBirthFieldError(registerForm); } ); displayInput.addEventListener( 'blur', () => { if (picker.hidden) { normalizeBirthControl( registerForm ); } } ); document.addEventListener( 'pointerdown', (event) => { if (picker.hidden) return; if ( picker.contains(event.target) || openButton.contains(event.target) ) { return; } closePicker(); } ); document.addEventListener( 'keydown', (event) => { if ( event.key === 'Escape' && !picker.hidden ) { event.preventDefault(); closePicker({ restoreFocus: true }); } } ); modal.addEventListener( 'close', () => { closePicker(); } ); renderDays(); }
+
+
+
 
   function showAuthError(modal, step, code){
     const box = modal.querySelector(`[data-step="${step}"] [data-auth-error]`);
@@ -323,10 +487,7 @@ function bindAuthSteps(modal) {
   if (modal.__ppStepsBound) return;
   modal.__ppStepsBound = true;
 
-  const emailForm = q('#ppAuthEmailForm', modal);
-  const emailInp  = q('#ppAuthEmail', modal);
-  const loginForm = q('#ppLoginForm', modal);
-  const regForm   = q('#ppRegisterForm', modal);
+const emailForm = q('#ppAuthEmailForm', modal); const emailInp = q('#ppAuthEmail', modal); const loginForm = q('#ppLoginForm', modal); const regForm = q('#ppRegisterForm', modal); bindBirthDateControl(modal);
 
   // Click router dentro del modal
   modal.addEventListener('click', (ev) => {
@@ -476,10 +637,7 @@ closeAuthWhenLoggedIn();
     const first = (q('#ppRegFirstName', regForm)?.value || '').trim();
     if (!first) { q('#ppRegFirstName', regForm)?.focus(); return; }
 
-    const last = (q('#ppRegLastName', regForm)?.value || '').trim();
-    if (!last) { q('#ppRegLastName', regForm)?.focus(); return; }
-
-    const country = (q('#ppRegCountry', regForm)?.value || '').trim();
+const last = (q('#ppRegLastName', regForm)?.value || '').trim(); if (!last) { q('#ppRegLastName', regForm)?.focus(); return; } const birthState = normalizeBirthControl( regForm, { focusOnError: true } ); if (!birthState.valid) { return; } const country = (q('#ppRegCountry', regForm)?.value || '').trim();
     if (!country) { q('#ppRegCountry', regForm)?.focus(); return; }
 
     const phone = (q('#ppRegPhone', regForm)?.value || '').trim();
@@ -519,12 +677,7 @@ closeAuthWhenLoggedIn();
 
 const displayName = `${first} ${last}`.trim();
 
-const profileData = {
-  gender,
-  firstName: first,
-  lastName: last,
-  birth: (q('#ppRegBirth', regForm)?.value || '').trim(),
-  country,
+const profileData = { gender, firstName: first, lastName: last, /* Compatibilidad visual + formato normalizado */ birth: birthState.display, birthISO: birthState.iso, country,
   phoneCode: (q('#ppRegPhoneCode', regForm)?.value || '').trim(),
   phone,
   newsletter: !!q('#ppRegNewsletter', regForm)?.checked,
@@ -566,11 +719,12 @@ setTimeout(() => {
 }
 
 
-  function openAuth(){
+  function openAuth(step = 'email'){
     const modal = document.querySelector('#header #ppAuthModal');
     if (!modal) return;
 
-    showStep(modal, 'email');
+    const targetStep = step === 'login' || step === 'register' ? step : 'email';
+    showStep(modal, targetStep);
 
     try { if (!modal.open) modal.showModal(); } catch (e) {
       console.error('[AUTH] showModal failed', e);
@@ -611,9 +765,17 @@ document.addEventListener('click', (ev) => {
 
   // ===== Global open/close handlers (limpios) =====
 document.addEventListener('click', (e) => {
+  const explicitAuth = e.target.closest('[data-pp-open-login], [data-pp-open-register]');
   const guestBtn   = e.target.closest('#ppAuthLogoBtn');
   const profileBtn = e.target.closest('#ppProfileChip');
   const closeBtn   = e.target.closest('[data-close="auth"]');
+
+  if (explicitAuth) {
+    e.preventDefault();
+    if (!partialsInjected || !document.querySelector('#header #ppAuthModal')) return;
+    openAuth(explicitAuth.matches('[data-pp-open-register]') ? 'register' : 'login');
+    return;
+  }
 
   if (guestBtn) {
     e.preventDefault();
@@ -663,85 +825,213 @@ document.addEventListener('click', (e) => {
 
 
   
- /* =============== Mega menú (delegado) =============== */
+ /* =============== Mega menú global accesible =============== */
 (function () {
-  const closeMega = () => {
-    const mega = document.querySelector('.mega');
-    if (!mega) return;
+  const HOVER_OPEN_DELAY = 70;
+  const supportsHover = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches;
+  const cssEscape = window.CSS?.escape || ((value) => String(value).replace(/[^a-zA-Z0-9_-]/g, '\\\\$&'));
 
-    mega.classList.remove('is-open');
-    mega.querySelectorAll('.mega-toggle').forEach(b => {
-      b.classList.remove('is-active');
-      b.setAttribute('aria-expanded', 'false');
-      b.setAttribute('aria-selected', 'false');
+  let openTimer = 0;
+  let activeKey = '';
+
+  const getRoot = () => document.querySelector('.mega[data-prop-mega]');
+
+  function getParts(root = getRoot()) {
+    return {
+      root,
+      wrap: root?.querySelector('.mega-panel[data-mega]') || null,
+      toggles: Array.from(root?.querySelectorAll('.mega-toggle') || []),
+      panels: Array.from(root?.querySelectorAll('.panel[role="tabpanel"]') || [])
+    };
+  }
+
+  function clearMegaTimers() {
+    window.clearTimeout(openTimer);
+  }
+
+  function getPanelForButton(root, button) {
+    const key = String(button?.dataset?.panel || '').trim();
+    const controls = String(button?.getAttribute('aria-controls') || '').trim();
+    const panel = controls
+      ? root?.querySelector(`#${cssEscape(controls)}`)
+      : key
+        ? root?.querySelector(`#panel-${cssEscape(key)}`)
+        : null;
+
+    return { key, panel };
+  }
+  function setToggleState(toggles, activeButton = null) {
+    toggles.forEach((button) => {
+      const active = button === activeButton;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-expanded', active ? 'true' : 'false');
+      button.setAttribute('aria-selected', active ? 'true' : 'false');
+      button.type = 'button';
     });
-    mega.querySelectorAll('.panel[role="tabpanel"]').forEach(p => p.hidden = true);
-    const wrap = mega.querySelector('.mega-panel[data-mega]');
+  }
+
+  function closeMega({ restoreFocus = false } = {}) {
+    document.body.classList.remove('pp-mega-open');
+
+    const { root, wrap, toggles, panels } = getParts();
+    if (!root) return;
+
+    const previousButton = activeKey
+      ? root.querySelector(`.mega-toggle[data-panel="${cssEscape(activeKey)}"]`)
+      : null;
+
+    clearMegaTimers();
+    activeKey = '';
+    root.classList.remove('is-open');
+    root.removeAttribute('data-active-panel');
+    setToggleState(toggles, null);
+
+    panels.forEach((panel) => {
+      panel.hidden = true;
+    });
+
     if (wrap) {
       wrap.setAttribute('aria-hidden', 'true');
       wrap.hidden = true;
-      wrap.style.display = 'none';
-      wrap.style.opacity = '0';
-      wrap.style.transform = 'translateY(8px)';
-    }
-  };
-
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.mega-toggle');
-    const mega = e.target.closest('.mega');
-
-    // Click fuera del mega => cerrar
-    if (!btn && !mega) {
-      closeMega();
-      return;
     }
 
-    // Click en botón del mega
-    if (btn) {
-      const root = btn.closest('.mega');
-      const key = btn.dataset.panel; // mujer / hombre / colecciones / house
-      const wrap = root.querySelector('.mega-panel[data-mega]');
-      const panel = root.querySelector(`#panel-${key}`);
-      if (!wrap || !panel) return;
+    if (restoreFocus) {
+      previousButton?.focus({ preventScroll: true });
+    }
+  }
 
-      const isSame = btn.classList.contains('is-active');
-      const isOpen = root.classList.contains('is-open');
+  function openMega(button, { focusFirst = false } = {}) {
+    const root = button?.closest('.mega[data-prop-mega]');
+    if (!root) return;
 
-      // Reset de todos
-      root.querySelectorAll('.mega-toggle').forEach(b => {
-        b.classList.remove('is-active');
-        b.setAttribute('aria-expanded', 'false');
-        b.setAttribute('aria-selected', 'false');
+    const { wrap, toggles, panels } = getParts(root);
+    const { key, panel } = getPanelForButton(root, button);
+
+    if (!wrap || !panel || !key) return;
+
+    clearMegaTimers();
+    activeKey = key;
+
+    panels.forEach((item) => {
+      item.hidden = item !== panel;
+    });
+
+    wrap.hidden = false;
+    wrap.setAttribute('aria-hidden', 'false');
+    wrap.setAttribute('aria-labelledby', button.id || '');
+
+    root.dataset.activePanel = key;
+    root.classList.add('is-open');
+    document.body.classList.add('pp-mega-open');
+    setToggleState(toggles, button);
+
+    if (focusFirst) {
+      window.requestAnimationFrame(() => {
+        panel.querySelector('a, button')?.focus({ preventScroll: true });
       });
-      root.querySelectorAll('.panel[role="tabpanel"]').forEach(p => p.hidden = true);
+    }
+  }
 
-      if (isOpen && isSame) {
-        closeMega();
-        return;
+  function scheduleOpen(button) {
+    window.clearTimeout(openTimer);
+    openTimer = window.setTimeout(() => openMega(button), HOVER_OPEN_DELAY);
+  }
+
+
+  function focusAdjacentToggle(current, direction) {
+    const { toggles } = getParts();
+    const index = toggles.indexOf(current);
+    if (index < 0 || !toggles.length) return;
+
+    const next = toggles[(index + direction + toggles.length) % toggles.length];
+    next.focus({ preventScroll: true });
+    openMega(next);
+  }
+
+  function bindMega() {
+    const { root, wrap, toggles, panels } = getParts();
+    if (!root || !wrap || root.dataset.ppMegaBound === 'true') return;
+
+    root.dataset.ppMegaBound = 'true';
+    wrap.hidden = true;
+    wrap.setAttribute('aria-hidden', 'true');
+
+    toggles.forEach((button) => {
+      button.type = 'button';
+      button.setAttribute('aria-haspopup', 'true');
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-selected', 'false');
+
+      if (supportsHover) {
+        button.addEventListener('pointerenter', () => {
+          if (root.classList.contains('is-open')) scheduleOpen(button);
+        });
       }
 
-      // Abrir + activar
-      root.classList.add('is-open');
-      wrap.hidden = false;
-      wrap.style.display = 'block';
-      wrap.style.opacity = '1';
-      wrap.style.transform = 'translateY(0px)';
-      wrap.setAttribute('aria-hidden', 'false');
+      button.addEventListener('focus', () => openMega(button));
 
-      btn.classList.add('is-active');
-      btn.setAttribute('aria-expanded', 'true');
-      btn.setAttribute('aria-selected', 'true');
-      panel.hidden = false;
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        openMega(button);
+      });
+
+      button.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          focusAdjacentToggle(button, 1);
+        }
+
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          focusAdjacentToggle(button, -1);
+        }
+
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          openMega(button, { focusFirst: true });
+        }
+
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeMega({ restoreFocus: true });
+        }
+      });
+    });
+
+    panels.forEach((panel) => {
+      panel.hidden = true;
+    });
+
+    if (supportsHover) {
+      root.addEventListener('pointerenter', () => {
+        window.clearTimeout(openTimer);
+      });
     }
-  });
 
-  // ESC cierra
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMega();
-  });
+
+    document.addEventListener('pointerdown', (event) => {
+      const latestRoot = getRoot();
+      if (!latestRoot?.classList.contains('is-open')) return;
+      if (latestRoot.contains(event.target)) return;
+      closeMega();
+    });
+
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeMega({ restoreFocus: true });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindMega, { once: true });
+  } else {
+    bindMega();
+  }
+
+  window.addEventListener('partials:ready', bindMega);
 })();
-
-
     /* =============== Ajuste de --pp-header-h =============== */
 function setHeaderHeightVar() {
   const hd = document.getElementById('header');

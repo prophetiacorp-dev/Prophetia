@@ -1,0 +1,683 @@
+/* PROPHETIA PLP UI: one font system for gender pages header and filters. */
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) {
+  --pp-plp-ui-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --pp-plp-filter-font-size: 13px;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-header,
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-header :is(a, button, input, .mega-toggle, .search-input) {
+  font-family: var(--pp-plp-ui-font) !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-header .pp-left :is(a, button, .mega-toggle) {
+  font-size: var(--pp-header-nav-font-size, 13px) !important;
+  font-weight: 500 !important;
+  letter-spacing: .02em !important;
+  line-height: 1.35 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-header .search-inline .search-input {
+  font-size: var(--pp-header-nav-font-size, 13px) !important;
+  letter-spacing: .01em !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-filters.container,
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-filters.container :is(button, input, label, select, span, .pp-btn, .pp-sort-trigger, .pp-sort-select, .pp-sort-option, .pp-check) {
+  font-family: var(--pp-plp-ui-font) !important;
+  font-size: var(--pp-plp-filter-font-size) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-filters.container :is(.pp-sort-trigger, .pp-btn) {
+  font: 400 var(--pp-plp-filter-font-size)/1.2 var(--pp-plp-ui-font) !important;
+}
+
+body.sud-men-page.pp-mega-open .pp-header.pp-header {
+  background: #fff !important;
+  color: #050505 !important;
+}
+
+body.sud-men-page .pp-header.pp-header .pp-left .mega-toggle,
+body.sud-men-page .pp-header.pp-header .pp-left .mega-toggle:hover,
+body.sud-men-page .pp-header.pp-header .pp-left .mega-toggle:active,
+body.sud-men-page .pp-header.pp-header .pp-left .mega-toggle:focus,
+body.sud-men-page .pp-header.pp-header .pp-left .mega-toggle:focus-visible,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle:hover,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle:active,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle:focus,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle:focus-visible,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle.is-active,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle[aria-expanded="true"] {
+  color: #050505 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle.is-active::after,
+body.sud-men-page.pp-mega-open .pp-header.pp-header .pp-left .mega-toggle[aria-expanded="true"]::after {
+  background: #050505 !important;
+  border-color: #050505 !important;
+  opacity: 1 !important;
+}
+
+/* Sudaderas punto hombre follows the same typography as camisetas punto hombre. */
+body.sud-men-page .pp-hero__title {
+  margin: 0 0 12px !important;
+  font: 500 clamp(20px, 1.35vw, 26px)/1.1 var(--font-display, Georgia, serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.sud-men-page .pp-hero__list {
+  gap: 9px !important;
+}
+
+body.sud-men-page .pp-hero__list a {
+  font: 400 14px/1.25 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.sud-men-page .card-title,
+body.sud-men-page .card-title a,
+body.sud-men-page .product-card__title,
+body.sud-men-page .product-card__title a,
+body.sud-men-page .pp-plp .card-body h3,
+body.sud-men-page .pp-plp .card-body h3 a {
+  font: 400 13px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.sud-men-page .card-sub,
+body.sud-men-page .product-card__subtitle,
+body.sud-men-page .pp-plp .card-body p:nth-of-type(1) {
+  font: 400 12px/1.45 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.sud-men-page .card-meta,
+body.sud-men-page .product-card__price,
+body.sud-men-page .pp-plp .card-body p:nth-of-type(2),
+body.sud-men-page .pp-plp .card-price {
+  font: 400 12px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* =========================================================
+   PROPHETIA PLP SAVE CONTRAST + NOTICE + RESPONSIVE
+   ========================================================= */
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) {
+  --pp-save-btn-bg: rgba(255, 255, 255, .92);
+  --pp-save-btn-border: rgba(5, 5, 5, .38);
+  --pp-save-btn-ink: #050505;
+  --pp-save-btn-active-bg: rgba(255, 255, 255, .96);
+  --pp-save-btn-active-ink: #050505;
+  --pp-save-btn-burst: rgba(5, 5, 5, .34);
+  --pp-plp-notice-bg: rgba(5, 5, 5, .94);
+  --pp-plp-notice-ink: #fff;
+  --pp-plp-notice-line: rgba(255, 255, 255, .16);
+}
+
+body:is(.streetwear-page, .hoodies-page) {
+  --pp-save-btn-bg: rgba(245, 245, 239, .94);
+  --pp-save-btn-border: rgba(255, 255, 255, .72);
+  --pp-save-btn-ink: #07080b;
+  --pp-save-btn-active-bg: #fff;
+  --pp-save-btn-active-ink: #050505;
+  --pp-save-btn-burst: rgba(255, 255, 255, .46);
+  --pp-plp-notice-bg: rgba(255, 255, 255, .94);
+  --pp-plp-notice-ink: #050505;
+  --pp-plp-notice-line: rgba(0, 0, 0, .12);
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn) {
+  color: var(--pp-save-btn-ink) !important;
+  background: var(--pp-save-btn-bg) !important;
+  border: 1px solid var(--pp-save-btn-border) !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+  transition: transform 180ms ease, color 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn) svg {
+  position: relative !important;
+  z-index: 2 !important;
+  color: currentColor !important;
+  stroke: currentColor !important;
+  fill: none !important;
+  transform-origin: center !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn) svg path {
+  stroke: currentColor !important;
+  fill: transparent !important;
+  transform-origin: center !important;
+  transition: fill 180ms ease, stroke 180ms ease, transform 180ms ease !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn):is(.is-saved, [aria-pressed="true"]) {
+  color: var(--pp-save-btn-active-ink) !important;
+  background: var(--pp-save-btn-active-bg) !important;
+  border-color: color-mix(in srgb, var(--pp-save-btn-active-ink) 58%, transparent) !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, .16), 0 0 0 1px rgba(255, 255, 255, .18) inset !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn):is(.is-saved, [aria-pressed="true"]) svg {
+  animation: ppSaveHeartPop 420ms cubic-bezier(.18, .9, .24, 1.25) both;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn):is(.is-saved, [aria-pressed="true"]) svg path {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn)::after {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  z-index: 1;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(.68);
+  background:
+    radial-gradient(circle, transparent 47%, var(--pp-save-btn-burst) 50%, transparent 62%),
+    conic-gradient(from 18deg, transparent 0 8%, var(--pp-save-btn-burst) 8% 12%, transparent 12% 24%, var(--pp-save-btn-burst) 24% 28%, transparent 28% 45%, var(--pp-save-btn-burst) 45% 49%, transparent 49% 68%, var(--pp-save-btn-burst) 68% 72%, transparent 72% 100%);
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn):is(.is-saved, [aria-pressed="true"])::after {
+  animation: ppSaveHeartBurst 560ms ease-out both;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) #ppTopNotice {
+  position: fixed !important;
+  top: calc(var(--pp-header-h, var(--hdr-h, 64px)) + max(10px, env(safe-area-inset-top))) !important;
+  right: auto !important;
+  left: 50% !important;
+  width: min(440px, calc(100vw - 32px)) !important;
+  height: auto !important;
+  min-height: 44px !important;
+  border: 1px solid var(--pp-plp-notice-line) !important;
+  border-radius: 999px !important;
+  background: var(--pp-plp-notice-bg) !important;
+  color: var(--pp-plp-notice-ink) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .18) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transform: translate(-50%, calc(-100% - 18px)) !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) #ppTopNotice[aria-hidden="false"] {
+  transform: translate(-50%, 0) !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) #ppTopNotice .pp-topnotice__inner {
+  min-height: 44px !important;
+  padding: 10px 16px 10px 18px !important;
+  justify-content: center !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) #ppTopNoticeMsg {
+  color: var(--pp-plp-notice-ink) !important;
+  text-align: center !important;
+}
+
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) #ppTopNoticeClose {
+  color: var(--pp-plp-notice-ink) !important;
+  position: absolute !important;
+  right: 8px !important;
+}
+
+html:has(#ppTopNotice[aria-hidden="false"]) body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) .pp-header {
+  pointer-events: auto !important;
+}
+
+@keyframes ppSaveHeartPop {
+  0% { transform: scale(.78); }
+  54% { transform: scale(1.24); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ppSaveHeartBurst {
+  0% { opacity: 0; transform: scale(.45) rotate(0deg); }
+  24% { opacity: .78; }
+  100% { opacity: 0; transform: scale(1.55) rotate(22deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn):is(.is-saved, [aria-pressed="true"]) svg,
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn):is(.is-saved, [aria-pressed="true"])::after {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) {
+    --pp-plp-filter-font-size: 12px;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) .pp-filters.container {
+    align-items: center !important;
+    gap: 12px !important;
+    min-height: 54px !important;
+    padding-inline: clamp(16px, 4vw, 28px) !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) .pp-filter-left,
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) .pp-filter-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 28px 12px !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) :is(#plp-grid, #gridCamisetas, .pp-plp) :is(.icon-btn.save, .save-btn) {
+    width: 40px !important;
+    height: 40px !important;
+    top: 10px !important;
+    right: 10px !important;
+    bottom: auto !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) #ppTopNotice {
+    top: calc(max(10px, env(safe-area-inset-top)) + 10px) !important;
+    width: min(360px, calc(100vw - 20px)) !important;
+    border-radius: 18px !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) #ppTopNotice .pp-topnotice__inner {
+    min-height: 48px !important;
+    padding: 10px 42px 10px 14px !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) .pp-hero__side {
+    max-width: min(260px, 100%) !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) .pp-hero__title {
+    font-size: clamp(18px, 5.4vw, 22px) !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) .pp-hero__list a {
+    font-size: 13px !important;
+  }
+
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) .pp-filters.container {
+    min-height: 50px !important;
+    padding-block: 10px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* PROPHETIA PLP NOTICE SAFE TOP FIX */
+body:is(
+  .men-page,
+  .women-page,
+  .sud-men-page,
+  .sud-women-page
+) #ppTopNotice {
+  top: clamp(12px, calc(var(--hdr-h, 64px) + 10px), 92px) !important;
+}
+
+@media (max-width: 640px) {
+  body:is(
+    .men-page,
+    .women-page,
+    .sud-men-page,
+    .sud-women-page
+  ) #ppTopNotice {
+    top: calc(max(10px, env(safe-area-inset-top)) + 10px) !important;
+  }
+}
+/* PROPHETIA POINT PLP ELEGANT COHERENCE */
+body:is(.camisetas-page, .sud-men-page, .sud-women-page) {
+  --pp-point-edge: clamp(16px, 3vw, 40px);
+  --pp-point-ui-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --pp-point-display-font: var(--font-display, "Playfair Display", Georgia, serif);
+  --pp-point-ink: #070707;
+  --pp-point-muted: rgba(0,0,0,.62);
+  --pp-point-line: rgba(0,0,0,.10);
+  --pp-point-media-bg: radial-gradient(circle at 50% 42%, rgba(255,255,255,.86), transparent 46%), linear-gradient(180deg, #f8f6f1 0%, #efebe2 100%);
+  --sud-media-ratio: 3 / 4;
+  --font-urban: var(--pp-point-ui-font);
+  --street-ink: var(--pp-point-ink);
+  --street-muted: var(--pp-point-muted);
+  background: #fff;
+  color: var(--pp-point-ink);
+  font-family: var(--pp-point-ui-font);
+}
+
+body:is(.sud-men-page, .sud-women-page) .pp-hero__title {
+  margin: 0 0 12px !important;
+  font: 500 clamp(20px, 1.35vw, 26px)/1.1 var(--pp-point-display-font) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--pp-point-ink) !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) .pp-hero__list {
+  gap: 9px !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) .pp-hero__list a {
+  font: 400 14px/1.25 var(--pp-point-ui-font) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--pp-point-ink) !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) .pp-plp.container {
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+  box-sizing: border-box !important;
+  padding-inline: var(--pp-point-edge) !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid.plp-grid, .pp-plp .plp-grid) {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)) !important;
+  column-gap: clamp(24px, 3vw, 48px) !important;
+  row-gap: clamp(42px, 5vw, 68px) !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  justify-content: stretch !important;
+  place-content: normal !important;
+  align-items: start !important;
+}
+
+@media (min-width: 1440px) {
+  body:is(.sud-men-page, .sud-women-page) :is(#plp-grid.plp-grid, .pp-plp .plp-grid) {
+    grid-template-columns: repeat(4, minmax(230px, 1fr)) !important;
+  }
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) :is(.card, .product-card) {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  border-radius: 14px !important;
+  border: 0 !important;
+  background: linear-gradient(145deg, rgba(255,255,255,.86), rgba(250,247,240,.72)) !important;
+  box-shadow: 0 32px 90px rgba(0,0,0,.055), 0 0 80px rgba(191,157,92,.06), inset 0 1px 0 rgba(255,255,255,.78) !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) :is(.plp-media, .card-media, .product-card .card-media, .product-card .img-wrap) {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  inline-size: 100% !important;
+  aspect-ratio: var(--sud-media-ratio) !important;
+  overflow: hidden !important;
+  background: var(--pp-point-media-bg) !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) .plp-media > :is(.card-media, .img-wrap, picture) {
+  height: 100% !important;
+  block-size: 100% !important;
+  aspect-ratio: auto !important;
+  background: transparent !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) :is(.card-media img, .img-wrap img, picture img) {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: cover !important;
+  transition: transform .6s cubic-bezier(.25,.15,.25,1) !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) :is(.card:hover, .product-card:hover) :is(.card-media img, .img-wrap img, picture img) {
+  transform: scale(1.02) !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) .card-body {
+  padding: 12px 0 0 !important;
+  display: grid !important;
+  row-gap: 3px !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) :is(.card-title, .card-title a, .product-card__title, .product-card__title a, .card-body h3, .card-body h3 a) {
+  font: 400 13px/1.35 var(--pp-point-ui-font) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--pp-point-ink) !important;
+  text-decoration: none !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) :is(.card-sub, .product-card__subtitle, .card-body p:nth-of-type(1)) {
+  color: var(--pp-point-muted) !important;
+  font: 400 12px/1.45 var(--pp-point-ui-font) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(.sud-men-page, .sud-women-page) :is(#plp-grid, .pp-plp) :is(.card-meta, .product-card__price, .card-price, .price, .card-body p:nth-of-type(2)) {
+  color: var(--pp-point-ink) !important;
+  font: 400 12px/1.35 var(--pp-point-ui-font) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+@media (max-width: 640px) {
+  body:is(.sud-men-page, .sud-women-page) .pp-plp.container {
+    padding-inline: var(--edge, 16px) !important;
+    padding-top: 20px !important;
+  }
+
+  body:is(.sud-men-page, .sud-women-page) :is(#plp-grid.plp-grid, .pp-plp .plp-grid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 30px 12px !important;
+  }
+}

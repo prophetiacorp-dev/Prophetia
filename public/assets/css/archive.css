@@ -882,6 +882,17 @@ body.archive-page.archive-page--summer .archive-version-option:hover{
   border-color: rgba(17,18,20,.14);
 }
 
+body.archive-page.archive-page--summer .archive-version-option[aria-disabled="true"]{
+  cursor: default;
+  opacity: .58;
+}
+
+body.archive-page.archive-page--summer .archive-version-option[aria-disabled="true"]:hover{
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(17,18,20,.08);
+}
+
 body.archive-page.archive-page--summer .archive-version-option__label{
   font-family: var(--font-display, "Playfair Display", serif);
   font-size: 22px;

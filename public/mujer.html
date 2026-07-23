@@ -44,6 +44,7 @@
   <link rel="stylesheet" href="assets/css/woman.css">
 
   <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/quick-add.css">
   <link rel="stylesheet" href="assets/css/auth.css">
   <link rel="stylesheet" href="assets/css/cart.css">
   <link rel="stylesheet" href="assets/css/footer.css">
@@ -53,6 +54,7 @@
   <link rel="stylesheet" href="assets/css/popup.css">
   <link rel="stylesheet" href="assets/css/cookies.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+  <link rel="stylesheet" href="assets/css/plp-ui-universal.css">
 
   <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,7 +62,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="pp-collection-page women-page" data-page="women">
+<body data-quick-add-enabled data-quick-add-theme="light" class="pp-collection-page women-page" data-page="women">
   <!-- Header inyectado -->
   <div id="header"></div>
 
@@ -90,7 +92,7 @@
         <h1 class="women-band__title">Mujer</h1>
         <ul class="women-band__list">
           <li><a href="streetwear-mujer">Streetwear</a></li>
-          <li><a href="camisetas-mujer">Camisetas de Punto</a></li>
+          <li><a href="/camisetas-punto-mujer">Camisetas de Punto</a></li>
           <li><a href="hoodies-mujer">Hoodies</a></li>
           <li><a href="sudaderas-punto-mujer">Sudaderas de punto</a></li>
         </ul>
@@ -128,7 +130,7 @@
          ======================= -->
     <section class="plp-wrap" data-fade>
       <div class="container">
-     <div id="plp-grid" class="plp-grid women-grid" data-gender="mujer" data-source="firestore" data-section="all"></div>
+     <div id="plp-grid" class="plp-grid women-grid" data-gender="mujer" data-source="json" data-catalog="assets/data/catalog.json" data-section="all"></div>
 
 
         
@@ -297,20 +299,6 @@
                 <span class="women-swatch-label">Multicolor</span>
               </label>
             </li>
-            <li>
-              <label class="women-swatch">
-                <input class="women-swatch-input" type="checkbox" name="color" value="incoloro">
-                <span class="women-swatch-dot women-swatch--clear"></span>
-                <span class="women-swatch-label">Incoloro</span>
-              </label>
-            </li>
-            <li>
-              <label class="women-swatch">
-                <input class="women-swatch-input" type="checkbox" name="color" value="transparente">
-                <span class="women-swatch-dot women-swatch--transparent"></span>
-                <span class="women-swatch-label">Transparente</span>
-              </label>
-            </li>
           </ul>
         </section>
 
@@ -370,7 +358,7 @@
   <!-- Toast -->
   <div id="ppToast" hidden>
     <span id="ppToastMsg">Añadido a artículos guardados</span>
-    <a id="ppToastAction" href="wishlist"" aria-label="Abrir Mi selección">Ver</a>
+    <a id="ppToastAction" href="/wishlist" aria-label="Abrir Mi selección">Ver</a>
   </div>
 
   <!-- Área para popups -->
@@ -423,5 +411,7 @@
    })();
   </script>
 
+  <script src="assets/js/quick-add.js" defer></script>
+  <script type="module" src="/assets/js/plp-reservations.js"></script>
       </body>
       </html>

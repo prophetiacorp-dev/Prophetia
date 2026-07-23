@@ -677,3 +677,219 @@ body.wishlist-page .brand-band .page-logo img {
   height: 90px;   /* prueba 90 / 100 / 120 según lo veas */
   width: auto;
 }
+
+/* =========================================================
+   PROPHETIA WISHLIST HEART LUXURY MINIMAL
+   ========================================================= */
+body.wishlist-page .wishlist-grid .product-card .save-btn {
+  top: 14px !important;
+  right: 14px !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(18, 15, 10, .18) !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, .92), rgba(243, 238, 226, .72)) !important;
+  color: #11100c !important;
+  box-shadow:
+    0 16px 34px rgba(20, 16, 10, .16),
+    0 1px 0 rgba(255, 255, 255, .78) inset,
+    0 -1px 0 rgba(18, 15, 10, .05) inset !important;
+  backdrop-filter: blur(14px) saturate(1.08) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.08) !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+  transition:
+    transform .2s ease,
+    color .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease !important;
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 35% 24%, rgba(255,255,255,.84), transparent 42%),
+    linear-gradient(145deg, rgba(255,255,255,.2), rgba(0,0,0,.035));
+  pointer-events: none;
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  border-radius: inherit;
+  border: 1px solid rgba(196, 168, 111, .34);
+  opacity: .56;
+  transform: scale(.94);
+  transition: transform .2s ease, opacity .2s ease;
+  pointer-events: none;
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn .icon-heart,
+body.wishlist-page .wishlist-grid .product-card .save-btn svg {
+  position: relative;
+  z-index: 2;
+  width: 20px !important;
+  height: 20px !important;
+  display: block;
+  color: currentColor !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  transform-origin: center;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.32));
+  transition: transform .2s ease, filter .2s ease;
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn .icon-heart--minimal path,
+body.wishlist-page .wishlist-grid .product-card .save-btn svg path {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+  stroke-width: .9px !important;
+  stroke-linejoin: round !important;
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn:hover,
+body.wishlist-page .wishlist-grid .product-card .save-btn:focus-visible {
+  color: #f8f2e7 !important;
+  background:
+    linear-gradient(145deg, rgba(23, 20, 15, .96), rgba(8, 7, 5, .94)) !important;
+  border-color: rgba(214, 190, 134, .5) !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 18px 40px rgba(20, 16, 10, .24),
+    0 0 0 1px rgba(214, 190, 134, .16) inset,
+    0 1px 0 rgba(255,255,255,.16) inset !important;
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn:hover::after,
+body.wishlist-page .wishlist-grid .product-card .save-btn:focus-visible::after {
+  opacity: .9;
+  transform: scale(1.04);
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn:hover .icon-heart,
+body.wishlist-page .wishlist-grid .product-card .save-btn:focus-visible .icon-heart {
+  transform: scale(1.06);
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,.28));
+}
+
+body.wishlist-page .wishlist-grid .product-card .save-btn:active {
+  transform: translateY(0) scale(.96) !important;
+}
+
+@media (max-width: 640px) {
+  body.wishlist-page .wishlist-grid .product-card .save-btn {
+    width: 40px !important;
+    height: 40px !important;
+    top: 12px !important;
+    right: 12px !important;
+  }
+}
+
+/* =========================================================
+   WISHLIST · Galeria personal refinada
+   ========================================================= */
+
+body.wishlist-page .wl-nav__list {
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .18em;
+}
+
+body.wishlist-page .wl-nav__list a {
+  font-weight: 500;
+  color: rgba(0, 0, 0, .64);
+}
+
+body.wishlist-page .wl-nav__list a:hover,
+body.wishlist-page .wl-nav__list a.active,
+body.wishlist-page .wl-nav__list a[aria-current="page"] {
+  color: rgba(0, 0, 0, .92);
+}
+
+body.wishlist-page .wl-sub {
+  padding: 12px 36px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .22em;
+  color: rgba(0, 0, 0, .78);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, .08),
+    inset 0 1px 0 rgba(255, 255, 255, .72);
+}
+
+body.wishlist-page .wl-sub span {
+  font-weight: 500;
+}
+
+body.wishlist-page .wl-empty__wrap h3,
+body.wishlist-page #wlEmpty .wl-empty-title,
+body.wishlist-page .wl-empty-title {
+  font-weight: 400;
+  letter-spacing: .20em;
+  color: rgba(0, 0, 0, .86);
+}
+
+body.wishlist-page #wlEmpty .wl-empty-sub,
+body.wishlist-page .wl-empty-sub,
+body.wishlist-page .wl-empty__wrap p {
+  font-weight: 400;
+  color: rgba(0, 0, 0, .62);
+}
+
+body.wishlist-page .wl-recommended {
+  box-shadow:
+    0 24px 76px rgba(0, 0, 0, .09),
+    inset 0 1px 0 rgba(255, 255, 255, .78);
+}
+
+body.wishlist-page .wl-recommended__kicker,
+body.wishlist-page .wl-reco-card__eyebrow {
+  font-weight: 500;
+  letter-spacing: .24em;
+}
+
+body.wishlist-page .wl-recommended__title {
+  font-weight: 400;
+  letter-spacing: -.018em;
+  color: rgba(0, 0, 0, .92);
+}
+
+body.wishlist-page .wl-recommended__text {
+  font-weight: 400;
+  color: rgba(0, 0, 0, .58);
+}
+
+body.wishlist-page .wl-reco-card {
+  border-color: rgba(0, 0, 0, .08);
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, .06),
+    inset 0 1px 0 rgba(255, 255, 255, .72);
+}
+
+body.wishlist-page .wl-reco-card strong,
+body.wishlist-page .wishlist-grid .product-card h4 {
+  font-weight: 400;
+  letter-spacing: -.006em;
+}
+
+body.wishlist-page .wishlist-grid .product-card .price {
+  font-weight: 400;
+  letter-spacing: .08em;
+  color: rgba(0, 0, 0, .58);
+}
+
+body.wishlist-page .wishlist-grid .product-card .btn.btn--sm,
+body.wishlist-page #wlEmpty .btn,
+body.wishlist-page #wlEmpty .wl-empty-actions .btn--ghost {
+  font-weight: 500;
+  letter-spacing: .12em;
+}

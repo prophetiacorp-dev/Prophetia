@@ -113,6 +113,121 @@
 }
 .tribe-sub{ margin: 2px 0 8px; opacity: .8; }
 
+/* =========================================================
+   PROPHETIA TRIBE · Información de suscripción
+   ========================================================= */
+
+.tribe-membership-note {
+  display: grid;
+  gap: 5px;
+
+  margin: 0 0 2px;
+  padding: 12px 14px;
+
+  border: 1px solid rgba(17, 17, 17, .10);
+  border-left: 3px solid rgba(193, 164, 95, .82);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, .46);
+  color: rgba(17, 17, 17, .72);
+}
+
+.tribe-membership-note__title {
+  font-family: var(
+    --font-ui,
+    "Inter",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif
+  );
+
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: #111;
+}
+
+.tribe-membership-note__text {
+  max-width: 58ch;
+
+  font-family: var(
+    --font-ui,
+    "Inter",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif
+  );
+
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(17, 17, 17, .68);
+}
+
+/* =========================================================
+   PROPHETIA TRIBE · Fecha de nacimiento
+   ========================================================= */
+
+.tribe-dob-fieldset {
+  min-width: 0;
+  margin: 2px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.tribe-dob-title {
+  margin: 0;
+  padding: 0;
+
+  font-family: var(
+    --font-ui,
+    "Inter",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif
+  );
+
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, .84);
+}
+
+.tribe-dob-help {
+  margin: 6px 0 10px;
+
+  font-family: var(
+    --font-ui,
+    "Inter",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif
+  );
+
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(17, 17, 17, .58);
+}
+
+@media (max-width: 520px) {
+  .tribe-membership-note {
+    padding: 11px 12px;
+  }
+
+  .tribe-membership-note__text,
+  .tribe-dob-help {
+    font-size: 11.5px;
+  }
+}
+
+
 /* ===== Form ===== */
 .tribe-form{ display: grid; gap: 10px; }
 .tribe-form input[type="text"],
@@ -144,42 +259,597 @@
 
 
 
-/* ===== Botón flotante Reopen ===== */
-.tribe-reopen{
-  position: fixed; left: 18px; bottom: 18px;
-  width: 56px; height: 56px; border-radius: 999px;
-  display: grid; place-items: center;
-  background: #fff;
-  border: 1px solid rgba(193,164,95,.45);
-  box-shadow: 0 8px 28px rgba(0,0,0,.12), 0 0 22px rgba(255,215,128,.25);
+
+/* =========================================================
+   PROPHETIA TRIBE · ACCESO FLOTANTE
+   Emblema visible + quick add + llamada de atención
+   ========================================================= */
+
+#tribeReopen.tribe-reopen {
+  position: fixed;
+  left: 22px;
+  bottom: 22px;
   z-index: calc(var(--z-modal) + 40);
+
+  width: 66px;
+  height: 66px;
+
+  display: grid;
+  place-items: center;
+
+  margin: 0;
+  padding: 0;
+
+  border: 1px solid rgba(20, 17, 14, .82);
+  border-radius: 999px;
+
+  background:
+    radial-gradient(
+      circle at 34% 28%,
+      rgba(255, 255, 255, .96),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      #fffdf8,
+      #eee7db
+    );
+
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, .22),
+    inset 0 0 0 1px rgba(255, 255, 255, .75),
+    0 0 0 0 rgba(17, 17, 17, 0);
+
+  color: #111;
+
   cursor: pointer;
-  transition: transform .25s ease, box-shadow .25s ease;
+  overflow: visible;
+  isolation: isolate;
+
+  animation:
+    tribeReopenFloat 4.8s ease-in-out infinite;
+
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
 }
-.tribe-reopen::after{
-  content:""; position:absolute; inset:-10px; border-radius:inherit;
-  background: radial-gradient(60% 60% at 50% 50%, rgba(255,255,255,.9), rgba(255,255,255,0));
-  filter: blur(10px);
+
+#tribeReopen[hidden] {
+  display: none !important;
+}
+
+/* Halo ambiental permanente */
+#tribeReopen.tribe-reopen::before {
+  content: "";
+
+  position: absolute;
+  inset: -7px;
+  z-index: 0;
+
+  border: 1px solid rgba(17, 17, 17, .30);
+  border-radius: inherit;
+
+  opacity: .28;
+  transform: scale(.96);
+
+  pointer-events: none;
+
+  animation:
+    tribeReopenAmbientRing 3.6s ease-out infinite;
+}
+
+/* Brillo interior */
+#tribeReopen.tribe-reopen::after {
+  content: "";
+
+  position: absolute;
+  inset: 5px;
+  z-index: 0;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      125deg,
+      transparent 22%,
+      rgba(255, 255, 255, .58) 43%,
+      transparent 62%
+    );
+
+  background-size: 220% 100%;
+  background-position: 130% 0;
+
+  opacity: .56;
+  pointer-events: none;
+
+  animation:
+    tribeReopenSheen 5.2s ease-in-out infinite;
+}
+
+/* Contenedor del emblema */
+#tribeReopen .tribe-reopen__emblem {
+  position: relative;
+  z-index: 2;
+
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 999px;
+
+  transition:
+    transform 220ms ease;
+}
+
+/* El águila se conserva negra */
+#tribeReopen .tribe-reopen__img {
+  width: 34px;
+  height: 34px;
+
+  display: block;
+  object-fit: contain;
+
+  filter: none;
+  opacity: 1;
+
+  transition:
+    transform 240ms ease,
+    opacity 240ms ease;
+}
+
+
+/* =========================================================
+   PROPHETIA TRIBE · QUICK ADD ORBITAL
+   Aro animado alrededor del SVG
+   ========================================================= */
+
+#tribeReopen .tribe-reopen__plus {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  z-index: 4;
+
+  width: 28px;
+  height: 28px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: transparent;
+  color: #111;
+
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, .22);
+
+  overflow: visible;
+  isolation: isolate;
+  transform-origin: center;
+
+  transition:
+    transform 220ms ease,
+    filter 220ms ease;
+}
+
+/*
+  Disco exterior giratorio.
+
+  El conic-gradient genera dos segmentos:
+  - arco negro principal;
+  - pequeño acento dorado Prophetia.
+*/
+#tribeReopen
+.tribe-reopen__plus::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  border-radius: inherit;
+
+  background:
+    conic-gradient(
+      from 0deg,
+
+      transparent 0 12%,
+      #111 12% 42%,
+
+      transparent 42% 66%,
+      rgba(193, 164, 95, .96) 66% 79%,
+
+      transparent 79% 100%
+    );
+
+  animation:
+    tribeQuickAddOrbit 1.65s linear infinite;
+
   pointer-events: none;
 }
-.tribe-reopen:hover{ transform: translateY(-1px); box-shadow: 0 14px 40px rgba(0,0,0,.18); }
-.tribe-reopen__img{ width:28px; height:28px; display:block; object-fit:contain; }
 
-/* A11y util */
-.sr-only{
-  position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+/*
+  Disco interior blanco.
+
+  Tapa el centro del conic-gradient y deja visible
+  únicamente el aro exterior.
+*/
+#tribeReopen
+.tribe-reopen__plus::after {
+  content: "";
+
+  position: absolute;
+  inset: 3px;
+  z-index: 1;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f4eee3
+    );
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(17, 17, 17, .10);
+
+  pointer-events: none;
 }
-/* Reopen camelCase alias */
-.tribeReopen { /* alias de .tribe-reopen */
-  position: fixed; left: 18px; bottom: 18px;
-  width: 56px; height: 56px; border-radius: 999px;
-  display: grid; place-items: center; background: #fff;
-  border: 1px solid rgba(193,164,95,.45);
-  box-shadow: 0 8px 28px rgba(0,0,0,.12), 0 0 22px rgba(255,215,128,.25);
-  z-index: calc(var(--z-modal, 1200) + 40);
-  cursor: pointer; transition: transform .25s ease, box-shadow .25s ease;
+
+/* SVG central: permanece quieto mientras gira el aro */
+#tribeReopen
+.tribe-reopen__plus svg {
+  position: relative;
+  z-index: 2;
+
+  display: block;
+
+  width: 15px;
+  height: 15px;
+
+  color: #111;
 }
-.tribeReopen:hover{ transform: translateY(-1px); box-shadow: 0 14px 40px rgba(0,0,0,.18); }
+
+/* =========================================================
+   INTERACCIÓN GENERAL DEL BOTÓN
+   ========================================================= */
+
+#tribeReopen.tribe-reopen:hover {
+  transform:
+    translateY(-4px)
+    scale(1.035);
+
+  border-color: #111;
+
+  box-shadow:
+    0 20px 46px rgba(0, 0, 0, .29),
+    inset 0 0 0 1px rgba(255, 255, 255, .80),
+    0 0 30px rgba(193, 164, 95, .26);
+}
+
+#tribeReopen.tribe-reopen:hover
+.tribe-reopen__img {
+  transform: scale(1.08);
+}
+
+#tribeReopen.tribe-reopen:hover
+.tribe-reopen__plus {
+  transform: scale(1.12);
+
+  filter:
+    drop-shadow(
+      0 0 7px
+      rgba(17, 17, 17, .24)
+    );
+}
+
+/* El aro acelera al pasar el cursor */
+#tribeReopen.tribe-reopen:hover
+.tribe-reopen__plus::before {
+  animation-duration: .85s;
+}
+
+/* =========================================================
+   ATENCIÓN FUERTE AL CERRAR TRIBE
+   ========================================================= */
+
+#tribeReopen.tribe-reopen.is-attention {
+  animation:
+    tribeReopenAttentionButton
+    1.35s
+    ease-in-out
+    5;
+}
+
+#tribeReopen.tribe-reopen.is-attention::before {
+  border-color:
+    rgba(17, 17, 17, .92);
+
+  animation:
+    tribeReopenAlertRing
+    1.35s
+    ease-out
+    5;
+}
+
+/* Pulso independiente del acceso rápido */
+#tribeReopen.tribe-reopen.is-attention
+.tribe-reopen__plus {
+  animation:
+    tribeQuickAddAttention
+    1.15s
+    ease-in-out
+    5;
+}
+
+/* Durante la llamada de atención, el aro gira más rápido */
+#tribeReopen.tribe-reopen.is-attention
+.tribe-reopen__plus::before {
+  background:
+    conic-gradient(
+      from 0deg,
+
+      transparent 0 8%,
+      #111 8% 48%,
+
+      transparent 48% 67%,
+      rgba(193, 164, 95, 1) 67% 84%,
+
+      transparent 84% 100%
+    );
+
+  animation-duration: .62s;
+}
+
+
+
+/* =========================================================
+   MENSAJE CONTEXTUAL
+   ========================================================= */
+
+#tribeReopen .tribe-reopen__hint {
+  position: absolute;
+  left: calc(100% + 14px);
+  bottom: 3px;
+  z-index: 6;
+
+  width: max-content;
+  max-width:
+    min(280px, calc(100vw - 120px));
+
+  display: grid;
+  gap: 4px;
+
+  padding: 12px 15px;
+
+  border: 1px solid rgba(193, 164, 95, .42);
+  border-radius: 12px;
+
+  background:
+    rgba(18, 16, 14, .97);
+
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, .28);
+
+  color: #fffaf2;
+  text-align: left;
+
+  opacity: 0;
+  visibility: hidden;
+  transform:
+    translateX(-8px)
+    scale(.98);
+
+  pointer-events: none;
+
+  transition:
+    opacity 220ms ease,
+    visibility 220ms ease,
+    transform 220ms ease;
+}
+
+#tribeReopen .tribe-reopen__hint::before {
+  content: "";
+
+  position: absolute;
+  left: -6px;
+  bottom: 20px;
+
+  width: 12px;
+  height: 12px;
+
+  background: rgba(18, 16, 14, .97);
+
+  transform: rotate(45deg);
+}
+
+#tribeReopen .tribe-reopen__hint strong {
+  font:
+    700 12px/1.2
+    var(--font-ui, "Inter", sans-serif);
+
+  letter-spacing: .04em;
+}
+
+#tribeReopen .tribe-reopen__hint small {
+  font:
+    400 11px/1.4
+    var(--font-ui, "Inter", sans-serif);
+
+  color:
+    rgba(255, 250, 242, .72);
+}
+
+#tribeReopen.is-coachmark
+.tribe-reopen__hint,
+#tribeReopen:hover
+.tribe-reopen__hint,
+#tribeReopen:focus-visible
+.tribe-reopen__hint {
+  opacity: 1;
+  visibility: visible;
+
+  transform:
+    translateX(0)
+    scale(1);
+}
+
+/* =========================================================
+   ANIMACIONES
+   ========================================================= */
+
+@keyframes tribeReopenFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes tribeReopenAmbientRing {
+  0% {
+    opacity: .12;
+    transform: scale(.94);
+  }
+
+  55% {
+    opacity: .36;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.28);
+  }
+}
+
+@keyframes tribeReopenSheen {
+  0%,
+  64% {
+    background-position: 130% 0;
+  }
+
+  82% {
+    background-position: -100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes tribeQuickAddOrbit {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes tribeReopenAttentionButton {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  35% {
+    transform: translateY(-4px) scale(1.07);
+  }
+
+  60% {
+    transform: translateY(0) scale(1.02);
+  }
+}
+
+@keyframes tribeReopenAlertRing {
+  0% {
+    opacity: .75;
+    transform: scale(.92);
+    box-shadow:
+      0 0 0 0 rgba(17, 17, 17, .42);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.62);
+    box-shadow:
+      0 0 0 11px rgba(17, 17, 17, 0);
+  }
+}
+
+@keyframes tribeQuickAddAttention {
+  0%,
+  100% {
+    transform: scale(1);
+
+    filter:
+      drop-shadow(
+        0 0 0
+        rgba(17, 17, 17, 0)
+      );
+  }
+
+  42% {
+    transform: scale(1.22);
+
+    filter:
+      drop-shadow(
+        0 0 9px
+        rgba(17, 17, 17, .34)
+      );
+  }
+
+  68% {
+    transform: scale(1.08);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 640px) {
+  #tribeReopen.tribe-reopen {
+    left: 16px;
+    bottom: 16px;
+
+    width: 60px;
+    height: 60px;
+  }
+
+  #tribeReopen .tribe-reopen__img {
+    width: 31px;
+    height: 31px;
+  }
+
+  #tribeReopen .tribe-reopen__plus {
+    width: 22px;
+    height: 22px;
+  }
+
+  #tribeReopen .tribe-reopen__hint {
+    max-width:
+      min(235px, calc(100vw - 105px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #tribeReopen.tribe-reopen,
+  #tribeReopen.tribe-reopen::before,
+  #tribeReopen.tribe-reopen::after,
+  #tribeReopen .tribe-reopen__plus,
+  #tribeReopen .tribe-reopen__plus::before {
+    animation: none;
+  }
+}
+
 
 /* ====== Backdrop con transición ====== */
 .tribe-backdrop { opacity: 0; transition: opacity .25s ease; }
@@ -233,18 +903,7 @@
 }
 @keyframes tribeSpin { to { transform: rotate(360deg); } }
 
-/* ====== Éxito: botón de cerrar ====== */
-.tribe-success__close{
-  align-self: start;
-  height: 40px; padding: 0 14px;
-  border-radius: 999px;
-  background: #fff; color: #111;
-  border: 1px solid var(--tribe-line, #E6E2D9);
-  font-weight: 600; letter-spacing: .01em;
-  cursor: pointer;
-  transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
-}
-.tribe-success__close:hover{ background: #f7f5ef; box-shadow: 0 6px 16px rgba(0,0,0,.08); transform: translateY(-1px); }
+
 
 /* ====== Inputs: error/help ====== */
 .tribe-form .is-invalid {
@@ -352,7 +1011,13 @@
   overflow: hidden;
   border-radius: 20px;
   border: 1px solid var(--tribe-line);
-  background: var(--tribe-bg);
+  background:
+  linear-gradient(
+    rgba(243, 239, 231, .58),
+    rgba(243, 239, 231, .58)
+  ),
+  url("../img/textures/fondoform.png")
+    center / cover no-repeat;
   box-shadow: 0 24px 60px rgba(0,0,0,.18);
   transform: none !important;
   opacity: 1 !important;
@@ -501,7 +1166,9 @@
 
 #tribeModal.is-open .tribe-panel {
   display: grid;
-  grid-template-columns: minmax(240px, 42%) minmax(0, 58%);
+  grid-template-columns:
+    minmax(260px, 36%)
+    minmax(0, 64%);
   align-items: stretch;
   justify-content: center;
 
@@ -554,7 +1221,14 @@
   .tribe-check {
     align-items: flex-start;
   }
+#tribeModal .tribe-success__title {
+  width: auto;
+  max-width: 12ch;
 
+  white-space: normal;
+
+  font-size: clamp(38px, 10vw, 50px);
+}
   .tribe-btn {
     min-height: 48px;
   }
@@ -635,140 +1309,311 @@ body.tribe-open .site-header,
 body.tribe-open .site-header * {
   pointer-events: none;
 }
+
 /* =========================================================
-   PROPHETIA · Tribe Success State
-   Estado final limpio, sin solapes ni botones cortados
+   PROPHETIA · TRIBE SUCCESS
+   Columna vertical completa
    ========================================================= */
 
-.tribe-title[hidden],
-.tribe-sub[hidden],
-.tribe-form[hidden],
-.tribe-success[hidden],
-.tribe-toast[hidden] {
+#tribeModal .tribe-title[hidden],
+#tribeModal .tribe-sub[hidden],
+#tribeModal .tribe-form[hidden],
+#tribeModal .tribe-success[hidden],
+#tribeModal .tribe-toast[hidden] {
   display: none !important;
 }
 
-.tribe-success {
+/*
+  No modificamos las columnas del panel durante el éxito.
+
+  Se conserva:
+  izquierda 42%
+  derecha   58%
+
+  Así el logo mantiene su tamaño original.
+*/
+
+/* Columna derecha desde arriba hasta abajo */
+#tribeModal .tribe-right.is-success {
+  box-sizing: border-box;
+
+  min-width: 0;
+  min-height: 0;
+
   width: 100%;
-  min-height: 100%;
+  height: 100%;
+
+  align-self: stretch;
+
+  display: flex;
+  flex-direction: column;
+
+padding: 0;
+overflow: visible;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, .97),
+      rgba(249, 245, 238, .93)
+    );
+}
+
+/*
+  La superficie de éxito ocupa toda la columna.
+
+  La tercera fila se expande y empuja el botón
+  hacia la parte inferior sin posiciones absolutas.
+*/
+#tribeModal .tribe-success {
+  box-sizing: border-box;
+
+  flex: 1 1 auto;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  height: 100%;
+  min-height: 0;
 
   display: grid;
-  grid-template-columns: 56px 1fr;
+
+  grid-template-columns:
+    48px
+    minmax(0, 1fr);
+
+  grid-template-rows:
+    auto
+    auto
+    minmax(0, 1fr)
+    auto;
+
   grid-template-areas:
     "icon msg"
     "icon title"
-    "icon text"
-    "button button";
+    ". text"
+    ". button";
+
   column-gap: 18px;
   row-gap: 12px;
 
-  align-content: center;
+  align-content: stretch;
   align-items: start;
 
-  padding: clamp(20px, 3vw, 34px);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 22px;
+  /*
+    Menos espacio superior que antes:
+    el contenido comienza cerca del borde superior.
+  */
+  padding:
+    clamp(36px, 5vh, 52px)
+    clamp(28px, 3vw, 42px)
+    clamp(28px, 4vh, 40px);
 
-  background: rgba(255,255,255,.58);
-  box-shadow: 0 18px 50px rgba(0,0,0,.06);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+  box-shadow: none;
+
+overflow: visible;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-.tribe-success__icon {
+/* Icono verde */
+#tribeModal .tribe-success__icon {
   grid-area: icon;
 
   width: 48px;
   height: 48px;
-  border-radius: 999px;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
+
+  border-radius: 999px;
 
   background: #13a65a;
   color: #fff;
 
-  font-size: 24px;
+  font-size: 23px;
   font-weight: 800;
   line-height: 1;
 }
 
-.tribe-success__msg {
+/* Mensaje superior */
+#tribeModal .tribe-success__msg {
   grid-area: msg;
 
-  margin: 0;
-  max-width: 38ch;
+  min-width: 0;
+  max-width: none;
 
-  font-family: var(--font-ui, "Inter", system-ui, sans-serif);
+  margin: 3px 0 0;
+
+  font-family:
+    var(--font-ui, "Inter", sans-serif);
+
   font-size: 13px;
   line-height: 1.45;
   font-weight: 700;
+
   color: #0d8f4e;
 }
 
-.tribe-success__title {
+/* Título */
+
+
+#tribeModal .tribe-success__title {
   grid-area: title;
 
-  margin: 4px 0 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 
-  font-family: var(--font-display, "Playfair Display", serif);
-  font-size: clamp(32px, 3.4vw, 46px);
-  line-height: .95;
+  margin: 2px 0 0;
+
+  font-family:
+    var(
+      --font-display,
+      "Playfair Display",
+      serif
+    );
+
+  font-size: clamp(34px, 2.5vw, 42px);
+  line-height: .98;
   letter-spacing: -.045em;
   font-weight: 500;
-  color: #111;
+
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  text-wrap: balance;
+
+  color: #171310;
 }
 
-.tribe-success__text {
+/* Descripción */
+#tribeModal .tribe-success__text {
   grid-area: text;
 
-  margin: 0;
-  max-width: 44ch;
+  min-width: 0;
+  max-width: 48ch;
+
+  margin: 16px 0 0;
+
+  align-self: start;
+
+  font-family:
+    var(--font-ui, "Inter", sans-serif);
 
   font-size: 14px;
-  line-height: 1.65;
-  color: rgba(0,0,0,.68);
+  line-height: 1.68;
+
+  color: rgba(30, 24, 20, .72);
 }
 
-.tribe-success__text strong {
-  color: #111;
+#tribeModal .tribe-success__text strong {
+  color: #171310;
   font-weight: 700;
 }
 
-.tribe-success__close {
+/* Botón colocado al fondo de la columna */
+#tribeModal .tribe-success__close {
+  box-sizing: border-box;
+
   grid-area: button;
 
   width: 100%;
-  min-height: 48px;
-  margin-top: 14px;
+  min-width: 0;
+  min-height: 50px;
+
+  align-self: end;
+  justify-self: stretch;
+
+  margin: 20px 0 0;
+  padding: 0 20px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
+  border: 1px solid #151515;
   border-radius: 999px;
-  white-space: nowrap;
-  overflow: visible;
+
+  background: #111;
+  color: #fff;
+
+  font:
+    700 13px/1
+    var(--font-ui, "Inter", sans-serif);
+
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
+#tribeModal .tribe-success__close:hover {
+  transform: translateY(-1px);
+
+  background: #2b231e;
+
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, .14);
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
 @media (max-width: 820px) {
-  .tribe-success {
+  #tribeModal .tribe-right.is-success {
+    min-height: min(640px, 84dvh);
+  }
+
+  #tribeModal .tribe-success {
     grid-template-columns: 1fr;
+
+    grid-template-rows:
+      auto
+      auto
+      auto
+      minmax(0, 1fr)
+      auto;
+
     grid-template-areas:
       "icon"
       "msg"
       "title"
       "text"
       "button";
+
     justify-items: start;
+
+  padding:
+  clamp(36px, 5vh, 52px)
+  clamp(24px, 2.5vw, 34px)
+  clamp(28px, 4vh, 40px);
   }
 
-  .tribe-success__icon {
-    width: 44px;
-    height: 44px;
+  #tribeModal .tribe-success__title {
+    max-width: 12ch;
+    font-size: clamp(38px, 10vw, 50px);
+  }
+
+  #tribeModal .tribe-success__text {
+    max-width: none;
+  }
+
+  #tribeModal .tribe-success__close {
+    width: 100%;
+    margin-top: 22px;
   }
 }
+
 
 /* =========================================================
    PROPHETIA · Tribe Discount Checkout
@@ -913,5 +1758,135 @@ body.tribe-open .site-header * {
   #ppToast .pp-toast__inner {
     padding: 10px 16px;
     font-size: 13px;
+  }
+}
+/* =========================================================
+   PROPHETIA TRIBE - DOB field pickers
+   ========================================================= */
+.tribe-dob__field {
+  position: relative;
+  min-width: 0;
+}
+
+.tribe-dob__field > input {
+  cursor: text;
+  padding-right: 30px;
+}
+
+.tribe-dob__field::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid rgba(17, 17, 17, .62);
+  border-bottom: 1px solid rgba(17, 17, 17, .62);
+  pointer-events: none;
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform .18s ease, border-color .18s ease;
+}
+
+.tribe-dob__field.is-open {
+  z-index: 35;
+}
+
+.tribe-dob__field.is-open::after {
+  border-color: rgba(17, 17, 17, .92);
+  transform: translateY(-35%) rotate(225deg);
+}
+
+.tribe-dob__field.is-open > input {
+  border-color: rgba(193, 164, 95, .78);
+  box-shadow: 0 0 0 3px rgba(193, 164, 95, .18);
+}
+
+.tribe-dob-picker {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: grid;
+  gap: 2px;
+  max-height: min(240px, 45dvh);
+  padding: 6px;
+  overflow: auto;
+  border: 1px solid rgba(17, 17, 17, .16);
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.98), rgba(248,244,236,.98));
+  box-shadow:
+    0 20px 46px rgba(17, 17, 17, .18),
+    inset 0 1px 0 rgba(255,255,255,.78);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.tribe-dob-picker[hidden] {
+  display: none;
+}
+
+.tribe-dob-picker.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tribe-dob-picker.is-above {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
+.tribe-dob-picker--month {
+  min-width: 156px;
+}
+
+.tribe-dob-picker--year {
+  min-width: 118px;
+}
+
+.tribe-dob-picker__option {
+  min-height: 34px;
+  width: 100%;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  transition: background-color .14s ease, color .14s ease;
+}
+
+.tribe-dob-picker__option:hover,
+.tribe-dob-picker__option:focus-visible,
+.tribe-dob-picker__option[aria-selected="true"] {
+  background: #111;
+  color: #fff;
+  outline: none;
+}
+
+.tribe-dob-picker::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tribe-dob-picker::-webkit-scrollbar-thumb {
+  background: rgba(17, 17, 17, .22);
+  border-radius: 999px;
+}
+
+@media (max-width: 420px) {
+  .tribe-dob-picker--month {
+    min-width: 138px;
+  }
+
+  .tribe-dob-picker__option {
+    min-height: 32px;
+    padding-inline: 8px;
+    font-size: 11.5px;
   }
 }

@@ -37,16 +37,40 @@ body.streetwear-page {
 
 
 
-  /* Colores base · noche urbana Silent Luxury */
-  --street-bg: #14151e;
-  --street-bg-soft: #1b1e29;
-  --street-hero-top: #202539;
-  --street-hero-bottom: #11131b;
-  --street-ink: #f5f5ef;
-  --street-muted: rgba(245,245,239,0.78);
-  --street-accent: #f0c674;
-  --street-line: rgba(255,255,255,0.18);
-    --street-shell: #05060a; /* cáscara oscura común header/drawer/footer */
+/* ===== Streetwear Hombre · Dry Y2K tokens ===== */
+--street-bg: var(--pp-night-0);
+--street-bg-soft: var(--pp-night-1);
+--street-hero-top: var(--pp-night-2);
+--street-hero-bottom: var(--pp-night-0);
+
+/* Texto */
+--street-ink: #f7f7f1;
+--street-ink-strong: #ffffff;
+--street-muted: rgba(247,247,241,.78);
+--street-soft: rgba(247,247,241,.58);
+--street-line: rgba(247,247,241,.16);
+
+/* Acentos streetwear hombre */
+--street-accent: #C1A45F;
+--street-brass: #C1A45F;
+
+--street-led: rgba(160,120,255,.42);
+--street-led-soft: rgba(160,120,255,.18);
+--street-led-faint: rgba(160,120,255,.08);
+
+--street-ice: rgba(155,206,255,.16);
+--street-rose: rgba(245,120,205,.055);
+
+/* Superficies */
+--street-shell: rgba(5,6,10,.92);
+--street-shell-soft: rgba(10,11,14,.84);
+--street-glass: var(--pp-glass-soft);
+--street-glass-strong: var(--pp-glass-mid);
+
+/* Cards fallback */
+--street-card-ink: #111111;
+--street-card-muted: rgba(0,0,0,.62);
+--street-card-meta: rgba(0,0,0,.76);
 /* ===== Tipos editoriales (Streetwear) · legible ===== */
 --sw-ui:    clamp(12px, 0.90vw + 8px, 14px);
 --sw-kicker:clamp(12px, 0.75vw + 8px, 14px);
@@ -700,9 +724,9 @@ body.streetwear-page .mega-title{
 
 body.streetwear-page .mega-col a{
   font-size: var(--sw-mega-link, 11px);
-  letter-spacing: .10em;
+  letter-spacing: .005em;
   line-height: 1.35;        /* un pelín más compacto */
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--street-muted);
 }
 
@@ -768,14 +792,14 @@ body.streetwear-page .men-filters-cta {
 /* Tokens de fondo (ajústalos aquí) */
 body.streetwear-page{
     
-  --sw-bg: #050607;
+  --sw-bg: #030407;
 
-  /* Intensidad patrón (muy sutil) */
-  --sw-zebra-opacity: .06;   /* 0.04–0.08 */
-  --sw-grain-opacity: .08;   /* 0.06–0.12 */
+  /* Streetwear hombre: más seco, menos “glow bonito” */
+  --sw-zebra-opacity: .045;
+  --sw-grain-opacity: .075;
 
-  /* Escalas (zebra grande, grain pequeño) */
-  --sw-zebra-scale: 820px;
+  /* Zebra más grande = más premium, menos ruido */
+  --sw-zebra-scale: 920px;
   --sw-grain-scale: 180px;
 
   background: var(--sw-bg);
@@ -2422,8 +2446,7 @@ body.streetwear-page .site-footer .footer-inner::after{
    Estética: Y2K premium / urbano nocturno / chrome glow
    ========================================================= */
 
-body.streetwear-page,
-body.hoodies-page{
+body.streetwear-page{
 
   /* =======================================================
      BASE · NIGHT LUXURY
@@ -2471,11 +2494,11 @@ body.hoodies-page{
   --pp-y2k-led-violet-soft: rgba(var(--pp-y2k-violet-rgb),0.28);
   --pp-y2k-led-violet-faint: rgba(var(--pp-y2k-violet-rgb),0.13);
 
-  --pp-y2k-led-ice: rgba(var(--pp-y2k-ice-rgb),0.48);
-  --pp-y2k-led-ice-soft: rgba(var(--pp-y2k-ice-rgb),0.20);
+--pp-y2k-led-ice: rgba(var(--pp-y2k-ice-rgb),0.24);
+--pp-y2k-led-ice-soft: rgba(var(--pp-y2k-ice-rgb),0.10);
 
-  --pp-y2k-led-pink: rgba(var(--pp-y2k-pink-rgb),0.42);
-  --pp-y2k-led-pink-soft: rgba(var(--pp-y2k-pink-rgb),0.18);
+--pp-y2k-led-pink: rgba(var(--pp-y2k-pink-rgb),0.16);
+--pp-y2k-led-pink-soft: rgba(var(--pp-y2k-pink-rgb),0.06);
 
   --pp-y2k-led-warm: rgba(255,214,158,0.46);
 
@@ -2493,17 +2516,17 @@ body.hoodies-page{
     );
 
   /* Variante más rosa para Streetwear */
-  --pp-y2k-led-gradient-pop:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--pp-y2k-led-pink) 14%,
-      var(--pp-y2k-led-violet) 30%,
-      var(--pp-y2k-led-core) 50%,
-      var(--pp-y2k-led-ice) 68%,
-      var(--pp-y2k-led-pink) 84%,
-      transparent 100%
-    );
+--pp-y2k-led-gradient-pop:
+  linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--pp-y2k-violet-rgb),0.34) 16%,
+    rgba(245,245,239,0.62) 48%,
+    rgba(var(--pp-y2k-brass-rgb),0.34) 60%,
+    rgba(var(--pp-y2k-ice-rgb),0.18) 72%,
+    rgba(var(--pp-y2k-violet-rgb),0.30) 84%,
+    transparent 100%
+  );
 
   /* =======================================================
      GLASS / PANELS
@@ -2694,11 +2717,20 @@ body.streetwear-page .pp-hero.hero--two-cols::before{
   inset: 0;
 
   background:
-    radial-gradient(circle at 18% 35%, rgba(var(--pp-y2k-pink-rgb),0.10), transparent 30%),
-    radial-gradient(circle at 82% 18%, rgba(var(--pp-y2k-ice-rgb),0.10), transparent 32%),
-    radial-gradient(circle at 50% 100%, rgba(var(--pp-y2k-violet-rgb),0.11), transparent 42%);
+    radial-gradient(circle at 18% 35%,
+      rgba(var(--pp-y2k-violet-rgb),0.075),
+      transparent 32%
+    ),
+    radial-gradient(circle at 82% 18%,
+      rgba(var(--pp-y2k-brass-rgb),0.045),
+      transparent 34%
+    ),
+    radial-gradient(circle at 50% 100%,
+      rgba(245,245,239,0.035),
+      transparent 46%
+    );
 
-  opacity: 0.85;
+  opacity: 0.72;
   pointer-events: none;
   z-index: -1;
 }
@@ -2716,10 +2748,10 @@ body.streetwear-page .pp-hero__title::after{
   content: var(--pp-y2k-star);
   margin-left: 12px;
 
-  color: rgba(var(--pp-y2k-pink-rgb),0.82);
-  text-shadow:
-    0 0 10px rgba(var(--pp-y2k-pink-rgb),0.38),
-    0 0 22px rgba(var(--pp-y2k-violet-rgb),0.24);
+color: rgba(var(--pp-y2k-brass-rgb),0.72);
+text-shadow:
+  0 0 10px rgba(var(--pp-y2k-brass-rgb),0.18),
+  0 0 20px rgba(var(--pp-y2k-violet-rgb),0.18);
 
   opacity: 0.82;
 }
@@ -2733,10 +2765,10 @@ body.streetwear-page .pp-hero__list a{
 body.streetwear-page .pp-hero__list a:hover,
 body.streetwear-page .pp-hero__list a[aria-current="page"]{
   color: var(--pp-y2k-ink) !important;
-  border-bottom-color: rgba(var(--pp-y2k-pink-rgb),0.62) !important;
-  text-shadow:
-    0 0 10px rgba(var(--pp-y2k-pink-rgb),0.24),
-    0 0 18px rgba(var(--pp-y2k-violet-rgb),0.20);
+border-bottom-color: rgba(var(--pp-y2k-brass-rgb),0.48) !important;
+text-shadow:
+  0 0 10px rgba(var(--pp-y2k-brass-rgb),0.12),
+  0 0 18px rgba(var(--pp-y2k-violet-rgb),0.18);
 }
 
 /* TOOLBAR / FILTROS */
@@ -2837,11 +2869,12 @@ body.streetwear-page .pp-plp .card-media{
 body.streetwear-page #plp-grid .card:hover .card-media,
 body.streetwear-page .pp-plp .card:hover .card-media{
   background: var(--pp-y2k-card-bg-hover) !important;
-  border-color: rgba(var(--pp-y2k-pink-rgb),0.34) !important;
+border-color: rgba(var(--pp-y2k-violet-rgb),0.28) !important;
 
-  box-shadow:
-    var(--pp-y2k-shadow-card-hover),
-    0 0 28px rgba(var(--pp-y2k-pink-rgb),0.10) !important;
+box-shadow:
+  var(--pp-y2k-shadow-card-hover),
+  0 0 22px rgba(var(--pp-y2k-violet-rgb),0.10),
+  0 0 18px rgba(var(--pp-y2k-brass-rgb),0.055) !important;
 
   transform: translateY(var(--pp-y2k-hover-lift));
 }
@@ -2867,8 +2900,8 @@ body.streetwear-page #plp-grid .card-meta,
 body.streetwear-page .pp-plp .card-meta,
 body.streetwear-page #plp-grid .price,
 body.streetwear-page .pp-plp .price{
-  color: rgba(var(--pp-y2k-pink-rgb),0.88) !important;
-  text-shadow: 0 0 14px rgba(var(--pp-y2k-pink-rgb),0.14);
+color: rgba(var(--pp-y2k-brass-rgb),0.92) !important;
+text-shadow: 0 0 12px rgba(var(--pp-y2k-brass-rgb),0.10);
 }
 
 /* Wishlist button más chrome/Y2K */

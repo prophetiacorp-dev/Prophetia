@@ -340,7 +340,7 @@
 }
 
 .ck-details__hint{ margin-top: 12px; }
-
+/* ========================================================= CHECKOUT AUTH · Login, registro y verificación ========================================================= */ .ck-details__head .ck-h { margin-bottom: 0; } .ck-auth { max-width: 620px; } .ck-auth__kicker, .ck-auth__verify-kicker { margin: 0 0 7px; font-size: 10px; font-weight: 600; line-height: 1.2; letter-spacing: .16em; text-transform: uppercase; color: rgba(0, 0, 0, .48); } .ck-auth__intro { margin-bottom: 22px; } .ck-auth__intro h4, .ck-auth__verify h4 { margin: 0 0 8px; font-family: var( --font-display, "Playfair Display", serif ); font-size: clamp( 21px, 2.2vw, 28px ); font-weight: 500; line-height: 1.18; color: rgba( 0, 0, 0, .94 ); } .ck-auth__intro p, .ck-auth__verify p { max-width: 570px; margin: 0; font-size: 13px; line-height: 1.65; color: rgba( 0, 0, 0, .64 ); } .ck-auth__switch { display: grid; grid-template-columns: repeat( 2, minmax(0, 1fr) ); margin-bottom: 24px; border-bottom: 1px solid rgba( 0, 0, 0, .12 ); } .ck-auth__switch-btn { min-height: 46px; padding: 0 14px 12px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: rgba( 0, 0, 0, .46 ); font-family: var( --font-ui, Inter, system-ui, sans-serif ); font-size: 11px; font-weight: 600; line-height: 1; letter-spacing: .085em; text-transform: uppercase; cursor: pointer; transition: color .18s ease, border-color .18s ease; } .ck-auth__switch-btn:hover { color: rgba( 0, 0, 0, .78 ); } .ck-auth__switch-btn.is-active { border-bottom-color: #111; color: #111; } .ck-auth__panel { animation: ckAuthReveal .22s ease both; } @keyframes ckAuthReveal { from { opacity: 0; transform: translateY( 5px ); } to { opacity: 1; transform: translateY( 0 ); } } .ck-auth__name-grid { display: grid; grid-template-columns: repeat( 2, minmax(0, 1fr) ); gap: 18px; } .ck-auth__name-grid > div { display: grid; gap: 8px; min-width: 0; } .ck-auth__check { display: flex; align-items: flex-start; gap: 11px; font-size: 11.5px; line-height: 1.55; color: rgba( 0, 0, 0, .68 ); cursor: pointer; } .ck-form .ck-auth__check input { width: 16px; height: 16px; min-width: 16px; margin: 2px 0 0; padding: 0; border: 1px solid rgba( 0, 0, 0, .36 ); accent-color: #111; } .ck-auth__check a { color: #111; text-decoration: underline; text-underline-offset: 3px; } .ck-auth__status { min-height: 0; margin: 0; font-size: 12px; line-height: 1.55; color: rgba( 0, 0, 0, .62 ); } .ck-auth__status:empty { display: none; } .ck-auth__status.is-ok { color: #2d603d; } .ck-auth__status.is-error { color: #9d1f2f; } .ck-auth__status.is-info { color: #755b26; } .ck-auth__verify { padding: 28px; border: 1px solid rgba( 0, 0, 0, .12 ); background: linear-gradient( 145deg, rgba( 248, 245, 238, .92 ), rgba( 255, 255, 255, .96 ) ); box-shadow: inset 0 1px 0 rgba( 255, 255, 255, .95 ), 0 18px 46px rgba( 0, 0, 0, .05 ); animation: ckAuthReveal .24s ease both; } .ck-auth__verify strong { color: #111; overflow-wrap: anywhere; } .ck-auth__verify-note { margin-top: 12px; } .ck-auth__verify-actions { display: grid; gap: 10px; margin-top: 22px; } .ck-auth__secondary { width: 100%; min-height: 50px; border: 1px solid rgba( 0, 0, 0, .22 ); background: transparent; color: #111; font-family: var( --font-ui, Inter, system-ui, sans-serif ); font-size: 11px; font-weight: 600; letter-spacing: .075em; text-transform: uppercase; cursor: pointer; transition: border-color .18s ease, background .18s ease; } .ck-auth__secondary:hover { border-color: rgba( 0, 0, 0, .56 ); background: rgba( 0, 0, 0, .025 ); } .ck-auth__secondary:disabled, .ck-auth__text-btn:disabled { opacity: .48; cursor: not-allowed; } .ck-auth__text-btn { justify-self: center; padding: 7px 5px; border: 0; background: transparent; color: rgba( 0, 0, 0, .62 ); font: inherit; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; } .ck-summaryCard { margin: 12px 0 0; padding: 18px; border: 1px solid rgba( 0, 0, 0, .18 ); } .ck-summaryCard__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; } .ck-summaryCard__email { margin-top: 8px; color: rgba( 0, 0, 0, .78 ); overflow-wrap: anywhere; } .ck-summaryCard__action { margin-top: 14px; } .checkout-page .pp-invalid { border-bottom-color: #9d1f2f; } .checkout-page .pp-fieldError { margin-top: -10px; font-size: 11px; line-height: 1.45; color: #9d1f2f; } @media ( max-width: 620px ) { .ck-auth__name-grid { grid-template-columns: 1fr; } .ck-auth__verify { padding: 22px 18px; } .ck-auth__switch-btn { padding-inline: 8px; font-size: 10px; } }
 /* =========================
    9) SHIPPING (pane 3)
    ========================= */
@@ -817,12 +817,38 @@
   margin-top: 10px;
   width: 100%;
   height: 52px;
+
   border: 0;
-  background: rgba(0,0,0,.35);
+  background: #050505;
   color: #fff;
-  letter-spacing: .06em;
-  font-size: 13px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
   cursor: pointer;
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  transition:
+    background .18s ease,
+    transform .18s ease,
+    opacity .18s ease;
+}
+
+.ck-confirmPay:hover{
+  background: #000;
+  transform: translateY(-1px);
+}
+
+.ck-confirmPay:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .ck-legal{
@@ -881,15 +907,48 @@
   opacity: .82;
 }
 
-.pp-payChip{
-  font-size: 11px;
-  letter-spacing: .04em;
-  border: 1px solid rgba(0,0,0,.14);
-  border-radius: var(--pp-radius-chip);
-  padding: 6px 10px;
-  opacity: .78;
+/* =========================================================
+   CHECKOUT · Payment chips refined
+   Métodos de pago disponibles · rail derecho
+   ========================================================= */
+
+.checkout-page .pp-payLogos{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 8px;
+  align-items: center;
+  max-width: 100%;
 }
 
+.checkout-page .pp-payChip{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 25px;
+  padding: 6px 11px;
+
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 999px;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,247,244,.86));
+
+  color: rgba(0,0,0,.74);
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .035em;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 4px 12px rgba(0,0,0,.035);
+
+  opacity: 1;
+  white-space: nowrap;
+}
 /* =========================
    16) RESPONSIVE
    ========================= */
@@ -990,6 +1049,28 @@
 }
 
 
+
+.pp-checkout-address-notice {
+  margin: 0 0 18px;
+  padding: 13px 15px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(0,0,0,.025);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: rgba(0,0,0,.72);
+}
+
+.pp-checkout-address-notice.is-ok {
+  border-color: rgba(138,103,39,.28);
+  background: rgba(138,103,39,.07);
+  color: rgba(68,49,17,.88);
+}
+
+.pp-checkout-address-notice.is-error {
+  border-color: rgba(135,31,31,.28);
+  background: rgba(135,31,31,.07);
+  color: rgba(97,22,22,.9);
+}
 /* =========================================================
    PROPHETIA · Legal acceptance
    ========================================================= */
@@ -1027,3 +1108,270 @@
   opacity: .65;
 }
 
+
+/* =========================================================
+   CHECKOUT · Quantity input refined
+   ========================================================= */
+
+.checkout-page .custom-input-number.cartnc-qty{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkout-page .custom-input-number.cartnc-qty input[type="number"],
+.checkout-page .custom-input-number.cartnc-qty .cin-input{
+  width: 44px !important;
+  height: 32px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(0,0,0,.14) !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.82) !important;
+
+  text-align: center !important;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  color: #111 !important;
+
+  outline: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.8),
+    0 6px 16px rgba(0,0,0,.035);
+}
+
+.checkout-page .custom-input-number.cartnc-qty input[type="number"]:focus{
+  border-color: rgba(0,0,0,.42) !important;
+  box-shadow:
+    0 0 0 3px rgba(0,0,0,.055),
+    inset 0 1px 0 rgba(255,255,255,.85);
+}
+
+/* Quitar flechas nativas del number */
+.checkout-page .custom-input-number.cartnc-qty input[type="number"]::-webkit-outer-spin-button,
+.checkout-page .custom-input-number.cartnc-qty input[type="number"]::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.checkout-page .custom-input-number.cartnc-qty input[type="number"]{
+  -moz-appearance: textfield;
+}
+
+/* =========================================================
+   CHECKOUT · Legal acceptance contrast
+   ========================================================= */
+
+.checkout-page .ck-legal.ck-legal--accept{
+  opacity: 1 !important;
+  color: rgba(0,0,0,.86) !important;
+}
+
+.checkout-page .ck-legal.ck-legal--accept span{
+  color: inherit !important;
+}
+
+.checkout-page .ck-legal.ck-legal--accept a{
+  color: #050505 !important;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.checkout-page .ck-legal.ck-legal--accept input{
+  border-color: #111;
+  accent-color: #050505;
+}
+
+/* =========================================================
+   CHECKOUT · Prophetia Tribe discount refined
+   Código privado · rail derecho
+   ========================================================= */
+
+.checkout-page .ck-tribeDiscount{
+  margin-top: 16px;
+  padding-top: 16px;
+
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+
+.checkout-page .ck-tribeDiscount__label{
+  display: block;
+  margin: 0 0 8px;
+
+  font-family: var(--font-display, "Playfair Display", serif);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+
+  color: rgba(0,0,0,.92);
+}
+
+.checkout-page .ck-tribeDiscount__row{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+
+  border: 1px solid rgba(0,0,0,.14);
+  background: rgba(255,255,255,.72);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 8px 22px rgba(0,0,0,.035);
+
+  overflow: hidden;
+}
+
+.checkout-page .ck-tribeDiscount__input{
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+
+  padding: 0 13px;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12.5px;
+  line-height: 1;
+
+  color: #111;
+  outline: none;
+}
+
+.checkout-page .ck-tribeDiscount__input::placeholder{
+  color: rgba(0,0,0,.45);
+}
+
+.checkout-page .ck-tribeDiscount__input:focus{
+  background: rgba(255,255,255,.42);
+}
+
+.checkout-page .ck-tribeDiscount__btn{
+  min-width: 78px;
+  height: 38px;
+
+  border: 0;
+  border-left: 1px solid rgba(0,0,0,.12);
+  border-radius: 0;
+
+  background: #0b0b0b;
+  color: #fff;
+
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    background .18s ease,
+    opacity .18s ease;
+}
+
+.checkout-page .ck-tribeDiscount__btn:hover{
+  background: #000;
+}
+
+.checkout-page .ck-tribeDiscount__btn:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.checkout-page .ck-tribeDiscount__msg{
+  margin: 7px 0 0;
+
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgba(0,0,0,.62);
+}
+/* =========================================================
+   CHECKOUT · Guest checkout
+   ========================================================= */
+
+.checkout-page .ck-guest-checkout {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.58);
+}
+
+.checkout-page .ck-guest-checkout__button {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 10px;
+}
+
+.checkout-page .ck-summaryCard__note {
+  margin-top: 8px;
+  max-width: 48ch;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(0,0,0,.58);
+}
+
+.checkout-page .ck-guest-account {
+  margin-top: 10px;
+  padding: 18px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.62);
+}
+
+.checkout-page .ck-guest-account__copy {
+  margin: 0 0 14px;
+  max-width: 66ch;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: rgba(0,0,0,.66);
+}
+
+.checkout-page .ck-guest-account__check {
+  margin-top: 12px;
+}
+/* Prophetia checkout details: email gate + guest continuation */
+.checkout-page .ck-auth__choice.is-email-step .ck-guest-checkout,
+.checkout-page .ck-auth__choice.is-email-step .ck-new-user-summary {
+  display: none !important;
+}
+
+.checkout-page .ck-new-user-summary {
+  margin-bottom: 30px;
+}
+
+.checkout-page .ck-new-user-summary h4 {
+  margin: 0 0 8px;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #111;
+}
+
+.checkout-page .ck-new-user-summary p {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, .66);
+  overflow-wrap: anywhere;
+}
+
+.checkout-page .ck-auth__text-btn--inline {
+  justify-self: start;
+  padding: 0 0 2px;
+  color: #111;
+}
+
+.checkout-page .ck-auth__choice.is-new-user-step .ck-auth__intro {
+  display: none;
+}

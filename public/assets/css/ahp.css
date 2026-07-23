@@ -740,3 +740,36 @@ body.ahp-page .tiles--ahp .tile-sub {
     padding: 22px 20px 24px;
   }
 }
+
+/* =========================================================
+   AHP · Product mockup duo tile · stronger presence
+   ========================================================= */
+
+.ahp-page .tiles--ahp .tile-img--duo.tile-img--mockup-duo{
+  aspect-ratio: 4 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  padding: 0;
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at 30% 22%, rgba(127,231,255,.12), transparent 58%),
+    radial-gradient(circle at 72% 18%, rgba(183,140,255,.12), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(0,0,0,.22));
+
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.ahp-page .tiles--ahp .tile-img--duo.tile-img--mockup-duo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  filter: drop-shadow(0 18px 28px rgba(0,0,0,.42));
+}
+
+.ahp-page .tiles--ahp .tile-img--duo.tile-img--mockup-duo img:first-child{
+  border-right: 1px solid rgba(255,255,255,.06);
+}

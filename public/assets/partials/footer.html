@@ -1,78 +1,83 @@
-<footer class="site-footer">
-  <div class="footer-inner container">
-    <section class="brand-col">
-      <a class="brand brand--sm" href="/home" aria-label="Inicio">PROPHETIA</a>
-      <p class="brand-lede">Silent Luxury Mediterráneo. Diseño editorial con alma simbólica.</p>
+<footer class="site-footer" aria-label="Pie de pagina">
+  <section class="footer-editorial container" aria-label="Prophetia editorial">
+    <div class="footer-editorial__copy">
+      <h2>PROPHETIA</h2>
+      <p>
+        La casa Prophetia reúne prendas esenciales, símbolos mediterráneos y una lectura silenciosa del lujo. Cada pieza está pensada para acompañar el día a día con presencia, calma y una identidad reconocible.
+      </p>
+    </div>
+  </section>
 
-      <form class="news-form" action="#" method="post" onsubmit="event.preventDefault(); alert('Gracias por unirte.');">
-        <label for="newsEmail" class="news-label">Únete a Prophetia Tribe</label>
-        <div class="news-row">
-          <input id="newsEmail" type="email" required placeholder="Tu email" />
-          <button class="btn-primary">Unirme</button>
+  <div class="footer-panel">
+    <div class="footer-inner container">
+      <nav class="footer-col footer-col--service" aria-label="Atención al cliente">
+        <ul>
+          <li><a href="/contact">Atención al cliente</a></li>
+          <li><a href="/shipping">Envío y devoluciones</a></li>
+          <li><a href="/faqs">Preguntas frecuentes</a></li>
+          <li><a href="/reservas">Reserva una cita</a></li>
+          <li><a href="/studio">Tiendas</a></li>
+          <li><a href="/sitemap.xml">Mapa del sitio</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Comprar">
+        <ul>
+          <li><a href="/mujer">Mujer</a></li>
+          <li><a href="/hombre">Hombre</a></li>
+          <li><a href="/colecciones">Colecciones</a></li>
+          <li><a href="/prophetia-originals">Prophetia Originals</a></li>
+          <li><a href="/wishlist">Guardados</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Prophetia House">
+        <ul>
+          <li><a href="/about">Prophetia House</a></li>
+          <li><a href="/musica">Música</a></li>
+          <li><a href="/events">Eventos</a></li>
+          <li><a href="/my-services">Servicios</a></li>
+        </ul>
+      </nav>
+
+      <section class="brand-col" aria-label="Newsletter Prophetia">
+        <a class="footer-brand" href="/home" aria-label="Inicio Prophetia">PROPHETIA</a>
+        <p class="brand-lede">Silent Luxury Mediterráneo. Diseño editorial con alma simbólica.</p>
+
+        <form class="news-form" data-footer-tribe-form novalidate>
+          <label for="newsEmail" class="news-label">Únete a Prophetia Tribe</label>
+          <div class="news-row">
+            <input id="newsEmail" name="email" type="email" required autocomplete="email" placeholder="Tu email" />
+            <button class="btn-primary" type="submit">Unirme</button>
+          </div>
+          <small class="muted">
+            Completarás la inscripción segura en el siguiente paso.
+            <a href="/privacy">Privacidad</a>.
+          </small>
+          <p class="news-status" data-footer-tribe-status aria-live="polite"></p>
+        </form>
+
+        <div class="socials" aria-label="Redes sociales">
+          <span>Redes oficiales próximamente</span>
         </div>
-        <small class="muted">Envíos ocasionales, puedes darte de baja cuando quieras.</small>
-      </form>
+      </section>
 
-      <div class="socials">
-        <a href="#" aria-label="Instagram">Instagram</a>
-        <a href="#" aria-label="TikTok">TikTok</a>
-        <a href="#" aria-label="Spotify">Spotify</a>
+      <aside class="footer-art" aria-hidden="true">
+        <img src="/assets/img/logo/emblem.svg" alt="">
+      </aside>
+    </div>
+
+    <div class="footer-bottom container">
+      <span>España (Español)</span>
+
+      <div class="legal">
+        <a href="/terms">Condiciones de venta</a>
+        <a href="/devoluciones">Devoluciones</a>
+        <a href="/shipping">Envíos</a>
+        <a href="/privacy">Privacidad</a>
+        <a href="/aviso-legal">Aviso legal</a>
+        <a href="/politica-cookies">Cookies</a>
       </div>
-    </section>
-
-    <nav class="footer-col" aria-label="Comprar">
-      <h5>Shop</h5>
-      <ul>
-        <li><a href="/camisetas-punto-hombre">T-Shirts</a></li>
-        <li><a href="/hoodies">Hoodies</a></li>
-        <li><a href="/colecciones">Collections</a></li>
-      </ul>
-    </nav>
-
-    <nav class="footer-col" aria-label="Ayuda">
-      <h5>Help</h5>
-      <ul>
-        <li><a href="/shipping">Envíos</a></li>
-        <li><a href="/devoluciones">Devoluciones</a></li>
-        <li><a href="/faqs">FAQs</a></li>
-        <li><a href="/contact">Contacto</a></li>
-      </ul>
-    </nav>
-
-    <nav class="footer-col" aria-label="Legal">
-      <h5>Legal</h5>
-      <ul>
-        <li><a href="/terms">Condiciones de venta</a></li>
-        <li><a href="/privacy">Privacidad</a></li>
-        <li><a href="/aviso-legal">Aviso legal</a></li>
-        <li><a href="/politica-cookies">Cookies</a></li>
-      </ul>
-    </nav>
-
-    <nav class="footer-col" aria-label="Studio">
-      <h5>Studio</h5>
-      <ul>
-        <li><a href="/about">About Prophetia</a></li>
-        <li><a href="/journal">Journal</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-    </nav>
-
-    <aside class="footer-art" aria-hidden="true">
-      <img src="/assets/img/logo/emblem.svg" alt="">
-    </aside>
-  </div>
-
-  <div class="footer-bottom container">
-    <span>© 2026 PROPHETIA — Silent Luxury Mediterráneo</span>
-
-    <div class="legal">
-      <a href="/terms">Condiciones de venta</a>
-      <a href="/devoluciones">Devoluciones</a>
-      <a href="/shipping">Envíos</a>
-      <a href="/privacy">Privacidad</a>
-      <a href="/aviso-legal">Aviso legal</a>
-      <a href="/politica-cookies">Cookies</a>
     </div>
   </div>
 </footer>

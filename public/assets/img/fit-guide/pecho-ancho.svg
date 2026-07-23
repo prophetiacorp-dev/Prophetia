@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 160" role="img" aria-labelledby="title desc">
+  <title id="title">Pecho ancho</title>
+  <desc id="desc">Torso frontal monolineal Prophetia con pecho ancho.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M87 23 C94 40 80 51 60 60 C46 66 40 84 35 108 L26 144" stroke="#111" stroke-width="3.2"/>
+    <path d="M143 23 C136 40 150 51 170 60 C184 66 190 84 195 108 L204 144" stroke="#111" stroke-width="3.2"/>
+    <path d="M70 82 C93 70 137 70 160 82" stroke="#111" stroke-width="2.8"/>
+    <path d="M94 60 C102 74 108 91 108 108" stroke="#111" stroke-width="2.1" opacity=".48"/>
+    <path d="M136 60 C128 74 122 91 122 108" stroke="#111" stroke-width="2.1" opacity=".48"/>
+    <path d="M17 77 C9 97 12 121 24 139" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+    <path d="M213 77 C221 97 218 121 206 139" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+  </g>
+</svg>

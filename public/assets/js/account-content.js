@@ -120,10 +120,12 @@ initiate: {
   };
 
 function normalizeRankId(rank) {
-  return String(rank || "member")
+  const clean = String(rank || "member")
     .trim()
     .toLowerCase()
     .replace(/\s+/g, "-");
+
+  return clean === "seer" ? "archivist" : clean;
 }
 function getRankEmblemSrc(rank) {
   const rankId = normalizeRankId(rank);
@@ -345,7 +347,7 @@ const PP_VAULT_RANK_LABELS = {
   "initiate": "Initiate",
   "adeptus": "Adeptus",
   "oracle": "Oracle",
-  "seer": "Seer",
+  "seer": "Archivist",
   "archivist": "Archivist",
   "prophet": "Prophet",
   "prophet-i": "Prophet I",
@@ -452,10 +454,12 @@ async function renderAccountCalendarPreview() {
 let ppCachedTribeMember = null;
 
 function ppNormalizeVaultRank(rankId = "") {
-  return String(rankId || "tribe-member")
+  const clean = String(rankId || "tribe-member")
     .trim()
     .toLowerCase()
     .replace(/\s+/g, "-");
+
+  return clean === "seer" ? "archivist" : clean;
 }
 
 function ppGetVaultRankLevel(rankId = "") {
@@ -1272,6 +1276,10 @@ window.addEventListener("pp:wishlist-updated", () => {
   renderAccountVaultPreview();
 });
 window.addEventListener("pp:tribe-mission-completed", handleTribeMissionCompleted);
+window.addEventListener("pp:tribe-membership-ready", () => {
+  tribeProfileRequested = false;
+  refreshTribeProfile();
+});
   }
 
   if (document.readyState === "loading") {

@@ -1,0 +1,114 @@
+/* PROPHETIA PLP rhythm: match the streetwear mujer hero-to-grid breathing room. */
+body:is(
+  .men-page.streetwear-page,
+  .women-page.streetwear-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page
+) {
+  --pp-plp-hero-h: clamp(520px, 34.1vw, 655px);
+  --pp-plp-hero-pad-top: 42px;
+  --pp-plp-hero-pad-bottom: clamp(58px, 6vw, 92px);
+}
+
+body:is(
+  .men-page.streetwear-page,
+  .women-page.streetwear-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page
+) .pp-hero.hero--two-cols {
+  box-sizing: border-box !important;
+  margin-bottom: 0 !important;
+  min-height: var(--pp-plp-hero-h) !important;
+  padding-top: var(--pp-plp-hero-pad-top) !important;
+  padding-bottom: var(--pp-plp-hero-pad-bottom) !important;
+}
+
+body:is(
+  .men-page.streetwear-page,
+  .women-page.streetwear-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page
+) :is(.bb-spacer, .sud-spacer) {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+body:is(
+  .men-page.streetwear-page,
+  .women-page.streetwear-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page
+) :is(.pp-collection-page, .pp-plp.container, .pp-filters.container) {
+  margin-top: 0 !important;
+}
+
+body:is(
+  .men-page.streetwear-page,
+  .women-page.streetwear-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.camisetas-page,
+  .women-page.camisetas-page
+) .pp-collection-page > .pp-collection-hero.container,
+body:is(.sud-men-page, .women-page.sud-women-page) .sud-intro {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 900px) {
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) {
+    --pp-plp-hero-h: clamp(360px, 72vw, 520px);
+    --pp-plp-hero-pad-top: 34px;
+    --pp-plp-hero-pad-bottom: clamp(46px, 8vw, 72px);
+  }
+}
+
+@media (max-width: 640px) {
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) {
+    --pp-plp-hero-h: clamp(300px, 88vw, 430px);
+    --pp-plp-hero-pad-top: 28px;
+    --pp-plp-hero-pad-bottom: 48px;
+  }
+}

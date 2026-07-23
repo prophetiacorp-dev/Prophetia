@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 160" role="img" aria-labelledby="title desc">
+  <title id="title">Pecho medio</title>
+  <desc id="desc">Torso frontal monolineal Prophetia con pecho medio.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M93 24 C98 40 89 50 72 58 C60 64 55 81 51 104 L43 144" stroke="#111" stroke-width="3.2"/>
+    <path d="M137 24 C132 40 141 50 158 58 C170 64 175 81 179 104 L187 144" stroke="#111" stroke-width="3.2"/>
+    <path d="M81 80 C99 72 131 72 149 80" stroke="#111" stroke-width="2.7"/>
+    <path d="M98 60 C104 73 108 88 108 104" stroke="#111" stroke-width="2.1" opacity=".48"/>
+    <path d="M132 60 C126 73 122 88 122 104" stroke="#111" stroke-width="2.1" opacity=".48"/>
+    <path d="M33 78 C27 94 28 114 36 131" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+    <path d="M197 78 C203 94 202 114 194 131" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+  </g>
+</svg>

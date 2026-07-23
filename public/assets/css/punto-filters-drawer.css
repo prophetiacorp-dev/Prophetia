@@ -1,0 +1,371 @@
+/* =========================================================
+   PROPHETIA · drawers de punto
+   Camisetas/Sudaderas de punto con lectura limpia tipo Loewe
+   ========================================================= */
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersOverlay#menFiltersOverlay, #womenFiltersOverlay#womenFiltersOverlay):is(.men-filters-overlay, .women-filters-overlay) {
+  background: rgba(0, 0, 0, .34) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  z-index: 2600 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer):is(.men-filters-drawer, .women-filters-drawer) {
+  box-sizing: border-box !important;
+  width: min(600px, 100vw) !important;
+  height: 100dvh !important;
+  padding-inline: clamp(24px, 3.2vw, 32px) !important;
+  background: #fff !important;
+  color: #111 !important;
+  border-left: 1px solid rgba(0, 0, 0, .12) !important;
+  box-shadow: -18px 0 54px rgba(0, 0, 0, .18) !important;
+  transform: translate3d(100%, 0, 0) !important;
+  opacity: 1 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  transition: transform .32s cubic-bezier(.22, .61, .36, 1),
+              visibility 0s linear .32s !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer):is(.men-filters-drawer, .women-filters-drawer).is-open {
+  transform: translate3d(0, 0, 0) !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transition: transform .32s cubic-bezier(.22, .61, .36, 1) !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer):is(.men-filters-drawer, .women-filters-drawer)::before {
+  content: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-head, .women-filters-head) {
+  flex: 0 0 auto !important;
+  padding: 30px 0 0 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, .14) !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-head-top, .women-filters-head-top) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-title, .women-filters-title) {
+  margin: 0 !important;
+  color: #111 !important;
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif) !important;
+  font-size: 22px !important;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-close, .women-filters-close) {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #111 !important;
+  font: 300 28px/1 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  cursor: pointer !important;
+  transform: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-close, .women-filters-close)::before {
+  content: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-tabs, .women-filters-tabs) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 32px !important;
+  margin: 26px 0 0 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-tab, .women-filters-tab) {
+  position: relative !important;
+  padding: 0 0 16px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: rgba(0, 0, 0, .55) !important;
+  box-shadow: none !important;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+  transform: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-tab, .women-filters-tab).is-active {
+  color: #111 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-tab, .women-filters-tab)::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: -1px !important;
+  height: 1px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-tab, .women-filters-tab).is-active::after {
+  background: #111 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-body, .women-filters-body) {
+  flex: 1 1 auto !important;
+  display: block !important;
+  padding: 30px 0 28px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  color: #111 !important;
+  scrollbar-width: thin !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-panel, .women-filters-panel) {
+  display: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  animation: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-panel, .women-filters-panel).is-active {
+  display: block !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-swatch-list, .women-swatch-list) {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 22px 60px !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-swatch, .women-swatch) {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  color: #111 !important;
+  cursor: pointer !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-swatch-input, .women-swatch-input) {
+  position: absolute !important;
+  inset: 0 !important;
+  opacity: 0 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-swatch-dot, .women-swatch-dot) {
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px !important;
+  border-radius: 0 !important;
+  border: 1px solid rgba(0, 0, 0, .28) !important;
+  box-shadow: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-swatch-label, .women-swatch-label) {
+  color: rgba(0, 0, 0, .62) !important;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+  white-space: nowrap !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-swatch-input, .women-swatch-input):checked
+  + :is(.men-swatch-dot, .women-swatch-dot) {
+  box-shadow: inset 0 0 0 3px #fff !important;
+  background-color: #111 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-panel, .women-filters-panel)[data-panel="talla"].is-active {
+  display: block !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-panel, .women-filters-panel)[data-panel="talla"]
+  :is(.men-check, .women-check) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  width: max-content !important;
+  min-height: 28px !important;
+  margin: 0 0 22px !important;
+  padding: 0 !important;
+  color: rgba(0, 0, 0, .68) !important;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+  cursor: pointer !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-check, .women-check) input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: #111 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-foot, .women-filters-foot) {
+  flex: 0 0 auto !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-top: 1px solid rgba(0, 0, 0, .14) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-foot-inner, .women-filters-foot-inner) {
+  width: 100% !important;
+  min-height: 76px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-clear, .women-filters-clear, .men-filters-cta, .women-filters-cta) {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 76px !important;
+  margin: 0 !important;
+  padding: 0 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transform: none !important;
+  transition: background .18s ease, color .18s ease !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-clear, .women-filters-clear) {
+  border: 0 !important;
+  border-right: 1px solid rgba(0, 0, 0, .14) !important;
+  background: #fff !important;
+  color: #111 !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-cta, .women-filters-cta) {
+  border: 0 !important;
+  background: #050505 !important;
+  color: #fff !important;
+}
+
+body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(.men-filters-count, .women-filters-count, #menResultsCount, #womenResultsCount) {
+  display: inline-flex !important;
+  min-width: 1ch !important;
+  margin: 0 2px !important;
+  font: inherit !important;
+}
+
+@media (max-width: 640px) {
+  body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+    :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer):is(.men-filters-drawer, .women-filters-drawer) {
+    width: 100vw !important;
+    padding-inline: 22px !important;
+  }
+
+  body:is(.camisetas-page, .sud-men-page, .sud-women-page)
+    :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+    :is(.men-swatch-list, .women-swatch-list) {
+    grid-template-columns: 1fr !important;
+  }
+}

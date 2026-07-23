@@ -1078,3 +1078,14 @@ body.women-page .card .nav.prev:active,
 body.women-page .card .nav.next:active{
   box-shadow: 0 6px 14px rgba(0,0,0,.08);
 }
+
+/* Tallas verticales en cualquier drawer de mujer */
+.women-filters-panel[data-panel="talla"].is-active {
+  display: block;
+}
+
+.women-filters-panel[data-panel="talla"] .women-check {
+  display: flex;
+  align-items: center;
+  width: max-content;
+}

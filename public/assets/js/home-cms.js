@@ -21,7 +21,12 @@ onSnapshot(ref, (snap) => {
   if (elCta && typeof d.heroCTA === "string" && d.heroCTA.trim()) {
     elCta.textContent = d.heroCTA.trim();
   }
-}, (err) => console.error("[HOME CMS] onSnapshot error:", err));
+}, (err) => {
+  // Mientras Firestore no esté activo o sus reglas aún no estén desplegadas,
+  // la portada conserva el contenido editorial incluido en el HTML.
+  if (err?.code === "permission-denied" || err?.code === "unavailable") return;
+  console.error("[HOME CMS] onSnapshot error:", err);
+});
 
 function escapeHtml(s) {
   return String(s ?? "")

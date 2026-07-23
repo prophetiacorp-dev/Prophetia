@@ -1,9 +1,8 @@
 (() => {
   'use strict';
 
-  const CART_KEY = 'pp_cart_v2';
   const LS_EMAIL = 'pp_checkout_email';
-  const LS_SHIP_MODE = 'pp_checkout_shipping'; // 'home' | 'store'
+  const LS_SHIP_MODE = 'pp_checkout_shipping';// 'home' | 'store'
   const LS_SHIP_DETAILS = 'pp_checkout_shipping_details';
     const LS_GIFT_ON = 'pp_checkout_isGift';
   const LS_INVOICE_ON = 'pp_checkout_invoiceWanted';
@@ -16,31 +15,61 @@ const PP_DISCOUNT_VALIDATE_ENDPOINT = '/api/discount/validate';
 const LS_ORDER_DRAFT_ID = 'pp_checkout_order_draft_id';
 
 const LS_TRIBE_CODE = 'pp_checkout_tribe_code';
+const LS_CHECKOUT_MODE = 'pp_checkout_mode';
+const LS_GUEST_ACCOUNT_INTENT = 'pp_checkout_guest_account_intent';
 
-let ppSecureCartSummary = null;
+let ppSecureCartSummary = null; let checkoutAuthMode = 'email'; let checkoutAwaitingVerification = false; let pendingVerificationEmail = ''; let pendingVerificationPassword = '';
   // Función para formatear el dinero
   const money = (n = 0) => {
-    try { 
-      return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n); 
+    try {
+      return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n);
     }
-    catch { 
-      return `${(+n).toFixed(2)} €`; 
+    catch {
+      return `${(+n).toFixed(2)} €`;
     }
   };
 
-  // Cargar y guardar carrito en localStorage
-  const loadCart = () => {
-    try { 
-      return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); 
-    }
-    catch { 
-      return []; 
-    }
-  };
+/*
+ * El carrito global es la única fuente de verdad.
+ * checkout.js no debe conocer ni construir claves
+ * pp_cart_v3 directamente.
+ */
+const loadCart = () => {
+  try {
+    const cart =
+      window.ppCart?.read?.();
+
+    return Array.isArray(cart)
+      ? cart
+      : [];
+  } catch (error) {
+    console.error(
+      '[checkout] No se pudo leer el carrito global:',
+      error
+    );
+
+    return [];
+  }
+};
 
 const saveCart = (cart) => {
   ppSecureCartSummary = null;
-  localStorage.setItem(CART_KEY, JSON.stringify(cart || []));
+
+  const safeCart =
+    Array.isArray(cart)
+      ? cart
+      : [];
+
+  if (
+    !window.ppCart ||
+    typeof window.ppCart.write !== 'function'
+  ) {
+    throw new Error(
+      'El carrito global todavía no está disponible.'
+    );
+  }
+
+  window.ppCart.write(safeCart);
 };
 const sum = () => {
   if (ppSecureCartSummary && Number.isFinite(Number(ppSecureCartSummary.subtotal))) {
@@ -49,7 +78,91 @@ const sum = () => {
 
   return 0;
 };
+function waitForCheckoutCart(
+  timeoutMs = 5000
+) {
+  const existingCart =
+    window.ppCart;
 
+  const alreadyReady =
+    existingCart &&
+    typeof existingCart.read === 'function' &&
+    typeof existingCart.write === 'function' &&
+    (
+      typeof existingCart.isScopeResolved !==
+        'function' ||
+      existingCart.isScopeResolved()
+    );
+
+  if (alreadyReady) {
+    return Promise.resolve(existingCart);
+  }
+
+  return new Promise((resolve, reject) => {
+    let settled = false;
+
+    const finish = () => {
+      if (settled) return;
+
+      const cart =
+        window.ppCart;
+
+      const ready =
+        cart &&
+        typeof cart.read === 'function' &&
+        typeof cart.write === 'function' &&
+        (
+          typeof cart.isScopeResolved !==
+            'function' ||
+          cart.isScopeResolved()
+        );
+
+      if (!ready) {
+        return;
+      }
+
+      settled = true;
+
+      window.removeEventListener(
+        'pp:cart-scope-changed',
+        onCartScopeChanged
+      );
+
+      window.clearTimeout(timeoutId);
+
+      resolve(cart);
+    };
+
+    const onCartScopeChanged = () => {
+      finish();
+    };
+
+    window.addEventListener(
+      'pp:cart-scope-changed',
+      onCartScopeChanged
+    );
+
+    const timeoutId =
+      window.setTimeout(() => {
+        if (settled) return;
+
+        settled = true;
+
+        window.removeEventListener(
+          'pp:cart-scope-changed',
+          onCartScopeChanged
+        );
+
+        reject(
+          new Error(
+            'El carrito no terminó de inicializarse.'
+          )
+        );
+      }, timeoutMs);
+
+    finish();
+  });
+}
   // Selección de elementos del DOM
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -108,17 +221,59 @@ sideShipping: $('#ckSidebarShipping'),
     basketCTA: $('#ckContinueFromBasket'),
     sideCTA: $('#ckSidebarFinalize'),
     back: $('#goBack'),
-    logoutBtn: $('#ckLogout'),
+  back: $('#goBack'),
+logoutBtn: $('#ckLogout'),
 
-    // Forms
-    detailsForm: $('#ckDetailsForm'),
-    shippingForm: $('#ckShippingForm'),
-    emailInput: $('#ckEmail'),
+// Forms
+detailsForm: $('#ckDetailsForm'),
+registerForm: $('#ckRegisterForm'),
+shippingForm: $('#ckShippingForm'),
+emailInput: $('#ckEmail'),
+registerEmailInput: $('#ckRegisterEmail'),
+guestContinue: $('#ckGuestContinue'),
+guestStatus: $('#ckGuestStatus'),
+guestAccountOffer: $('#ckGuestAccountOffer'),
+guestPasswordInput: $('#ckGuestPassword'),
+guestCreateAccountInput: $('#ckGuestCreateAccount'),
 
-    // UI Auth
+// UI Auth
 detailsSummary: $('#ckDetailsSummary'),
-shippingLoginSummary: $('#ckShippingLoginSummary'),
-    // Paso 3 (intro que NO debe verse cuando hay resumen)
+authGuest: $('#ckAuthGuest'),
+authChoice: $('#ckAuthChoice'),
+authTitle: $('#ckAuthTitle'),
+authIntroText: $('#ckAuthIntroText'),
+newUserSummary: $('#ckNewUserSummary'),
+newUserEmail: $('#ckNewUserEmail'),
+useOtherEmail: $('#ckUseOtherEmail'),
+guestCheckout: $('#ckGuestCheckout'),
+
+authModeButtons: $$(
+  '[data-ck-auth-mode]'
+),
+
+authPanels: $$(
+  '[data-ck-auth-panel]'
+),
+
+verifyPanel: $('#ckVerifyPanel'),
+verifyEmail: $('#ckVerifyEmail'),
+
+loginStatus: $('#ckLoginStatus'),
+registerStatus: $('#ckRegisterStatus'),
+verifyStatus: $('#ckVerifyStatus'),
+
+loginSubmit: $('#ckLoginSubmit'),
+registerSubmit: $('#ckRegisterSubmit'),
+
+verifyNow: $('#ckVerifyNow'),
+verifyResend: $('#ckVerifyResend'),
+verifyBack: $('#ckVerifyBack'),
+
+shippingLoginSummary: $(
+  '#ckShippingLoginSummary'
+),
+
+// Paso 3 (intro que NO debe verse cuando hay resumen)
     shipPane: $('#nav-js-shipping-checkoutnc'),
     shipIntroTitle: document.querySelector('#nav-js-shipping-checkoutnc .ck-box > h3.ck-h'),
 
@@ -314,24 +469,15 @@ const doAccept = () => {
     else tabEl.removeAttribute('tabindex');  // Habilita el tabIndex
   }
 
-  function enableTabs() {
-    console.log('Habilitando pestañas...');
-
-    const E = els();
-    const hasEmail = !!localStorage.getItem(LS_EMAIL);
-    const hasShip  = !!localStorage.getItem(LS_SHIP_DETAILS);
-
-    // Details: siempre accesible (si hay checkout abierto)
-    enableTab(E.tabDetails, loadCart().length > 0);
-
-
-    // Shipping: solo si hay login/email
-    enableTab(E.tabShipping, hasEmail);
-
-    // Payment: solo si ya hay shipping guardado
-    enableTab(E.tabPayment, hasShip);
-  }
-
+ function getVerifiedCheckoutUser() { const user = window.__ppAuthCurrentUser || window.__ppLastUser || window.__ppFirebaseAuth?.currentUser || null; if ( !user?.uid || !user?.email ) { return null; } /* * Las cuentas email/password deben verificar * el correo antes de acceder a Envío. */ if ( user.emailVerified === false ) { return null; } return user; }
+function enableTabs() {
+  const E = els();
+  const hasCheckoutIdentity = Boolean(getVerifiedCheckoutUser() || isGuestCheckout());
+  const hasShip = hasCheckoutIdentity && Boolean(localStorage.getItem(LS_SHIP_DETAILS));
+  enableTab(E.tabDetails, loadCart().length > 0);
+  enableTab(E.tabShipping, hasCheckoutIdentity);
+  enableTab(E.tabPayment, hasShip);
+}
 
   // Mostrar u ocultar elementos
   function setDisplay(el, show) {
@@ -414,6 +560,8 @@ function setHomeOnlyExtrasVisible(show) {
     row.setAttribute('aria-hidden', on ? 'false' : 'true');
     setDisabledInside(row, !on);
   });
+
+  updateGuestAccountOfferVisibility(on && isGuestCheckout());
 }
 
   // Aplicar modo de envío
@@ -494,14 +642,19 @@ if (idToShow === 'nav-js-shipping-checkoutnc') {
   const hasShip = !!localStorage.getItem(LS_SHIP_DETAILS);
 
   if (!hasShip) {
-    // ✅ al entrar al paso 3 “en limpio”: nada preseleccionado
     try { localStorage.removeItem(LS_SHIP_MODE); } catch {}
 
     const E2 = els();
     E2.shippingRadios?.forEach(r => (r.checked = false));
 
-      applyShippingMode(''); // oculta panels + extras
+    applyShippingMode('');
     hideShippingSummaryAndShowForm();
+
+    if (isGuestCheckout()) {
+      prepareGuestShippingForm();
+    } else {
+      setTimeout(() => { ppMaybeApplyDefaultAddress(); }, 160);
+    }
   }
 }
 
@@ -700,211 +853,304 @@ if (shippingCost) {
 
 renderShippingPrivilegeLine(summary);
 }
-  function renderDetailsSummary(email) {
+function renderDetailsSummary(email, options = {}) {
   const E = els();
+  const isGuest = Boolean(options.guest || isGuestCheckout());
   if (!E.detailsSummary) return;
-
   if (!email) {
     E.detailsSummary.classList.add('d-none');
     E.detailsSummary.setAttribute('aria-hidden', 'true');
     E.detailsSummary.innerHTML = '';
     return;
   }
-
   E.detailsSummary.innerHTML = `
-    <div class="ck-summaryCard" style="border:1px solid rgba(0,0,0,.18); padding:18px; margin:12px 0 0;">
-      <div style="display:flex; justify-content:space-between; gap:12px;">
-        <strong>Sesión iniciada</strong>
+    <div class="ck-summaryCard">
+      <div class="ck-summaryCard__head">
+        <strong>${isGuest ? 'Compra como invitado' : 'Sesión iniciada'}</strong>
         <button type="button" class="ck-link ck-link--muted" id="ckDetailsEditLogin">Cambiar</button>
       </div>
-      <div style="margin-top:8px; opacity:.8;">${escapeHtml(email)}</div>
+      <div class="ck-summaryCard__email">${escapeHtml(email)}</div>
+      ${isGuest ? '<div class="ck-summaryCard__note">Podrás crear cuenta más adelante si quieres conservar tus datos para futuras compras.</div>' : ''}
     </div>
-
-    <div style="margin-top:14px;">
-      <button type="button" class="ck-primary" id="ckDetailsContinue">CONTINUAR</button>
-    </div>
+    <div class="ck-summaryCard__action"><button type="button" class="ck-primary" id="ckDetailsContinue">CONTINUAR</button></div>
   `;
-
   E.detailsSummary.classList.remove('d-none');
   E.detailsSummary.setAttribute('aria-hidden', 'false');
-
-  // “Cambiar” → vuelve a mostrar el form (por si quiere iniciar con otro email)
   document.getElementById('ckDetailsEditLogin')?.addEventListener('click', () => {
-    if (E.detailsForm) E.detailsForm.classList.remove('d-none');
-    E.detailsSummary.classList.add('d-none');
-    E.detailsSummary.setAttribute('aria-hidden', 'true');
-
-    if (E.emailInput) {
-      E.emailInput.disabled = false;
-      E.emailInput.focus();
+    if (isGuest) {
+      clearGuestCheckoutState({ keepEmail: false });
+      renderDetailsSummary('');
+      E.authGuest?.classList.remove('d-none');
+      E.authGuest?.setAttribute('aria-hidden', 'false');
+      setCheckoutAuthMode('email', { focus: false });
+      enableShipping(false);
+      enablePayment(false);
+      enableTabs();
+      return;
     }
-    const pass = document.getElementById('ckPass');
-    if (pass) pass.value = '';
+    E.logoutBtn?.click();
   });
-
-  // Continuar → Envío
   document.getElementById('ckDetailsContinue')?.addEventListener('click', () => {
+    if (isGuest) prepareGuestShippingForm();
     enableShipping(true);
     enableTabs();
     setTab('nav-js-shipping-checkoutnc');
   });
 }
 
-function renderShippingLoginSummary(email) {
+function renderShippingLoginSummary(email, options = {}) {
   const E = els();
+  const isGuest = Boolean(options.guest || isGuestCheckout());
   if (!E.shippingLoginSummary) return;
-
-  if (!email) {
-    E.shippingLoginSummary.innerHTML = '';
-    return;
-  }
-
+  if (!email) { E.shippingLoginSummary.innerHTML = ''; return; }
   E.shippingLoginSummary.innerHTML = `
     <div class="ck-summaryCard" style="border:1px solid rgba(0,0,0,.18); padding:18px; margin:0 0 18px;">
       <div style="display:flex; justify-content:space-between; gap:12px;">
-        <strong>Detalles de inicio de sesión</strong>
-        <button type="button" class="ck-link ck-link--muted" id="ckShipLogoutTop">Cerrar sesión</button>
+        <strong>${isGuest ? 'Compra como invitado' : 'Detalles de inicio de sesión'}</strong>
+        <button type="button" class="ck-link ck-link--muted" id="ckShipLogoutTop">${isGuest ? 'Cambiar email' : 'Cerrar sesión'}</button>
       </div>
       <div style="margin-top:8px; opacity:.8;">${escapeHtml(email)}</div>
-    </div>
-  `;
-
+    </div>`;
   document.getElementById('ckShipLogoutTop')?.addEventListener('click', () => {
+    if (isGuest) {
+      clearGuestCheckoutState({ keepEmail: false });
+      setTab('nav-js-details-checkoutnc');
+      syncUIFromStorage();
+      return;
+    }
     document.getElementById('ckLogout')?.click();
   });
 }
 
-  function syncUIFromStorage() {
-    const E = els();
-
-let savedEmail = localStorage.getItem(LS_EMAIL) || '';
-const savedMode = localStorage.getItem(LS_SHIP_MODE) || '';
-const savedShipDetails = localStorage.getItem(LS_SHIP_DETAILS) || '';
-    const firebaseEmail = String(
-  window.__ppAuthCurrentUser?.email ||
-  window.__ppLastUser?.email ||
-  window.__ppFirebaseAuth?.currentUser?.email ||
-  ''
-).trim().toLowerCase();
-
-if (firebaseEmail && isEmailValid(firebaseEmail) && firebaseEmail !== savedEmail) {
-  localStorage.setItem(LS_EMAIL, firebaseEmail);
+function syncUIFromStorage() {
+  const E = els();
+  const verifiedUser = getVerifiedCheckoutUser();
+  const authResolved = window.__ppAuthStateResolved === true;
+  let savedEmail = localStorage.getItem(LS_EMAIL) || '';
+  const savedMode = localStorage.getItem(LS_SHIP_MODE) || '';
+  let savedShipDetails = localStorage.getItem(LS_SHIP_DETAILS) || '';
+  const firebaseEmail = String(verifiedUser?.email || '').trim().toLowerCase();
+  if (firebaseEmail && isEmailValid(firebaseEmail)) {
+    localStorage.setItem(LS_EMAIL, firebaseEmail);
+    localStorage.setItem(LS_CHECKOUT_MODE, 'account');
+    localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+    savedEmail = firebaseEmail;
+  }
+  const hasVerifiedSession = Boolean(verifiedUser && savedEmail && firebaseEmail === savedEmail);
+  const hasGuestSession = !hasVerifiedSession && isGuestCheckout();
+  if (authResolved && !verifiedUser && !hasGuestSession) {
+    localStorage.removeItem(LS_EMAIL);
+    localStorage.removeItem(LS_SHIP_MODE);
+    localStorage.removeItem(LS_SHIP_DETAILS);
+    localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+    savedEmail = '';
+    savedShipDetails = '';
+  }
+  const hasCheckoutIdentity = Boolean(hasVerifiedSession || hasGuestSession);
+  if (E.emailInput) { E.emailInput.disabled = hasVerifiedSession; if (savedEmail) E.emailInput.value = savedEmail; }
+  if (E.registerEmailInput && savedEmail && !E.registerEmailInput.value) E.registerEmailInput.value = savedEmail;
+  if (hasCheckoutIdentity) {
+    checkoutAwaitingVerification = false;
+    E.authGuest?.classList.add('d-none');
+    E.authGuest?.setAttribute('aria-hidden', 'true');
+    renderDetailsSummary(savedEmail, { guest: hasGuestSession });
+  } else {
+    renderDetailsSummary('');
+    E.authGuest?.classList.remove('d-none');
+    E.authGuest?.setAttribute('aria-hidden', 'false');
+    if (!checkoutAwaitingVerification) setCheckoutAuthMode('email', { focus: false });
+  }
+  renderShippingLoginSummary(hasCheckoutIdentity ? savedEmail : '', { guest: hasGuestSession });
+  if (E.logoutBtn) E.logoutBtn.hidden = !hasVerifiedSession;
+  enableShipping(hasCheckoutIdentity);
+  enablePayment(hasCheckoutIdentity && Boolean(savedShipDetails));
+  enableTabs();
+  if (hasGuestSession) prepareGuestShippingForm();
+  if (hasCheckoutIdentity && savedShipDetails) {
+    let details = null;
+    try { details = JSON.parse(savedShipDetails); } catch { details = null; }
+    const mode = details?.shippingMethod || savedMode || '';
+    if (mode) {
+      const radio = document.querySelector(`input[name="shipping"][value="${mode}"]`);
+      if (radio) radio.checked = true;
+      applyShippingMode(mode);
+    }
+    if (details) renderShippingSummary(savedEmail, details);
+  } else if (hasCheckoutIdentity && savedMode) {
+    hideShippingSummaryAndShowForm();
+    const radio = document.querySelector(`input[name="shipping"][value="${savedMode}"]`);
+    if (radio) radio.checked = true;
+    applyShippingMode(savedMode);
+  } else {
+    E.shippingRadios.forEach((radio) => { radio.checked = false; });
+    applyShippingMode('');
+  }
+  applyGiftToggleUI(localStorage.getItem(LS_GIFT_ON) === '1');
+  applyInvoiceToggleUI(localStorage.getItem(LS_INVOICE_ON) === '1');
+  const currentMode = localStorage.getItem(LS_SHIP_MODE) || '';
+  setHomeOnlyExtrasVisible(hasCheckoutIdentity && currentMode === 'home');
 }
-savedEmail = localStorage.getItem(LS_EMAIL) || savedEmail;
+// ========================================================= // CHECKOUT · LOGIN, REGISTRO Y VERIFICACIÓN // =========================================================
+async function ppLoginWithEmailPass( email, pass ) { const fn = window.ppSignInWithEmailPass; if ( typeof fn !== 'function' ) { throw new Error( 'ppSignInWithEmailPass no disponible.' ); } return fn( email, pass ); } async function ppRegisterWithEmailPass( email, pass, displayName, profileData ) { const fn = window.ppCreateUserWithEmailPass; if ( typeof fn !== 'function' ) { throw new Error( 'ppCreateUserWithEmailPass no disponible.' ); } return fn( email, pass, displayName, profileData ); } function setCheckoutAuthStatus( element, message = '', type = '' ) { if (!element) { return; } element.textContent = message; element.classList.remove( 'is-ok', 'is-error', 'is-info' ); if (type) { element.classList.add( type ); } } function setCheckoutAuthButtonLoading( button, isLoading, loadingText = '' ) { if (!button) { return; } if ( !button.dataset.idleText ) { button.dataset.idleText = button.textContent.trim(); } button.disabled = Boolean(isLoading); button.setAttribute( 'aria-busy', isLoading ? 'true' : 'false' ); button.textContent = isLoading ? loadingText : button.dataset.idleText; } function setCheckoutAuthMode( mode = 'email', { focus = true } = {} ) {
+  const E = els();
+  const safeMode = mode === 'register' ? 'register' : 'email';
+  checkoutAuthMode = safeMode;
+  checkoutAwaitingVerification = false;
 
-    if (E.emailInput && savedEmail) {
-      E.emailInput.value = savedEmail;
-      E.emailInput.disabled = true;
-    }
+  E.authGuest?.classList.remove( 'd-none' );
+  E.authGuest?.setAttribute( 'aria-hidden', 'false' );
+  E.authChoice?.classList.remove( 'd-none' );
+  E.authChoice?.setAttribute( 'aria-hidden', 'false' );
+  E.authChoice?.classList.toggle( 'is-email-step', safeMode === 'email' );
+  E.authChoice?.classList.toggle( 'is-new-user-step', safeMode === 'register' );
+  E.authGuest?.setAttribute( 'aria-labelledby', safeMode === 'register' ? 'ckNewUserTitle' : 'ckAuthTitle' );
+  E.verifyPanel?.classList.add( 'd-none' );
+  E.verifyPanel?.setAttribute( 'aria-hidden', 'true' );
 
-        // UI: Detalles (si ya hay sesión, NO mostrar password)
-    if (savedEmail) {
-      if (E.detailsForm) E.detailsForm.classList.add('d-none');
-      renderDetailsSummary(savedEmail);
-    } else {
-      if (E.detailsForm) E.detailsForm.classList.remove('d-none');
-      renderDetailsSummary('');
-    }
+  E.authModeButtons.forEach( button => {
+    const active = button.dataset.ckAuthMode === safeMode;
+    button.classList.toggle( 'is-active', active );
+    button.setAttribute( 'aria-selected', active ? 'true' : 'false' );
+  } );
 
-    // UI: Envío (bloque de sesión arriba del paso 3)
-    renderShippingLoginSummary(savedEmail);
+  E.authPanels.forEach( panel => {
+    const active = panel.dataset.ckAuthPanel === safeMode;
+    panel.classList.toggle( 'd-none', !active );
+    panel.setAttribute( 'aria-hidden', active ? 'false' : 'true' );
+  } );
 
-    if (E.logoutBtn) E.logoutBtn.style.display = savedEmail ? 'block' : 'none';
-
-    enableShipping(!!savedEmail);
-    enablePayment(!!savedShipDetails);
-    enableTabs();
-
-    // Shipping restore (modo + resumen)
-    if (savedEmail && savedShipDetails) {
-      let details = null;
-      try { details = JSON.parse(savedShipDetails); } catch { details = null; }
-
-      const mode = details?.shippingMethod || savedMode || '';
-      if (mode) {
-        const r = document.querySelector(`input[name="shipping"][value="${mode}"]`);
-        if (r) r.checked = true;
-        applyShippingMode(mode);
-      }
-if (details) {
-  renderShippingSummary(savedEmail, details);
-}
-
-    } else if (savedEmail && savedMode) {
-      // Si solo hay modo pero NO hay detalles, mostramos el form para completar
-      hideShippingSummaryAndShowForm();
-      const r = document.querySelector(`input[name="shipping"][value="${savedMode}"]`);
-      if (r) r.checked = true;
-      applyShippingMode(savedMode);
-    } else {
-      if (E.shippingRadios.length) E.shippingRadios.forEach(r => (r.checked = false));
-      applyShippingMode('');
-    }
-
-
-    // Restore Gift/Invoice states
-    applyGiftToggleUI(localStorage.getItem(LS_GIFT_ON) === '1');
-    applyInvoiceToggleUI(localStorage.getItem(LS_INVOICE_ON) === '1');
-    // ✅ Home-only extras visibles solo si el modo actual es 'home'
-const currentMode = localStorage.getItem(LS_SHIP_MODE) || '';
-setHomeOnlyExtrasVisible(currentMode === 'home');
-
+  if (E.authTitle) {
+    E.authTitle.textContent = safeMode === 'register' ? 'Nuevo usuario' : 'Introduce tu email';
+  }
+  if (E.authIntroText) {
+    E.authIntroText.textContent = safeMode === 'register'
+      ? 'Completa la cuenta o continúa como invitado sin perder las piezas de tu cesta.'
+      : 'Si tienes una cuenta, te solicitaremos el acceso. En caso contrario, puedes continuar como invitado y registrarte después de finalizar la compra.';
   }
 
-  
-// ========= Firebase login helper (usa firebase-auth.js ya cargado) =========
-async function ppLoginWithEmailPass(email, pass) {
-  const fn = window.ppSignInWithEmailPass;
-  if (typeof fn !== 'function') {
-    throw new Error('ppSignInWithEmailPass no disponible. Revisa que firebase-auth.js cargue sin CORS.');
+  const email = String( E.registerEmailInput?.value || E.emailInput?.value || '' ).trim().toLowerCase();
+  if ( safeMode === 'register' && E.registerEmailInput ) {
+    E.registerEmailInput.value = email;
   }
-  return fn(email, pass);
+  if ( safeMode === 'email' && E.emailInput && E.registerEmailInput?.value && !E.emailInput.value ) {
+    E.emailInput.value = E.registerEmailInput.value.trim().toLowerCase();
+  }
+  if (E.newUserEmail) {
+    E.newUserEmail.textContent = email;
+  }
+  if (E.newUserSummary) {
+    E.newUserSummary.hidden = safeMode !== 'register';
+  }
+  E.guestCheckout?.classList.toggle( 'd-none', safeMode !== 'register' );
+  E.guestCheckout?.setAttribute( 'aria-hidden', safeMode === 'register' ? 'false' : 'true' );
+
+  setCheckoutAuthStatus( E.loginStatus );
+  setCheckoutAuthStatus( E.registerStatus );
+
+  if (!focus) { return; }
+  requestAnimationFrame(() => {
+    const target = safeMode === 'register' ? document.getElementById( 'ckRegisterFirstName' ) : E.emailInput;
+    target?.focus({ preventScroll: true });
+  });
 }
 
-  // Logout en checkout: limpia UI + storage + (si existe) Firebase
-  const logoutEl = document.getElementById('ckLogout');
-  logoutEl?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const E = els();
+function showCheckoutVerification( email ) { const E = els(); const cleanEmail = String(email || '') .trim() .toLowerCase(); checkoutAwaitingVerification = true; E.authGuest?.classList.remove( 'd-none' ); E.authGuest?.setAttribute( 'aria-hidden', 'false' ); E.authChoice?.classList.add( 'd-none' ); E.authChoice?.setAttribute( 'aria-hidden', 'true' ); E.verifyPanel?.classList.remove( 'd-none' ); E.verifyPanel?.setAttribute( 'aria-hidden', 'false' ); if (E.verifyEmail) { E.verifyEmail.textContent = cleanEmail; } setCheckoutAuthStatus( E.verifyStatus, 'Tu cesta sigue guardada mientras verificas la cuenta.', 'is-info' ); requestAnimationFrame(() => { E.verifyNow?.focus({ preventScroll: true }); }); } function checkoutAuthErrorMessage( error, context = 'login' ) { const code = String( error?.code || '' ); switch (code) { case 'auth/email-already-in-use': return 'Este correo ya tiene una cuenta. Inicia sesión para continuar.'; case 'auth/invalid-email': return 'Introduce un correo electrónico válido.'; case 'auth/weak-password': return 'La contraseña debe tener al menos 8 caracteres.'; case 'auth/email-not-verified': return 'La cuenta todavía no está verificada. Revisa tu correo.'; case 'auth/invalid-credential': case 'auth/user-not-found': case 'auth/wrong-password': return 'Correo o contraseña incorrectos.'; case 'auth/too-many-requests': return 'Demasiados intentos. Espera unos minutos y vuelve a probar.'; default: return context === 'register' ? 'No se ha podido crear la cuenta. Inténtalo de nuevo.' : 'No se ha podido iniciar sesión. Revisa tus datos.'; } } function waitForCheckoutCartOwner( expectedOwner, timeoutMs = 3000 ) { const matches = () => { return ( window.ppCart ?.getOwner?.() === expectedOwner ); }; if (matches()) { return Promise.resolve( true ); } return new Promise(resolve => { let settled = false; const finish = result => { if (settled) { return; } settled = true; window.removeEventListener( 'pp:cart-scope-changed', onScopeChanged ); clearTimeout( timeoutId ); resolve( result ); }; const onScopeChanged = () => { if (matches()) { finish(true); } }; window.addEventListener( 'pp:cart-scope-changed', onScopeChanged ); const timeoutId = setTimeout( () => { finish( matches() ); }, timeoutMs ); }); } async function finishCheckoutAuthentication( credential, email ) { const uid = String( credential?.user?.uid || '' ).trim(); if (uid) { await waitForCheckoutCartOwner( `user:${uid}` ); } pendingVerificationEmail = ''; pendingVerificationPassword = ''; checkoutAwaitingVerification = false; localStorage.setItem( LS_EMAIL, String(email || '') .trim() .toLowerCase() ); localStorage.setItem( LS_CHECKOUT_MODE, 'account' ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; await syncCheckoutAuthFromFirebase({ moveToShipping: true }); syncUIFromStorage(); await renderCart(); } async function attemptPendingVerification({ resendOnly = false } = {}) { const E = els(); const email = pendingVerificationEmail; const password = pendingVerificationPassword; if ( !email || !password ) { setCheckoutAuthStatus( E.verifyStatus, 'Vuelve al registro e introduce de nuevo tus datos.', 'is-error' ); return; } const activeButton = resendOnly ? E.verifyResend : E.verifyNow; setCheckoutAuthButtonLoading( activeButton, true, resendOnly ? 'REENVIANDO…' : 'COMPROBANDO…' ); try { const credential = await ppLoginWithEmailPass( email, password ); setCheckoutAuthStatus( E.verifyStatus, 'Cuenta verificada. Estamos preparando el envío.', 'is-ok' ); await finishCheckoutAuthentication( credential, email ); } catch (error) { if ( error?.code === 'auth/email-not-verified' ) { setCheckoutAuthStatus( E.verifyStatus, resendOnly ? 'Te hemos enviado un nuevo correo de verificación.' : 'Todavía no aparece como verificado. Revisa el enlace de tu correo.', 'is-info' ); return; } setCheckoutAuthStatus( E.verifyStatus, checkoutAuthErrorMessage( error, 'login' ), 'is-error' ); } finally { setCheckoutAuthButtonLoading( activeButton, false ); } } function initCheckoutAuth() {
+  const E = els();
+  if ( !E.authGuest || E.authGuest.__ppCheckoutAuthBound ) { return; }
+  E.authGuest.__ppCheckoutAuthBound = true;
 
+  E.authModeButtons.forEach( button => {
+    button.addEventListener( 'click', () => { setCheckoutAuthMode( button.dataset.ckAuthMode ); } );
+  } );
 
-    // 1) Firebase logout si está disponible
-    try {
-      const fbAuth = window.__ppFirebaseAuth;
-      if (fbAuth?.currentUser) {
-        // Firebase modular expone signOut dentro del módulo, aquí no importamos.
-        // Si tienes window.ppSignOut (lo añadimos en firebase-auth.js abajo), lo usamos.
-        await window.ppSignOut?.();
-
-
-      }
-    } catch (err) {
-      console.warn('[checkout] signOut firebase falló (no bloquea):', err);
+  E.detailsForm?.addEventListener( 'submit', event => {
+    event.preventDefault();
+    const email = E.emailInput?.value?.trim().toLowerCase() || '';
+    setCheckoutAuthStatus( E.loginStatus );
+    if ( !isEmailValid(email) ) {
+      setFieldError( E.emailInput, 'Introduce un email válido' );
+      E.emailInput?.focus();
+      return;
     }
+    clearFieldError( E.emailInput );
+    if (E.registerEmailInput) { E.registerEmailInput.value = email; }
+    if (E.newUserEmail) { E.newUserEmail.textContent = email; }
+    setCheckoutAuthMode( 'register' );
+  } );
 
-    // 2) Limpia estado checkout
-   localStorage.removeItem(LS_EMAIL);
-localStorage.removeItem(LS_SHIP_MODE);
-localStorage.removeItem(LS_SHIP_DETAILS);
-localStorage.removeItem(LS_TRIBE_CODE);
-ppSecureCartSummary = null;
-
-    // 3) UI
+  E.useOtherEmail?.addEventListener( 'click', () => {
+    localStorage.removeItem( LS_EMAIL );
+    localStorage.removeItem( LS_CHECKOUT_MODE );
+    localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT );
+    if (E.registerEmailInput) { E.registerEmailInput.value = ''; }
     if (E.emailInput) {
       E.emailInput.disabled = false;
       E.emailInput.value = '';
-      E.emailInput.classList.remove('is-invalid');
+      E.emailInput.classList.remove( 'is-invalid' );
+      clearFieldError( E.emailInput );
     }
-    if (E.logoutBtn) E.logoutBtn.style.display = 'none';
+    setCheckoutAuthMode( 'email' );
+  } );
 
-    applyShippingMode('');
-    enableShipping(false);
-    enablePayment(false);
+  E.registerForm?.addEventListener( 'submit', async event => {
+    event.preventDefault();
+    const firstName = String( document.getElementById( 'ckRegisterFirstName' )?.value || '' ).trim();
+    const lastName = String( document.getElementById( 'ckRegisterLastName' )?.value || '' ).trim();
+    const email = String( E.registerEmailInput?.value || E.emailInput?.value || '' ).trim().toLowerCase();
+    const passwordInput = document.getElementById( 'ckRegisterPass' );
+    const confirmationInput = document.getElementById( 'ckRegisterPassConfirm' );
+    const password = String( passwordInput?.value || '' );
+    const confirmation = String( confirmationInput?.value || '' );
+    const termsInput = document.getElementById( 'ckRegisterTerms' );
+    const newsletterInput = document.getElementById( 'ckRegisterNewsletter' );
 
-    setTab('nav-js-details-checkoutnc');
-    syncUIFromStorage();
+    setCheckoutAuthStatus( E.registerStatus );
+    if ( !firstName ) { setFieldError( document.getElementById( 'ckRegisterFirstName' ), 'Introduce tu nombre' ); return; }
+    if ( !lastName ) { setFieldError( document.getElementById( 'ckRegisterLastName' ), 'Introduce tus apellidos' ); return; }
+    if ( !isEmailValid(email) ) {
+      setCheckoutAuthStatus( E.registerStatus, 'Vuelve al paso anterior e introduce un email válido.', 'is-error' );
+      setCheckoutAuthMode( 'email' );
+      return;
+    }
+    if ( password.length < 8 ) { setFieldError( passwordInput, 'Usa al menos 8 caracteres' ); passwordInput?.focus(); return; }
+    if ( password !== confirmation ) { setFieldError( confirmationInput, 'Las contraseñas no coinciden' ); confirmationInput?.focus(); return; }
+    if ( !termsInput?.checked ) {
+      setCheckoutAuthStatus( E.registerStatus, 'Debes aceptar los términos y la política de privacidad.', 'is-error' );
+      termsInput?.focus();
+      return;
+    }
 
-  });
+    setCheckoutAuthButtonLoading( E.registerSubmit, true, 'CREANDO CUENTA...' );
+    try {
+      await ppRegisterWithEmailPass( email, password, `${firstName} ${lastName}`.trim(), {
+        firstName,
+        lastName,
+        newsletter: Boolean( newsletterInput?.checked ),
+        termsAccepted: true
+      } );
+      pendingVerificationEmail = email;
+      pendingVerificationPassword = password;
+      showCheckoutVerification( email );
+      setCheckoutAuthStatus( E.verifyStatus, 'Cuenta creada. Abre el enlace que acabamos de enviarte.', 'is-ok' );
+    } catch (error) {
+      setCheckoutAuthStatus( E.registerStatus, checkoutAuthErrorMessage( error, 'register' ), 'is-error' );
+      if ( error?.code === 'auth/email-already-in-use' ) {
+        setCheckoutAuthStatus( E.registerStatus, 'Este correo ya tiene cuenta. Accede desde el icono de cuenta o usa otro correo.', 'is-error' );
+      }
+    } finally {
+      setCheckoutAuthButtonLoading( E.registerSubmit, false );
+    }
+  } );
+
+  E.verifyNow?.addEventListener( 'click', () => { attemptPendingVerification(); } );
+  E.verifyResend?.addEventListener( 'click', () => { attemptPendingVerification({ resendOnly: true }); } );
+  E.verifyBack?.addEventListener( 'click', () => { setCheckoutAuthMode( 'register' ); } );
+  E.guestContinue?.addEventListener( 'click', () => { continueCheckoutAsGuest(); } );
+
+  setCheckoutAuthMode( checkoutAuthMode, { focus: false } );
+}
+
+// ========================================================= // CHECKOUT · CERRAR SESIÓN // ========================================================= const logoutEl = document.getElementById( 'ckLogout' ); logoutEl?.addEventListener( 'click', async event => { event.preventDefault(); const E = els(); try { if ( typeof window.ppSignOut === 'function' ) { await window.ppSignOut(); } } catch (error) { console.warn( '[checkout] No se pudo cerrar la sesión Firebase:', error ); } localStorage.removeItem( LS_EMAIL ); localStorage.removeItem( LS_SHIP_MODE ); localStorage.removeItem( LS_SHIP_DETAILS ); localStorage.removeItem( LS_TRIBE_CODE ); localStorage.removeItem( LS_CHECKOUT_MODE ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; pendingVerificationEmail = ''; pendingVerificationPassword = ''; checkoutAwaitingVerification = false; setCheckoutAuthMode( 'email', { focus: false } ); if (E.emailInput) { E.emailInput.disabled = false; E.emailInput.value = ''; E.emailInput.classList.remove( 'is-invalid' ); } if (E.logoutBtn) { E.logoutBtn.hidden = true; } applyShippingMode(''); enableShipping(false); enablePayment(false); setTab( 'nav-js-details-checkoutnc' ); syncUIFromStorage(); } );
 function safeJsonParse(raw, fallback = null) {
   try {
     return JSON.parse(raw || '');
@@ -923,6 +1169,8 @@ function setAppliedTribeCode(code = '') {
     localStorage.setItem(LS_TRIBE_CODE, clean);
   } else {
     localStorage.removeItem(LS_TRIBE_CODE);
+  localStorage.removeItem(LS_CHECKOUT_MODE);
+  localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
   }
 
   ppSecureCartSummary = null;
@@ -930,6 +1178,107 @@ function setAppliedTribeCode(code = '') {
 
 function getCheckoutEmail() {
   return String(localStorage.getItem(LS_EMAIL) || '').trim().toLowerCase();
+}
+function isGuestCheckout() {
+  const mode = String(localStorage.getItem(LS_CHECKOUT_MODE) || '').trim();
+  const email = getCheckoutEmail();
+  return mode === 'guest' && isEmailValid(email) && !getVerifiedCheckoutUser();
+}
+
+function prepareGuestShippingForm() {
+  const select = document.getElementById('ckShipAddressList') || document.querySelector('select[name="ship_addressList"]');
+  if (!select || !isGuestCheckout()) return;
+  select.innerHTML = '<option value="new" selected>Introducir dirección para este pedido</option>';
+  select.value = 'new';
+}
+
+function updateGuestAccountOfferVisibility(show = false) {
+  const E = els();
+  const on = Boolean(show && isGuestCheckout());
+  if (!E.guestAccountOffer) return;
+  E.guestAccountOffer.classList.toggle('d-none', !on);
+  E.guestAccountOffer.setAttribute('aria-hidden', on ? 'false' : 'true');
+  setDisabledInside(E.guestAccountOffer, !on);
+  if (!on) {
+    if (E.guestPasswordInput) E.guestPasswordInput.value = '';
+    if (E.guestCreateAccountInput) E.guestCreateAccountInput.checked = false;
+  }
+}
+
+function getGuestCandidateEmail() {
+  const E = els();
+  const activePanel = document.querySelector('[data-ck-auth-panel]:not(.d-none)');
+  const panelEmail = activePanel?.querySelector('input[type="email"]')?.value || '';
+  return String(panelEmail || E.registerEmailInput?.value || E.emailInput?.value || '').trim().toLowerCase();
+}
+
+function getGuestAccountIntent() {
+  const parsed = safeJsonParse(localStorage.getItem(LS_GUEST_ACCOUNT_INTENT) || '', null);
+  if (!parsed || !isGuestCheckout()) return null;
+  return { wantsAccount: Boolean(parsed.wantsAccount), passwordProvided: Boolean(parsed.passwordProvided) };
+}
+
+function collectGuestAccountIntent() {
+  if (!isGuestCheckout()) {
+    localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+    return { ok: true, intent: null };
+  }
+  const E = els();
+  const password = String(E.guestPasswordInput?.value || '');
+  const wantsAccount = Boolean(E.guestCreateAccountInput?.checked || password);
+  if (password && password.length < 8) {
+    return { ok: false, field: E.guestPasswordInput, message: 'Usa al menos 8 caracteres.' };
+  }
+  if (!wantsAccount) {
+    localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+    return { ok: true, intent: null };
+  }
+  const intent = { wantsAccount: true, passwordProvided: Boolean(password), createdAt: new Date().toISOString() };
+  localStorage.setItem(LS_GUEST_ACCOUNT_INTENT, JSON.stringify(intent));
+  return { ok: true, intent };
+}
+
+function clearGuestCheckoutState({ keepEmail = false } = {}) {
+  localStorage.removeItem(LS_CHECKOUT_MODE);
+  localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+  localStorage.removeItem(LS_TRIBE_CODE);
+  if (!keepEmail) {
+    localStorage.removeItem(LS_EMAIL);
+    localStorage.removeItem(LS_SHIP_MODE);
+    localStorage.removeItem(LS_SHIP_DETAILS);
+  }
+  ppSecureCartSummary = null;
+  updateGuestAccountOfferVisibility(false);
+}
+
+async function continueCheckoutAsGuest() {
+  const E = els();
+  const email = getGuestCandidateEmail();
+  const targetInput = checkoutAuthMode === 'register' ? E.registerEmailInput : E.emailInput;
+  setCheckoutAuthStatus(E.guestStatus);
+  if (!isEmailValid(email)) {
+    setFieldError(targetInput || E.emailInput || E.registerEmailInput, 'Introduce un email válido');
+    setCheckoutAuthStatus(E.guestStatus, 'Introduce un email válido para recibir la confirmación del pedido.', 'is-error');
+    targetInput?.focus?.();
+    return;
+  }
+  localStorage.setItem(LS_EMAIL, email);
+  localStorage.setItem(LS_CHECKOUT_MODE, 'guest');
+  localStorage.removeItem(LS_SHIP_DETAILS);
+  localStorage.removeItem(LS_TRIBE_CODE);
+  localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+  ppSecureCartSummary = null;
+  if (E.emailInput) E.emailInput.value = email;
+  if (E.registerEmailInput) E.registerEmailInput.value = email;
+  E.authGuest?.classList.add('d-none');
+  E.authGuest?.setAttribute('aria-hidden', 'true');
+  prepareGuestShippingForm();
+  renderDetailsSummary(email, { guest: true });
+  renderShippingLoginSummary(email, { guest: true });
+  enableShipping(true);
+  enableTabs();
+  setTab('nav-js-shipping-checkoutnc');
+  try { await renderCart(); } catch (error) { console.error('[checkout] renderCart invitado falló:', error); }
 }
 async function waitForCheckoutFirebaseUser(timeoutMs = 2200) {
   const directUser =
@@ -974,59 +1323,7 @@ async function waitForCheckoutFirebaseUser(timeoutMs = 2200) {
    Si el usuario ya está logado en Prophetia, el paso 2 no pide credenciales
    ========================================================= */
 
-async function syncCheckoutAuthFromFirebase({ moveToShipping = false } = {}) {
-  const E = els();
-
-  const user = await waitForCheckoutFirebaseUser(2600);
-  const email = String(user?.email || '').trim().toLowerCase();
-
-  if (!email || !isEmailValid(email)) {
-    return false;
-  }
-
-  /*
-    El servidor exige que el email del checkout coincida con el usuario Firebase.
-    Por eso usamos siempre el email real de auth.currentUser.
-  */
-  localStorage.setItem(LS_EMAIL, email);
-  ppSecureCartSummary = null;
-
-  if (E.emailInput) {
-    E.emailInput.value = email;
-    E.emailInput.disabled = true;
-    E.emailInput.classList.remove('is-invalid');
-  }
-
-  const passEl = document.getElementById('ckPass');
-  if (passEl) {
-    passEl.value = '';
-    clearFieldError(passEl);
-  }
-
-  if (E.detailsForm) {
-    E.detailsForm.classList.add('d-none');
-    E.detailsForm.setAttribute('aria-hidden', 'true');
-  }
-
-  renderDetailsSummary(email);
-  renderShippingLoginSummary(email);
-
-  if (E.logoutBtn) {
-    E.logoutBtn.style.display = 'block';
-  }
-
-  enableShipping(true);
-  enableTabs();
-
-  if (moveToShipping) {
-    setTab('nav-js-shipping-checkoutnc');
-    setTimeout(() => {
-      ppMaybeApplyDefaultAddress();
-    }, 250);
-  }
-
-  return true;
-}
+async function syncCheckoutAuthFromFirebase({ moveToShipping = false } = {}) { const E = els(); const user = await waitForCheckoutFirebaseUser( 2600 ); const email = String( user?.email || '' ) .trim() .toLowerCase(); if ( !user?.uid || user.emailVerified === false || !email || !isEmailValid(email) ) { return false; } localStorage.setItem( LS_EMAIL, email ); localStorage.setItem( LS_CHECKOUT_MODE, 'account' ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; if (E.emailInput) { E.emailInput.value = email; E.emailInput.disabled = true; E.emailInput.classList.remove( 'is-invalid' ); } const passEl = document.getElementById( 'ckPass' ); if (passEl) { passEl.value = ''; clearFieldError( passEl ); } E.authGuest?.classList.add( 'd-none' ); E.authGuest?.setAttribute( 'aria-hidden', 'true' ); renderDetailsSummary( email ); renderShippingLoginSummary( email ); if (E.logoutBtn) { E.logoutBtn.hidden = false; } enableShipping(true); enableTabs(); if (moveToShipping) { setTab( 'nav-js-shipping-checkoutnc' ); setTimeout( () => { ppMaybeApplyDefaultAddress(); }, 250 ); } return true; }
 async function getCheckoutAuthHeaders() {
   const headers = {
     'Content-Type': 'application/json'
@@ -1159,6 +1456,13 @@ async function validateAndApplyTribeCode() {
     return;
   }
 
+  if (isGuestCheckout()) {
+    setAppliedTribeCode('');
+    setTribeMessage('Los códigos Prophetia Tribe requieren iniciar sesión con tu cuenta.', 'is-error');
+    await renderCart();
+    return;
+  }
+
   const payload = {
     ...buildCartSummaryPayload(),
     email,
@@ -1244,12 +1548,31 @@ function initTribeDiscountBox() {
 }
 
 function getGiftData() {
-  const isGift = localStorage.getItem(LS_GIFT_ON) === '1';
-  const giftMessageEl = document.querySelector('[name="giftMessage"]');
+  const giftCheckbox =
+    document.getElementById('ppIsGift') ||
+    document.querySelector('input[name="isGift"]');
+
+  const giftPanel = document.getElementById('ppGiftMessage');
+
+  const giftMessageEl =
+    document.getElementById('ppGiftMessageText') ||
+    giftPanel?.querySelector('textarea') ||
+    document.querySelector('textarea[name="giftMessage"]') ||
+    document.querySelector('[name="giftMessage"]');
+
+  const isGift = !!giftCheckbox?.checked;
+
+  const message = isGift
+    ? String(giftMessageEl?.value || '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/[\u0000-\u001F\u007F]/g, '')
+        .trim()
+        .slice(0, 250)
+    : '';
 
   return {
     isGift,
-    message: isGift ? String(giftMessageEl?.value || '').trim().slice(0, 250) : ''
+    message
   };
 }
 
@@ -1335,7 +1658,9 @@ return {
   shippingDetails,
   discountCode: getAppliedTribeCode(),
   gift: getGiftData(),
-  invoice: getInvoiceData()
+  invoice: getInvoiceData(),
+  checkoutMode: isGuestCheckout() ? 'guest' : 'account',
+  guestAccountIntent: getGuestAccountIntent()
 };
 }
 
@@ -1390,7 +1715,9 @@ function showPaymentError(message) {
 
   box.textContent = message || 'No se ha podido iniciar el pago. Inténtalo de nuevo.';
 }
-function clearCheckoutSensitiveStorage({ keepCart = false } = {}) {
+function clearCheckoutSensitiveStorage({
+  keepCart = false
+} = {}) {
   localStorage.removeItem(LS_EMAIL);
   localStorage.removeItem(LS_SHIP_MODE);
   localStorage.removeItem(LS_SHIP_DETAILS);
@@ -1398,18 +1725,24 @@ function clearCheckoutSensitiveStorage({ keepCart = false } = {}) {
   localStorage.removeItem(LS_INVOICE_ON);
   localStorage.removeItem(LS_STEP);
   localStorage.removeItem(LS_ORDER_DRAFT_ID);
-localStorage.removeItem(LS_TRIBE_CODE);
+  localStorage.removeItem(LS_TRIBE_CODE);
+  localStorage.removeItem(LS_CHECKOUT_MODE);
+  localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
 
   if (!keepCart) {
-    localStorage.removeItem(CART_KEY);
+    window.ppCart?.write?.([]);
   }
 }
+
 
 window.ppClearCheckoutSensitiveStorage = clearCheckoutSensitiveStorage;
 
 // ========= Firestore: dirección predeterminada del usuario =========
 let __ppDefaultAddressApplied = false;
 let __ppShippingFormTouched = false;
+let __ppFirestoreAddresses = [];
+let __ppApplyingStoredAddress = false;
+let __ppAddressSelectLoadSeq = 0;
 
 function markShippingFormTouched() {
   const form = document.getElementById('ckShippingForm');
@@ -1417,14 +1750,29 @@ function markShippingFormTouched() {
 
   form.__ppTouchedBound = true;
 
+  const shouldIgnoreTouch = (target) => {
+    if (__ppApplyingStoredAddress) return true;
+    if (!target?.matches?.('input, select, textarea')) return true;
+
+    /*
+      No consideramos “edición manual”:
+      - elegir Entrega a domicilio / Recogida
+      - abrir o cambiar el select de direcciónes guardadas
+    */
+    if (target.name === 'shipping') return true;
+    if (target.name === 'ship_addressList') return true;
+
+    return false;
+  };
+
   form.addEventListener('input', (event) => {
-    if (event.target?.matches?.('input, select, textarea')) {
+    if (!shouldIgnoreTouch(event.target)) {
       __ppShippingFormTouched = true;
     }
   });
 
   form.addEventListener('change', (event) => {
-    if (event.target?.matches?.('input, select, textarea')) {
+    if (!shouldIgnoreTouch(event.target)) {
       __ppShippingFormTouched = true;
     }
   });
@@ -1447,6 +1795,10 @@ async function ppGetFirebaseClient() {
 }
 
 async function ppLoadDefaultFirestoreAddress() {
+  if (isGuestCheckout()) {
+    return null;
+  }
+
   const { auth, db } = await ppGetFirebaseClient();
 
   if (!auth || !db || !auth.currentUser) {
@@ -1482,7 +1834,448 @@ async function ppLoadDefaultFirestoreAddress() {
     ...docSnap.data()
   };
 }
+async function ppLoadFirestoreAddresses() {
+  if (isGuestCheckout()) {
+    return [];
+  }
 
+  const { auth, db } = await ppGetFirebaseClient();
+
+  if (!db) {
+    return [];
+  }
+
+  /*
+    Esperamos al usuario real de Firebase.
+    En checkout, auth.currentUser puede tardar unos ms en estar disponible.
+  */
+  const user =
+    auth?.currentUser ||
+    await waitForCheckoutFirebaseUser(3500);
+
+  if (!user?.uid) {
+    console.warn('[checkout] No hay usuario Firebase para cargar direcciónes.');
+    return [];
+  }
+
+  const {
+    collection,
+    getDocs,
+    query,
+    orderBy
+  } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+
+  const ref = collection(db, 'users', user.uid, 'addresses');
+
+  try {
+    const q = query(ref, orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+
+    return snap.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }));
+  } catch (error) {
+    /*
+      Fallback por si alguna dirección antigua no tiene createdAt
+      o el índice/orderBy da guerra.
+    */
+    console.warn('[checkout] Reintentando direcciónes sin orderBy:', error);
+
+    const snap = await getDocs(ref);
+
+    return snap.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }));
+  }
+}
+
+function ppAddressSelectLabel(address = {}) {
+  const alias = address.alias ? `${address.alias} · ` : '';
+  const line1 = address.line1 || 'Dirección';
+  const city = address.city || '';
+  const postcode = address.postcode || '';
+
+  return `${alias}${line1}${city ? ` · ${city}` : ''}${postcode ? ` · ${postcode}` : ''}`;
+}
+
+function ppGetAddressFromSelectValue(value = '') {
+  const id = String(value || '').replace('firestore:', '');
+
+  if (!id) return null;
+
+  return __ppFirestoreAddresses.find((item) => item.id === id) || null;
+}
+
+async function ppLoadFirestoreAddressesIntoSelect({ selectDefault = false } = {}) {
+  const select = document.getElementById('ckShipAddressList') ||
+    document.querySelector('select[name="ship_addressList"]');
+
+  if (!select) return [];
+
+  /*
+    Evita carreras async:
+    si una carga antigua termina después de una nueva, no pinta nada.
+  */
+  const requestId = ++__ppAddressSelectLoadSeq;
+  const previousValue = select.value;
+
+  const rawAddresses = await ppLoadFirestoreAddresses();
+
+  if (requestId !== __ppAddressSelectLoadSeq) {
+    return __ppFirestoreAddresses;
+  }
+
+  /*
+    Dedupe defensivo por ID.
+    Aunque Firestore venga bien, evitamos duplicar opciones en UI.
+  */
+  const seen = new Set();
+  const addresses = rawAddresses.filter((address) => {
+    if (!address?.id || seen.has(address.id)) return false;
+    seen.add(address.id);
+    return true;
+  });
+
+  __ppFirestoreAddresses = addresses;
+
+  select.innerHTML = '';
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.disabled = true;
+  placeholder.hidden = true;
+  placeholder.textContent = 'Seleccionar dirección guardada';
+  select.appendChild(placeholder);
+
+  addresses.forEach((address) => {
+    const opt = document.createElement('option');
+    opt.value = `firestore:${address.id}`;
+    opt.textContent = ppAddressSelectLabel(address);
+
+    if (address.isDefault) {
+      opt.textContent += ' · Predeterminada';
+    }
+
+    select.appendChild(opt);
+  });
+
+  const newOpt = document.createElement('option');
+  newOpt.value = 'new';
+  newOpt.textContent = 'Crear una nueva dirección de envío';
+  select.appendChild(newOpt);
+
+  const defaultAddress =
+    addresses.find((address) => address.isDefault) ||
+    (addresses.length === 1 ? addresses[0] : null);
+
+  const values = new Set(
+    Array.from(select.options).map((opt) => opt.value)
+  );
+
+  if (selectDefault && defaultAddress) {
+    select.value = `firestore:${defaultAddress.id}`;
+  } else if (previousValue && values.has(previousValue)) {
+    select.value = previousValue;
+  } else {
+    select.value = addresses.length ? '' : 'new';
+  }
+
+  return addresses;
+}
+
+function ppCheckoutCountryLabel(value = '') {
+  const clean = ppNormalizeCheckoutCountryValue(value);
+
+  if (clean === 'pt') return 'Portugal';
+  if (clean === 'fr') return 'Francia';
+
+  return 'Espana';
+}
+
+function ppBuildFirestoreAddressPayload(details = {}, { isDefault = false, serverTimestamp } = {}) {
+  const firstName = String(details.firstName || '').trim();
+  const lastName = String(details.lastName || '').trim();
+  const fullName = `${firstName} ${lastName}`.trim();
+  const now = typeof serverTimestamp === 'function' ? serverTimestamp() : new Date();
+
+  return {
+    alias: 'Envio',
+    name: fullName,
+    phone: String(details.phone || '').trim(),
+    line1: String(details.address1 || '').trim(),
+    line2: String(details.address2 || '').trim(),
+    city: String(details.city || '').trim(),
+    postcode: String(details.postalCode || '').trim(),
+    province: String(details.state || '').trim(),
+    country: ppCheckoutCountryLabel(details.country),
+    isDefault: Boolean(isDefault),
+    createdAt: now,
+    updatedAt: now,
+    source: 'checkout'
+  };
+}
+
+function ppValidateFirestoreAddressPayload(payload = {}) {
+  return Boolean(
+    payload.name &&
+    payload.phone &&
+    payload.line1 &&
+    payload.city &&
+    payload.postcode
+  );
+}
+
+async function ppSyncDefaultAddressMirror(addressId, payload = {}, firestore = {}) {
+  const { db, auth } = await ppGetFirebaseClient();
+
+  if (!db || !auth?.currentUser?.uid || !addressId) {
+    return;
+  }
+
+  const { doc, setDoc } = firestore;
+
+  if (typeof doc !== 'function' || typeof setDoc !== 'function') {
+    return;
+  }
+
+  const defaultRef = doc(
+    db,
+    'users',
+    auth.currentUser.uid,
+    'private',
+    'defaultAddress'
+  );
+
+  await setDoc(defaultRef, {
+    addressId,
+    ...payload,
+    syncedAt: payload.updatedAt || new Date()
+  }, { merge: true });
+}
+
+async function ppSetOnlyDefaultFirestoreAddress(addressId, payload = {}, firestore = {}) {
+  const { db, auth } = await ppGetFirebaseClient();
+
+  if (!db || !auth?.currentUser?.uid || !addressId) {
+    return;
+  }
+
+  const {
+    collection,
+    doc,
+    getDocs,
+    writeBatch,
+    serverTimestamp
+  } = firestore;
+
+  if (
+    typeof collection !== 'function' ||
+    typeof doc !== 'function' ||
+    typeof getDocs !== 'function' ||
+    typeof writeBatch !== 'function'
+  ) {
+    return;
+  }
+
+  const ref = collection(db, 'users', auth.currentUser.uid, 'addresses');
+  const snap = await getDocs(ref);
+  const batch = writeBatch(db);
+
+  snap.forEach((item) => {
+    const itemRef = doc(db, 'users', auth.currentUser.uid, 'addresses', item.id);
+
+    batch.update(itemRef, {
+      isDefault: item.id === addressId,
+      updatedAt: typeof serverTimestamp === 'function' ? serverTimestamp() : new Date()
+    });
+  });
+
+  await batch.commit();
+  await ppSyncDefaultAddressMirror(addressId, payload, firestore);
+}
+
+async function ppCompleteFirstAddressMissionFromCheckout() {
+  const user = await waitForCheckoutFirebaseUser();
+
+  if (!user?.getIdToken) {
+    return null;
+  }
+
+  try {
+    const token = await user.getIdToken(true);
+
+    const response = await fetch('/api/tribe/mission/check', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        missionId: 'first-address'
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      console.warn('[checkout] Mision first-address no completada:', data.error || response.status);
+      return null;
+    }
+
+    window.dispatchEvent(new CustomEvent('pp:tribe-mission-completed', {
+      detail: data
+    }));
+
+    return data;
+  } catch (error) {
+    console.warn('[checkout] No se pudo comprobar first-address:', error);
+    return null;
+  }
+}
+
+function ppShowCheckoutAddressNotice(message = '', type = 'info') {
+  const panel = document.getElementById('js-shipToMe-checkoutnc');
+
+  if (!panel) return;
+
+  let notice = document.getElementById('ppCheckoutAddressNotice');
+
+  if (!notice) {
+    notice = document.createElement('div');
+    notice.id = 'ppCheckoutAddressNotice';
+    notice.className = 'pp-checkout-address-notice';
+
+    panel.insertAdjacentElement('afterbegin', notice);
+  }
+
+  notice.classList.remove('is-ok', 'is-error', 'is-info');
+  notice.classList.add(`is-${type || 'info'}`);
+
+  if (type === 'error') {
+    notice.setAttribute('role', 'alert');
+    notice.removeAttribute('aria-live');
+  } else {
+    notice.removeAttribute('role');
+    notice.setAttribute('aria-live', 'polite');
+  }
+
+  notice.textContent = message;
+}
+
+function ppClearCheckoutAddressNotice() {
+  const notice = document.getElementById('ppCheckoutAddressNotice');
+
+  if (notice) {
+    notice.remove();
+  }
+}
+
+async function ppSaveNewCheckoutAddressIfNeeded(details = {}) {
+  const form = document.getElementById('ckShippingForm');
+  const select = form?.querySelector('select[name="ship_addressList"]');
+
+  if (!form || !select || select.value !== 'new') {
+    return {
+      saved: false,
+      details
+    };
+  }
+
+  if (isGuestCheckout()) {
+    return {
+      saved: false,
+      details: {
+        ...details,
+        source: 'guest-checkout'
+      }
+    };
+  }
+
+  const { auth, db } = await ppGetFirebaseClient();
+  const user = getVerifiedCheckoutUser() || auth?.currentUser || await waitForCheckoutFirebaseUser();
+
+  if (!db || !user?.uid || user.emailVerified === false) {
+    throw new Error('Necesitas una sesion verificada para guardar la dirección.');
+  }
+
+  const {
+    collection,
+    addDoc,
+    getDocs,
+    serverTimestamp,
+    writeBatch,
+    doc,
+    setDoc
+  } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+
+  const ref = collection(db, 'users', user.uid, 'addresses');
+  const existingSnap = await getDocs(ref);
+  const isFirstAddress = existingSnap.empty;
+  const payload = ppBuildFirestoreAddressPayload(details, {
+    isDefault: isFirstAddress,
+    serverTimestamp
+  });
+
+  if (!ppValidateFirestoreAddressPayload(payload)) {
+    throw new Error('Completa los campos principales de la dirección.');
+  }
+
+  const created = await addDoc(ref, payload);
+
+  if (payload.isDefault) {
+    await ppSetOnlyDefaultFirestoreAddress(created.id, payload, {
+      collection,
+      doc,
+      getDocs,
+      writeBatch,
+      serverTimestamp,
+      setDoc
+    });
+  }
+
+  const savedDetails = {
+    ...details,
+    source: 'firestore-address',
+    firestoreAddressId: created.id
+  };
+
+  __ppFirestoreAddresses = [
+    {
+      id: created.id,
+      ...payload
+    },
+    ...__ppFirestoreAddresses.filter((address) => address.id !== created.id)
+  ];
+
+  await ppLoadFirestoreAddressesIntoSelect();
+
+  const refreshedSelect = document.getElementById('ckShipAddressList') ||
+    document.querySelector('select[name="ship_addressList"]');
+
+  if (refreshedSelect) {
+    refreshedSelect.value = `firestore:${created.id}`;
+  }
+
+  const mission = await ppCompleteFirstAddressMissionFromCheckout();
+
+  ppShowCheckoutAddressNotice(
+    mission?.completedNow
+      ? 'Dirección guardada. Initiate queda revelado en tu archivo Prophetia Tribe.'
+      : 'Dirección guardada para futuros envíos.',
+    'ok'
+  );
+
+  return {
+    saved: true,
+    addressId: created.id,
+    isFirstAddress,
+    mission,
+    details: savedDetails
+  };
+}
 function ppSplitFullName(fullName = '') {
   const clean = String(fullName || '').trim();
   if (!clean) {
@@ -1501,11 +2294,24 @@ function ppSplitFullName(fullName = '') {
     lastName
   };
 }
+function ppNormalizeCheckoutCountryValue(value = '') {
+  const clean = String(value || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
 
+  if (['es', 'espana', 'spain'].includes(clean)) return 'es';
+  if (['pt', 'portugal'].includes(clean)) return 'pt';
+  if (['fr', 'francia', 'france'].includes(clean)) return 'fr';
+
+  return 'es';
+}
 function ppMapFirestoreAddressToCheckout(address) {
   if (!address) return null;
 
   const name = ppSplitFullName(address.name || '');
+  const country = ppNormalizeCheckoutCountryValue(address.country || 'España');
 
   return {
     firstName: name.firstName,
@@ -1515,10 +2321,12 @@ function ppMapFirestoreAddressToCheckout(address) {
     postalCode: address.postcode || '',
     city: address.city || '',
     state: address.province || '',
-    country: address.country || 'España',
+    country,
+    phoneCode: country,
     phone: address.phone || '',
+    gender: '4',
     shippingMethod: 'home',
-    source: 'firestore-default-address',
+    source: 'firestore-address',
     firestoreAddressId: address.id || ''
   };
 }
@@ -1537,15 +2345,25 @@ function ppFillShippingFormFromAddress(details) {
   const form = document.getElementById('ckShippingForm');
   if (!form || !details) return;
 
-  ppSetFieldValue(form, 'ship_firstName', details.firstName);
-  ppSetFieldValue(form, 'ship_lastName', details.lastName);
-  ppSetFieldValue(form, 'ship_address1', details.address1);
-  ppSetFieldValue(form, 'ship_address2', details.address2);
-  ppSetFieldValue(form, 'ship_postal', details.postalCode);
-  ppSetFieldValue(form, 'ship_city', details.city);
-  ppSetFieldValue(form, 'ship_state', ppNormalizeLegacyProvinceValue(details.state));
-  ppSetFieldValue(form, 'ship_country', details.country);
-  ppSetFieldValue(form, 'ship_phone', details.phone);
+  __ppApplyingStoredAddress = true;
+
+  try {
+    ppSetFieldValue(form, 'ship_gender', details.gender || '4');
+    ppSetFieldValue(form, 'ship_firstName', details.firstName);
+    ppSetFieldValue(form, 'ship_lastName', details.lastName);
+    ppSetFieldValue(form, 'ship_address1', details.address1);
+    ppSetFieldValue(form, 'ship_address2', details.address2);
+    ppSetFieldValue(form, 'ship_postal', details.postalCode);
+    ppSetFieldValue(form, 'ship_city', details.city);
+    ppSetFieldValue(form, 'ship_state', ppNormalizeLegacyProvinceValue(details.state));
+    ppSetFieldValue(form, 'ship_country', details.country || 'es');
+    ppSetFieldValue(form, 'ship_phoneCode', details.phoneCode || details.country || 'es');
+    ppSetFieldValue(form, 'ship_phone', details.phone);
+  } finally {
+    window.setTimeout(() => {
+      __ppApplyingStoredAddress = false;
+    }, 0);
+  }
 }
 
 function ppShowDefaultAddressNotice() {
@@ -1571,17 +2389,33 @@ function ppShowDefaultAddressNotice() {
 }
 
 async function ppMaybeApplyDefaultAddress() {
-  const hasSavedShipping = !!localStorage.getItem(LS_SHIP_DETAILS);
-
-  if (__ppDefaultAddressApplied || __ppShippingFormTouched || hasSavedShipping) {
-    return;
-  }
-
   let savedEmail = localStorage.getItem(LS_EMAIL) || '';
   if (!savedEmail) return;
 
   try {
-    const address = await ppLoadDefaultFirestoreAddress();
+    const hasSavedShipping = !!localStorage.getItem(LS_SHIP_DETAILS);
+
+    /*
+      Primero cargamos el select SIEMPRE.
+      Aunque el usuario haya tocado el formulario, sus direcciónes deben aparecer.
+    */
+    await ppLoadFirestoreAddressesIntoSelect({
+      selectDefault: !__ppShippingFormTouched && !hasSavedShipping
+    });
+
+    if (__ppDefaultAddressApplied || __ppShippingFormTouched || hasSavedShipping) {
+      return;
+    }
+
+    const select = document.getElementById('ckShipAddressList') ||
+      document.querySelector('select[name="ship_addressList"]');
+
+    let address = ppGetAddressFromSelectValue(select?.value || '');
+
+    if (!address) {
+      address = await ppLoadDefaultFirestoreAddress();
+    }
+
     const details = ppMapFirestoreAddressToCheckout(address);
 
     if (!details) return;
@@ -1590,6 +2424,10 @@ async function ppMaybeApplyDefaultAddress() {
 
     if (homeRadio) {
       homeRadio.checked = true;
+    }
+
+    if (select && address?.id) {
+      select.value = `firestore:${address.id}`;
     }
 
     applyShippingMode('home');
@@ -1651,8 +2489,11 @@ if (paymentForm && !paymentForm.__ppPaymentBound) {
 paymentForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const payload = buildCheckoutPayload();
-  const error = validateCheckoutPayload(payload);
+const payload = buildCheckoutPayload();
+
+
+
+const error = validateCheckoutPayload(payload);
 
   if (error) {
     showPaymentError(error);
@@ -1728,72 +2569,12 @@ paymentForm.addEventListener('submit', async (e) => {
     });
 
 // Basket CTA -> Details
-const goDetails = async () => {
-  const cart = loadCart();
-  if (!cart.length) return;
-
-  /*
-    Primero sincronizamos Firebase.
-    Si ya está logado, el paso 2 mostrará resumen de sesión.
-    Si no está logado, mostrará el formulario normal.
-  */
-  await syncCheckoutAuthFromFirebase();
-
-  enableTabs();
-  setTab('nav-js-details-checkoutnc');
-};
+const goDetails = async () => { const cart = loadCart(); if (!cart.length) { return; } /* * El invitado entra en Detalles inmediatamente. * Solo sincronizamos Firebase si ya existe sesión. */ if ( getVerifiedCheckoutUser() ) { await syncCheckoutAuthFromFirebase(); } enableTabs(); setTab( 'nav-js-details-checkoutnc' ); };
 
 E.basketCTA?.addEventListener('click', goDetails);
 E.sideCTA?.addEventListener('click', goDetails);
 
-    // Details submit -> Shipping
-    E.detailsForm?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const email = E.emailInput?.value?.trim() || '';
-      const pass  = document.querySelector('#ckPass')?.value?.trim() || '';
-
-      if (!isEmailValid(email)) {
-        console.warn('[checkout] email inválido:', email);
-        E.emailInput?.classList.add('is-invalid');
-        return;
-      }
-       if (!pass) {
-        const passEl = document.querySelector('#ckPass');
-        setFieldError(passEl, 'Introduce tu contraseña');
-        passEl?.focus();
-        return;
-      }
-
-
-      try {
-        await ppLoginWithEmailPass(email, pass);
-
-        // Guardamos email para el flujo checkout
-        localStorage.setItem(LS_EMAIL, email);
-if (E.detailsForm) E.detailsForm.classList.add('d-none');
-renderDetailsSummary(email);
-renderShippingLoginSummary(email);
-
-        enableShipping(true);
-setTab('nav-js-shipping-checkoutnc');
-syncUIFromStorage();
-
-// Firestore puede tardar una fracción más que el cambio de tab.
-// Este segundo intento evita que el usuario tenga que refrescar.
-setTimeout(() => {
-  ppMaybeApplyDefaultAddress();
-}, 250);
-          } catch (err) {
-        console.error('[checkout] login falló:', err);
-        const passEl = document.querySelector('#ckPass');
-        setFieldError(passEl, 'Credenciales incorrectas o error de login');
-        passEl?.focus();
-      }
-
-
-    });
-
+   // Login y registro se enlazan desde initCheckoutAuth().
 
     // Shipping submit -> Payment
  E.shippingForm?.addEventListener('submit', async (e) => {
@@ -1835,32 +2616,51 @@ if (!test.ok) return;
       shippingMethod: 'home'
     };
 
-localStorage.setItem(LS_SHIP_DETAILS, JSON.stringify(details));
-try {
-  await renderCart();
-} catch (error) {
-  console.error('[checkout] renderCart tras guardar envío falló:', error);
-  showPaymentError(error.message || 'No se ha podido calcular el envío.');
+ppClearCheckoutAddressNotice();
+
+const guestIntentResult = collectGuestAccountIntent();
+if (!guestIntentResult.ok) {
+  setFieldError(guestIntentResult.field, guestIntentResult.message);
+  guestIntentResult.field?.focus?.();
   return;
 }
 
-// ✅ (Opcional) si tienes una función legacy, llámala sin romper el flujo
-if (typeof window.saveNewAddress === 'function') {
-  try { window.saveNewAddress(); } catch (e) { console.warn('[addr] saveNewAddress falló:', e); }
+const submitBtn = document.getElementById('ckShippingSubmit');
+let savedAddressResult = {
+  saved: false,
+  details
+};
+
+try {
+  setCheckoutAuthButtonLoading(submitBtn, true, 'GUARDANDO...');
+  savedAddressResult = await ppSaveNewCheckoutAddressIfNeeded(details);
+} catch (error) {
+  console.error('[checkout] No se pudo guardar la dirección de envío:', error);
+  ppShowCheckoutAddressNotice(
+    error.message || 'No se ha podido guardar la dirección. Revisa tus datos e intentalo de nuevo.',
+    'error'
+  );
+  return;
+} finally {
+  setCheckoutAuthButtonLoading(submitBtn, false);
 }
 
-// ✅ Guardar solo si el usuario eligió "Crear nueva..."
-// Desactivado en producción inicial: evita guardar direcciones en localStorage.
-// saveCurrentFormAddressIfNew();
+const finalDetails = savedAddressResult?.details || details;
 
-
-
+localStorage.setItem(LS_SHIP_DETAILS, JSON.stringify(finalDetails));
+try {
+  await renderCart();
+} catch (error) {
+  console.error('[checkout] renderCart tras guardar envío fallo:', error);
+  showPaymentError(error.message || 'No se ha podido calcular el envío.');
+  return;
+}
 enablePayment(true);
 enableTabs();
 
     // Render resumen estilo “Prophetia-like”
     const email = localStorage.getItem(LS_EMAIL) || '';
-    renderShippingSummary(email, details);
+    renderShippingSummary(email, finalDetails);
 
     // ✅ Ir a Pago (paso 4)
     renderPaymentShippingDetails();
@@ -1878,7 +2678,12 @@ enableTabs();
       storeEl?.focus();
       return;
     }
-
+    const storeGuestIntentResult = collectGuestAccountIntent();
+    if (!storeGuestIntentResult.ok) {
+      setFieldError(storeGuestIntentResult.field, storeGuestIntentResult.message);
+      storeGuestIntentResult.field?.focus?.();
+      return;
+    }
 
     const details = { shippingMethod: 'store', store };
     localStorage.setItem(LS_SHIP_DETAILS, JSON.stringify(details));
@@ -2041,6 +2846,34 @@ return;
     });
   }
 
+function fillSelectedAddressFromSelect() {
+  const form = document.getElementById('ckShippingForm');
+  const select = form?.querySelector('select[name="ship_addressList"]');
+
+  if (!form || !select) return;
+
+  const value = select.value;
+
+  if (!value || value === 'new') {
+    return;
+  }
+
+  const address = ppGetAddressFromSelectValue(value);
+  const details = ppMapFirestoreAddressToCheckout(address);
+
+  if (!details) return;
+
+  const homeRadio = document.querySelector('input[name="shipping"][value="home"]');
+
+  if (homeRadio) {
+    homeRadio.checked = true;
+  }
+
+  applyShippingMode('home');
+  ppClearCheckoutAddressNotice();
+  ppFillShippingFormFromAddress(details);
+  ppShowDefaultAddressNotice();
+}
 // ========= Helpers form =========
 function val(form, name) {
   const el = form?.querySelector(`[name="${name}"]`);
@@ -2048,138 +2881,6 @@ function val(form, name) {
   return (el.value ?? '').toString().trim();
 }
 
-const LS_SAVED_ADDR = 'pp_saved_addresses_v1';
-
-function getSavedAddresses() {
-  try { return JSON.parse(localStorage.getItem(LS_SAVED_ADDR) || '[]'); }
-  catch { return []; }
-}
-
-function setSavedAddresses(list) {
-  localStorage.setItem(LS_SAVED_ADDR, JSON.stringify(Array.isArray(list) ? list : []));
-}
-
-function normalizeAddr(a) {
-  return {
-    address1: (a.address1 || '').trim(),
-    address2: (a.address2 || '').trim(),
-    postalCode: (a.postalCode || '').trim(),
-    city: (a.city || '').trim(),
-    state: (a.state || '').trim(),
-    country: (a.country || 'es').trim(),
-    firstName: (a.firstName || '').trim(),
-    lastName: (a.lastName || '').trim(),
-    phone: (a.phone || '').trim(),
-  };
-}
-
-function addrKey(a) {
-  return [
-    a.address1.toLowerCase(),
-    a.postalCode.toLowerCase(),
-    a.city.toLowerCase(),
-    a.state.toLowerCase(),
-    a.country.toLowerCase()
-  ].join('|');
-}
-
-function loadSavedAddressesIntoSelect() {
-  const select = document.querySelector('select[name="ship_addressList"]');
-  if (!select) return;
-
-  // limpia todo excepto placeholder y "new"
-  const keep = new Set(['', 'new']);
-  Array.from(select.options).forEach(opt => {
-    if (!keep.has(opt.value)) opt.remove();
-  });
-
-  const list = getSavedAddresses();
-  list.forEach((raw, index) => {
-    const a = normalizeAddr(raw);
-    if (!a.address1 || !a.postalCode) return;
-
-    const opt = document.createElement('option');
-    opt.value = `address_${index}`;
-    opt.textContent = `${a.city || '—'} · ${a.address1} · ${a.postalCode}`;
-    select.appendChild(opt);
-  });
-}
-
-function fillSelectedAddressFromSelect() {
-  const form = document.getElementById('ckShippingForm');
-  const select = form?.querySelector('select[name="ship_addressList"]');
-  if (!form || !select) return;
-
-  const v = select.value;
-  if (v === 'new' || !v) return;
-
-  if (v.startsWith('address_')) {
-    const idx = parseInt(v.split('_')[1], 10);
-    const list = getSavedAddresses();
-    const a = normalizeAddr(list[idx] || {});
-    if (!a.address1) return;
-
-    form.querySelector('input[name="ship_address1"]').value = a.address1;
-    form.querySelector('input[name="ship_address2"]').value = a.address2 || '';
-    form.querySelector('input[name="ship_postal"]').value = a.postalCode;
-    form.querySelector('input[name="ship_city"]').value = a.city;
-    form.querySelector('select[name="ship_state"]').value = ppNormalizeLegacyProvinceValue(a.state);
-
-    form.querySelector('select[name="ship_country"]').value = a.country;
-
-    const fn = form.querySelector('input[name="ship_firstName"]');
-    const ln = form.querySelector('input[name="ship_lastName"]');
-    const ph = form.querySelector('input[name="ship_phone"]');
-    if (fn && a.firstName) fn.value = a.firstName;
-    if (ln && a.lastName) ln.value = a.lastName;
-    if (ph && a.phone) ph.value = a.phone;
-  }
-}
-
-function saveCurrentFormAddressIfNew() {
-  const form = document.getElementById('ckShippingForm');
-  const select = form?.querySelector('select[name="ship_addressList"]');
-  if (!form || !select) return;
-
-  // Solo guardamos si está en "new"
-  if (select.value !== 'new') return;
-
-  const a = normalizeAddr({
-    firstName: form.querySelector('input[name="ship_firstName"]')?.value,
-    lastName: form.querySelector('input[name="ship_lastName"]')?.value,
-    address1: form.querySelector('input[name="ship_address1"]')?.value,
-    address2: form.querySelector('input[name="ship_address2"]')?.value,
-    postalCode: form.querySelector('input[name="ship_postal"]')?.value,
-    city: form.querySelector('input[name="ship_city"]')?.value,
-    state: form.querySelector('select[name="ship_state"]')?.value,
-    country: form.querySelector('select[name="ship_country"]')?.value,
-    phone: form.querySelector('input[name="ship_phone"]')?.value,
-  });
-
-  if (!a.address1 || !a.postalCode) return;
-
-  const list = getSavedAddresses();
-  const keys = new Set(list.map(x => addrKey(normalizeAddr(x))));
-  const k = addrKey(a);
-
-  let savedIndex = -1;
-
-  if (!keys.has(k)) {
-    list.push(a);
-    setSavedAddresses(list);
-    savedIndex = list.length - 1;
-  } else {
-    // si ya existía, buscamos el índice para poder seleccionarlo
-    savedIndex = list.map(x => addrKey(normalizeAddr(x))).indexOf(k);
-  }
-
-  loadSavedAddressesIntoSelect();
-
-  // ✅ Selecciona la dirección guardada en el desplegable
-  if (savedIndex >= 0) {
-    select.value = `address_${savedIndex}`;
-  }
-}
 // ========= Provincias España (para selects ship_state / bill_state) =========
 // Nota: usamos el NOMBRE como value para que Google Places matchee fácil por texto.
 const PP_ES_PROVINCES = [
@@ -2262,6 +2963,10 @@ function renderShippingSummary(email, details) {
   const E = els();
   if (!E.shipSummaryContainer) return;
 
+  const isGuest = isGuestCheckout();
+  const accountSummaryTitle = isGuest ? 'Compra como invitado' : 'Detalles de inicio de sesión';
+  const accountSummaryAction = isGuest ? 'Cambiar email' : 'Cerrar sesión';
+
   const isStore = details.shippingMethod === 'store';
 
   const fullName = `${details.firstName || ''} ${details.lastName || ''}`.trim();
@@ -2304,8 +3009,8 @@ const shippingPrivilegeLabel = getShippingPrivilegeLabel(ppSecureCartSummary);
 
     <div class="ck-summaryCard" style="border:1px solid rgba(0,0,0,.18); padding:18px; margin-top:12px;">
       <div style="display:flex; justify-content:space-between; gap:12px;">
-        <strong>Detalles de inicio de sesión</strong>
-        <button type="button" class="ck-link ck-link--muted" id="ckSummaryLogout">Cerrar sesión</button>
+        <strong>${accountSummaryTitle}</strong>
+        <button type="button" class="ck-link ck-link--muted" id="ckSummaryLogout">${accountSummaryAction}</button>
       </div>
       <div style="margin-top:8px; opacity:.8;">${escapeHtml(email || '')}</div>
     </div>
@@ -2358,10 +3063,17 @@ document.getElementById('ckSummaryEdit')?.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-  // Botón “Cerrar sesión” reutiliza tu logout real
+  // En invitado vuelve a detalles; en cuenta, reutiliza el cierre de sesión real.
   document.getElementById('ckSummaryLogout')?.addEventListener('click', () => {
+    if (isGuest) {
+      clearGuestCheckoutState({ keepEmail: false });
+      hideShippingSummaryAndShowForm();
+      setTab('nav-js-details-checkoutnc');
+      syncUIFromStorage();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     document.getElementById('ckLogout')?.click();
-    
   });
   // Botón “CONTINUAR” -> ir a Pago
 document.getElementById('ckShippingContinue')?.addEventListener('click', () => {
@@ -2426,16 +3138,52 @@ card.innerHTML = address + shippingInfo;
 }
 
   // Inicialización
-  document.addEventListener('DOMContentLoaded', () => {
- 
-markShippingFormTouched();
+document.addEventListener(
+  'DOMContentLoaded',
+  async () => {
+    try {
+      await waitForCheckoutCart();
+    } catch (error) {
+      console.error(
+        '[checkout] El carrito global no está disponible:',
+        error
+      );
+    }
+
+    markShippingFormTouched();
+
     renderCart().catch((error) => {
-  console.error('[checkout] renderCart inicial falló:', error);
-});
+      console.error(
+        '[checkout] renderCart inicial falló:',
+        error
+      );
+    });
+    window.addEventListener(
+  'pp:cart-scope-changed',
+  () => {
+    ppSecureCartSummary = null;
+
+    renderCart().catch((error) => {
+      console.error(
+        '[checkout] No se pudo actualizar la cesta tras cambiar la sesión:',
+        error
+      );
+    });
+
+    enableTabs();
+  }
+);
 window.addEventListener('pp:auth-ready', () => {
   syncCheckoutAuthFromFirebase()
     .finally(() => {
       syncUIFromStorage();
+
+      ppLoadFirestoreAddressesIntoSelect().catch((error) => {
+        console.warn('[checkout] No se pudieron recargar direcciónes tras auth-ready:', error);
+      });
+
+      ppMaybeApplyDefaultAddress();
+
       renderCart().catch((error) => {
         console.error('[checkout] renderCart tras pp:auth-ready falló:', error);
       });
@@ -2446,22 +3194,31 @@ window.addEventListener('pp:auth-changed', () => {
   syncCheckoutAuthFromFirebase()
     .finally(() => {
       syncUIFromStorage();
+
+      ppLoadFirestoreAddressesIntoSelect().catch((error) => {
+        console.warn('[checkout] No se pudieron recargar direcciónes tras auth-changed:', error);
+      });
+
+      ppMaybeApplyDefaultAddress();
+
       renderCart().catch((error) => {
         console.error('[checkout] renderCart tras pp:auth-changed falló:', error);
       });
     });
 });
 initCartEvents();
-    
 initTabClicks();
+initCheckoutAuth();
 initSteps();
 initTribeDiscountBox();
 
 ppInitProvinceSelects();
 
-loadSavedAddressesIntoSelect();
+if ( getVerifiedCheckoutUser() ) { ppLoadFirestoreAddressesIntoSelect() .catch(error => { console.warn( '[checkout] No se pudieron cargar direcciónes Firestore:', error ); }); }
 
-const sel = document.querySelector('select[name="ship_addressList"]');
+const sel = document.getElementById('ckShipAddressList') ||
+  document.querySelector('select[name="ship_addressList"]');
+
 if (sel && !sel.__ppBound) {
   sel.__ppBound = true;
   sel.addEventListener('change', fillSelectedAddressFromSelect);
@@ -2511,11 +3268,7 @@ async function ppInitAddressAutocomplete() {
   if (!address1) return;
 
   // Evita doble binding
-  if (address1.__ppPlacesBound) return;
-  address1.__ppPlacesBound = true;
-
-  // 2) Carga librería "places" (Google recomienda importLibrary) :contentReference[oaicite:3]{index=3}
-  await google.maps.importLibrary('places');
+if ( address1.__ppPlacesBound ) { return; } if ( !window.google ?.maps ?.importLibrary ) { console.warn( '[checkout] Google Maps Places todavía no está disponible.' ); return; } address1.__ppPlacesBound = true; await window.google.maps .importLibrary( 'places' );
 
   // 3) Crea Autocomplete (clásico, sobre tu <input>)
   const ac = new google.maps.places.Autocomplete(address1, {

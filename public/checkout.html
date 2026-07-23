@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout — PROPHETIA</title>
+  <meta name="description" content="Finaliza tu compra de forma segura en PROPHETIA.">
+  <meta name="robots" content="noindex,nofollow">
 
   <!-- BASE -->
   <link rel="stylesheet" href="assets/css/tokens.css">
@@ -27,6 +29,7 @@
 <body class="checkout-page" data-page="checkout">
 
   <main class="ck">
+    <h1 class="sr-only">Finalizar compra</h1>
     <!-- HEADER CHECKOUT (logo centrado) -->
     <header class="lw-header-checkoutnc" role="banner">
       <div class="capds-checkoutnc-header-container">
@@ -134,47 +137,99 @@
                     </div>
                   </div>
                 </div><!-- /tab-pane #nav-js-basket-checkoutnc -->
-                <!-- 2) DETALLES -->
-                <div class="tab-pane fade"
-                     id="nav-js-details-checkoutnc"
-                     role="tabpanel"
-                     aria-labelledby="nav-js-details-checkoutnc-tab">
+<!-- 2) DETALLES -->
+<div class="tab-pane fade" id="nav-js-details-checkoutnc" role="tabpanel" aria-labelledby="nav-js-details-checkoutnc-tab">
+  <div class="ck-box ck-details">
+    <div class="ck-details__head">
+      <div>
+        <p class="ck-auth__kicker">PROPHETIA ACCOUNT</p>
+        <h3 class="ck-h">Tus datos</h3>
+      </div>
+      <button id="ckLogout" class="ck-link ck-link--muted" type="button" hidden>Cerrar sesión</button>
+    </div>
 
-                  <div class="ck-box ck-details">
-                    <div class="ck-details__head">
-                      <h3 class="ck-h">Detalles de inicio de sesión</h3>
-                      <button id="ckLogout" class="ck-link ck-link--muted" type="button">
-                        Cerrar sesión
-                      </button>
+    <!-- Resumen cuando ya existe una sesión verificada -->
+    <div id="ckDetailsSummary" class="d-none" aria-hidden="true"></div>
 
-                    </div>
-                    <!-- Resumen Detalles (cuando ya hay sesión) -->
-                    <div id="ckDetailsSummary" class="d-none" aria-hidden="true"></div>
+    <!-- Acceso y registro dentro del checkout -->
+    <section id="ckAuthGuest" class="ck-auth" aria-labelledby="ckAuthTitle">
+      <div id="ckAuthChoice" class="ck-auth__choice is-email-step">
+        <div class="ck-auth__intro">
+          <h4 id="ckAuthTitle">Introduce tu email</h4>
+          <p id="ckAuthIntroText">Si tienes una cuenta, te solicitaremos el acceso. En caso contrario, puedes continuar como invitado y registrarte después de finalizar la compra.</p>
+        </div>
 
-<form id="ckDetailsForm" class="ck-form">
-  <label class="ck-label" for="ckEmail">Email</label>
-  <input id="ckEmail" name="email" type="email" required autocomplete="email"
-         inputmode="email" placeholder="tu@email.com">
+        <!-- EMAIL INICIAL -->
+        <div id="ckLoginPanel" class="ck-auth__panel" role="tabpanel" data-ck-auth-panel="email">
+          <form id="ckDetailsForm" class="ck-form" novalidate>
+            <label class="ck-label" for="ckEmail">Dirección de correo electrónico *</label>
+            <input id="ckEmail" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="tu@email.com">
+            <p id="ckLoginStatus" class="ck-auth__status" role="status" aria-live="polite"></p>
+            <button id="ckLoginSubmit" class="ck-primary" type="submit">CONTINUAR</button>
+          </form>
+        </div>
 
-  <label class="ck-label" for="ckPass">Contraseña</label>
-  <input id="ckPass" name="password" type="password" autocomplete="current-password"
-         placeholder="••••••••" required>
+        <!-- CREAR CUENTA -->
+        <div id="ckRegisterPanel" class="ck-auth__panel d-none" role="tabpanel" aria-hidden="true" data-ck-auth-panel="register">
+          <div id="ckNewUserSummary" class="ck-new-user-summary" hidden>
+            <h4 id="ckNewUserTitle">Nuevo usuario</h4>
+            <p id="ckNewUserEmail"></p>
+            <button id="ckUseOtherEmail" class="ck-auth__text-btn ck-auth__text-btn--inline" type="button">Continuar con otro correo electrónico</button>
+          </div>
 
-  <button class="ck-primary" type="submit">INICIAR SESIÓN Y CONTINUAR</button>
+          <form id="ckRegisterForm" class="ck-form" novalidate>
+            <input id="ckRegisterEmail" name="email" type="email" required autocomplete="email" inputmode="email" hidden>
+            <div class="ck-auth__name-grid">
+              <div>
+                <label class="ck-label" for="ckRegisterFirstName">Nombre</label>
+                <input id="ckRegisterFirstName" name="firstName" type="text" required maxlength="36" autocomplete="given-name" placeholder="Nombre">
+              </div>
+              <div>
+                <label class="ck-label" for="ckRegisterLastName">Apellidos</label>
+                <input id="ckRegisterLastName" name="lastName" type="text" required maxlength="51" autocomplete="family-name" placeholder="Apellidos">
+              </div>
+            </div>
+            <label class="ck-label" for="ckRegisterPass">Contraseña</label>
+            <input id="ckRegisterPass" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+            <label class="ck-label" for="ckRegisterPassConfirm">Repite la contraseña</label>
+            <input id="ckRegisterPassConfirm" name="passwordConfirm" type="password" required minlength="8" autocomplete="new-password" placeholder="Repite la contraseña">
+            <label class="ck-auth__check" for="ckRegisterTerms">
+              <input id="ckRegisterTerms" name="termsAccepted" type="checkbox" required>
+              <span>Acepto los <a href="/terms" target="_blank" rel="noopener">términos</a> y la <a href="/privacy" target="_blank" rel="noopener">política de privacidad</a>.</span>
+            </label>
+            <label class="ck-auth__check" for="ckRegisterNewsletter">
+              <input id="ckRegisterNewsletter" name="newsletter" type="checkbox">
+              <span>Quiero recibir novedades editoriales y acceso anticipado de Prophetia.</span>
+            </label>
+            <p id="ckRegisterStatus" class="ck-auth__status" role="status" aria-live="polite"></p>
+            <button id="ckRegisterSubmit" class="ck-primary" type="submit">CREAR CUENTA Y CONTINUAR</button>
+          </form>
+        </div>
 
-  <p class="ck-muted" style="margin-top:10px">
-    Si no tienes cuenta, inicia sesión desde el panel “Mi cuenta” o crea una cuenta antes de comprar.
-  </p>
-</form>
+        <div id="ckGuestCheckout" class="ck-guest-checkout d-none" aria-hidden="true">
+          <p id="ckGuestStatus" class="ck-auth__status is-info" role="status" aria-live="polite">Si todavía no quieres crear cuenta, puedes continuar como invitado. Usaremos este email solo para el pedido y la confirmación.</p>
+          <button id="ckGuestContinue" class="ck-auth__secondary ck-guest-checkout__button" type="button">CONTINUAR COMO INVITADO</button>
+        </div>
+      </div>
 
+      <!-- VERIFICACION DE EMAIL -->
+      <div id="ckVerifyPanel" class="ck-auth__verify d-none" aria-hidden="true">
+        <p class="ck-auth__verify-kicker">VERIFICACION SEGURA</p>
+        <h4>Revisa tu correo</h4>
+        <p>Hemos enviado un enlace de verificación a <strong id="ckVerifyEmail"></strong>.</p>
+        <p class="ck-auth__verify-note">Tu cesta permanece guardada. Verifica el correo y vuelve aquí para continuar con el envío.</p>
+        <p id="ckVerifyStatus" class="ck-auth__status" role="status" aria-live="polite"></p>
+        <div class="ck-auth__verify-actions">
+          <button id="ckVerifyNow" class="ck-primary" type="button">YA HE VERIFICADO MI CORREO</button>
+          <button id="ckVerifyResend" class="ck-auth__secondary" type="button">REENVIAR CORREO</button>
+          <button id="ckVerifyBack" class="ck-auth__text-btn" type="button">Volver al registro</button>
+        </div>
+      </div>
+    </section>
 
-                    <p class="ck-muted ck-details__hint">
-                      Usaremos este email para enviarte la confirmación del pedido.
-                    </p>
-                  </div>
-                </div>
-
-
+    <p class="ck-muted ck-details__hint">Usaremos este email para enviarte la confirmación del pedido.</p>
+  </div>
+</div>
 
                 <!-- 3) ENVÍO -->
                 <div class="tab-pane fade"
@@ -196,8 +251,8 @@
   </label>
 
   <label class="ck-radio">
-    <input type="radio" name="shipping" value="store">
-    <span>Recogida en tienda</span>
+    <input type="radio" name="shipping" value="store" disabled>
+    <span>Recogida en tienda (próximamente)</span>
   </label>
 
   <!-- PANEL DOMICILIO (cerrado por defecto) -->
@@ -212,11 +267,13 @@
       <fieldset>
 
         <div class="capds-form__input--group capds-span2">
-         <select class="capds-form__input capds-form__input--arrow" name="ship_addressList" required>
-  <option value="" disabled selected hidden></option>
+ <select id="ckShipAddressList"
+        class="capds-form__input capds-form__input--arrow"
+        name="ship_addressList"
+        required>
+  <option value="" disabled selected hidden>Cargando direcciones...</option>
   <option value="new">Crear una nueva dirección de envío</option>
 </select>
-
           <label>Seleccionar de la dirección guardada *</label>
         </div>
 
@@ -291,7 +348,17 @@
           <input class="capds-form__input" type="text" name="ship_phone" inputmode="tel" required placeholder=" ">
           <label>Teléfono *</label>
         </div>
-
+        <div id="ckGuestAccountOffer" class="ck-guest-account capds-span2 d-none" aria-hidden="true">
+          <p class="ck-guest-account__copy">Estás comprando como invitado. Si quieres una experiencia más rápida en tu próxima visita, puedes indicar que deseas crear una cuenta Prophetia con este correo después del pedido.</p>
+          <div class="capds-form__input--group">
+            <input id="ckGuestPassword" class="capds-form__input" type="password" name="guest_password" minlength="8" autocomplete="new-password" placeholder=" ">
+            <label>Contraseña para tu próxima visita</label>
+          </div>
+          <label class="ck-auth__check ck-guest-account__check" for="ckGuestCreateAccount">
+            <input id="ckGuestCreateAccount" name="guest_createAccount" type="checkbox">
+            <span>Quiero que Prophetia prepare una cuenta con este correo al finalizar el pedido.</span>
+          </label>
+        </div>
          </fieldset>
     </div><!-- /.capds-form -->
   </div><!-- /#js-shipToMe-checkoutnc -->
@@ -323,7 +390,6 @@
         <div class="capds-form__input--group capds-span2">
           <select class="capds-form__input capds-form__input--arrow" name="bill_addressList" required>
             <option value="" disabled selected hidden></option>
-            <option value="madrid">Madrid · Estación de Chamartín · 28036</option>
             <option value="new">Crear una nueva dirección de facturación</option>
           </select>
           <label>Seleccionar de la dirección guardada *</label>
@@ -480,9 +546,7 @@
         <label class="ck-label" for="ckStore">Tienda</label>
         <select id="ckStore" name="store">
           <option value="" disabled selected hidden>Selecciona una tienda</option>
-          <option value="sevilla-centro">Sevilla Centro</option>
-          <option value="sevilla-nervion">Sevilla Nervión</option>
-          <option value="dos-hermanas">Dos Hermanas</option>
+          <option value="" disabled>Recogida en tienda disponible próximamente</option>
         </select>
 
         <p class="ck-muted" style="margin: 0;">
@@ -517,8 +581,8 @@
 <label class="ck-payRow">
   <input class="ck-payRadio" type="radio" name="payMethod" value="stripe_checkout" checked>
   <span class="ck-payLabel">
-    <strong>Pago seguro con tarjeta</strong>
-    <span class="ck-payBadge">Visa · Mastercard · Apple Pay · Google Pay</span>
+    <strong>Pago seguro con Stripe</strong>
+    <span class="ck-payBadge">Tarjeta · Apple Pay · Google Pay · Link · Bizum</span>
   </span>
 </label>
 
@@ -642,20 +706,19 @@
         <h3 class="pp-rightTitle">¿Necesitas ayuda?</h3>
         <p class="pp-rightText">+34 911 538 181</p>
         <p class="pp-rightText">Lunes a sábado · 10:00–19:00 (hora Madrid)</p>
-        <p class="pp-rightText"><a class="pp-rightLink" href="mailto:clientservices@prophetia.com">clientservices@prophetia.com</a></p>
+        <p class="pp-rightText"><a class="pp-rightLink" href="mailto:orders@prophetia.es">orders@prophetia.es</a></p>
       </section>
 
-      <section class="pp-rightSection">
-        <h3 class="pp-rightTitle">Pago seguro</h3>
-        <div class="pp-payLogos" aria-label="Métodos de pago">
-          <span class="pp-payChip">VISA</span>
-          <span class="pp-payChip">MC</span>
-          <span class="pp-payChip">AMEX</span>
-          <span class="pp-payChip">Apple Pay</span>
-          <span class="pp-payChip">Klarna</span>
-          <span class="pp-payChip">PayPal</span>
-        </div>
-      </section>
+   <section class="pp-rightSection">
+  <h3 class="pp-rightTitle">Pago seguro</h3>
+  <div class="pp-payLogos" aria-label="Métodos de pago disponibles">
+    <span class="pp-payChip">Tarjeta</span>
+    <span class="pp-payChip">Apple Pay</span>
+    <span class="pp-payChip">Google Pay</span>
+    <span class="pp-payChip">Link</span>
+    <span class="pp-payChip">Bizum</span>
+  </div>
+</section>
 
       <section class="pp-rightSection pp-rightSection--media">
         <div>
@@ -676,23 +739,25 @@
   </main>
 
 
-  <!-- Otros scripts -->
-  <script src="assets/js/header-init.js" defer></script>
-  <script src="assets/js/script.js" defer></script>
-
-  <!-- Auth modular REAL (tu archivo) -->
-  <script src="assets/js/firebase-auth.js" type="module" defer></script>
-<script>
-  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-    key: "AIzaSyAYDsbNfsJ-9v3CRzYVhR54Mja5E580R9o",
-    v: "weekly",
-    // opcional, recomendado si restringes por referrer
-    authReferrerPolicy: "origin"
-  });
+<!-- Auth -->
+<script
+  src="/assets/js/firebase-auth.js"
+  type="module">
 </script>
 
-  <!-- Checkout (depende de auth) -->
-  <script src="assets/js/checkout.js" type="module" defer></script>
+<!-- Carrito global -->
+<script
+  src="/assets/js/cart.js"
+  defer>
+</script>
+
+<!-- Google Maps --> <script> ( g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set(), e = new URLSearchParams(), u = () => h || ( h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) { e.set( k.replace( /[A-Z]/g, t => "_" + t[0].toLowerCase() ), g[k] ); } e.set( "callback", c + ".maps." + q ); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => { h = n( Error( p + " could not load." ) ); }; a.nonce = m.querySelector( "script[nonce]" )?.nonce || ""; m.head.append(a); }) ); d[l] ? console.warn( p + " only loads once. Ignoring:", g ) : d[l] = ( f, ...n ) => { r.add(f); return u().then( () => d[l](f, ...n) ); }; } )({ key: "AIzaSyAYDsbNfsJ-9v3CRzYVhR54Mja5E580R9o", v: "weekly", authReferrerPolicy: "origin" }); </script>
+
+<!-- Checkout -->
+<script
+  src="/assets/js/checkout.js"
+  type="module">
+</script>
 </body>
 
 </html>

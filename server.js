@@ -7,13 +7,22 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const Stripe = require('stripe');
 const { Resend } = require('resend');
-const admin = require('firebase-admin');
+const { getApps, initializeApp, cert } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+
+if (process.env.NODE_ENV === 'production') {
+  /*
+    Render/Cloudflare actúan como proxy inverso.
+    Permitimos un salto confiable para obtener req.ip.
+  */
+  app.set('trust proxy', 1);
+}
 /*
   PRODUCCIÓN:
   - FIREBASE_ADMIN_CREDENTIALS apunta al service account privado.
@@ -25,14 +34,14 @@ const FIREBASE_ADMIN_CREDENTIALS = process.env.FIREBASE_ADMIN_CREDENTIALS
   ? path.resolve(__dirname, process.env.FIREBASE_ADMIN_CREDENTIALS)
   : '';
 
-if (!admin.apps.length) {
+if (!getApps().length) {
   if (!FIREBASE_ADMIN_CREDENTIALS || !fs.existsSync(FIREBASE_ADMIN_CREDENTIALS)) {
     console.warn('[firebase-admin] No se ha encontrado FIREBASE_ADMIN_CREDENTIALS. /api/my-orders no funcionará en modo seguro.');
   } else {
     const serviceAccount = require(FIREBASE_ADMIN_CREDENTIALS);
 
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
+    initializeApp({
+      credential: cert(serviceAccount)
     });
 
     console.log('[firebase-admin] inicializado correctamente.');
@@ -47,7 +56,7 @@ if (!admin.apps.length) {
 
   - Producción:
       NODE_ENV=production
-      SITE_URL=https://prophetia.es
+      SITE_URL=https://www.prophetia.es
 
   - SITE_URL se usa para Stripe success_url/cancel_url y enlaces internos.
   - PORT normalmente lo asigna la plataforma de hosting.
@@ -67,7 +76,8 @@ const REQUIRED_ENV_IN_PRODUCTION = [
   'RESEND_API_KEY',
   'ORDER_FROM_EMAIL',
   'ORDER_INTERNAL_EMAIL',
-  'FIREBASE_ADMIN_CREDENTIALS'
+  'FIREBASE_ADMIN_CREDENTIALS',
+  'DATA_DIR'
 ];
 
 if (process.env.NODE_ENV === 'production') {
@@ -82,13 +92,16 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = process.env.DATA_DIR
+  ? path.resolve(__dirname, process.env.DATA_DIR)
+  : path.join(__dirname, 'data');
 
 const ORDERS_DIR = DATA_DIR;
 const ORDERS_FILE = path.join(ORDERS_DIR, 'orders.json');
 
 const STOCK_FILE = path.join(DATA_DIR, 'stock.json');
-const SHIPPING_RATES_FILE = path.join(DATA_DIR, 'shipping-rates.json');
+const STOCK_WAITLIST_FILE = path.join(DATA_DIR, 'stock-waitlist.json');
+const SHIPPING_RATES_FILE = path.join(__dirname, 'config', 'shipping-rates.json');
 const TRIBE_MEMBERS_FILE = path.join(DATA_DIR, 'tribe-members.json');
 const PRIVATE_DROPS_FILE = path.join(DATA_DIR, 'private-drops.json');
 const PRIVATE_DROP_PAGES_FILE = path.join(DATA_DIR, 'private-drop-pages.json');
@@ -98,6 +111,9 @@ const TRIBE_DISCOUNT_PERCENT = 10;
 const TRIBE_MIN_SUBTOTAL = 40;
 const TRIBE_POINTS_PER_EURO = 1;
 const TRIBE_POINTS_REDEEM_COST = 100;
+
+const TRIBE_ALLOW_LEGACY_EMAIL_UID_LINK =
+  process.env.TRIBE_ALLOW_LEGACY_EMAIL_UID_LINK === 'true';
 
 /* =========================================================
    PROPHETIA · TRIBE CONFIG
@@ -200,10 +216,10 @@ const TRIBE_RANKS = [
     }
   },
   {
-    id: 'seer',
-    label: 'Seer',
+    id: 'archivist',
+    label: 'Archivist',
     min: 500,
-    accessLabel: 'Seer Access',
+    accessLabel: 'Archivist Access',
     objective: 'Acceso privado avanzado a recompensas y prioridad.',
     earlyAccessHours: 24,
     freeShipping: {
@@ -221,7 +237,7 @@ const TRIBE_RANKS = [
     rewardOnUnlock: {
       type: 'rank_discount',
       percent: 20,
-      label: '20% privado Seer',
+      label: '20% privado Archivist',
       minSubtotal: 70,
       singleUse: true
     }
@@ -404,20 +420,100 @@ function isValidEmail(value = '') {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
 }
 
-function calculateAgeFromBirthDate(birthDate = '') {
-  const date = new Date(birthDate);
+function hasConfiguredResend() {
+  const key = String(process.env.RESEND_API_KEY || '').trim();
+  return /^re_[a-zA-Z0-9_-]{8,}$/.test(key) && !key.includes('REPLACE_ME');
+}
 
-  if (Number.isNaN(date.getTime())) return 0;
+function parseBirthDateISO(value = '') {
+  const cleanValue =
+    String(value || '').trim();
+
+  const match = cleanValue.match(
+    /^(\d{4})-(\d{2})-(\d{2})$/
+  );
+
+  if (!match) {
+    return null;
+  }
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+
+  if (
+    year < 1900 ||
+    month < 1 ||
+    month > 12 ||
+    day < 1 ||
+    day > 31
+  ) {
+    return null;
+  }
+
+  const date = new Date(
+    Date.UTC(
+      year,
+      month - 1,
+      day
+    )
+  );
+
+  const isRealDate =
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day;
+
+  if (!isRealDate) {
+    return null;
+  }
+
+  return {
+    date,
+    year,
+    month,
+    day,
+    iso:
+      `${year}-` +
+      `${String(month).padStart(2, '0')}-` +
+      `${String(day).padStart(2, '0')}`
+  };
+}
+
+function calculateAgeFromBirthDate(
+  birthDate = ''
+) {
+  const birth =
+    parseBirthDateISO(birthDate);
+
+  if (!birth) {
+    return null;
+  }
 
   const today = new Date();
-  let age = today.getFullYear() - date.getFullYear();
-  const birthdayThisYear = new Date(today.getFullYear(), date.getMonth(), date.getDate());
 
-  if (today < birthdayThisYear) age--;
+  let age =
+    today.getUTCFullYear() -
+    birth.year;
+
+  const currentMonth =
+    today.getUTCMonth() + 1;
+
+  const currentDay =
+    today.getUTCDate();
+
+  if (
+    currentMonth < birth.month ||
+    (
+      currentMonth === birth.month &&
+      currentDay < birth.day
+    )
+  ) {
+    age -= 1;
+  }
 
   return age;
 }
-
 function findTribeMemberByEmail(email = '') {
   const cleanEmail = normalizeEmail(email);
   if (!cleanEmail) return null;
@@ -427,74 +523,401 @@ function findTribeMemberByEmail(email = '') {
   }) || null;
 }
 
-function upsertTribeMember(memberInput) {
-  const members = loadTribeMembers();
-  const cleanEmail = normalizeEmail(memberInput.email);
 
-  const index = members.findIndex((member) => {
-    return normalizeEmail(member.email) === cleanEmail;
+
+
+function findTribeMemberByFirebaseUid(firebaseUid = '') {
+  const cleanUid = String(firebaseUid || '').trim();
+
+  if (!cleanUid) {
+    return null;
+  }
+
+  return loadTribeMembers().find((member) => {
+    return String(member.firebaseUid || '').trim() === cleanUid;
+  }) || null;
+}
+
+function getPublicTribeMember(member = {}) {
+  return {
+    name: String(member.name || ''),
+    email: normalizeEmail(member.email),
+
+    discountCode:
+      String(member.discountCode || TRIBE_DISCOUNT_CODE),
+
+    discountPercent:
+      Number(member.discountPercent || TRIBE_DISCOUNT_PERCENT),
+
+    discountStatus:
+      String(member.discountStatus || 'available'),
+
+    usedCount:
+      Number(member.usedCount || 0),
+
+    points:
+      Number(member.points || 0),
+
+    lifetimePoints:
+      Number(member.lifetimePoints || member.points || 0),
+
+    rank:
+      String(member.rank || 'Tribe Member'),
+
+    rankId:
+      String(member.rankId || 'tribe-member'),
+
+    status:
+      String(member.status || 'active')
+  };
+}
+
+/*
+  Seguridad de identidad Tribe:
+  - La membresia pertenece al uid unico de Firebase.
+  - La migracion por email queda desactivada por defecto.
+  - Un email antiguo no puede transferir puntos a una cuenta nueva.
+*/
+function getTribeIdentitySnapshot(member = {}) {
+  return {
+    id: member.id || null,
+    email: normalizeEmail(member.email),
+    firebaseUid: String(member.firebaseUid || '').trim() || null,
+    name: String(member.name || ''),
+    points: Number(member.points || 0),
+    lifetimePoints: Number(member.lifetimePoints || member.points || 0),
+    rank: String(member.rank || ''),
+    rankId: String(member.rankId || ''),
+    createdAt: member.createdAt || null,
+    updatedAt: member.updatedAt || null
+  };
+}
+
+function findAndLinkTribeMemberForFirebaseUser(
+  firebaseUser = {},
+  options = {}
+) {
+  const firebaseUid =
+    String(firebaseUser.uid || '').trim();
+
+  const email =
+    normalizeEmail(firebaseUser.email);
+
+  if (!firebaseUid || !email) {
+    return null;
+  }
+
+  const allowLegacyEmailLink =
+    options.allowLegacyEmailLink === true ||
+    (
+      options.allowLegacyEmailLink !== false &&
+      TRIBE_ALLOW_LEGACY_EMAIL_UID_LINK
+    );
+
+  const writeLink =
+    options.writeLink !== false;
+
+  const members = loadTribeMembers();
+
+  const uidIndex = members.findIndex((member) => {
+    return String(member.firebaseUid || '').trim() === firebaseUid;
   });
+
+  if (uidIndex >= 0) {
+    const member = members[uidIndex];
+    const memberEmail = normalizeEmail(member.email);
+
+    if (memberEmail && memberEmail !== email) {
+      console.warn('[tribe-identity] UID con email distinto. Se conserva el UID como fuente de verdad.', {
+        uid: firebaseUid,
+        memberEmail,
+        tokenEmail: email
+      });
+    }
+
+    return member;
+  }
+
+  const emailIndex = members.findIndex((member) => {
+    return normalizeEmail(member.email) === email;
+  });
+
+  if (emailIndex < 0) {
+    return null;
+  }
+
+  const existingMember = members[emailIndex];
+  const existingUid = String(existingMember.firebaseUid || '').trim();
+
+  if (existingUid && existingUid !== firebaseUid) {
+    console.warn('[tribe-identity] Membresia ignorada por uid diferente.', {
+      email,
+      existingUid,
+      firebaseUid
+    });
+
+    return null;
+  }
+
+  if (!existingUid && !allowLegacyEmailLink) {
+    console.warn('[tribe-identity] Migracion legacy por email bloqueada.', {
+      email,
+      firebaseUid
+    });
+
+    return null;
+  }
+
+  if (!existingUid && writeLink) {
+    members[emailIndex] = {
+      ...existingMember,
+      firebaseUid,
+      authLinkedAt: new Date().toISOString(),
+      authLinkSource: 'legacy-email-migration',
+      updatedAt: new Date().toISOString()
+    };
+
+    saveTribeMembers(members);
+
+    return members[emailIndex];
+  }
+
+  return existingMember;
+}
+
+function buildInitialTribeMemberPayload(memberInput = {}, now = new Date().toISOString(), extra = {}) {
+  const cleanEmail = normalizeEmail(memberInput.email);
+  const firebaseUid = String(memberInput.firebaseUid || '').trim();
+
+  return {
+    id: cleanEmail,
+
+    firebaseUid:
+      firebaseUid || null,
+
+    name:
+      String(memberInput.name || '').trim(),
+
+    email:
+      cleanEmail,
+
+    birthDate:
+      String(memberInput.birthDate || '').trim(),
+
+    optin:
+      !!memberInput.optin,
+
+    status:
+      'active',
+
+    points:
+      0,
+
+    lifetimePoints:
+      0,
+
+    rank:
+      TRIBE_MEMBER_PROFILE.label,
+
+    rankId:
+      TRIBE_MEMBER_PROFILE.id,
+
+    nextRank:
+      TRIBE_RANKS[0]?.label || null,
+
+    nextRankAt:
+      TRIBE_RANKS[0]?.min || null,
+
+    pointsToNextRank:
+      TRIBE_RANKS[0]?.min || 1,
+
+    progressPercent:
+      0,
+
+    pointsRequiredForNextDiscount:
+      TRIBE_POINTS_REDEEM_COST,
+
+    discountCode:
+      TRIBE_DISCOUNT_CODE,
+
+    discountPercent:
+      TRIBE_DISCOUNT_PERCENT,
+
+    discountStatus:
+      'available',
+
+    discountIssuedAt:
+      now,
+
+    discountUsedAt:
+      null,
+
+    discountUsedOrderId:
+      null,
+
+    usedCount:
+      0,
+
+    unlockedRewards:
+      [],
+
+    lastUnlockedRewards:
+      [],
+
+    xpEvents:
+      [],
+
+    lastXpEvent:
+      null,
+
+    lastMissionEvent:
+      null,
+
+    prestigeLevel:
+      0,
+
+    prestigeId:
+      '',
+
+    prestigeLabel:
+      '',
+
+    prestigeEmblem:
+      '',
+
+    nextPrestigeAt:
+      null,
+
+    nextPrestigeLabel:
+      null,
+
+    pointsToNextPrestige:
+      null,
+
+    prestigeProgressPercent:
+      0,
+
+    prestigeBenefits:
+      [],
+
+    createdAt:
+      now,
+
+    updatedAt:
+      now,
+
+    ...extra
+  };
+}
+function upsertTribeMember(memberInput = {}) {
+  const members = loadTribeMembers();
+
+  const cleanEmail =
+    normalizeEmail(memberInput.email);
+
+  const firebaseUid =
+    String(memberInput.firebaseUid || '').trim();
 
   const now = new Date().toISOString();
 
-  if (index >= 0) {
-    const existing = members[index];
+  if (!cleanEmail || !isValidEmail(cleanEmail)) {
+    const error = new Error('Email Tribe no valido.');
+    error.code = 'TRIBE_INVALID_EMAIL';
+    throw error;
+  }
 
-    const updatedMember = {
-      ...existing,
-      id: existing.id || cleanEmail,
-      name: String(memberInput.name || existing.name || '').trim(),
-      email: cleanEmail,
-      birthDate: String(memberInput.birthDate || existing.birthDate || '').trim(),
-      optin: !!memberInput.optin,
-      status: existing.status || 'active',
+  /*
+    Primera comprobacion: la cuenta Firebase ya tiene
+    una membresia, aunque intente enviar otro correo.
+  */
+  if (firebaseUid) {
+    const uidIndex = members.findIndex((member) => {
+      return (
+        String(member.firebaseUid || '').trim() ===
+        firebaseUid
+      );
+    });
 
-      points: Number(existing.points || 0),
-      pointsRequiredForNextDiscount: Number(existing.pointsRequiredForNextDiscount || 100),
+    if (uidIndex >= 0) {
+      return {
+        ...members[uidIndex],
+        alreadyMember: true,
+        codeIssuedNow: false
+      };
+    }
+  }
 
-      discountCode: existing.discountCode || TRIBE_DISCOUNT_CODE,
-      discountPercent: Number(existing.discountPercent || TRIBE_DISCOUNT_PERCENT),
-      discountStatus: existing.discountStatus || 'available',
-      discountIssuedAt: existing.discountIssuedAt || existing.createdAt || now,
-      discountUsedAt: existing.discountUsedAt || null,
-      discountUsedOrderId: existing.discountUsedOrderId || null,
-      usedCount: Number(existing.usedCount || 0),
+  /*
+    Segunda comprobacion: el email ya pertenece a Tribe.
+    Si llega desde otra identidad Firebase, no heredamos puntos:
+    se reinicia una ficha limpia para esa nueva identidad verificada.
+  */
+  const emailIndex = members.findIndex((member) => {
+    return (
+      normalizeEmail(member.email) ===
+      cleanEmail
+    );
+  });
 
-      updatedAt: now
-    };
+  if (emailIndex >= 0) {
+    const existingMember = members[emailIndex];
+    const existingUid =
+      String(existingMember.firebaseUid || '').trim();
 
-    members[index] = updatedMember;
-    saveTribeMembers(members);
+    const shouldStartCleanForFirebaseIdentity =
+      Boolean(firebaseUid) &&
+      (
+        (existingUid && existingUid !== firebaseUid) ||
+        (!existingUid && !TRIBE_ALLOW_LEGACY_EMAIL_UID_LINK)
+      );
+
+    if (shouldStartCleanForFirebaseIdentity) {
+      members[emailIndex] = buildInitialTribeMemberPayload(
+        memberInput,
+        now,
+        {
+          identityResetAt: now,
+          identityResetReason: existingUid
+            ? 'firebase-uid-mismatch'
+            : 'legacy-email-record',
+          previousIdentity:
+            getTribeIdentitySnapshot(existingMember)
+        }
+      );
+
+      saveTribeMembers(members);
+
+      return {
+        ...members[emailIndex],
+        alreadyMember: false,
+        codeIssuedNow: true
+      };
+    }
+
+    /*
+      Migracion legacy opcional y explicita.
+      Por defecto queda bloqueada para evitar herencias de clientes.
+    */
+    if (firebaseUid && !existingUid && TRIBE_ALLOW_LEGACY_EMAIL_UID_LINK) {
+      members[emailIndex] = {
+        ...existingMember,
+        firebaseUid,
+        authLinkedAt: now,
+        authLinkSource: 'legacy-email-migration',
+        updatedAt: now
+      };
+
+      saveTribeMembers(members);
+    }
 
     return {
-      ...updatedMember,
+      ...members[emailIndex],
       alreadyMember: true,
       codeIssuedNow: false
     };
   }
 
-  const payload = {
-    id: cleanEmail,
-    name: String(memberInput.name || '').trim(),
-    email: cleanEmail,
-    birthDate: String(memberInput.birthDate || '').trim(),
-    optin: !!memberInput.optin,
-    status: 'active',
-
-    points: 0,
-    pointsRequiredForNextDiscount: 100,
-
-    discountCode: TRIBE_DISCOUNT_CODE,
-    discountPercent: TRIBE_DISCOUNT_PERCENT,
-    discountStatus: 'available',
-    discountIssuedAt: now,
-    discountUsedAt: null,
-    discountUsedOrderId: null,
-    usedCount: 0,
-
-    createdAt: now,
-    updatedAt: now
-  };
+  const payload = buildInitialTribeMemberPayload(memberInput, now);
 
   members.push(payload);
   saveTribeMembers(members);
@@ -505,7 +928,6 @@ function upsertTribeMember(memberInput) {
     codeIssuedNow: true
   };
 }
-
 function findAvailableRankReward(member, cleanCode = '') {
   const rewards = Array.isArray(member?.unlockedRewards)
     ? member.unlockedRewards
@@ -519,7 +941,7 @@ function findAvailableRankReward(member, cleanCode = '') {
   }) || null;
 }
 
-function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
+function validateTribeDiscount({ email = '', code = '', subtotal = 0, member = null, strictMember = false } = {}) {
   const cleanEmail = normalizeEmail(email);
   const cleanCode = String(code || '').trim().toUpperCase();
   const cleanSubtotal = Number(subtotal || 0);
@@ -531,7 +953,7 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
       type: '',
       percent: 0,
       amount: 0,
-      reason: 'Sin código de descuento.'
+      reason: 'Sin codigo de descuento.'
     };
   }
 
@@ -542,13 +964,18 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
       type: '',
       percent: 0,
       amount: 0,
-      reason: 'Email no válido.'
+      reason: 'Email no valido.'
     };
   }
 
-  const member = findTribeMemberByEmail(cleanEmail);
+  const resolvedMember =
+    member && normalizeEmail(member.email) === cleanEmail
+      ? member
+      : strictMember
+        ? null
+        : findTribeMemberByEmail(cleanEmail);
 
-  if (!member || member.status !== 'active') {
+  if (!resolvedMember || resolvedMember.status !== 'active') {
     return {
       valid: false,
       code: cleanCode,
@@ -560,19 +987,19 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
   }
 
   /*
-    1) Código bienvenida TRIBE10
-    - Solo una vez por email.
-    - Mínimo TRIBE_MIN_SUBTOTAL.
+    1) Codigo bienvenida TRIBE10
+    - Solo una vez por identidad Tribe.
+    - Minimo TRIBE_MIN_SUBTOTAL.
   */
   if (cleanCode === TRIBE_DISCOUNT_CODE) {
-    if (member.discountStatus !== 'available' || Number(member.usedCount || 0) > 0) {
+    if (resolvedMember.discountStatus !== 'available' || Number(resolvedMember.usedCount || 0) > 0) {
       return {
         valid: false,
         code: cleanCode,
         type: 'welcome_code',
         percent: 0,
         amount: 0,
-        reason: 'Este código Tribe ya ha sido utilizado. Podrás recibir otras recompensas acumulando Legacy Points.'
+        reason: 'Este codigo Tribe ya ha sido utilizado. Podras recibir otras recompensas acumulando Legacy Points.'
       };
     }
 
@@ -583,7 +1010,7 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
         type: 'welcome_code',
         percent: 0,
         amount: 0,
-        reason: `El pedido mínimo para usar ${TRIBE_DISCOUNT_CODE} es ${TRIBE_MIN_SUBTOTAL} €.`
+        reason: `El pedido minimo para usar ${TRIBE_DISCOUNT_CODE} es ${TRIBE_MIN_SUBTOTAL} €.`
       };
     }
 
@@ -605,16 +1032,14 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
 
   /*
     2) Recompensas privadas de rango
-    - PP-ADEPTUS-...
-    - PP-ORACLE-...
-    - Deben existir en unlockedRewards del usuario.
+    - Deben existir en unlockedRewards de esta identidad Tribe.
     - Deben estar available.
   */
-  const reward = findAvailableRankReward(member, cleanCode);
+  const reward = findAvailableRankReward(resolvedMember, cleanCode);
 
   if (!reward) {
-    const allRewards = Array.isArray(member.unlockedRewards)
-      ? member.unlockedRewards
+    const allRewards = Array.isArray(resolvedMember.unlockedRewards)
+      ? resolvedMember.unlockedRewards
       : [];
 
     const existingReward = allRewards.find((item) => {
@@ -629,7 +1054,7 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
       amount: 0,
       reason: existingReward
         ? 'Esta recompensa privada ya ha sido utilizada.'
-        : 'Código no válido o no pertenece a tu cuenta Prophetia Tribe.'
+        : 'Codigo no valido o no pertenece a tu cuenta Prophetia Tribe.'
     };
   }
 
@@ -657,7 +1082,7 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
       percent: 0,
       amount: 0,
       minSubtotal,
-      reason: `El pedido mínimo para usar esta recompensa ${reward.rank || 'Tribe'} es ${minSubtotal} €.`
+      reason: `El pedido minimo para usar esta recompensa ${reward.rank || 'Tribe'} es ${minSubtotal} €.`
     };
   }
 
@@ -675,7 +1100,7 @@ function validateTribeDiscount({ email = '', code = '', subtotal = 0 } = {}) {
       percent: 0,
       amount: 0,
       minSubtotal,
-      reason: 'Esta recompensa no tiene un descuento válido.'
+      reason: 'Esta recompensa no tiene un descuento valido.'
     };
   }
 
@@ -876,7 +1301,7 @@ function getTribePrestigeInfo(lifetimePoints = 0) {
 }
 
 function getTribeRankConfig(rankId = 'initiate') {
-  const cleanRankId = String(rankId || 'initiate').trim().toLowerCase();
+  const cleanRankId = normalizeRankId(rankId || 'initiate') || 'initiate';
 
   if (cleanRankId === TRIBE_MEMBER_PROFILE.id) {
     return TRIBE_MEMBER_PROFILE;
@@ -1044,11 +1469,15 @@ function getPublicTribeMissions(member = {}) {
 
 function completeTribeMissionForEmail({
   email = '',
+  firebaseUid = '',
+  identityMember = null,
+  strictIdentity = false,
   missionId = '',
   progress = null,
   reason = ''
 } = {}) {
   const cleanEmail = normalizeEmail(email);
+  const cleanUid = String(firebaseUid || identityMember?.firebaseUid || '').trim();
   const mission = getMissionConfig(missionId);
 
   if (!cleanEmail || !mission) {
@@ -1060,7 +1489,23 @@ function completeTribeMissionForEmail({
   }
 
   const members = loadTribeMembers();
-  const index = members.findIndex((member) => normalizeEmail(member.email) === cleanEmail);
+  let index = -1;
+
+  if (cleanUid) {
+    index = members.findIndex((item) => {
+      return String(item.firebaseUid || '').trim() === cleanUid;
+    });
+  }
+
+  if (index < 0 && identityMember?.id) {
+    index = members.findIndex((item) => {
+      return String(item.id || '') === String(identityMember.id || '');
+    });
+  }
+
+  if (index < 0 && !strictIdentity) {
+    index = members.findIndex((item) => normalizeEmail(item.email) === cleanEmail);
+  }
 
   if (index < 0) {
     return {
@@ -1240,6 +1685,56 @@ function hasPaidOrderForEmail(email = '') {
   });
 }
 
+function getDateMs(value) {
+  if (!value) return 0;
+
+  if (typeof value.toDate === 'function') {
+    return value.toDate().getTime();
+  }
+
+  if (typeof value.seconds === 'number') {
+    return value.seconds * 1000;
+  }
+
+  if (typeof value._seconds === 'number') {
+    return value._seconds * 1000;
+  }
+
+  const parsed = Date.parse(String(value));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function getTribeIdentityStartMs(member = {}) {
+  return getDateMs(
+    member.identityResetAt ||
+    member.authLinkedAt ||
+    member.createdAt ||
+    0
+  );
+}
+
+function hasPaidOrderForMember(member = {}) {
+  const cleanEmail = normalizeEmail(member.email);
+
+  if (!cleanEmail) return false;
+
+  const identityStartedAt = getTribeIdentityStartMs(member);
+
+  return loadOrders().some((order) => {
+    const orderEmail = normalizeEmail(order.customerEmail || order.email);
+    const status = String(order.status || '').toLowerCase();
+    const paymentStatus = String(order.paymentStatus || '').toLowerCase();
+    const isPaid = status === 'paid' || paymentStatus === 'paid';
+    const orderTime = getDateMs(order.paidAt || order.updatedAt || order.createdAt);
+
+    return (
+      orderEmail === cleanEmail &&
+      isPaid &&
+      (!identityStartedAt || (orderTime && orderTime >= identityStartedAt))
+    );
+  });
+}
+
 function syncAutomaticTribeMissionsForMember(member = {}) {
   if (!member || !member.email || member.status !== 'active') {
     return member;
@@ -1253,6 +1748,9 @@ function syncAutomaticTribeMissionsForMember(member = {}) {
   */
   const joinResult = completeTribeMissionForEmail({
     email: currentMember.email,
+    firebaseUid: currentMember.firebaseUid,
+    identityMember: currentMember,
+    strictIdentity: true,
     missionId: 'join-tribe',
     reason: 'member-active'
   });
@@ -1265,9 +1763,12 @@ function syncAutomaticTribeMissionsForMember(member = {}) {
     Primera adquisición:
     se completa si ya existe al menos un pedido pagado.
   */
-  if (hasPaidOrderForEmail(currentMember.email)) {
+  if (hasPaidOrderForMember(currentMember)) {
     const orderResult = completeTribeMissionForEmail({
       email: currentMember.email,
+      firebaseUid: currentMember.firebaseUid,
+      identityMember: currentMember,
+      strictIdentity: true,
       missionId: 'first-order',
       reason: 'paid-order-detected'
     });
@@ -1286,6 +1787,9 @@ function syncAutomaticTribeMissionsForMember(member = {}) {
   if (lifetimePoints > 0) {
     const initiateResult = completeTribeMissionForEmail({
       email: currentMember.email,
+      firebaseUid: currentMember.firebaseUid,
+      identityMember: currentMember,
+      strictIdentity: true,
       missionId: 'initiate-unlocked',
       reason: 'rank-activated'
     });
@@ -1346,16 +1850,14 @@ function buildRankUnlockRewards({
     })
     .filter(Boolean);
 }
-function getTribeBenefitsForEmail(email = '') {
-  const cleanEmail = normalizeEmail(email);
-
-  if (!cleanEmail || !isValidEmail(cleanEmail)) {
+function getTribeBenefitsForMember(member = null) {
+  if (!member || member.status !== 'active') {
     return null;
   }
 
-  const member = findTribeMemberByEmail(cleanEmail);
+  const cleanEmail = normalizeEmail(member.email);
 
-  if (!member || member.status !== 'active') {
+  if (!cleanEmail || !isValidEmail(cleanEmail)) {
     return null;
   }
 
@@ -1377,6 +1879,27 @@ function getTribeBenefitsForEmail(email = '') {
     priority: rankConfig.priority || 'standard'
   };
 }
+
+function getTribeBenefitsForFirebaseUser(firebaseUser = {}) {
+  const member = findAndLinkTribeMemberForFirebaseUser(firebaseUser, {
+    allowLegacyEmailLink: false,
+    writeLink: false
+  });
+
+  return getTribeBenefitsForMember(member);
+}
+
+function getTribeBenefitsForEmail(email = '') {
+  const cleanEmail = normalizeEmail(email);
+
+  if (!cleanEmail || !isValidEmail(cleanEmail)) {
+    return null;
+  }
+
+  return getTribeBenefitsForMember(
+    findTribeMemberByEmail(cleanEmail)
+  );
+}
 /* =========================================================
    PROPHETIA · EARLY ACCESS
    Protección real de productos privados por rango Tribe
@@ -1384,15 +1907,22 @@ function getTribeBenefitsForEmail(email = '') {
 
 const TRIBE_RANK_ORDER = {
   'tribe-member': 0,
+  'member': 0,
   'initiate': 1,
   'adeptus': 2,
   'oracle': 3,
+  'archivist': 4,
   'seer': 4,
   'prophet': 5
 };
 
 function normalizeRankId(rankId = '') {
-  return String(rankId || '').trim().toLowerCase();
+  const clean = String(rankId || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-');
+
+  return clean === 'seer' ? 'archivist' : clean;
 }
 
 function hasRequiredTribeRank(userRankId = '', requiredRankId = '') {
@@ -1424,10 +1954,12 @@ const CALENDAR_RANK_ORDER = {
 };
 
 function normalizeCalendarRankId(rankId = '') {
-  return String(rankId || 'tribe-member')
+  const clean = String(rankId || 'tribe-member')
     .trim()
     .toLowerCase()
     .replace(/\s+/g, '-');
+
+  return clean === 'seer' ? 'archivist' : clean;
 }
 
 function hasRequiredCalendarRank(userRankId = '', requiredRankId = 'tribe-member') {
@@ -2034,24 +2566,39 @@ function buildTribeWelcomeEmail(member) {
 }
 
 async function sendTribeWelcomeEmail(member) {
-  if (!process.env.RESEND_API_KEY) {
+  if (!hasConfiguredResend()) {
     console.warn('[tribe] RESEND_API_KEY no configurada.');
-    return;
+    return {
+      sent: false,
+      status: 'not_configured'
+    };
   }
 
   const from = process.env.ORDER_FROM_EMAIL || 'Prophetia <onboarding@resend.dev>';
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from,
       to: member.email,
       subject: `Tu acceso Prophetia Tribe — ${TRIBE_DISCOUNT_CODE}`,
       html: buildTribeWelcomeEmail(member)
     });
 
+    if (result?.error) {
+      throw result.error;
+    }
+
     console.log('[tribe] email enviado:', member.email);
+    return {
+      sent: true,
+      status: 'sent'
+    };
   } catch (err) {
     console.error('[tribe] error enviando email:', err);
+    return {
+      sent: false,
+      status: 'send_failed'
+    };
   }
 }
 function buildRankRewardRows(rewards = []) {
@@ -2144,7 +2691,7 @@ async function sendTribeRankRewardEmail({ member = {}, rewards = [], xpEvent = {
     return false;
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!hasConfiguredResend()) {
     console.warn('[tribe-rank-email] RESEND_API_KEY no configurada.');
     return false;
   }
@@ -2319,7 +2866,76 @@ function buildCustomerOrderEmail(order) {
     </div>
   `;
 }
+function normalizeGiftPayload(gift = {}) {
+  const isGift = gift?.isGift === true || gift?.isGift === 'true';
 
+  const message = String(gift?.message || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/[\u0000-\u001F\u007F]/g, '')
+    .trim()
+    .slice(0, 250);
+
+  return {
+    isGift,
+    message
+  };
+}
+
+function buildGiftEmailBlock(order = {}, { internal = false } = {}) {
+  const gift = order.gift || {};
+
+  if (!gift.isGift) {
+    return '';
+  }
+
+  const message = String(gift.message || '').trim();
+
+  return `
+    <h2>Pedido para regalo</h2>
+
+    <div style="
+      border:1px solid #ddd;
+      background:#fafafa;
+      padding:14px 16px;
+      margin:10px 0 22px;
+      font-family:Arial,sans-serif;
+      color:#111;
+    ">
+      <p style="margin:0 0 8px;">
+        <strong>Preparación:</strong> Este pedido ha sido marcado como regalo.
+      </p>
+
+      ${
+        message
+          ? `
+            <p style="margin:0 0 6px;"><strong>Mensaje del cliente:</strong></p>
+            <p style="
+              margin:0;
+              padding:12px;
+              background:#fff;
+              border:1px solid #eee;
+              white-space:pre-line;
+            ">${escapeHtml(message)}</p>
+          `
+          : `
+            <p style="margin:0;">
+              <strong>Mensaje:</strong> El cliente no ha añadido mensaje personalizado.
+            </p>
+          `
+      }
+
+      ${
+        internal
+          ? `
+            <p style="margin:12px 0 0; color:#8a6727; font-size:13px;">
+              Revisar antes de preparar el paquete: incluir tarjeta / nota de regalo si procede.
+            </p>
+          `
+          : ``
+      }
+    </div>
+  `;
+}
 function buildInternalOrderEmail(order) {
   const currency = order.currency || 'EUR';
   const orderNumber = order.orderNumber || order.orderDraftId;
@@ -2334,9 +2950,11 @@ function buildInternalOrderEmail(order) {
       <p><strong>Total:</strong> ${formatMoney(order.total || order.amountTotal, currency)}</p>
 
       <h2>Productos</h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        ${buildOrderItemsHtml(order)}
-      </table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  ${buildOrderItemsHtml(order)}
+</table>
+
+
 
       <h2>Dirección de envío</h2>
       <p>
@@ -2347,12 +2965,14 @@ function buildInternalOrderEmail(order) {
         ${escapeHtml(shipping.state || '')}, ${escapeHtml(shipping.country || '')}<br>
         Tel: ${escapeHtml(shipping.phone || '')}
       </p>
+
+      ${buildGiftEmailBlock(order, { internal: true })}
     </div>
   `;
 }
 
 async function sendOrderEmailsOnce(orderInput) {
-  if (!process.env.RESEND_API_KEY) {
+  if (!hasConfiguredResend()) {
     console.warn('[email] RESEND_API_KEY no configurada.');
     return;
   }
@@ -2379,12 +2999,16 @@ async function sendOrderEmailsOnce(orderInput) {
     }
 
     if (internalEmail) {
-      await resend.emails.send({
-        from,
-        to: internalEmail,
-        subject: `Nuevo pedido pagado — ${orderNumber}`,
-        html: buildInternalOrderEmail(currentOrder)
-      });
+ const internalSubjectPrefix = currentOrder.gift?.isGift
+  ? 'REGALO — '
+  : '';
+
+await resend.emails.send({
+  from,
+  to: internalEmail,
+  subject: `${internalSubjectPrefix}Nuevo pedido pagado — ${orderNumber}`,
+  html: buildInternalOrderEmail(currentOrder)
+});
     }
 
     upsertOrder({
@@ -2397,6 +3021,569 @@ async function sendOrderEmailsOnce(orderInput) {
   } catch (err) {
     console.error('[email] error enviando emails:', err);
   }
+}
+
+function cleanReservationText(value = '', max = 240) {
+  return String(value ?? '')
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+    .trim()
+    .slice(0, max);
+}
+
+function reservationDocId(value = '') {
+  const clean = cleanReservationText(value, 160)
+    .replace(/[\/\\#?\[\]]/g, '_')
+    .replace(/\s+/g, '_');
+
+  return clean || 'unknown';
+}
+
+function demandVariantPartLabel(value = '', kind = '') {
+  const raw = cleanReservationText(value, 60);
+  const key = raw.toLowerCase();
+  const labels = kind === 'color'
+    ? {
+        black: 'Negro', white: 'Blanco', beige: 'Beige', cream: 'Crema',
+        navy: 'Azul marino', blue: 'Azul', yellow: 'Amarillo', red: 'Rojo',
+        green: 'Verde', orange: 'Naranja', pink: 'Rosa', grey: 'Gris',
+        gray: 'Gris', brown: 'Marrón', multicolor: 'Multicolor'
+      }
+    : {
+        classic: 'Clásico', regular: 'Regular', oversize: 'Oversize',
+        oversized: 'Oversize', boxy: 'Boxy', fitted: 'Entallado'
+      };
+
+  if (labels[key]) return labels[key];
+  return raw
+    ? raw.charAt(0).toUpperCase() + raw.slice(1)
+    : '';
+}
+
+function getDemandVariantLabel(variant = {}) {
+  return [
+    demandVariantPartLabel(variant.cut, 'cut'),
+    demandVariantPartLabel(variant.color, 'color'),
+    cleanReservationText(variant.size, 30).toUpperCase()
+  ].filter(Boolean).join(' · ');
+}
+
+function reservationAbsoluteUrl(value = '') {
+  const raw = cleanReservationText(value, 500);
+  if (!raw) return '';
+
+  try {
+    return new URL(raw, SITE_URL).href;
+  } catch {
+    return raw;
+  }
+}
+
+function normalizeDemandCount(value) {
+  return Math.max(0, Math.floor(Number(value) || 0));
+}
+
+function sortDemandVariants(variants = []) {
+  return (Array.isArray(variants) ? variants : [])
+    .map((variant) => ({
+      sku: cleanReservationText(variant?.sku, 140),
+      variantLabel: cleanReservationText(variant?.variantLabel, 140),
+      count: normalizeDemandCount(variant?.count)
+    }))
+    .filter((variant) => variant.sku && variant.count > 0)
+    .sort((a, b) => b.count - a.count || a.variantLabel.localeCompare(b.variantLabel))
+    .slice(0, 12);
+}
+
+function buildReservationInterestEmail(payload = {}) {
+  const type = payload.type === 'stock-waitlist'
+    ? 'stock-waitlist'
+    : 'reservation';
+  const title = cleanReservationText(payload.title || 'Pieza Prophetia', 180);
+  const productId = cleanReservationText(payload.productId, 100);
+  const sku = cleanReservationText(payload.sku, 120);
+  const variantLabel = cleanReservationText(payload.variantLabel, 140);
+  const customerEmail = normalizeEmail(payload.email || payload.userEmail || '');
+  const userId = cleanReservationText(payload.userId, 120);
+  const price = cleanReservationText(payload.price, 80);
+  const url = reservationAbsoluteUrl(payload.url);
+  const page = reservationAbsoluteUrl(payload.page);
+  const isWaitlist = type === 'stock-waitlist';
+  const demand = payload.demand && typeof payload.demand === 'object'
+    ? payload.demand
+    : null;
+  const variantDemand = normalizeDemandCount(demand?.variantCount);
+  const productDemand = normalizeDemandCount(demand?.productCount);
+  const topVariants = sortDemandVariants(demand?.topVariants);
+  const topVariantRows = topVariants.map((variant) => `
+    <tr>
+      <td style="padding:9px 0;border-bottom:1px solid #eee;">
+        ${escapeHtml(variant.variantLabel || variant.sku)}
+      </td>
+      <td style="padding:9px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">
+        ${variant.count}
+      </td>
+    </tr>
+  `).join('');
+
+  return `
+    <div style="font-family:Arial,sans-serif;color:#111;line-height:1.55;">
+      <h1 style="font-family:Georgia,serif;font-weight:400;margin:0 0 16px;">
+        ${isWaitlist ? 'Nuevo aviso de stock' : 'Nueva reserva desde grid'}
+      </h1>
+
+      <p style="margin:0 0 18px;color:#555;">
+        ${isWaitlist
+          ? 'Una persona quiere recibir aviso cuando esta variante vuelva a tener stock. Esta solicitud sirve también como señal de demanda para la próxima reposición o drop.'
+          : 'Un cliente ha marcado una pieza como reserva/interes desde el grid.'}
+      </p>
+
+      ${isWaitlist && demand ? `
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px;background:#111;color:#fff;border-radius:10px;overflow:hidden;">
+          <tr>
+            <td style="padding:18px;">
+              <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;">Demanda de esta variante</div>
+              <div style="font-family:Georgia,serif;font-size:34px;line-height:1.1;margin-top:5px;">${variantDemand}</div>
+              <div style="font-size:13px;color:#ddd;margin-top:3px;">${variantDemand === 1 ? 'persona interesada' : 'personas interesadas'}</div>
+            </td>
+            <td style="padding:18px;text-align:right;">
+              <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;">Total del producto</div>
+              <div style="font-family:Georgia,serif;font-size:34px;line-height:1.1;margin-top:5px;">${productDemand}</div>
+              <div style="font-size:13px;color:#ddd;margin-top:3px;">solicitudes por variante</div>
+            </td>
+          </tr>
+        </table>
+      ` : ''}
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #111;border-bottom:1px solid #eee;">
+        <tr>
+          <td style="padding:11px 0;color:#777;">Producto</td>
+          <td style="padding:11px 0;text-align:right;"><strong>${escapeHtml(title)}</strong></td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;color:#777;">ID</td>
+          <td style="padding:11px 0;text-align:right;">${escapeHtml(productId || '-')}</td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;color:#777;">Variante solicitada</td>
+          <td style="padding:11px 0;text-align:right;"><strong>${escapeHtml(variantLabel || sku || '-')}</strong></td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;color:#777;">SKU</td>
+          <td style="padding:11px 0;text-align:right;font-size:12px;color:#777;">${escapeHtml(sku || '-')}</td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;color:#777;">Email cliente</td>
+          <td style="padding:11px 0;text-align:right;">${escapeHtml(customerEmail || '-')}</td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;color:#777;">UID</td>
+          <td style="padding:11px 0;text-align:right;">${escapeHtml(userId || '-')}</td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;color:#777;">Precio</td>
+          <td style="padding:11px 0;text-align:right;">${escapeHtml(price || '-')}</td>
+        </tr>
+      </table>
+
+      ${isWaitlist && topVariantRows ? `
+        <h2 style="font-family:Georgia,serif;font-weight:400;font-size:22px;margin:26px 0 8px;">Qué conviene reponer</h2>
+        <p style="margin:0 0 10px;color:#666;font-size:13px;">
+          Solicitudes únicas acumuladas por email y variante. Es una señal de intención, no una venta garantizada.
+        </p>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <th style="padding:8px 0;text-align:left;border-bottom:1px solid #111;">Corte · color · talla</th>
+            <th style="padding:8px 0;text-align:right;border-bottom:1px solid #111;">Demanda</th>
+          </tr>
+          ${topVariantRows}
+        </table>
+      ` : ''}
+
+      ${url ? `
+        <p style="margin:22px 0 0;">
+          <a href="${escapeHtml(url)}" style="color:#111;text-decoration:underline;text-underline-offset:3px;">
+            Ver producto
+          </a>
+        </p>
+      ` : ''}
+
+      ${page ? `
+        <p style="margin:8px 0 0;color:#777;font-size:13px;">
+          Origen: ${escapeHtml(page)}
+        </p>
+      ` : ''}
+    </div>
+  `;
+}
+
+function ensureStockWaitlistFile() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+
+  if (!fs.existsSync(STOCK_WAITLIST_FILE)) {
+    fs.writeFileSync(STOCK_WAITLIST_FILE, '{}', 'utf8');
+  }
+}
+
+function loadStockWaitlist() {
+  ensureStockWaitlistFile();
+
+  try {
+    const raw = fs.readFileSync(STOCK_WAITLIST_FILE, 'utf8');
+    const data = JSON.parse(raw || '{}');
+    return data && typeof data === 'object' && !Array.isArray(data)
+      ? data
+      : {};
+  } catch (err) {
+    console.warn('[stock-waitlist] No se ha podido leer el archivo local:', err.message);
+    return {};
+  }
+}
+
+function getActiveLocalWaitlistEntries(bucket = {}) {
+  const entries = bucket?.entries && typeof bucket.entries === 'object'
+    ? Object.values(bucket.entries)
+    : [];
+
+  return entries.filter((entry) => entry?.status !== 'inactive');
+}
+
+function buildLocalDemandSummary(waitlist = {}, payload = {}) {
+  const sku = cleanReservationText(payload.sku || payload.productId, 140);
+  const productId = cleanReservationText(payload.productId, 120);
+  const skuKey = reservationDocId(sku);
+  const variantCount = getActiveLocalWaitlistEntries(waitlist[skuKey]).length;
+  const topVariants = Object.values(waitlist)
+    .filter((bucket) => cleanReservationText(bucket?.productId, 120) === productId)
+    .map((bucket) => ({
+      sku: cleanReservationText(bucket?.sku, 140),
+      variantLabel: cleanReservationText(bucket?.variantLabel, 140),
+      count: getActiveLocalWaitlistEntries(bucket).length
+    }))
+    .filter((variant) => variant.count > 0);
+
+  return {
+    variantCount,
+    productCount: topVariants.reduce((total, variant) => total + variant.count, 0),
+    topVariants: sortDemandVariants(topVariants)
+  };
+}
+
+function saveStockWaitlistLocalFile(payload = {}) {
+  const email = normalizeEmail(payload.email);
+  const sku = cleanReservationText(payload.sku || payload.productId, 140);
+
+  if (!email || !isValidEmail(email) || !sku) {
+    return { saved: false, reason: 'invalid_waitlist_payload' };
+  }
+
+  const waitlist = loadStockWaitlist();
+  const skuKey = reservationDocId(sku);
+  const emailKey = reservationDocId(email);
+  const previous = waitlist[skuKey]?.entries?.[emailKey] || null;
+  const now = new Date().toISOString();
+
+  waitlist[skuKey] = waitlist[skuKey] || {
+    sku,
+    productId: cleanReservationText(payload.productId, 120),
+    title: cleanReservationText(payload.title || 'Pieza Prophetia', 180),
+    entries: {}
+  };
+
+  waitlist[skuKey] = {
+    ...waitlist[skuKey],
+    sku,
+    productId: cleanReservationText(payload.productId, 120),
+    title: cleanReservationText(payload.title || 'Pieza Prophetia', 180),
+    variantLabel: cleanReservationText(payload.variantLabel, 140),
+    image: cleanReservationText(payload.image, 500),
+    url: reservationAbsoluteUrl(payload.url),
+    entries: waitlist[skuKey].entries || {}
+  };
+
+  const created = !previous;
+  const previousInternalEmailStatus = cleanReservationText(previous?.internalEmailStatus, 30);
+
+  waitlist[skuKey].entries[emailKey] = {
+    ...(previous || {}),
+    type: 'stock-waitlist',
+    sku,
+    productId: cleanReservationText(payload.productId, 120),
+    title: cleanReservationText(payload.title || 'Pieza Prophetia', 180),
+    image: cleanReservationText(payload.image, 500),
+    url: reservationAbsoluteUrl(payload.url),
+    price: cleanReservationText(payload.price, 80),
+    variantLabel: cleanReservationText(payload.variantLabel, 140),
+    email,
+    userId: cleanReservationText(payload.userId, 120),
+    userEmail: normalizeEmail(payload.userEmail || ''),
+    status: 'active',
+    statusLabel: 'Aviso de stock activo',
+    source: cleanReservationText(payload.source || 'plp-grid', 80),
+    page: reservationAbsoluteUrl(payload.page),
+    createdAt: previous?.createdAt || now,
+    updatedAt: now,
+    internalEmailStatus: previousInternalEmailStatus || 'pending',
+    internalEmailAttempts: normalizeDemandCount(previous?.internalEmailAttempts)
+  };
+
+  const demand = buildLocalDemandSummary(waitlist, payload);
+  waitlist[skuKey].demandCount = demand.variantCount;
+  waitlist[skuKey].updatedAt = now;
+
+  fs.writeFileSync(
+    STOCK_WAITLIST_FILE,
+    JSON.stringify(waitlist, null, 2),
+    'utf8'
+  );
+
+  return {
+    saved: true,
+    reason: 'local_file',
+    created,
+    shouldNotifyInternal: created || previousInternalEmailStatus !== 'sent',
+    demand: {
+      ...demand,
+      created
+    }
+  };
+}
+
+async function saveStockWaitlistWithAdmin(payload = {}) {
+  if (payload.type !== 'stock-waitlist') {
+    return { saved: false, reason: 'not_waitlist' };
+  }
+
+  if (!getApps().length) {
+    return saveStockWaitlistLocalFile(payload);
+  }
+
+  const email = normalizeEmail(payload.email);
+
+  if (!email || !isValidEmail(email)) {
+    return { saved: false, reason: 'invalid_email' };
+  }
+
+  const sku = cleanReservationText(payload.sku || payload.productId, 140);
+
+  if (!sku) {
+    return { saved: false, reason: 'missing_sku' };
+  }
+
+  const db = getFirestore();
+  const skuKey = reservationDocId(sku);
+  const productId = cleanReservationText(payload.productId, 120);
+  const productKey = reservationDocId(productId);
+  const emailKey = reservationDocId(email);
+  const variantLabel = cleanReservationText(payload.variantLabel, 140);
+  const skuRef = db.collection('stockWaitlist').doc(skuKey);
+  const entryRef = skuRef.collection('entries').doc(emailKey);
+  const productDemandRef = db.collection('stockDemandProducts').doc(productKey);
+
+  return db.runTransaction(async (transaction) => {
+    const entrySnapshot = await transaction.get(entryRef);
+    const skuSnapshot = await transaction.get(skuRef);
+    const productDemandSnapshot = await transaction.get(productDemandRef);
+    const now = FieldValue.serverTimestamp();
+    const created = !entrySnapshot.exists;
+    const previousEntry = entrySnapshot.data() || {};
+    const previousInternalEmailStatus = cleanReservationText(
+      previousEntry.internalEmailStatus,
+      30
+    );
+    const existingVariantCount = skuSnapshot.exists
+      ? normalizeDemandCount(skuSnapshot.data()?.demandCount)
+      : (entrySnapshot.exists ? 1 : 0);
+    const existingProductCount = productDemandSnapshot.exists
+      ? normalizeDemandCount(productDemandSnapshot.data()?.demandCount)
+      : (entrySnapshot.exists ? 1 : 0);
+    const variantCount = existingVariantCount + (created ? 1 : 0);
+    const productCount = existingProductCount + (created ? 1 : 0);
+    const existingVariants = productDemandSnapshot.data()?.variants;
+    const variants = existingVariants && typeof existingVariants === 'object'
+      ? { ...existingVariants }
+      : {};
+    const previousVariantDemand = normalizeDemandCount(variants[skuKey]?.count) ||
+      (entrySnapshot.exists ? 1 : 0);
+
+    variants[skuKey] = {
+      sku,
+      variantLabel,
+      count: previousVariantDemand + (created ? 1 : 0)
+    };
+
+    const topVariants = sortDemandVariants(Object.values(variants));
+
+    transaction.set(
+      entryRef,
+      {
+        type: 'stock-waitlist',
+        sku,
+        productId,
+        title: cleanReservationText(payload.title || 'Pieza Prophetia', 180),
+        image: cleanReservationText(payload.image, 500),
+        url: reservationAbsoluteUrl(payload.url),
+        price: cleanReservationText(payload.price, 80),
+        variantLabel,
+        email,
+        userId: cleanReservationText(payload.userId, 120),
+        userEmail: normalizeEmail(payload.userEmail || ''),
+        status: 'active',
+        statusLabel: 'Aviso de stock activo',
+        source: cleanReservationText(payload.source || 'plp-grid', 80),
+        page: reservationAbsoluteUrl(payload.page),
+        createdAt: entrySnapshot.exists ? previousEntry.createdAt || now : now,
+        updatedAt: now,
+        internalEmailStatus: previousInternalEmailStatus || 'pending',
+        internalEmailAttempts: normalizeDemandCount(previousEntry.internalEmailAttempts)
+      },
+      { merge: true }
+    );
+
+    transaction.set(
+      skuRef,
+      {
+        sku,
+        productId,
+        title: cleanReservationText(payload.title || 'Pieza Prophetia', 180),
+        variantLabel,
+        image: cleanReservationText(payload.image, 500),
+        url: reservationAbsoluteUrl(payload.url),
+        demandCount: variantCount,
+        createdAt: skuSnapshot.exists ? skuSnapshot.data()?.createdAt || now : now,
+        updatedAt: now
+      },
+      { merge: true }
+    );
+
+    transaction.set(
+      productDemandRef,
+      {
+        productId,
+        title: cleanReservationText(payload.title || 'Pieza Prophetia', 180),
+        demandCount: productCount,
+        variants,
+        createdAt: productDemandSnapshot.exists
+          ? productDemandSnapshot.data()?.createdAt || now
+          : now,
+        updatedAt: now
+      },
+      { merge: true }
+    );
+
+    return {
+      saved: true,
+      created,
+      shouldNotifyInternal: created || previousInternalEmailStatus !== 'sent',
+      demand: {
+        variantCount,
+        productCount,
+        topVariants,
+        created
+      }
+    };
+  });
+}
+
+function markStockWaitlistEmailStatusLocal(payload = {}, emailResult = {}) {
+  const email = normalizeEmail(payload.email);
+  const sku = cleanReservationText(payload.sku || payload.productId, 140);
+
+  if (!email || !sku) return;
+
+  const waitlist = loadStockWaitlist();
+  const skuKey = reservationDocId(sku);
+  const emailKey = reservationDocId(email);
+  const entry = waitlist[skuKey]?.entries?.[emailKey];
+
+  if (!entry) return;
+
+  const now = new Date().toISOString();
+  entry.internalEmailStatus = emailResult.sent ? 'sent' : 'failed';
+  entry.internalEmailAttempts = normalizeDemandCount(entry.internalEmailAttempts) + 1;
+  entry.internalEmailLastAttemptAt = now;
+  entry.internalEmailSentAt = emailResult.sent
+    ? now
+    : cleanReservationText(entry.internalEmailSentAt, 60);
+  entry.internalEmailError = emailResult.sent
+    ? ''
+    : cleanReservationText(emailResult.reason || 'send_failed', 160);
+
+  fs.writeFileSync(
+    STOCK_WAITLIST_FILE,
+    JSON.stringify(waitlist, null, 2),
+    'utf8'
+  );
+}
+
+async function markStockWaitlistEmailStatus(payload = {}, emailResult = {}) {
+  if (payload.type !== 'stock-waitlist') return;
+
+  if (!getApps().length) {
+    markStockWaitlistEmailStatusLocal(payload, emailResult);
+    return;
+  }
+
+  const email = normalizeEmail(payload.email);
+  const sku = cleanReservationText(payload.sku || payload.productId, 140);
+  if (!email || !sku) return;
+
+  const update = {
+    internalEmailStatus: emailResult.sent ? 'sent' : 'failed',
+    internalEmailAttempts: FieldValue.increment(1),
+    internalEmailLastAttemptAt: FieldValue.serverTimestamp(),
+    internalEmailError: emailResult.sent
+      ? ''
+      : cleanReservationText(emailResult.reason || 'send_failed', 160)
+  };
+
+  if (emailResult.sent) {
+    update.internalEmailSentAt = FieldValue.serverTimestamp();
+  }
+
+  await getFirestore()
+    .collection('stockWaitlist')
+    .doc(reservationDocId(sku))
+    .collection('entries')
+    .doc(reservationDocId(email))
+    .set(update, { merge: true });
+}
+
+async function sendReservationInterestEmail(payload = {}) {
+  const internalEmail =
+    process.env.RESERVATION_INTERNAL_EMAIL ||
+    process.env.ORDER_INTERNAL_EMAIL ||
+    '';
+
+  if (!hasConfiguredResend()) {
+    return { sent: false, reason: 'resend_not_configured' };
+  }
+
+  if (!internalEmail || !isValidEmail(internalEmail)) {
+    return { sent: false, reason: 'internal_email_not_configured' };
+  }
+
+  const type = payload.type === 'stock-waitlist'
+    ? 'stock-waitlist'
+    : 'reservation';
+  const title = cleanReservationText(payload.title || 'Pieza Prophetia', 120);
+  const sku = cleanReservationText(payload.sku, 80);
+  const variantLabel = cleanReservationText(payload.variantLabel, 120);
+  const variantDemand = normalizeDemandCount(payload.demand?.variantCount);
+  const from = process.env.ORDER_FROM_EMAIL || 'Prophetia <onboarding@resend.dev>';
+  const subject = type === 'stock-waitlist'
+    ? `Demanda ${variantDemand || 1} — ${title}${variantLabel ? ` — ${variantLabel}` : sku ? ` — ${sku}` : ''}`
+    : `Reserva en grid — ${title}`;
+
+  await resend.emails.send({
+    from,
+    to: internalEmail,
+    subject,
+    html: buildReservationInterestEmail(payload)
+  });
+
+  return { sent: true };
 }
 function generateOrderNumber() {
   const year = new Date().getFullYear();
@@ -2444,6 +3631,104 @@ function findOrderByDraftId(orderDraftId) {
 
   return loadOrders().find((order) => order.orderDraftId === cleanOrderDraftId) || null;
 }
+function isOrderPaidForTribe(order = {}) {
+  return order.status === 'paid' || order.paymentStatus === 'paid';
+}
+
+function isGuestCheckoutOrder(order = {}) {
+  const customerType = String(order.customerType || order.checkoutMode || '').trim().toLowerCase();
+
+  return (
+    customerType === 'guest' ||
+    Boolean(order.guestAccountIntent) ||
+    order.guestCheckout === true ||
+    order.guestCheckout === 'yes'
+  );
+}
+
+function hasGuestAccountCreationIntent(order = {}) {
+  const intent = order.guestAccountIntent || {};
+
+  return (
+    isGuestCheckoutOrder(order) &&
+    (
+      intent.wantsAccount === true ||
+      intent.wantsAccount === 'true' ||
+      intent.passwordProvided === true ||
+      intent.passwordProvided === 'true' ||
+      Boolean(intent.accountCreatedAfterCheckoutAt)
+    )
+  );
+}
+
+function getClaimableGuestAccountOrders(firebaseUser = {}) {
+  const cleanEmail = normalizeEmail(firebaseUser.email);
+
+  if (!cleanEmail || !isValidEmail(cleanEmail)) return [];
+
+  return loadOrders()
+    .filter((order) => {
+      return (
+        isOrderPaidForTribe(order) &&
+        hasGuestAccountCreationIntent(order) &&
+        !order.tribePointsAppliedAt &&
+        normalizeEmail(order.customerEmail) === cleanEmail
+      );
+    })
+    .sort((a, b) => {
+      const aTime = Date.parse(a.paidAt || a.updatedAt || a.createdAt || '') || 0;
+      const bTime = Date.parse(b.paidAt || b.updatedAt || b.createdAt || '') || 0;
+      return aTime - bTime;
+    });
+}
+
+async function claimGuestAccountPurchaseXpForFirebaseUser(firebaseUser = {}) {
+  const firebaseUid = String(firebaseUser.uid || '').trim();
+  const cleanEmail = normalizeEmail(firebaseUser.email);
+
+  if (!firebaseUid || !cleanEmail || !isValidEmail(cleanEmail) || firebaseUser.emailVerified === false) {
+    return { member: null, claimedXpEvent: null, claimedXpEvents: [] };
+  }
+
+  const claimableOrders = getClaimableGuestAccountOrders(firebaseUser);
+
+  if (!claimableOrders.length) {
+    return { member: null, claimedXpEvent: null, claimedXpEvents: [] };
+  }
+
+  upsertTribeMember({
+    email: cleanEmail,
+    firebaseUid,
+    name: String(firebaseUser.name || firebaseUser.displayName || cleanEmail.split('@')[0] || '').trim(),
+    optin: true
+  });
+
+  const claimedXpEvents = [];
+
+  for (const order of claimableOrders) {
+    const xpEvent = await addTribePointsForPaidOrder(order);
+
+    if (xpEvent) {
+      claimedXpEvents.push({
+        ...xpEvent,
+        customerType: 'account',
+        checkoutMode: 'account',
+        claimSource: 'guest-account-verified-login'
+      });
+    }
+  }
+
+  const member = findAndLinkTribeMemberForFirebaseUser(firebaseUser, {
+    allowLegacyEmailLink: false,
+    writeLink: false
+  });
+
+  return {
+    member,
+    claimedXpEvent: claimedXpEvents[claimedXpEvents.length - 1] || null,
+    claimedXpEvents
+  };
+}
 function getBearerToken(req) {
   const header = String(req.headers.authorization || '');
   const match = header.match(/^Bearer\s+(.+)$/i);
@@ -2452,7 +3737,7 @@ function getBearerToken(req) {
 
 async function requireFirebaseUser(req, res, next) {
   try {
-    if (!admin.apps.length) {
+    if (!getApps().length) {
       return res.status(500).json({
         error: 'Firebase Admin no está inicializado en el servidor.'
       });
@@ -2504,7 +3789,7 @@ return next();
 
 async function getOptionalFirebaseUser(req) {
   try {
-    if (!admin.apps.length) return null;
+    if (!getApps().length) return null;
 
     const idToken = getBearerToken(req);
     if (!idToken) return null;
@@ -2689,7 +3974,8 @@ childSrc: [
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       frameAncestors: ["'none'"],
-      formAction: ["'self'", "https://checkout.stripe.com"]
+      formAction: ["'self'", "https://checkout.stripe.com"],
+      upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null
     }
   },
 
@@ -2712,7 +3998,8 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    error: 'Demasiadas solicitudes. Espera unos minutos y vuelve a intentarlo.'
+    error:
+      'Demasiadas solicitudes. Espera unos minutos y vuelve a intentarlo.'
   }
 });
 
@@ -2722,7 +4009,8 @@ const checkoutLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    error: 'Demasiados intentos de checkout. Espera unos minutos.'
+    error:
+      'Demasiados intentos de checkout. Espera unos minutos.'
   }
 });
 
@@ -2732,20 +4020,53 @@ const authSensitiveLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    error: 'Demasiadas solicitudes. Inténtalo de nuevo más tarde.'
+    error:
+      'Demasiadas solicitudes. Inténtalo de nuevo más tarde.'
+  }
+});
+
+const reservationNotifyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error:
+      'Demasiados avisos de reserva o stock. Espera unos minutos antes de volver a intentarlo.'
+  }
+});
+
+const tribeSubscribeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 8,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error:
+      'Demasiados intentos de suscripción. Espera unos minutos antes de volver a intentarlo.'
   }
 });
 
 app.use('/api/cart-summary', apiLimiter);
 app.use('/api/discount/validate', authSensitiveLimiter);
-app.use('/api/tribe/subscribe', authSensitiveLimiter);
+
+app.use(
+  '/api/tribe/subscribe',
+  tribeSubscribeLimiter
+);
+
 app.use('/api/create-checkout-session', checkoutLimiter);
 app.use('/api/my-orders', authSensitiveLimiter);
+app.use('/api/reservations/notify', reservationNotifyLimiter);
 app.use('/api/tribe/me', authSensitiveLimiter);
 app.use('/api/tribe/mission/check', authSensitiveLimiter);
 app.use('/api/drops/private', authSensitiveLimiter);
 app.use('/api/private-drops', authSensitiveLimiter);
-app.use(express.json({ limit: '80kb' }));
+
+app.use(express.json({
+  limit: '80kb'
+}));
+
 /*
   PRODUCCIÓN:
   - Para activar caché real de assets:
@@ -2824,8 +4145,9 @@ if (order.discount?.code) {
     orderId: order.orderNumber || order.orderDraftId
   });
 }
-
-  await addTribePointsForPaidOrder(order);
+  if (!isGuestCheckoutOrder(order)) {
+    await addTribePointsForPaidOrder(order);
+  }
 upsertOrder({
   ...(findOrderByDraftId(order.orderDraftId) || order),
   finalizedAt: new Date().toISOString(),
@@ -2892,6 +4214,15 @@ function ensureStockFile() {
     Object.entries(initialStock).forEach(([sku, row]) => {
       if (!current[sku]) {
         current[sku] = row;
+        changed = true;
+      }
+    });
+
+    // Elimina SKUs retirados para que una variante antigua nunca pueda
+    // reaparecer en checkout por quedar en el archivo de inventario.
+    Object.keys(current).forEach((sku) => {
+      if (!initialStock[sku]) {
+        delete current[sku];
         changed = true;
       }
     });
@@ -3012,7 +4343,7 @@ function normalize(value) {
 }
 function loadShippingRates() {
   if (!fs.existsSync(SHIPPING_RATES_FILE)) {
-    throw new Error('No existe data/shipping-rates.json.');
+    throw new Error('No existe config/shipping-rates.json.');
   }
 
   const raw = fs.readFileSync(SHIPPING_RATES_FILE, 'utf8');
@@ -3186,6 +4517,7 @@ function findVariant(product, item) {
   const wantedSku = String(item.sku || '').trim();
   const wantedColor = normalize(item.color);
   const wantedSize = normalize(item.size);
+  const wantedCut = normalize(item.cut);
 
   if (!variants.length) {
     return {
@@ -3196,15 +4528,22 @@ function findVariant(product, item) {
     };
   }
 
-  return variants.find((variant) => {
-    const sameSku = wantedSku && String(variant.sku || '').trim() === wantedSku;
+  // Si el cliente envía SKU, ese identificador es autoritativo. No se hace
+  // fallback por color/talla: dos cortes pueden compartir ambas opciones.
+  if (wantedSku) {
+    return variants.find((variant) => {
+      return String(variant.sku || '').trim() === wantedSku;
+    }) || null;
+  }
 
+  return variants.find((variant) => {
     const sameOptions =
       normalize(variant.color) === wantedColor &&
       normalize(variant.size) === wantedSize;
+    const sameCut = !wantedCut || normalize(variant.cut) === wantedCut;
 
-    return sameSku || sameOptions;
-  });
+    return sameOptions && sameCut;
+  }) || null;
 }
 
 function findVersion(product, item) {
@@ -3216,6 +4555,25 @@ function findVersion(product, item) {
   return versions.find((version) => {
     return String(version.id || '').trim() === wantedVersion;
   }) || null;
+}
+
+function assertVariantSelection(product, variant, version, item) {
+  const requestedVersion = String(item.version || '').trim();
+  const requestedCut = normalize(item.cut);
+  const variantCut = normalize(variant?.cut);
+  const versionCut = normalize(version?.cut);
+
+  if (requestedVersion && !version) {
+    throw new Error(`Versión no encontrada para: ${product.id}`);
+  }
+
+  if (requestedCut && variantCut && requestedCut !== variantCut) {
+    throw new Error(`El corte no coincide con la variante: ${product.id}`);
+  }
+
+  if (versionCut && variantCut && versionCut !== variantCut) {
+    throw new Error(`La versión no coincide con el corte: ${product.id}`);
+  }
 }
 
 function buildSecureLineItems(cart, tribeBenefits = null) {
@@ -3247,6 +4605,7 @@ function buildSecureLineItems(cart, tribeBenefits = null) {
     }
 
     const version = findVersion(product, item);
+    assertVariantSelection(product, variant, version, item);
 
     const realPrice =
       Number(version?.price) ||
@@ -3275,7 +4634,7 @@ function buildSecureLineItems(cart, tribeBenefits = null) {
             product.cover,
             product.media?.hombre?.cover,
             product.media?.mujer?.cover
-          ].filter(Boolean).slice(0, 1)
+          ].filter(Boolean).slice(0, 1).map((image) => reservationAbsoluteUrl(image))
         }
       }
     };
@@ -3316,6 +4675,7 @@ if (product.active === false) {
     }
 
     const version = findVersion(product, item);
+    assertVariantSelection(product, variant, version, item);
 
     const realPrice =
       Number(version?.price) ||
@@ -3379,71 +4739,383 @@ return {
   total: subtotal + shippingResult.shipping
 };
 }
-app.post('/api/tribe/subscribe', async (req, res) => {
+
+app.get('/api/health', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    ok: true,
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    services: {
+      stripe: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET),
+      email: Boolean(hasConfiguredResend() && isValidEmail(process.env.ORDER_INTERNAL_EMAIL)),
+      firebaseAdmin: Boolean(getApps().length),
+      persistentData: Boolean(process.env.DATA_DIR)
+    }
+  });
+});
+
+
+
+app.post(
+  '/api/tribe/subscribe',
+  async (req, res) => {
+    try {
+      const {
+        name,
+        email,
+        birthDate,
+        optin
+      } = req.body || {};
+
+      const authHeaderWasSent =
+        Boolean(getBearerToken(req));
+
+      const firebaseUser =
+        await getOptionalFirebaseUser(req);
+
+      /*
+        Si se envía Authorization, el token debe
+        corresponder a una sesión Firebase válida.
+      */
+      if (
+        authHeaderWasSent &&
+        !firebaseUser
+      ) {
+        return res.status(401).json({
+          error:
+            'Tu sesión ha caducado. Inicia sesión de nuevo.'
+        });
+      }
+
+      const cleanName =
+        String(name || '')
+          .trim()
+          .replace(/\s+/g, ' ')
+          .slice(0, 80);
+
+      let cleanEmail =
+        normalizeEmail(email)
+          .slice(0, 254);
+
+      const cleanBirthDate =
+        String(birthDate || '')
+          .trim()
+          .slice(0, 10);
+
+      /*
+        Una cuenta autenticada solo puede utilizar
+        el correo verificado de su propia cuenta.
+      */
+      if (firebaseUser) {
+        const currentMember =
+          findAndLinkTribeMemberForFirebaseUser(
+            firebaseUser
+          );
+
+        /*
+          La cuenta ya tiene una membresía.
+          No se crea otra aunque manipule el formulario.
+        */
+        if (currentMember) {
+          return res.json({
+            ok: true,
+            isMember: true,
+            alreadyMember: true,
+            codeIssuedNow: false,
+            welcomeEmail: {
+              sent: null,
+              status: 'already_member'
+            },
+
+            member:
+              getPublicTribeMember(
+                currentMember
+              ),
+
+            message:
+              'Ya formas parte de Prophetia Tribe.'
+          });
+        }
+
+        if (
+          cleanEmail &&
+          cleanEmail !== firebaseUser.email
+        ) {
+          return res.status(403).json({
+            error:
+              'Debes utilizar el mismo correo de tu cuenta Prophetia.'
+          });
+        }
+
+        cleanEmail =
+          firebaseUser.email;
+      }
+
+      if (
+        !cleanName ||
+        cleanName.length < 2
+      ) {
+        return res.status(400).json({
+          error:
+            'Indica tu nombre.'
+        });
+      }
+
+      if (!isValidEmail(cleanEmail)) {
+        return res.status(400).json({
+          error:
+            'Introduce un correo electrónico válido.'
+        });
+      }
+
+      const age =
+        calculateAgeFromBirthDate(
+          cleanBirthDate
+        );
+
+      if (age === null) {
+        return res.status(400).json({
+          error:
+            'Introduce una fecha de nacimiento válida.'
+        });
+      }
+
+      if (age < 18) {
+        return res.status(400).json({
+          error:
+            'Debes ser mayor de 18 años para unirte a Prophetia Tribe.'
+        });
+      }
+
+      const member =
+        upsertTribeMember({
+          name: cleanName,
+          email: cleanEmail,
+          birthDate: cleanBirthDate,
+          optin: Boolean(optin),
+          firebaseUid:
+            firebaseUser?.uid || ''
+        });
+
+      /*
+        El correo solo se envía cuando se crea
+        realmente una membresía nueva.
+      */
+      const welcomeEmail = member.codeIssuedNow
+        ? await sendTribeWelcomeEmail(member)
+        : {
+            sent: null,
+            status: 'already_member'
+          };
+
+      /*
+        Visitantes anónimos:
+        no revelamos si el correo ya existía,
+        el código, puntos ni estado del descuento.
+      */
+      if (!firebaseUser) {
+        return res.status(202).json({
+          ok: true,
+          accepted: true,
+          publicStatus: 'submitted',
+
+          message:
+            'Si corresponde, recibirás por correo la información sobre tu acceso a Prophetia Tribe.'
+        });
+      }
+
+      /*
+        Usuarios autenticados:
+        solo reciben información de su propia membresía.
+      */
+      return res.json({
+        ok: true,
+        isMember: true,
+
+        alreadyMember:
+          Boolean(member.alreadyMember),
+
+        codeIssuedNow:
+          Boolean(member.codeIssuedNow),
+
+        welcomeEmail,
+
+        member:
+          getPublicTribeMember(member),
+
+        message:
+          member.codeIssuedNow
+            ? `Te has unido a Prophetia Tribe. Usa ${TRIBE_DISCOUNT_CODE} en tu próxima compra.`
+            : 'Ya formas parte de Prophetia Tribe.'
+      });
+    } catch (error) {
+      console.error(
+        '[tribe] subscribe error:',
+        error
+      );
+
+      if (
+        error.code ===
+        'TRIBE_UID_CONFLICT'
+      ) {
+        return res.status(409).json({
+          error: error.message
+        });
+      }
+
+      return res.status(500).json({
+        error:
+          'No se ha podido completar la suscripción.'
+      });
+    }
+  }
+);
+app.post('/api/reservations/notify', async (req, res) => {
   try {
-    const { name, email, birthDate, optin } = req.body || {};
+    const body = req.body || {};
+    const firebaseUser = await getOptionalFirebaseUser(req);
+    const type = body.type === 'stock-waitlist'
+      ? 'stock-waitlist'
+      : 'reservation';
+    const productId = cleanReservationText(body.productId, 120);
+    const requestedSku = cleanReservationText(body.sku, 140);
+    const email = normalizeEmail(
+      body.email ||
+      body.userEmail ||
+      firebaseUser?.email ||
+      ''
+    );
 
-    const cleanName = String(name || '').trim();
-    const cleanEmail = normalizeEmail(email);
-    const cleanBirthDate = String(birthDate || '').trim();
-
-    if (!cleanName || cleanName.length < 2) {
+    if (!productId) {
       return res.status(400).json({
-        error: 'Indica tu nombre.'
+        error: 'Falta el producto.'
       });
     }
 
-    if (!isValidEmail(cleanEmail)) {
+    if (type === 'stock-waitlist' && (!email || !isValidEmail(email))) {
       return res.status(400).json({
-        error: 'Introduce un email válido.'
+        error: 'Introduce un correo electrónico válido.'
       });
     }
 
-    const age = calculateAgeFromBirthDate(cleanBirthDate);
-
-    if (age < 18) {
-      return res.status(400).json({
-        error: 'Debes ser mayor de 18 años para unirte a Prophetia Tribe.'
+    if (type === 'reservation' && !firebaseUser?.uid) {
+      return res.status(401).json({
+        error: 'Inicia sesión para registrar una reserva.'
       });
     }
 
-    const member = upsertTribeMember({
-      name: cleanName,
-      email: cleanEmail,
-      birthDate: cleanBirthDate,
-      optin: !!optin
+    const catalog = loadCatalog();
+    const product = catalog.find((entry) => {
+      return (
+        String(entry.id || '') === productId ||
+        String(entry.slug || '') === productId
+      );
     });
 
- if (member.codeIssuedNow) {
-  await sendTribeWelcomeEmail(member);
-}
+    if (!product || product.active === false) {
+      return res.status(404).json({
+        error: 'La pieza solicitada no existe o no está disponible.'
+      });
+    }
 
-return res.json({
-  ok: true,
-  alreadyMember: !!member.alreadyMember,
-  codeIssuedNow: !!member.codeIssuedNow,
-  member: {
-    name: member.name,
-    email: member.email,
-    discountCode: member.discountCode,
-    discountPercent: member.discountPercent,
-    discountStatus: member.discountStatus,
-    points: Number(member.points || 0),
-    pointsRequiredForNextDiscount: Number(member.pointsRequiredForNextDiscount || 100)
-  },
-  message: member.codeIssuedNow
-    ? `Te has unido a Prophetia Tribe. Usa ${TRIBE_DISCOUNT_CODE} en tu próxima compra.`
-    : 'Ya formas parte de Prophetia Tribe. No se ha generado un nuevo código.'
-});
+    const productVariants = Array.isArray(product.variants)
+      ? product.variants
+      : [];
+    const variant = productVariants.length
+      ? productVariants.find((entry) => String(entry.sku || '').trim() === requestedSku)
+      : null;
+
+    if (type === 'stock-waitlist' && productVariants.length && !variant) {
+      return res.status(400).json({
+        error: 'Selecciona una talla válida para esta pieza.'
+      });
+    }
+
+    if (type === 'stock-waitlist' && variant && getVariantStock(variant) > 0) {
+      return res.status(409).json({
+        error: 'Esta talla ya está disponible para comprar.'
+      });
+    }
+
+    const variantLabel = variant
+      ? getDemandVariantLabel(variant)
+      : cleanReservationText(body.variantLabel, 140);
+    const trustedProductId = cleanReservationText(product.id || product.slug, 120);
+    const productUrl = `/producto?id=${encodeURIComponent(trustedProductId)}`;
+
+    const payload = {
+      type,
+      productId: trustedProductId,
+      title: cleanReservationText(product.title || 'Pieza Prophetia', 180),
+      sku: cleanReservationText(variant?.sku || requestedSku || trustedProductId, 140),
+      variantLabel,
+      image: cleanReservationText(
+        variant?.img ||
+        product.cover ||
+        product.media?.hombre?.cover ||
+        product.media?.mujer?.cover ||
+        '',
+        500
+      ),
+      url: productUrl,
+      price: cleanReservationText(product.price, 80),
+      email,
+      userEmail: firebaseUser?.email || '',
+      userId: firebaseUser?.uid || '',
+      source: cleanReservationText(body.source || 'plp-grid', 80),
+      page: cleanReservationText(body.page || req.get('referer') || '', 500)
+    };
+
+    const waitlistResult = type === 'stock-waitlist'
+      ? await saveStockWaitlistWithAdmin(payload)
+      : { saved: false, reason: 'not_waitlist' };
+    const emailPayload = {
+      ...payload,
+      demand: waitlistResult.demand || null
+    };
+    let emailResult = {
+      sent: false,
+      reason: type === 'stock-waitlist' && !waitlistResult.shouldNotifyInternal
+        ? 'already_notified'
+        : 'not_attempted'
+    };
+
+    if (type !== 'stock-waitlist' || waitlistResult.shouldNotifyInternal) {
+      try {
+        emailResult = await sendReservationInterestEmail(emailPayload);
+      } catch (emailError) {
+        console.error('[reservations] internal email error:', emailError.message);
+        emailResult = {
+          sent: false,
+          reason: 'email_send_failed'
+        };
+      }
+    }
+
+    if (type === 'stock-waitlist' && waitlistResult.saved && waitlistResult.shouldNotifyInternal) {
+      try {
+        await markStockWaitlistEmailStatus(emailPayload, emailResult);
+      } catch (statusError) {
+        console.error('[reservations] email status error:', statusError.message);
+      }
+    }
+
+    return res.json({
+      ok: true,
+      emailSent: !!emailResult.sent,
+      emailReason: emailResult.reason || null,
+      waitlistSaved: !!waitlistResult.saved,
+      waitlistReason: waitlistResult.reason || null,
+      alreadyRegistered: type === 'stock-waitlist' && waitlistResult.created === false
+    });
   } catch (err) {
-    console.error('[tribe] subscribe error:', err);
+    console.error('[reservations] notify error:', err);
 
     return res.status(500).json({
-      error: 'No se ha podido completar la suscripción.'
+      error: 'No se ha podido registrar el aviso.'
     });
   }
 });
-
 app.post('/api/discount/validate', async (req, res) => {
   try {
     const { cart, shippingDetails, email, discountCode } = req.body || {};
@@ -3466,7 +5138,12 @@ app.post('/api/discount/validate', async (req, res) => {
       });
     }
 
-    const tribeBenefits = getTribeBenefitsForEmail(firebaseUser.email);
+    const tribeMember = findAndLinkTribeMemberForFirebaseUser(firebaseUser, {
+      allowLegacyEmailLink: false,
+      writeLink: false
+    });
+
+    const tribeBenefits = getTribeBenefitsForMember(tribeMember);
 
 const summary = buildSecureCartSummary(cart, shippingDetails, {
   tribeBenefits
@@ -3474,7 +5151,9 @@ const summary = buildSecureCartSummary(cart, shippingDetails, {
     const discountResult = validateTribeDiscount({
   email: firebaseUser.email,
   code: discountCode,
-  subtotal: summary.subtotal
+  subtotal: summary.subtotal,
+  member: tribeMember,
+  strictMember: true
 });
 
     if (!discountResult.valid) {
@@ -3497,17 +5176,21 @@ const summary = buildSecureCartSummary(cart, shippingDetails, {
 });
 app.post('/api/cart-summary', async (req, res) => {
   try {
-    const { cart, shippingDetails, email, discountCode } = req.body || {};
-        const firebaseUser = await getOptionalFirebaseUser(req);
+    const { cart, shippingDetails, email, discountCode } = req.body || {};    const firebaseUser = await getOptionalFirebaseUser(req);
     const cleanEmail = normalizeEmail(email);
     const canUseTribeBenefits =
       firebaseUser?.email &&
       cleanEmail &&
       firebaseUser.email === cleanEmail;
 
-    const tribeBenefits = canUseTribeBenefits
-      ? getTribeBenefitsForEmail(firebaseUser.email)
+    const tribeMember = canUseTribeBenefits
+      ? findAndLinkTribeMemberForFirebaseUser(firebaseUser, {
+          allowLegacyEmailLink: false,
+          writeLink: false
+        })
       : null;
+
+    const tribeBenefits = getTribeBenefitsForMember(tribeMember);
 
     if (!Array.isArray(cart) || cart.length === 0) {
    return res.json({
@@ -3538,7 +5221,9 @@ if (discountCode) {
   const discountResult = validateTribeDiscount({
     email: firebaseUser.email,
     code: discountCode,
-    subtotal: summary.subtotal
+    subtotal: summary.subtotal,
+    member: tribeMember,
+  strictMember: true
   });
   if (discountResult.valid) {
     summary = applyDiscountToSummary(summary, discountResult);
@@ -3560,7 +5245,7 @@ return res.json(summary);
     });
   }
 });
-app.get('/api/order-by-session', requireFirebaseUser, async (req, res) => {
+app.get('/api/order-by-session', async (req, res) => {
   try {
     const sessionId = String(req.query.session_id || '').trim();
 
@@ -3569,29 +5254,41 @@ app.get('/api/order-by-session', requireFirebaseUser, async (req, res) => {
     }
 
     let order = findOrderBySessionId(sessionId);
+    let stripeSession = null;
 
     if (!order) {
-      const session = await stripe.checkout.sessions.retrieve(sessionId);
-      const orderDraftId = session.metadata?.orderDraftId || null;
+      stripeSession = await stripe.checkout.sessions.retrieve(sessionId);
+      const orderDraftId = stripeSession.metadata?.orderDraftId || null;
 
       if (orderDraftId) {
         const currentOrder = findOrderByDraftId(orderDraftId);
 
         if (currentOrder) {
+          const isStripeGuest =
+            stripeSession.metadata?.checkoutMode === 'guest' ||
+            stripeSession.metadata?.guestCheckout === 'yes';
+
           order = {
             ...currentOrder,
-            stripeSessionId: session.id,
-            paymentStatus: session.payment_status,
-            status: session.payment_status === 'paid' ? 'paid' : currentOrder.status,
-            amountTotal: Number(session.amount_total || 0) / 100,
-            currency: String(session.currency || currentOrder.currency || 'eur').toUpperCase()
+            stripeSessionId: stripeSession.id,
+            paymentStatus: stripeSession.payment_status,
+            status: stripeSession.payment_status === 'paid' ? 'paid' : currentOrder.status,
+            amountTotal: Number(stripeSession.amount_total || 0) / 100,
+            currency: String(stripeSession.currency || currentOrder.currency || 'eur').toUpperCase(),
+            customerType: currentOrder.customerType || (isStripeGuest ? 'guest' : 'account'),
+            guestAccountIntent: currentOrder.guestAccountIntent || (isStripeGuest
+              ? {
+                  wantsAccount: stripeSession.metadata?.guestWantsAccount === 'yes',
+                  passwordProvided: stripeSession.metadata?.guestPasswordProvided === 'yes'
+                }
+              : null)
           };
 
-upsertOrder(order);
+          upsertOrder(order);
 
-if (order.status === 'paid' || order.paymentStatus === 'paid') {
-  order = await finalizePaidOrderOnce(order);
-}
+          if (order.status === 'paid' || order.paymentStatus === 'paid') {
+            order = await finalizePaidOrderOnce(order);
+          }
         }
       }
     }
@@ -3599,35 +5296,57 @@ if (order.status === 'paid' || order.paymentStatus === 'paid') {
     if (!order) {
       return res.status(404).json({ error: 'No se ha encontrado el pedido.' });
     }
+
+    const firebaseUser = await getOptionalFirebaseUser(req);
     const cleanOrderEmail = normalizeEmail(order.customerEmail);
-const cleanUserEmail = normalizeEmail(req.firebaseUser.email);
+    const cleanUserEmail = normalizeEmail(firebaseUser?.email || '');
+    const sessionMetadata = stripeSession?.metadata || {};
+    const isGuestOrder =
+      order.customerType === 'guest' ||
+      Boolean(order.guestAccountIntent) ||
+      sessionMetadata.checkoutMode === 'guest' ||
+      sessionMetadata.guestCheckout === 'yes';
 
-if (!cleanOrderEmail || cleanOrderEmail !== cleanUserEmail) {
-  return res.status(403).json({
-    error: 'No tienes permiso para consultar este pedido.'
-  });
-}
+    if (!cleanOrderEmail) {
+      return res.status(403).json({
+        error: 'No tienes permiso para consultar este pedido.'
+      });
+    }
 
+    if (cleanUserEmail && cleanUserEmail !== cleanOrderEmail) {
+      return res.status(403).json({
+        error: 'No tienes permiso para consultar este pedido.'
+      });
+    }
+
+    if (!isGuestOrder && cleanUserEmail !== cleanOrderEmail) {
+      return res.status(403).json({
+        error: 'No tienes permiso para consultar este pedido.'
+      });
+    }
 
     return res.json({
-  order: {
-    orderDraftId: order.orderDraftId,
-    orderNumber: order.orderNumber || order.orderDraftId,
-    status: order.status,
-    paymentStatus: order.paymentStatus,
-    customerEmail: order.customerEmail,
+      order: {
+        orderDraftId: order.orderDraftId,
+        orderNumber: order.orderNumber || order.orderDraftId,
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        customerEmail: order.customerEmail,
+        customerType: order.customerType || (isGuestOrder ? 'guest' : 'account'),
+        guestAccountIntent: order.guestAccountIntent || null,
+        shippingDetails: order.shippingDetails || null,
         currency: order.currency,
         items: order.items || [],
         subtotal: order.subtotal,
-       shipping: order.shipping,
-shippingRate: order.shippingRate || null,
-estimatedDelivery: order.estimatedDelivery || order.shippingRate?.estimatedDelivery || '2–7 días laborables',
-total: order.total,
-amountTotal: order.amountTotal,
+        shipping: order.shipping,
+        shippingRate: order.shippingRate || null,
+        estimatedDelivery: order.estimatedDelivery || order.shippingRate?.estimatedDelivery || '2–7 días laborables',
+        total: order.total,
+        amountTotal: order.amountTotal,
         paidAt: order.paidAt || null,
-createdAt: order.createdAt || null,
-tribePointsEarned: order.tribePointsEarned || 0,
-tribeXpEvent: order.tribeXpEvent || null
+        createdAt: order.createdAt || null,
+        tribePointsEarned: isGuestOrder ? 0 : order.tribePointsEarned || 0,
+        tribeXpEvent: isGuestOrder ? null : order.tribeXpEvent || null
       }
     });
   } catch (err) {
@@ -3635,6 +5354,47 @@ tribeXpEvent: order.tribeXpEvent || null
     return res.status(500).json({
       error: 'No se ha podido recuperar el pedido.'
     });
+  }
+});
+app.post('/api/guest-order-account-intent', async (req, res) => {
+  try {
+    const sessionId = String(req.body?.sessionId || '').trim();
+    const orderDraftId = String(req.body?.orderDraftId || '').trim();
+    const cleanEmail = normalizeEmail(req.body?.email || '');
+
+    const order = orderDraftId
+      ? findOrderByDraftId(orderDraftId)
+      : findOrderBySessionId(sessionId);
+
+    if (!order || !isOrderPaidForTribe(order)) {
+      return res.status(404).json({ error: 'Pedido invitado no encontrado.' });
+    }
+
+    if (!isGuestCheckoutOrder(order)) {
+      return res.status(409).json({ error: 'Este pedido ya pertenece a una cuenta Prophetia.' });
+    }
+
+    if (!cleanEmail || cleanEmail !== normalizeEmail(order.customerEmail)) {
+      return res.status(403).json({ error: 'El email no coincide con el pedido.' });
+    }
+
+    const now = new Date().toISOString();
+
+    upsertOrder({
+      ...order,
+      guestAccountIntent: {
+        ...(order.guestAccountIntent || {}),
+        wantsAccount: true,
+        passwordProvided: true,
+        accountCreatedAfterCheckoutAt: now
+      },
+      guestAccountEmailVerificationPendingAt: now
+    });
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('[guest-order-account-intent] error:', err);
+    return res.status(500).json({ error: 'No se ha podido preparar la cuenta invitada.' });
   }
 });
 /* =========================================================
@@ -3652,14 +5412,23 @@ app.get('/api/tribe/me', requireFirebaseUser, async (req, res) => {
       });
     }
 
-let member = findTribeMemberByEmail(cleanEmail);
+const guestPurchaseClaim = await claimGuestAccountPurchaseXpForFirebaseUser(req.firebaseUser);
+
+let member =
+  guestPurchaseClaim.member ||
+  findAndLinkTribeMemberForFirebaseUser(
+    req.firebaseUser
+  );
     if (!member || member.status !== 'active') {
 const rankInfo = getTribeRankInfo(0);
 const publicRankBenefits = getPublicTribeRankBenefits(rankInfo.rankId);
 
 return res.json({
-        member: null,
-        points: 0,
+  ok: true,
+  isMember: false,
+  member: null,
+
+  points: 0,
         lifetimePoints: 0,
         rank: rankInfo.rank,
         rankId: rankInfo.rankId,
@@ -3715,12 +5484,37 @@ const usedRewards = publicRewards.filter((reward) => reward.status === 'used');
 const lastUnlockedRewards = getPublicLastUnlockedRewards(member);
 
 return res.json({
-      member: {
-        name: member.name || '',
-        email: member.email || cleanEmail,
-        status: member.status || 'active',
-        createdAt: member.createdAt || null,
-        updatedAt: member.updatedAt || null
+  ok: true,
+  isMember: true,
+
+  member: {
+    name: member.name || '',
+    email: member.email || cleanEmail,
+    status: member.status || 'active',
+
+    discountCode:
+      member.discountCode ||
+      TRIBE_DISCOUNT_CODE,
+
+    discountPercent:
+      Number(
+        member.discountPercent ||
+        TRIBE_DISCOUNT_PERCENT
+      ),
+
+    discountStatus:
+      member.discountStatus ||
+      'available',
+
+    usedCount:
+      Number(member.usedCount || 0),
+
+    createdAt:
+      member.createdAt || null,
+
+    updatedAt:
+      member.updatedAt || null
+
       },
 
       points: currentPoints,
@@ -3745,6 +5539,8 @@ rankId: rankInfo.rankId,
       ),
 
 lastXpEvent: member.lastXpEvent || null,
+claimedXpEvent: guestPurchaseClaim.claimedXpEvent || null,
+claimedXpEvents: guestPurchaseClaim.claimedXpEvents || [],
 lastMissionEvent: member.lastMissionEvent || null,
 missions: getPublicTribeMissions(member),
 rewards: publicRewards,
@@ -3771,31 +5567,54 @@ benefits: publicRankBenefits.benefits,
 rankMessage: publicRankBenefits.message,
 rewardOnUnlock: publicRankBenefits.rewardOnUnlock
     });
-  } catch (err) {
-    console.error('[tribe-me] error:', err);
+ } catch (err) {
+  console.error(
+    '[tribe-me] error:',
+    err
+  );
 
-    return res.status(500).json({
-      error: 'No se ha podido cargar tu perfil Prophetia Tribe.'
+  if (
+    err.code ===
+    'TRIBE_UID_CONFLICT'
+  ) {
+    return res.status(409).json({
+      error:
+        err.message ||
+        'Esta membresía Tribe ya está vinculada a otra cuenta.'
     });
   }
-});
-async function userHasAtLeastOneAddress(uid = '') {
-  const cleanUid = String(uid || '').trim();
 
-  if (!cleanUid || !admin.apps.length) {
+  return res.status(500).json({
+    error:
+      'No se ha podido cargar tu perfil Prophetia Tribe.'
+  });
+}
+});
+async function userHasAtLeastOneAddress(uid = '', since = '') {
+  const cleanUid = String(uid || '').trim();
+  const sinceMs = getDateMs(since);
+
+  if (!cleanUid || !getApps().length) {
     return false;
   }
 
   try {
-    const snap = await admin
-      .firestore()
+    const snap = await getFirestore()
       .collection('users')
       .doc(cleanUid)
       .collection('addresses')
-      .limit(1)
       .get();
 
-    return !snap.empty;
+    if (!sinceMs) {
+      return !snap.empty;
+    }
+
+    return snap.docs.some((doc) => {
+      const data = doc.data() || {};
+      const addressTime = getDateMs(data.createdAt || data.savedAt || data.updatedAt);
+
+      return addressTime && addressTime >= sinceMs;
+    });
   } catch (err) {
     console.error('[tribe-mission] error verificando direcciones:', err);
     return false;
@@ -3826,6 +5645,18 @@ app.post('/api/tribe/mission/check', requireFirebaseUser, async (req, res) => {
       });
     }
 
+
+    const memberForMission = findAndLinkTribeMemberForFirebaseUser(req.firebaseUser, {
+      allowLegacyEmailLink: false,
+      writeLink: false
+    });
+
+    if (!memberForMission || memberForMission.status !== 'active') {
+      return res.status(403).json({
+        error: 'Únete a Prophetia Tribe antes de completar misiones.'
+      });
+    }
+
     /*
       Seguridad:
       Solo permitimos completar desde endpoint misiones concretas.
@@ -3845,7 +5676,10 @@ let verifiedProgress = progress;
 let verifiedReason = 'client-verified-action';
 
 if (mission.id === 'first-address') {
-  const hasAddress = await userHasAtLeastOneAddress(req.firebaseUser.uid);
+  const hasAddress = await userHasAtLeastOneAddress(
+    req.firebaseUser.uid,
+    memberForMission.identityResetAt || memberForMission.createdAt || null
+  );
 
   if (!hasAddress) {
     return res.status(403).json({
@@ -3859,6 +5693,9 @@ if (mission.id === 'first-address') {
 
 const result = completeTribeMissionForEmail({
   email: cleanEmail,
+  firebaseUid: req.firebaseUser.uid,
+  identityMember: memberForMission,
+  strictIdentity: true,
   missionId: mission.id,
   progress: verifiedProgress,
   reason: verifiedReason
@@ -3918,7 +5755,10 @@ app.get('/api/drops/private', requireFirebaseUser, async (req, res) => {
       });
     }
 
-    const member = findTribeMemberByEmail(cleanEmail);
+    const member = findAndLinkTribeMemberForFirebaseUser(req.firebaseUser, {
+      allowLegacyEmailLink: false,
+      writeLink: false
+    });
 
     if (!member || member.status !== 'active') {
       return res.json({
@@ -4006,7 +5846,10 @@ app.get('/api/private-drops', requireFirebaseUser, async (req, res) => {
       });
     }
 
-    const member = findTribeMemberByEmail(cleanEmail);
+    const member = findAndLinkTribeMemberForFirebaseUser(req.firebaseUser, {
+      allowLegacyEmailLink: false,
+      writeLink: false
+    });
     const access = getPrivateDropAccessForMember(member);
 
     if (!access) {
@@ -4080,7 +5923,10 @@ app.get('/api/private-drops/:id', requireFirebaseUser, async (req, res) => {
       });
     }
 
-    const member = findTribeMemberByEmail(cleanEmail);
+    const member = findAndLinkTribeMemberForFirebaseUser(req.firebaseUser, {
+      allowLegacyEmailLink: false,
+      writeLink: false
+    });
     const access = getPrivateDropAccessForMember(member);
 
     if (!access) {
@@ -4193,40 +6039,57 @@ shippingRate: order.shippingRate || null,
 });
 app.post('/api/create-checkout-session', async (req, res) => {
   try {
-    const { cart, email, shippingDetails, gift, invoice, discountCode } = req.body || {};
+    const { cart, email, shippingDetails, gift, invoice, discountCode, guestAccountIntent } = req.body || {};
 
     const firebaseUser = await getOptionalFirebaseUser(req);
     const cleanEmail = normalizeEmail(email);
+    const sessionEmail = normalizeEmail(firebaseUser?.email || '');
+    const isAuthenticatedCheckout = Boolean(
+      firebaseUser?.uid && sessionEmail && cleanEmail && sessionEmail === cleanEmail
+    );
 
-    if (!firebaseUser?.email) {
-      return res.status(401).json({
-        error: 'Debes iniciar sesión antes de continuar al pago.'
-      });
+    if (!cleanEmail || !isValidEmail(cleanEmail)) {
+      return res.status(400).json({ error: 'Email inválido.' });
     }
 
-    if (!cleanEmail || firebaseUser.email !== cleanEmail) {
+    if (sessionEmail && sessionEmail !== cleanEmail) {
       return res.status(403).json({
         error: 'El email del checkout no coincide con tu sesión Prophetia.'
       });
     }
 
-    const tribeBenefits = getTribeBenefitsForEmail(firebaseUser.email);
+    const tribeMember = isAuthenticatedCheckout
+      ? findAndLinkTribeMemberForFirebaseUser(firebaseUser, {
+          allowLegacyEmailLink: false,
+          writeLink: false
+        })
+      : null;
+
+    const tribeBenefits = getTribeBenefitsForMember(tribeMember);
+    const checkoutMode = isAuthenticatedCheckout ? 'account' : 'guest';
+    const wantsGuestAccount = checkoutMode === 'guest' && Boolean(guestAccountIntent?.wantsAccount);
+    const guestPasswordProvided = wantsGuestAccount && Boolean(guestAccountIntent?.passwordProvided);
 
     if (!Array.isArray(cart) || cart.length === 0) {
       return res.status(400).json({ error: 'La cesta está vacía.' });
     }
 
-    if (!email || !String(email).includes('@')) {
-      return res.status(400).json({ error: 'Email inválido.' });
-    }
 
     if (!shippingDetails || !shippingDetails.shippingMethod) {
       return res.status(400).json({ error: 'Faltan datos de envío.' });
     }
 
+    const cleanGift = normalizeGiftPayload(gift);
+
    let secureSummary = buildSecureCartSummary(cart, shippingDetails, {
   tribeBenefits
 });
+
+if (discountCode && !isAuthenticatedCheckout) {
+  return res.status(403).json({
+    error: 'Inicia sesión con tu cuenta Prophetia Tribe para usar este código.'
+  });
+}
 
 if (discountCode && !tribeBenefits) {
   return res.status(403).json({
@@ -4236,9 +6099,11 @@ if (discountCode && !tribeBenefits) {
 
 const tribeDiscountResult = discountCode
   ? validateTribeDiscount({
-      email: firebaseUser.email,
+      email: sessionEmail,
       code: discountCode,
-      subtotal: secureSummary.subtotal
+      subtotal: secureSummary.subtotal,
+      member: tribeMember,
+  strictMember: true
     })
   : null;
 
@@ -4265,7 +6130,10 @@ const line_items = secureSummary.items.map((item) => {
           item.color ? `Color: ${item.color}` : '',
           item.size ? `Talla: ${item.size}` : ''
         ].filter(Boolean).join(' · '),
-        images: [item.img].filter(Boolean).slice(0, 1)
+        images: [item.img]
+          .filter(Boolean)
+          .slice(0, 1)
+          .map((image) => reservationAbsoluteUrl(image))
       }
     }
   };
@@ -4291,10 +6159,15 @@ upsertOrder({
   status: 'pending_payment',
   paymentStatus: 'unpaid',
   customerEmail: cleanEmail,
+  customerType: checkoutMode,
+  guestAccountIntent: wantsGuestAccount ? {
+    wantsAccount: true,
+    passwordProvided: guestPasswordProvided
+  } : null,
   shippingDetails,
   shippingRate: secureSummary.shippingRate || null,
   estimatedDelivery: secureSummary.shippingRate?.estimatedDelivery || '2–7 días laborables',
-  gift: gift || null,
+  gift: cleanGift.isGift ? cleanGift : null,
   invoice: invoice || null,
   currency: secureSummary.currency || 'EUR',
   items: secureSummary.items,
@@ -4325,6 +6198,10 @@ success_url: `${SITE_URL}/checkout-success.html?session_id={CHECKOUT_SESSION_ID}
       cancel_url: `${SITE_URL}/checkout#nav-js-payment-checkoutnc`,
      metadata: {
   orderDraftId,
+  checkoutMode,
+  guestCheckout: isAuthenticatedCheckout ? 'no' : 'yes',
+  guestWantsAccount: wantsGuestAccount ? 'yes' : 'no',
+  guestPasswordProvided: guestPasswordProvided ? 'yes' : 'no',
   shippingMethod: shippingDetails.shippingMethod,
   carrier: secureSummary.shippingRate?.carrier || '',
   carrierLabel: secureSummary.shippingRate?.carrierLabel || '',
@@ -4339,7 +6216,8 @@ discountAmount: secureSummary.discount?.amount ? String(secureSummary.discount.a
 tribeRank: secureSummary.tribeBenefits?.rank || '',
 tribeRankId: secureSummary.tribeBenefits?.rankId || '',
 tribeFreeShipping: secureSummary.shippingRate?.tribeFreeShipping ? 'yes' : 'no',
-gift: gift?.isGift ? 'yes' : 'no',
+gift: cleanGift.isGift ? 'yes' : 'no',
+giftMessage: cleanGift.message ? 'yes' : 'no',
 invoiceWanted: invoice?.invoiceWanted ? 'yes' : 'no'
 }
     });

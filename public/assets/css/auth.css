@@ -1,69 +1,5 @@
 
 
-/* ===== Prophetia · TRIBE PANEL (side-modal) ===== */
-#tribeModal{ position:fixed; inset:0; z-index:1200; display:none; }
-#tribeModal[aria-hidden="false"]{ display:block; }
-
-#tribeModal .tribe-backdrop{
-  position:absolute; inset:0; background:rgba(0,0,0,.38);
-  backdrop-filter: saturate(120%) blur(2px);
-}
-
-#tribeModal .tribe-panel{
-  position:absolute; right:0; top:0; height:100dvh;
-  width:min(520px, 92vw);
-  background:
-    linear-gradient(rgba(255,255,255,.92), rgba(255,255,255,.62)),
-    url("../img/textures/fondoform.png") center/cover no-repeat;
-  box-shadow:-18px 0 48px rgba(0,0,0,.12);
-  transform: translateX(100%);
-  animation: tribeIn .35s ease forwards;
-  display:grid; grid-template-rows:auto 1fr auto;
-}
-
-@keyframes tribeIn { to { transform: translateX(0); } }
-#tribeModal.is-closing .tribe-panel{ animation: tribeOut .25s ease forwards; }
-@keyframes tribeOut { to { transform: translateX(100%); } }
-
-/* header */
-.tribe-panel .tribe-head{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:16px; height:68px; padding:0 clamp(20px,2.2vw,28px);
-  border-bottom:1px solid rgba(0,0,0,.08);
-}
-.tribe-title{ font: 500 18px/1.2 var(--font-display,"Playfair Display",serif); margin:0; }
-.tribe-close{ all:unset; cursor:pointer; width:32px; height:32px; display:grid; place-items:center; }
-
-/* body */
-.tribe-body{
-  overflow:auto;
-  padding: clamp(16px,2.4vw,24px);
-  display:grid; gap:16px;
-}
-.tribe-copy h3{ font-family:var(--font-display); margin:.2rem 0 .6rem; }
-.tribe-copy p{ color:rgba(0,0,0,.72); }
-
-/* emblemita con tamaño correcto */
-.tribe-emblem{
-  width:min(180px,40%); height:auto; opacity:.85;
-}
-
-/* footer */
-.tribe-foot{
-  padding: 14px clamp(20px,2.2vw,28px) 18px;
-  border-top:1px solid rgba(0,0,0,.08);
-  display:flex; gap:10px; justify-content:flex-end;
-}
-.tribe-cta{
-  height:44px; padding:0 18px; border-radius:999px; border:0; cursor:pointer;
-  background:#111; color:#fff; font-weight:600;
-}
-
-/* responsive */
-@media (max-width: 520px){
-  .tribe-emblem{ width:140px; }
-}
-
 /* =========================================================
    PROPHETIA · AUTH + ACCOUNT PANEL — SINGLE SOURCE OF TRUTH
    ========================================================= */
@@ -186,30 +122,79 @@
 #ppAuthModal [data-step]{ display:block; }
 
 /* Form elements */
-#ppAuthModal label{
+
+/* =========================================================
+   AUTH · Textos y campos con contraste editorial
+   ========================================================= */
+
+#ppAuthModal label {
   display: block;
   margin: 14px 0 8px;
-  font: 500 12px/1 var(--pp-ui);
-  letter-spacing: .08em;
+
+  font: 600 11px/1.2 var(--pp-ui);
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: rgba(0,0,0,.55);
+
+  color: var(--pp-auth-label);
 }
 
 #ppAuthModal input[type="email"],
 #ppAuthModal input[type="password"],
 #ppAuthModal input[type="text"],
-#ppAuthModal select{
+#ppAuthModal input[type="tel"],
+#ppAuthModal select {
   width: 100%;
-  height: 42px;
+  height: 46px;
+
   border: 0;
-  border-bottom: 1px solid var(--pp-line);
+  border-bottom: 1px solid var(--pp-auth-line);
   border-radius: 0;
+
   padding: 8px 2px;
+
   background: transparent;
+  color: var(--pp-auth-ink);
+
   outline: none;
-  font: 400 16px/1.2 var(--pp-ui);
-  color: var(--pp-ink);
+
+  font: 500 16px/1.2 var(--pp-ui);
+
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
 }
+
+#ppAuthModal input::placeholder {
+  color: rgba(42, 33, 27, .48);
+  opacity: 1;
+}
+
+#ppAuthModal input:focus,
+#ppAuthModal select:focus {
+  border-color: var(--pp-auth-line-strong);
+  box-shadow: 0 1px 0 var(--pp-auth-line-strong);
+}
+
+#ppAuthModal select {
+  cursor: pointer;
+}
+
+#ppAuthModal select option {
+  background: #f7f1e9;
+  color: var(--pp-auth-ink);
+}
+
+#ppAuthModal .auth-required-note {
+  color: var(--pp-auth-muted);
+}
+
+#ppAuthModal .pp-helper,
+#ppAuthModal .auth-intro__subtitle {
+  color: var(--pp-auth-muted);
+}
+
+
 
 #ppAuthModal .sp-cta{
   width: 100%;
@@ -328,80 +313,112 @@
 #ppAuthModal #authTitle{
   text-align: left !important;
 }
+
 /* =========================================================
-   PROPHETIA · AUTH — Prophetia floating label + link CTA refinado
-   Pegar al final de auth.css
+   PROPHETIA · AUTH FIELD
+   Label editorial estable, sin píldora ni desplazamientos
    ========================================================= */
 
-/* Campo con label “fusionado” al borde */
-#ppAuthModal .pp-field{
+#ppAuthModal .pp-field {
   position: relative;
-  margin-top: 14px;
+  margin-top: 4px;
+  padding-top: 20px;
 }
 
-/* input en modo “línea” pero con borde inferior + aire Prophetia */
-#ppAuthModal .pp-field--float input{
+/* Campo principal */
+#ppAuthModal .pp-field--float input {
   width: 100%;
-  height: 46px;
-  padding: 14px 2px 8px;
+  height: 52px;
+
+  padding: 10px 0 12px;
+
   border: 0;
-  border-bottom: 1px solid var(--pp-line);
+  border-bottom: 1px solid var(--pp-auth-line);
+  border-radius: 0;
+
   background: transparent;
+  color: var(--pp-auth-ink);
+
   outline: none;
-  font: 400 16px/1.2 var(--pp-ui);
-  color: var(--pp-ink);
+
+  font: 500 16px/1.2 var(--pp-ui);
 }
 
-/* label apoyado en el borde superior (efecto tag) */
-#ppAuthModal .pp-field--float .pp-float-label{
+/* Label siempre arriba, como encabezado editorial */
+#ppAuthModal .pp-field--float .pp-float-label {
   position: absolute;
+  top: 0;
   left: 0;
-  top: -9px;
+
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 
-  padding: 0 8px;
-  border-radius: 999px;
-
-  /* “fusion” con el fondo del panel */
-  background: rgba(255,255,255,.78);
-  border: 1px solid rgba(0,0,0,.10);
-
-  font: 500 11px/1 var(--pp-ui);
-  letter-spacing: .10em;
-  text-transform: uppercase;
-  color: rgba(0,0,0,.58);
-
-  transform-origin: left top;
-}
-
-/* Estado focus: más contraste, sensación premium */
-#ppAuthModal .pp-field--float input:focus{
-  border-bottom-color: rgba(0,0,0,.42);
-}
-
-#ppAuthModal .pp-field--float input:focus + .pp-float-label{
-  color: rgba(0,0,0,.72);
-  border-color: rgba(0,0,0,.18);
-  background: rgba(255,255,255,.88);
-}
-
-/* Si el input está vacío y sin focus, el label baja un poco y se “mezcla” más */
-#ppAuthModal .pp-field--float input:placeholder-shown + .pp-float-label{
-  top: 10px;
-  border-color: transparent;
-  background: transparent;
+  margin: 0;
   padding: 0;
+
+  border: 0;
   border-radius: 0;
-  letter-spacing: .08em;
-  color: rgba(0,0,0,.50);
+  background: transparent;
+
+  font: 600 10.5px/1.2 var(--pp-ui);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+
+  color: var(--pp-auth-label);
+
+  pointer-events: none;
+  transform: none;
+
+  transition: color 180ms ease;
 }
 
-/* Para que no se pise con el ojo en password cuando uses pp-field ahí */
-#ppAuthModal .pp-field--float input[type="password"]{
-  padding-right: 44px;
+/* Línea animada inferior */
+#ppAuthModal .pp-field--float::after {
+  content: "";
+
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 1px;
+
+  background: var(--pp-auth-accent);
+
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  transition: transform 220ms cubic-bezier(.22, .61, .36, 1);
 }
+
+#ppAuthModal .pp-field--float:focus-within::after {
+  transform: scaleX(1);
+}
+
+#ppAuthModal .pp-field--float:focus-within .pp-float-label {
+  color: var(--pp-auth-accent);
+}
+
+/* Neutraliza el antiguo movimiento por placeholder */
+#ppAuthModal .pp-field--float input:placeholder-shown + .pp-float-label,
+#ppAuthModal .pp-field--float input:focus + .pp-float-label {
+  top: 0;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+
+  letter-spacing: .14em;
+}
+
+/* Espacio reservado cuando el campo incorpore botón de contraseña */
+#ppAuthModal .pp-field--float input[type="password"] {
+  padding-right: 48px;
+}
+
 
 /* =========================================================
    CTA “Crear cuenta” (button -> link editorial)
@@ -415,7 +432,7 @@
   cursor: pointer;
 
   font: 500 13px/1.35 var(--pp-ui);
-  color: rgba(0,0,0,.78);
+ color: var(--pp-auth-muted);
   text-align: left;
 
   text-decoration: underline;
@@ -427,7 +444,7 @@
 }
 
 #ppAuthModal .auth-create-account:hover{
-  color: rgba(0,0,0,.92);
+  color: var(--pp-auth-ink);
   text-decoration-color: rgba(0,0,0,.38);
   transform: translateY(-1px);
 }
@@ -465,6 +482,7 @@
 
 #ppAccountPanel .pp-accountpanel-close{
   all: unset;
+  position: relative;
   cursor: pointer;
   width: 40px;
   height: 40px;
@@ -472,6 +490,90 @@
   display: grid;
   place-items: center;
   color: var(--pp-ink);
+  overflow: visible;
+  transition: color .18s ease, transform .22s cubic-bezier(.22,.61,.36,1);
+}
+
+#ppAccountPanel .pp-accountpanel-close span{
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+  z-index: 1;
+}
+
+#ppAccountPanel .pp-accountpanel-close::before,
+#ppAccountPanel .pp-accountpanel-close::after,
+#ppAccountPanel .pp-accountpanel-close span::before,
+#ppAccountPanel .pp-accountpanel-close span::after{
+  content: "";
+  position: absolute;
+  display: block;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity .2s ease,
+    transform .28s cubic-bezier(.22,.61,.36,1);
+}
+
+#ppAccountPanel .pp-accountpanel-close::before,
+#ppAccountPanel .pp-accountpanel-close::after{
+  left: 9px;
+  width: 22px;
+  height: 1px;
+  transform: scaleX(.18);
+}
+
+#ppAccountPanel .pp-accountpanel-close::before{
+  bottom: 8px;
+  transform-origin: left center;
+}
+
+#ppAccountPanel .pp-accountpanel-close::after{
+  top: 8px;
+  transform-origin: right center;
+}
+
+#ppAccountPanel .pp-accountpanel-close span::before,
+#ppAccountPanel .pp-accountpanel-close span::after{
+  top: -7px;
+  width: 1px;
+  height: 22px;
+  transform: scaleY(.18);
+}
+
+#ppAccountPanel .pp-accountpanel-close span::before{
+  left: -8px;
+  transform-origin: center bottom;
+}
+
+#ppAccountPanel .pp-accountpanel-close span::after{
+  right: -8px;
+  transform-origin: center top;
+}
+
+#ppAccountPanel .pp-accountpanel-close:hover,
+#ppAccountPanel .pp-accountpanel-close:focus-visible{
+  transform: rotate(0.001deg);
+}
+
+#ppAccountPanel .pp-accountpanel-close:hover::before,
+#ppAccountPanel .pp-accountpanel-close:focus-visible::before,
+#ppAccountPanel .pp-accountpanel-close:hover::after,
+#ppAccountPanel .pp-accountpanel-close:focus-visible::after{
+  opacity: .42;
+  transform: scaleX(1);
+}
+
+#ppAccountPanel .pp-accountpanel-close:hover span::before,
+#ppAccountPanel .pp-accountpanel-close:focus-visible span::before,
+#ppAccountPanel .pp-accountpanel-close:hover span::after,
+#ppAccountPanel .pp-accountpanel-close:focus-visible span::after{
+  opacity: .38;
+  transform: scaleY(1);
 }
 
 /* Body */
@@ -483,7 +585,7 @@
   text-align: left;
 }
 
-/* Top (titulo + copy + hero) */
+/* Top (titulo + copy) */
 #ppAccountPanel .pp-accountpanel-top{
   display: grid;
   grid-template-columns: 1fr;
@@ -513,61 +615,47 @@
   max-width: 60ch;
 }
 
-/* Hero: 2 columnas (texto izquierda, imagen derecha) */
-#ppAccountPanel .pp-accountpanel-hero{
-  margin-top: 10px;
+#ppAccountPanel .pp-accountpanel-first-access{
   display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: 22px;
-  align-items: start;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 18px 0 4px;
+  border-top: 1px solid rgba(17,17,17,.18);
 }
 
-/* Link “Editar” Prophetia-like */
-#ppAccountPanel .pp-accountpanel-edit{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  width: fit-content;
+#ppAccountPanel .pp-accountpanel-first-access[hidden]{
+  display: none !important;
+}
 
-  font: 500 14px/1.2 var(--pp-ui);
+#ppAccountPanel .pp-accountpanel-first-access__eyebrow{
+  font: 600 10px/1.2 var(--pp-ui);
+  letter-spacing: .18em;
+  color: rgba(17,17,17,.56);
+}
+
+#ppAccountPanel .pp-accountpanel-first-access strong{
+  font: 400 22px/1.15 var(--pp-serif);
+  letter-spacing: -.01em;
   color: var(--pp-ink);
-  text-decoration: none;
 }
 
-#ppAccountPanel .pp-accountpanel-edit-icon{
-  font-size: 12px;
-  transform: translateY(-1px);
+#ppAccountPanel .pp-accountpanel-first-access p{
+  margin: 0;
+  max-width: 54ch;
+  font: 400 13px/1.5 var(--pp-ui);
+  color: var(--pp-muted);
 }
 
-/* Hover sutil (silent luxury) */
-#ppAccountPanel .pp-accountpanel-edit:hover{
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  text-decoration-thickness: 1px;
-  text-decoration-color: rgba(0,0,0,.22);
-}
-
-/* Media derecha */
-#ppAccountPanel .pp-accountpanel-media{
-  width: 220px;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  background: rgba(255,255,255,.35);
-}
-
-#ppAccountPanel .pp-accountpanel-media img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+#ppAccountPanel .pp-accountpanel-first-access.is-warning{
+  border-top-color: rgba(140,86,32,.38);
 }
 
 /* Links: SIEMPRE vertical, sin wrap */
 #ppAccountPanel .pp-accountpanel-links{
-  margin-top: 30px;
+  margin-top: 48px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 30px;
 
   /* blindaje contra estilos globales */
   text-align: left !important;
@@ -575,50 +663,80 @@
 }
 
 #ppAccountPanel .pp-accountpanel-link{
+  position: relative;
   display: inline-block;
   width: auto;
   max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  padding: 0;
 
-  font: 400 14px/1.2 var(--pp-ui);
+  font: 400 14px/1.35 var(--pp-ui);
   color: var(--pp-ink);
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
-#ppAccountPanel .pp-accountpanel-link:hover{
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  text-decoration-thickness: 1px;
-  text-decoration-color: rgba(0,0,0,.22);
+#ppAccountPanel .pp-accountpanel-link::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: .36;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition:
+    opacity .18s ease,
+    transform .24s cubic-bezier(.22,.61,.36,1);
+}
+
+#ppAccountPanel .pp-accountpanel-link:hover,
+#ppAccountPanel .pp-accountpanel-link:focus-visible{
+  text-decoration: none !important;
+}
+
+#ppAccountPanel .pp-accountpanel-link:hover::after,
+#ppAccountPanel .pp-accountpanel-link:focus-visible::after{
+  opacity: .52;
+  transform: scaleX(1);
 }
 
 /* Logout separado con aire */
 #ppAccountPanel .pp-accountpanel-logout{
-  margin-top: 18px;
+  margin-top: 42px;
 }
-
-/* Responsive: en móvil apila y la imagen pasa abajo */
-@media (max-width: 520px){
-  #ppAccountPanel .pp-accountpanel-hero{
-    grid-template-columns: 1fr;
-  }
-  #ppAccountPanel .pp-accountpanel-media{
-    width: 100%;
-    max-width: 320px;
-  }
-}
-
 
 /* =========================================================
    PROPHETIA · AUTH MODAL REFINEMENT
    Más aire, estilo editorial limpio tipo Loewe + Prophetia
    ========================================================= */
 
+
 #ppAuthModal {
   --auth-space-top: clamp(92px, 10vh, 128px);
   --auth-section-gap: clamp(28px, 4vh, 46px);
   --auth-field-gap: 28px;
   --auth-bottom-gap: clamp(34px, 5vh, 58px);
+
+  /* Paleta Auth · marrón carbón sobre fondo claro */
+  --pp-auth-ink: #2a211b;
+  --pp-auth-muted: rgba(42, 33, 27, .68);
+  --pp-auth-label: rgba(42, 33, 27, .78);
+  --pp-auth-line: rgba(42, 33, 27, .30);
+  --pp-auth-line-strong: rgba(42, 33, 27, .62);
+  --pp-auth-field-bg: rgba(255, 252, 247, .38);
+  --pp-auth-field-focus: rgba(255, 252, 247, .60);
+  --pp-auth-accent: #8a6727;
+
+  /* Reutilización de las variables que ya consume el panel */
+  --pp-ink: var(--pp-auth-ink);
+  --pp-muted: var(--pp-auth-muted);
+  --pp-line: var(--pp-auth-line);
 }
+
 
 /* Header con más respiración */
 #ppAuthModal .modal-head {
@@ -657,7 +775,7 @@
   margin: 0 0 4px;
   justify-self: end;
   font: 400 11px/1.2 var(--pp-ui);
-  color: rgba(0,0,0,.62);
+    color: var(--pp-auth-muted);
 }
 
 /* Campo email con más aire */
@@ -781,130 +899,295 @@
 }
 
 /* =========================================================
-   PROPHETIA · REGISTER FORM CLEAN REFINEMENT
-   Registro limpio, aireado y coherente con Prophetia
+   PROPHETIA · REGISTER FORM
+   Campos uniformes con label integrado en el marco
    ========================================================= */
 
+#ppAuthModal {
+  --pp-auth-control-height: 64px;
+  --pp-auth-field-border: rgba(42, 33, 27, .52);
+  --pp-auth-field-border-focus: #2a211b;
+  --pp-auth-field-surface: rgba(255, 252, 247, .44);
+  --pp-auth-field-surface-focus: rgba(255, 252, 247, .70);
+  --pp-auth-label-background: #f7f2ea;
+}
+
 #ppAuthModal .auth-form--register {
-  gap: clamp(24px, 3.2vh, 34px);
-}
-
-#ppAuthModal .pp-register-field {
   display: grid;
-  gap: 10px;
+  gap: 24px;
 }
 
-#ppAuthModal .pp-register-field label {
+/* Cada label + control forma una única unidad */
+#ppAuthModal .pp-register-field {
+  position: relative;
+  display: block;
+  min-width: 0;
   margin: 0;
-  font: 500 11px/1 var(--pp-ui);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: rgba(0,0,0,.56);
 }
 
-#ppAuthModal .pp-register-field input {
+/* Label integrado sobre el borde superior */
+#ppAuthModal .pp-register-field > label {
+  position: absolute;
+  top: -7px;
+  left: 13px;
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+
+  width: auto;
+  max-width: calc(100% - 26px);
+
+  margin: 0;
+  padding: 0 7px;
+
+  background: var(--pp-auth-label-background);
+
+  font: 600 10.5px/1.25 var(--pp-ui);
+  letter-spacing: .04em;
+  text-transform: none;
+
+  color: var(--pp-auth-ink);
+}
+
+/* Controles canónicos del formulario */
+#ppAuthModal .pp-register-field > input,
+#ppAuthModal .pp-register-field > select,
+#ppAuthModal .pp-register-field .sp-password > input {
   width: 100%;
-  height: 56px;
-  border: 1px solid rgba(0,0,0,.32);
-  border-radius: 0;
-  background: rgba(255,255,255,.16);
+  height: var(--pp-auth-control-height);
+  min-height: var(--pp-auth-control-height);
+
+  margin: 0;
   padding: 0 16px;
-  font: 400 15px/1.2 var(--pp-ui);
-  color: var(--pp-ink);
-}
 
-#ppAuthModal .pp-register-field input:focus {
-  outline: 0;
-  border-color: rgba(0,0,0,.72);
-  background: rgba(255,255,255,.26);
-}
-
-#ppAuthModal #ppRegisterForm > label {
-  margin: 0 0 -16px;
-  font-size: 11px;
-  letter-spacing: .12em;
-}
-
-#ppAuthModal #ppRegisterForm input[type="text"],
-#ppAuthModal #ppRegisterForm input[type="tel"],
-#ppAuthModal #ppRegisterForm input[type="password"],
-#ppAuthModal #ppRegisterForm select {
-  height: 56px;
-  border: 1px solid rgba(0,0,0,.32);
+  border: 1px solid var(--pp-auth-field-border);
   border-radius: 0;
-  background: rgba(255,255,255,.14);
-  padding: 0 16px;
+
+  background: var(--pp-auth-field-surface);
+  color: var(--pp-auth-ink);
+
+  outline: none;
+  box-shadow: none;
+
+  font: 500 15px/1.2 var(--pp-ui);
+
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
-#ppAuthModal #ppRegisterForm input:focus,
-#ppAuthModal #ppRegisterForm select:focus {
-  border-color: rgba(0,0,0,.72);
-  background: rgba(255,255,255,.26);
+#ppAuthModal .pp-register-field > input::placeholder,
+#ppAuthModal .pp-register-field .sp-password > input::placeholder {
+  color: rgba(42, 33, 27, .48);
+  opacity: 1;
 }
+
+/* Focus uniforme */
+#ppAuthModal .pp-register-field:focus-within > label {
+  color: var(--pp-auth-accent);
+}
+
+#ppAuthModal .pp-register-field > input:focus,
+#ppAuthModal .pp-register-field > select:focus,
+#ppAuthModal .pp-register-field .sp-password > input:focus {
+  border-color: var(--pp-auth-field-border-focus);
+  background: var(--pp-auth-field-surface-focus);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 33, 27, .12),
+    0 0 0 2px rgba(138, 103, 39, .08);
+}
+
+/* Select */
+#ppAuthModal .pp-register-field > select {
+  padding-right: 44px;
+  cursor: pointer;
+}
+
+/* ========================================================= FECHA PROPHETIA · Entrada manual + selector propio ========================================================= */ #ppAuthModal .pp-register-field--date { position: relative; } #ppAuthModal .pp-register-field--date.is-picker-open { z-index: 80; } #ppAuthModal .pp-date-control { position: relative; width: 100%; height: var(--pp-auth-control-height); border: 1px solid var(--pp-auth-field-border); background: var(--pp-auth-field-surface); transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease; } #ppAuthModal .pp-date-control > #ppRegBirth { width: 100%; height: 100%; margin: 0; padding: 0 72px 0 16px; border: 0; background: transparent; color: var(--pp-auth-ink); outline: none; box-shadow: none; font: 500 15px/1.2 var(--pp-ui); } #ppAuthModal .pp-date-control > #ppRegBirth:focus { border: 0; box-shadow: none; } #ppAuthModal .pp-date-control > #ppRegBirth::placeholder { color: rgba(42, 33, 27, .48); opacity: 1; } #ppAuthModal .pp-date-control__button { appearance: none; -webkit-appearance: none; position: absolute; top: 0; right: 0; width: 58px; height: 100%; display: grid; place-items: center; margin: 0; padding: 0; border: 0; border-left: 1px solid var(--pp-auth-field-border); background: transparent; color: var(--pp-auth-ink); cursor: pointer; transition: color 180ms ease, background-color 180ms ease; } #ppAuthModal .pp-date-control__button svg { width: 21px; height: 21px; } #ppAuthModal .pp-date-control__button:hover, #ppAuthModal .pp-date-control__button[aria-expanded="true"] { color: var(--pp-auth-accent); background: rgba(138, 103, 39, .08); } #ppAuthModal .pp-register-field--date:focus-within .pp-date-control { border-color: var(--pp-auth-field-border-focus); background: var(--pp-auth-field-surface-focus); box-shadow: inset 0 0 0 1px rgba(42, 33, 27, .12), 0 0 0 2px rgba(138, 103, 39, .08); } /* Selector desplegable */ #ppAuthModal .pp-date-picker { position: absolute; top: calc(100% + 12px); right: 0; left: 0; z-index: 90; width: 100%; padding: 20px; border: 1px solid rgba(42, 33, 27, .22); background: linear-gradient( 145deg, rgba(255, 253, 248, .99), rgba(241, 233, 222, .98) ); box-shadow: 0 28px 70px rgba(24, 18, 14, .24), inset 0 1px 0 rgba(255, 255, 255, .75); opacity: 0; transform: translateY(8px); transition: opacity 180ms ease, transform 180ms ease; } #ppAuthModal .pp-date-picker.is-above { top: auto; bottom: calc(100% + 12px); } #ppAuthModal .pp-date-picker.is-open { opacity: 1; transform: translateY(0); } #ppAuthModal .pp-date-picker[hidden] { display: none; } #ppAuthModal .pp-date-picker__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; } #ppAuthModal .pp-date-picker__kicker { display: block; margin-bottom: 6px; font: 600 9px/1.2 var(--pp-ui); letter-spacing: .16em; text-transform: uppercase; color: rgba(42, 33, 27, .54); } #ppAuthModal .pp-date-picker__title { display: block; font: 500 23px/1.05 var(--pp-serif); color: #211914; } #ppAuthModal .pp-date-picker__close { width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(42, 33, 27, .18); border-radius: 999px; background: rgba(255, 255, 255, .42); color: #2a211b; font-size: 20px; cursor: pointer; } #ppAuthModal .pp-date-picker__selectors { display: grid; grid-template-columns: .8fr 1.35fr 1fr; gap: 10px; } #ppAuthModal .pp-date-picker__selectors label { display: grid; gap: 7px; margin: 0; font: 600 9px/1 var(--pp-ui); letter-spacing: .12em; text-transform: uppercase; color: rgba(42, 33, 27, .62); } #ppAuthModal .pp-date-picker__selectors select { width: 100%; height: 48px; padding: 0 12px; border: 1px solid rgba(42, 33, 27, .30); background: rgba(255, 255, 255, .52); color: #2a211b; font: 500 14px/1 var(--pp-ui); } #ppAuthModal .pp-date-picker__selectors select:focus { border-color: #8a6727; box-shadow: 0 0 0 2px rgba(138, 103, 39, .10); } #ppAuthModal .pp-date-picker__error { margin: 12px 0 0; font: 500 11.5px/1.45 var(--pp-ui); color: #8f2f27; } #ppAuthModal .pp-date-picker__actions { display: grid; grid-template-columns: 1fr 1.35fr; gap: 10px; margin-top: 20px; } #ppAuthModal .pp-date-picker__cancel, #ppAuthModal .pp-date-picker__confirm { min-height: 46px; padding: 0 14px; font: 600 12px/1 var(--pp-ui); cursor: pointer; } #ppAuthModal .pp-date-picker__cancel { border: 1px solid rgba(42, 33, 27, .28); background: transparent; color: #2a211b; } #ppAuthModal .pp-date-picker__confirm { border: 1px solid #211914; background: #211914; color: #fffaf2; } #ppAuthModal .pp-date-control__hint { margin: 8px 0 0; font: 400 11.5px/1.45 var(--pp-ui); color: var(--pp-auth-muted); } #ppAuthModal .pp-date-control__error { margin: 8px 0 0; font: 500 11.5px/1.45 var(--pp-ui); color: #8f2f27; } #ppAuthModal .pp-register-field--date.is-invalid .pp-date-control { border-color: #8f2f27; } @media (max-width: 620px) { #ppAuthModal .pp-date-picker { padding: 17px 14px; } #ppAuthModal .pp-date-picker__selectors { gap: 7px; } #ppAuthModal .pp-date-picker__selectors select { padding-inline: 7px; font-size: 13px; } }
+/* =========================================================
+   Teléfono · una sola caja dividida
+   ========================================================= */
 
 #ppAuthModal .pp-phone-row {
   display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 12px;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 0;
+
+  width: 100%;
+  height: var(--pp-auth-control-height);
+
+  border: 1px solid var(--pp-auth-field-border);
+  background: var(--pp-auth-field-surface);
+
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
 }
+
+#ppAuthModal .pp-register-field--phone:focus-within .pp-phone-row {
+  border-color: var(--pp-auth-field-border-focus);
+  background: var(--pp-auth-field-surface-focus);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 33, 27, .12),
+    0 0 0 2px rgba(138, 103, 39, .08);
+}
+
+#ppAuthModal #ppRegisterForm .pp-phone-row select,
+#ppAuthModal #ppRegisterForm .pp-phone-row input {
+  width: 100%;
+  height: calc(var(--pp-auth-control-height) - 2px);
+
+  margin: 0;
+  padding: 0 14px;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+  color: var(--pp-auth-ink);
+
+  outline: none;
+  box-shadow: none;
+
+  font: 500 15px/1.2 var(--pp-ui);
+}
+
+#ppAuthModal #ppRegisterForm .pp-phone-row select {
+  border-right: 1px solid var(--pp-auth-field-border);
+  padding-right: 28px;
+}
+
+/* =========================================================
+   Contraseña
+   ========================================================= */
+
+#ppAuthModal .pp-register-field--password .sp-password {
+  position: relative;
+  width: 100%;
+}
+
+#ppAuthModal .pp-register-field--password .sp-password > input {
+  padding-right: 58px;
+}
+
+#ppAuthModal .pp-register-field--password .toggle-pass {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+
+  width: 38px;
+  height: 38px;
+
+  transform: translateY(-50%);
+
+  display: grid;
+  place-items: center;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: transparent;
+  color: var(--pp-auth-ink);
+
+  cursor: pointer;
+  user-select: none;
+  z-index: 3;
+}
+
+#ppAuthModal .pp-register-field--password .toggle-pass:hover {
+  background: rgba(42, 33, 27, .07);
+}
+
+#ppAuthModal .pp-register-field--password .toggle-pass:focus-visible {
+  outline: 1px solid var(--pp-auth-field-border-focus);
+  outline-offset: 2px;
+}
+
+#ppAuthModal .pp-register-field--password .pp-helper {
+  margin: 8px 0 0;
+
+  font: 400 11.5px/1.45 var(--pp-ui);
+  color: var(--pp-auth-muted);
+}
+
+/* =========================================================
+   Consentimientos
+   ========================================================= */
 
 #ppAuthModal #ppRegisterForm .pp-check {
   display: grid;
-  grid-template-columns: 18px 1fr;
+  grid-template-columns: 18px minmax(0, 1fr);
   gap: 12px;
   align-items: start;
+
   margin: 0;
+
   font: 400 12.5px/1.55 var(--pp-ui);
   letter-spacing: 0;
   text-transform: none;
-  color: rgba(0,0,0,.70);
+
+  color: var(--pp-auth-muted);
 }
 
 #ppAuthModal #ppRegisterForm .pp-check input {
   width: 16px;
   height: 16px;
-  margin-top: 2px;
+  margin: 2px 0 0;
 }
 
+#ppAuthModal #ppRegisterForm .pp-check a {
+  color: var(--pp-auth-ink);
+  text-decoration-color: rgba(42, 33, 27, .34);
+}
+
+#ppAuthModal #ppRegisterForm .pp-check a:hover {
+  color: var(--pp-auth-accent);
+}
+
+/* Botones del registro */
 #ppAuthModal #ppRegisterForm [data-pp-google] {
-  margin-top: clamp(10px, 2vh, 22px) !important;
+  margin-top: 4px;
+
+  border: 1px solid var(--pp-auth-field-border);
+
   background: transparent;
-  color: #111;
-  border: 1px solid rgba(0,0,0,.24);
+  color: var(--pp-auth-ink);
 }
 
 #ppAuthModal #ppRegisterForm button[type="submit"].sp-cta {
-  margin-top: 2px;
-}
-
-
-
-@media (max-width: 620px) {
-  #ppAuthModal .pp-phone-row {
-    grid-template-columns: 1fr;
-  }
-
-  #ppAuthModal .auth-form--register {
-    gap: 24px;
-  }
+  margin-top: 0;
 }
 
 /* =========================================================
-   AUTH · Password visibility button fix
+   Responsive
    ========================================================= */
 
-#ppAuthModal .sp-password {
-  position: relative;
-}
+@media (max-width: 620px) {
+  #ppAuthModal {
+    --pp-auth-control-height: 60px;
+  }
 
-#ppAuthModal .sp-password .toggle-pass {
-  pointer-events: auto;
-  user-select: none;
-  z-index: 20;
-}
+  #ppAuthModal .auth-form--register {
+    gap: 22px;
+  }
 
-#ppAuthModal .sp-password input {
-  padding-right: 56px !important;
+  #ppAuthModal .pp-phone-row {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  #ppAuthModal .pp-register-field > label {
+    left: 11px;
+    max-width: calc(100% - 22px);
+    padding-inline: 6px;
+  }
 }
 
 /* =========================================================
@@ -1079,4 +1362,307 @@
 #ppAuthModal .pp-linkbtn:focus-visible {
   outline: 1px solid rgba(0,0,0,.42);
   outline-offset: 5px;
+}
+
+
+
+/* =========================================================
+   PROPHETIA · PROFILE ONBOARDING
+   Primer acceso verificado
+   ========================================================= */
+
+#ppProfileOnboarding.pp-profile-onboarding {
+  width: min(570px, calc(100vw - 32px));
+  max-width: none;
+
+  margin: auto;
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+  color: #241d18;
+
+  overflow: visible;
+}
+
+#ppProfileOnboarding::backdrop {
+  background: rgba(17, 14, 12, .54);
+  backdrop-filter: blur(7px) saturate(110%);
+}
+
+#ppProfileOnboarding[open] {
+  animation:
+    ppProfileOnboardingIn
+    420ms cubic-bezier(.16, .84, .44, 1)
+    both;
+}
+
+@keyframes ppProfileOnboardingIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pp-profile-onboarding__card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding:
+    clamp(42px, 6vw, 66px)
+    clamp(28px, 5vw, 58px)
+    clamp(34px, 5vw, 52px);
+
+  border: 1px solid rgba(42, 33, 27, .18);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 253, 248, .98),
+      rgba(244, 237, 226, .95)
+    ),
+    url("../img/textures/fondoform.png")
+      center / cover no-repeat;
+
+  box-shadow:
+    0 36px 100px rgba(15, 12, 10, .30),
+    inset 0 1px 0 rgba(255, 255, 255, .72);
+
+  text-align: center;
+}
+
+.pp-profile-onboarding__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  margin: 0;
+  padding: 0;
+
+  border: 1px solid rgba(42, 33, 27, .18);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, .34);
+  color: #2a211b;
+
+  font: 400 22px/1 var(--pp-ui);
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.pp-profile-onboarding__close:hover {
+  transform: rotate(3deg);
+  border-color: rgba(42, 33, 27, .36);
+  background: rgba(255, 255, 255, .72);
+}
+
+.pp-profile-onboarding__emblem {
+  width: 82px;
+  height: 82px;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 24px;
+
+  border: 1px solid rgba(42, 33, 27, .14);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, .28);
+}
+
+.pp-profile-onboarding__emblem img {
+  width: 54px;
+  height: 54px;
+  display: block;
+  object-fit: contain;
+}
+
+.pp-profile-onboarding__kicker {
+  margin: 0 0 13px;
+
+  font: 600 10px/1.2 var(--pp-ui);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+
+  color: rgba(42, 33, 27, .58);
+}
+
+.pp-profile-onboarding__title {
+  max-width: 10ch;
+  margin: 0;
+
+  font:
+    400
+    clamp(38px, 6vw, 58px) / .98
+    var(--pp-serif);
+
+  letter-spacing: -.035em;
+  text-wrap: balance;
+
+  color: #211914;
+}
+
+.pp-profile-onboarding__text {
+  max-width: 44ch;
+
+  margin: 24px 0 0;
+
+  font: 400 14px/1.65 var(--pp-ui);
+  color: rgba(42, 33, 27, .70);
+}
+
+.pp-profile-onboarding__features {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  margin-top: 30px;
+
+  border-top: 1px solid rgba(42, 33, 27, .15);
+  border-bottom: 1px solid rgba(42, 33, 27, .15);
+}
+
+.pp-profile-onboarding__features span {
+  padding: 14px 8px;
+
+  font: 600 10px/1.2 var(--pp-ui);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+
+  color: rgba(42, 33, 27, .64);
+}
+
+.pp-profile-onboarding__features span + span {
+  border-left: 1px solid rgba(42, 33, 27, .15);
+}
+
+.pp-profile-onboarding__actions {
+  width: 100%;
+
+  display: grid;
+  gap: 11px;
+
+  margin-top: 30px;
+}
+
+.pp-profile-onboarding__primary,
+.pp-profile-onboarding__secondary {
+  width: 100%;
+  min-height: 54px;
+
+  padding: 0 20px;
+
+  border-radius: 0;
+
+  font: 600 13px/1 var(--pp-ui);
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.pp-profile-onboarding__primary {
+  border: 1px solid #201914;
+  background: #201914;
+  color: #fffaf2;
+}
+
+.pp-profile-onboarding__primary:hover {
+  transform: translateY(-1px);
+  background: #342820;
+  border-color: #342820;
+}
+
+.pp-profile-onboarding__primary:disabled {
+  opacity: .58;
+  cursor: wait;
+  transform: none;
+}
+
+.pp-profile-onboarding__secondary {
+  border: 1px solid rgba(42, 33, 27, .26);
+  background: transparent;
+  color: #2a211b;
+}
+
+.pp-profile-onboarding__secondary:hover {
+  border-color: rgba(42, 33, 27, .55);
+  background: rgba(255, 255, 255, .38);
+}
+
+.pp-profile-onboarding__primary:focus-visible,
+.pp-profile-onboarding__secondary:focus-visible,
+.pp-profile-onboarding__close:focus-visible {
+  outline: 2px solid #8a6727;
+  outline-offset: 4px;
+}
+
+.pp-profile-onboarding__status {
+  margin: 15px 0 0;
+
+  font: 500 12px/1.5 var(--pp-ui);
+  color: #8f2f27;
+}
+
+@media (max-width: 560px) {
+  #ppProfileOnboarding.pp-profile-onboarding {
+    width: calc(100vw - 20px);
+  }
+
+  .pp-profile-onboarding__card {
+    padding:
+      54px
+      22px
+      28px;
+  }
+
+  .pp-profile-onboarding__title {
+    font-size: clamp(36px, 11vw, 47px);
+  }
+
+  .pp-profile-onboarding__features {
+    grid-template-columns: 1fr;
+  }
+
+  .pp-profile-onboarding__features span + span {
+    border-top: 1px solid rgba(42, 33, 27, .15);
+    border-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #ppProfileOnboarding[open] {
+    animation: none;
+  }
+
+  .pp-profile-onboarding__close,
+  .pp-profile-onboarding__primary,
+  .pp-profile-onboarding__secondary {
+    transition: none;
+  }
 }

@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    PROPHETIA · OVERRIDES (cargar al final)
    ========================================================= */
 
@@ -24,29 +24,7 @@ button,input,select { font-family: var(--font-ui, Inter, system-ui, sans-serif);
   --tribe-reopen-img: 28px;      /* tamaño del logo dentro */
 }
 
-.tribe-reopen{
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
-  width: var(--tribe-reopen);
-  height: var(--tribe-reopen);
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  background: #fff;
-  border: 1px solid color-mix(in srgb, #000 10%, transparent);
-  box-shadow: 0 10px 28px rgba(0,0,0,.14);
-  cursor: pointer;
-  pointer-events: auto;      /* ← importante para que reciba el clic */
-  z-index: 5000;             /* ← por encima de hero, header y grids */
-}
 
-.tribe-reopen__img{
-  width: var(--tribe-reopen-img);
-  height: var(--tribe-reopen-img);
-  display: block;
-  object-fit: contain;       /* sin deformación del emblema */
-}
 /* ==== FIX TRIBE MODAL: no ocultar por display:none aunque tenga aria-hidden ==== */
 #tribeModal,
 #tribeModal[aria-hidden="true"] {
@@ -385,6 +363,30 @@ body.wishlist-page .wl-nav__list a[aria-current="page"]::after {
   transform: scaleX(1);
 }
 
+/* Account panel vive dentro del header, pero sus links no son icon buttons. */
+#ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link {
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  display: inline-block !important;
+  align-items: initial !important;
+  justify-content: initial !important;
+  line-height: 1.35 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: inherit !important;
+  font: inherit !important;
+  cursor: pointer !important;
+}
+
+#ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link::after {
+  bottom: -1px !important;
+}
+
 /* 7) Select Relevancia / Ordenar por */
 .men-select {
   position: relative;
@@ -459,4 +461,1762 @@ body.wishlist-page .wl-nav__list a[aria-current="page"]::after {
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
+}
+/* =========================================================
+   PROPHETIA - Unified type system
+   Excludes editorial collection microsites.
+   ========================================================= */
+body:not(.ms-page):not(.lfts-page):not(.ahp-page):not(.archive-page):not(.archive-piece-page) {
+  --font-heading: var(--font-display, "Playfair Display", Georgia, serif);
+  --font-urban: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --font-graffiti: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --hood-header-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --sw-header-font: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+}
+
+body:not(.ms-page):not(.lfts-page):not(.ahp-page):not(.archive-page):not(.archive-piece-page) :where(
+  p,
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  label,
+  li,
+  span,
+  small,
+  strong,
+  em,
+  td,
+  th,
+  .pp-header,
+  .mega-toggle,
+  .pp-breadcrumb,
+  .pp-hero__list,
+  .pp-filters,
+  .card-body,
+  .card-title,
+  .card-sub,
+  .card-price,
+  .footer-col,
+  .brand-lede,
+  .news-label,
+  .socials
+) {
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+}
+
+body:not(.ms-page):not(.lfts-page):not(.ahp-page):not(.archive-page):not(.archive-piece-page) :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .pp-hero__title,
+  .pp-ph-title,
+  .footer-brand,
+  .brand--sm
+) {
+  font-family: var(--font-display, "Playfair Display", Georgia, serif) !important;
+}
+
+/* =========================================================
+   PROPHETIA - Clothing floating logo alignment
+   Reference: sudaderas-punto-mujer.
+   ========================================================= */
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) {
+  --pp-clothing-logo-x: -30px;
+  --pp-clothing-logo-y: -90px;
+  --pp-clothing-logo-size: 920px;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__media {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__media .floating-logo {
+  position: absolute !important;
+  left: var(--pp-clothing-logo-x) !important;
+  top: calc(var(--hdr-h, var(--pp-header-h, 64px)) + var(--pp-clothing-logo-y)) !important;
+  transform: none !important;
+  z-index: 20 !important;
+  line-height: 0 !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__media .floating-logo img {
+  width: var(--pp-clothing-logo-size) !important;
+  height: auto !important;
+  max-width: none !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 760px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) {
+    --pp-clothing-logo-x: 0px;
+    --pp-clothing-logo-y: -48px;
+    --pp-clothing-logo-size: clamp(300px, 86vw, 520px);
+  }
+}
+/* =========================================================
+   PROPHETIA - Clothing typography rhythm
+   Matches camisetas-punto-hombre across clothing PLPs.
+   ========================================================= */
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) :where(
+  .pp-breadcrumb,
+  .pp-breadcrumb *,
+  .pp-hero__list,
+  .pp-hero__list *,
+  .pp-hero__side,
+  .pp-hero__side *,
+  .pp-filters,
+  .pp-filters *,
+  .plp-toolbar,
+  .plp-toolbar *,
+  .men-filters,
+  .men-filters *,
+  .women-filters,
+  .women-filters *,
+  .filter-toggle,
+  .sort-toggle,
+  .stock-toggle,
+  .view-toggle,
+  .men-check,
+  .men-check *,
+  .women-check,
+  .women-check *,
+  .card-body,
+  .card-body *,
+  .card-title,
+  .card-title *,
+  .card-sub,
+  .card-price,
+  .product-card,
+  .product-card *
+) {
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) :where(
+  .pp-hero__list,
+  .pp-hero__list *,
+  .pp-hero__side nav,
+  .pp-hero__side nav *,
+  .pp-breadcrumb,
+  .pp-breadcrumb *
+) {
+  font: 400 14px/1.25 var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) :where(
+  .pp-filters,
+  .pp-filters *,
+  .plp-toolbar,
+  .plp-toolbar *,
+  .men-filters,
+  .men-filters *,
+  .women-filters,
+  .women-filters *,
+  .filter-toggle,
+  .sort-toggle,
+  .stock-toggle,
+  .view-toggle,
+  .men-check,
+  .men-check *,
+  .women-check,
+  .women-check *
+) {
+  font: 400 13px/1.2 var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) :where(
+  .card-body,
+  .card-title,
+  .card-title *,
+  .card-sub,
+  .card-price,
+  .product-card,
+  .product-card *
+) {
+  font: 400 13px/1.35 var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__title {
+  font: 500 clamp(20px, 1.35vw, 26px)/1.1 var(--font-display, "Playfair Display", Georgia, serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* =========================================================
+   PROPHETIA - Shared clothing view toggle
+   Dense grid state for every clothing PLP.
+   ========================================================= */
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).is-plp-dense-view #plp-grid.plp-grid,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).is-plp-dense-view .pp-plp .plp-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: clamp(28px, 3vw, 52px) clamp(14px, 1.5vw, 26px) !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).is-plp-dense-view #plp-grid .card-media,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).is-plp-dense-view .pp-plp .card-media {
+  aspect-ratio: 3 / 4 !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-filter-right .pp-btn[aria-pressed="true"],
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-view-toggle[aria-pressed="true"] {
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+@media (min-width: 1600px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ).is-plp-dense-view #plp-grid.plp-grid,
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ).is-plp-dense-view .pp-plp .plp-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ).is-plp-dense-view #plp-grid.plp-grid,
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ).is-plp-dense-view .pp-plp .plp-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ).is-plp-dense-view #plp-grid.plp-grid,
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ).is-plp-dense-view .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 28px 10px !important;
+  }
+}
+
+/* =========================================================
+   PROPHETIA - Final clothing logo and hoodies mega lock
+   Keeps all clothing PLP logos aligned with camisetas-punto-mujer.
+   ========================================================= */
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) {
+  --pp-clothing-logo-x: -30px !important;
+  --pp-clothing-logo-y: -90px !important;
+  --pp-clothing-logo-size: 920px !important;
+  --pp-clothing-logo-filter: none;
+}
+
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) {
+  --pp-clothing-logo-filter: brightness(0) invert(1) drop-shadow(0 14px 30px rgba(0, 0, 0, .45));
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__media {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__media .floating-logo {
+  position: absolute !important;
+  left: var(--pp-clothing-logo-x) !important;
+  top: calc(var(--pp-header-h, 64px) + var(--pp-clothing-logo-y)) !important;
+  transform: none !important;
+  z-index: 20 !important;
+  line-height: 0 !important;
+  width: var(--pp-clothing-logo-size) !important;
+  max-width: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__media .floating-logo img {
+  width: var(--pp-clothing-logo-size) !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  display: block !important;
+  object-fit: contain !important;
+  filter: var(--pp-clothing-logo-filter) !important;
+}
+
+body.hoodies-page.pp-mega-open .pp-header,
+body.hoodies-page.pp-mega-open .pp-topbar {
+  background: #fff !important;
+  color: #111 !important;
+  border-bottom-color: rgba(17, 17, 17, .12) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body.hoodies-page.pp-mega-open .pp-header::after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.hoodies-page.pp-mega-open .pp-header :is(a, button, .mega-toggle, .icon-btn),
+body.hoodies-page.pp-mega-open .pp-header :is(a, button, .mega-toggle, .icon-btn):hover,
+body.hoodies-page.pp-mega-open .pp-header :is(a, button, .mega-toggle, .icon-btn):focus-visible {
+  color: #111 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+body.hoodies-page.pp-mega-open .pp-header :is(svg, svg path, svg circle, svg rect) {
+  color: #111 !important;
+  stroke: currentColor !important;
+}
+
+body.hoodies-page.pp-mega-open .pp-header img[src*="emblem"] {
+  filter: brightness(0) saturate(100%) !important;
+  opacity: 1 !important;
+}
+
+body.hoodies-page .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  top: var(--pp-header-h, var(--hdr-h, 68px)) !important;
+  color: #111 !important;
+  text-shadow: none !important;
+  background: linear-gradient(180deg, rgba(252, 250, 246, .985), rgba(244, 240, 232, .975)) !important;
+}
+
+body.hoodies-page .pp-header .mega[data-prop-mega] .mega-panel[data-mega] :is(a, button, span, strong, small) {
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+@media (max-width: 760px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) {
+    --pp-clothing-logo-x: 0px !important;
+    --pp-clothing-logo-y: -48px !important;
+    --pp-clothing-logo-size: clamp(300px, 86vw, 520px) !important;
+  }
+}
+/* =========================================================
+   PROPHETIA - Final hero side type lock
+   Keeps hoodies and streetwear side navigation at clothing PLP scale.
+   ========================================================= */
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__side,
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__side * {
+  font-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__title {
+  font: 500 clamp(20px, 1.35vw, 26px)/1.1 var(--font-display, "Playfair Display", Georgia, serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  margin: 0 0 12px !important;
+}
+
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list,
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list li,
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list a {
+  font: 400 14px/1.25 var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list {
+  gap: 8px !important;
+}
+/* =========================================================
+   PROPHETIA - Shared PLP sort dropdown
+   Supports the button/listbox sorter on every clothing PLP.
+   ========================================================= */
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-sort {
+  position: relative !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-sort .pp-sort-menu[hidden] {
+  display: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-sort.is-open .pp-sort-menu:not([hidden]) {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 90 !important;
+}
+/* =========================================================
+   PROPHETIA - Clothing PLP parity with camisetas hombre
+   Same grid and hero-side structure across all clothing pages.
+   ========================================================= */
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp.container {
+  padding-inline: var(--pp-edge-cam, var(--edge, clamp(24px, 3vw, 48px))) !important;
+  padding-top: 0 !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid.plp-grid,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .plp-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: clamp(34px, 4vw, 64px) clamp(18px, 2vw, 36px) !important;
+  align-items: start !important;
+  justify-content: stretch !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .card,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .product-card,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .product-card {
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .card-media,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-media {
+  aspect-ratio: 4 / 5 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .card-media img,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-media img,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .card-media > img,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-media > img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transform: none !important;
+  transition: opacity 180ms ease !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .card:hover .card-media img,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card:hover .card-media img {
+  opacity: .94 !important;
+  transform: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .card-body,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-body {
+  padding: 12px 0 0 !important;
+  row-gap: 3px !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .card-title,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .card-title a,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-body h3,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-body h3 a {
+  font: 400 13px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .card-sub,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-body p:nth-of-type(1) {
+  font: 400 12px/1.45 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .card-meta,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-body p:nth-of-type(2),
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card-price {
+  font: 400 12px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .card .icon-btn.save,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .product-card .save-btn {
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__side {
+  align-self: flex-end !important;
+  max-width: 360px !important;
+  text-align: left !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__title {
+  font: 500 clamp(20px, 1.35vw, 26px)/1.1 var(--font-display, "Playfair Display", Georgia, serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  margin: 0 0 12px !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__title::after {
+  content: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list li,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list a {
+  font: 400 14px/1.25 var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-hero__list {
+  gap: 8px !important;
+}
+
+@media (max-width: 1180px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) #plp-grid.plp-grid,
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) #plp-grid.plp-grid,
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) .pp-plp .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 32px 14px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) #plp-grid.plp-grid,
+  body:is(
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) .pp-plp .plp-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* =========================================================
+   PROPHETIA - Clothing PLP card width guard
+   Prevents inherited card widths from breaking the camisetas grid.
+   ========================================================= */
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .card,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .card,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #plp-grid .product-card,
+body:is(
+  .men-page.camisetas-page,
+  .women-page.camisetas-page,
+  .sud-men-page,
+  .women-page.sud-women-page,
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-plp .product-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+/* =========================================================
+   PROPHETIA - Dark clothing mega menu lock
+   Keeps hoodies/streetwear header and mega panel dark while open.
+   ========================================================= */
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) {
+  margin: 0 !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header {
+  width: 100% !important;
+  margin: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background:
+    linear-gradient(180deg, rgba(4, 5, 9, .94), rgba(4, 5, 9, .78)) !important;
+  color: rgba(245, 245, 239, .96) !important;
+  border-bottom: 1px solid rgba(155, 116, 255, .42) !important;
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, .42),
+    inset 0 -1px 0 rgba(245, 245, 239, .08) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(130%) !important;
+  backdrop-filter: blur(12px) saturate(130%) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header > .container,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .pp-topbar {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+  border: 0 !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header::after {
+  background: linear-gradient(90deg, rgba(155, 116, 255, .88), rgba(245, 245, 239, .35), rgba(155, 116, 255, .78)) !important;
+  box-shadow: 0 0 14px rgba(155, 116, 255, .42) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header :is(a, button, .mega-toggle, .icon-btn),
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header :is(a, button, .mega-toggle, .icon-btn):hover,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header :is(a, button, .mega-toggle, .icon-btn):focus-visible,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .mega-toggle.is-active,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"] {
+  color: rgba(245, 245, 239, .96) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .mega-toggle.is-active::after,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"]::after {
+  background: rgba(245, 245, 239, .92) !important;
+  box-shadow: 0 0 12px rgba(155, 116, 255, .34) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .search-inline .search-input,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .search-inline .search-input:focus {
+  color: rgba(245, 245, 239, .96) !important;
+  background: rgba(245, 245, 239, .07) !important;
+  border-bottom-color: rgba(245, 245, 239, .72) !important;
+  box-shadow: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header .search-inline .search-input::placeholder {
+  color: rgba(245, 245, 239, .68) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header :is(svg, svg path, svg circle, svg rect),
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header #ppCartBtn svg,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header #ppSavedBtn svg {
+  color: rgba(245, 245, 239, .96) !important;
+  stroke: currentColor !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  inset: var(--pp-header-h, var(--hdr-h, 68px)) 0 auto 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: clamp(360px, 43vh, 520px) !important;
+  margin: 0 !important;
+  border-inline: 0 !important;
+  border-radius: 0 !important;
+  border-top: 1px solid rgba(155, 116, 255, .30) !important;
+  border-bottom: 1px solid rgba(155, 116, 255, .28) !important;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 10, .88), rgba(3, 4, 8, .80)) !important;
+  color: rgba(245, 245, 239, .94) !important;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, .64),
+    inset 0 1px 0 rgba(245, 245, 239, .08) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(130%) !important;
+  backdrop-filter: blur(16px) saturate(130%) !important;
+  text-shadow: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] :is(a, button, span, small, strong, .mega-col a) {
+  color: rgba(245, 245, 239, .84) !important;
+  text-shadow: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] :is(a:hover, a:focus-visible, button:hover, button:focus-visible),
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-col a:hover,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-col a:focus-visible {
+  color: #fff !important;
+  transform: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-originals,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-originals strong {
+  color: rgba(245, 245, 239, .94) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-originals__kicker {
+  color: rgba(245, 245, 239, .58) !important;
+}
+/* =========================================================
+   PROPHETIA - Dark mega header image icons
+   Keeps account/emblem images visible on dark open headers.
+   ========================================================= */
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header img[src*="emblem"],
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header #ppAuthLogoBtn img,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+).pp-mega-open .pp-header.pp-header #ppProfileChip img {
+  filter: brightness(0) invert(1) !important;
+  opacity: 1 !important;
+}
+/* =========================================================
+   PROPHETIA - Dark mega full bleed refinement
+   Removes side steps, improves opacity and normalizes menu text.
+   ========================================================= */
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) #header,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header.pp-header,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header.pp-header > .container {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  min-width: 100vw !important;
+  margin-inline: 0 !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  inset: auto !important;
+  inset-inline: 0 !important;
+  top: var(--pp-header-h, var(--hdr-h, 68px)) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100vw !important;
+  min-width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  margin-inline: 0 !important;
+  transform-origin: top left !important;
+  background-color: rgba(5, 6, 10, .95) !important;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 10, .96), rgba(3, 4, 8, .92)) !important;
+  color: rgba(245, 245, 239, .96) !important;
+  box-shadow:
+    0 28px 86px rgba(0, 0, 0, .70),
+    inset 0 1px 0 rgba(245, 245, 239, .10) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega].is-open .mega-panel[data-mega] {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] .mega-grid {
+  opacity: 1 !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] .mega-col a,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] a:not(.mega-originals),
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] :is(li, span, small) {
+  color: rgba(245, 245, 239, .94) !important;
+  opacity: 1 !important;
+  letter-spacing: .005em !important;
+  text-transform: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] .mega-col a:hover,
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] a:not(.mega-originals):hover {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+/* =========================================================
+   PROPHETIA - Dark mega viewport seal
+   Final guard against side gaps and inherited uppercase styles.
+   ========================================================= */
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  position: fixed !important;
+  top: var(--pp-header-h, var(--hdr-h, 68px)) !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100vw !important;
+  min-width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 0 0 -50vw !important;
+  box-sizing: border-box !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  background-color: rgba(5, 6, 10, .97) !important;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 10, .975), rgba(3, 4, 8, .94)) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega].is-open .mega-panel[data-mega] {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega],
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] * {
+  text-transform: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header .mega[data-prop-mega] .mega-grid {
+  opacity: 1 !important;
+}
+/* =========================================================
+   PROPHETIA - Dark page cart badge contrast
+   White disc + black number on dark clothing headers.
+   ========================================================= */
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header #ppCartBtn.has-items .pp-cart-count {
+  color: #050505 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header #ppCartBtn.has-items .pp-cart-count__disc {
+  color: #fff !important;
+  fill: #fff !important;
+  filter: drop-shadow(0 1px 5px rgba(0, 0, 0, .32)) !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header #ppCartBtn.has-items .pp-cart-count__disc circle {
+  fill: #fff !important;
+}
+
+html body:is(
+  .men-page.hoodies-page,
+  .women-page.hoodies-page,
+  .men-page.streetwear-page,
+  .women-page.streetwear-page
+) .pp-header #ppCartBtn.has-items .pp-cart-count__value {
+  color: #050505 !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+
+/* HOMBRE · hover limpio en lateral y grid */
+body.men-page .men-band__list a {
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+}
+
+body.men-page .men-band__list a::after {
+  bottom: -2px !important;
+}
+
+body.men-page .pp-plp .card-title a,
+body.men-page .pp-plp .card-title a:hover,
+body.men-page .pp-plp .card-title a:focus-visible {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+}
+
+body.men-page .pp-plp .card-title a::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.men-page .pp-plp .card-body {
+  row-gap: 7px !important;
 }

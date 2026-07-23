@@ -1309,7 +1309,7 @@ body.account-page {
 
 /* =========================================================
    MY CONTENT · Luxury compression / Tribe compact layout
-   Ajuste final para evitar exceso vertical en Mi contenido
+   Ajuste final para evitar exceso vertical en Mi perfil
    ========================================================= */
 
 body.my-content-page .account-brand {
@@ -1921,7 +1921,7 @@ body.my-content-page .account-tribe__missions.is-all-completed .account-tribe__m
 
 /* =========================================================
    PROPHETIA · Account Calendar Preview
-   Teaser privado de calendario en Mi contenido
+   Teaser privado de calendario en Mi perfil
    ========================================================= */
 
 .account-calendar-preview {
@@ -2022,7 +2022,7 @@ body.my-content-page .account-tribe__missions.is-all-completed .account-tribe__m
 
 /* =========================================================
    PROPHETIA · Account Vault Preview
-   Teaser privado del Vault en Mi contenido
+   Teaser privado del Vault en Mi perfil
    ========================================================= */
 
 .account-vault-preview {
@@ -2250,7 +2250,7 @@ body.my-content-page .account-hero{
 
 /* =========================================================
    MY CONTENT · Move only hero copy
-   Solo sube el bloque "PROPHETIA ACCOUNT / Mi contenido"
+   Solo sube el bloque "PROPHETIA ACCOUNT / Mi perfil"
    No toca el panel derecho
    ========================================================= */
 
@@ -2356,4 +2356,41 @@ body.my-content-page .account-hero__panel{
 .account-vault-preview__link:focus-visible::after {
   transform: translate(4px, -1px);
   opacity: 1;
+}
+/* PROPHETIA ACCOUNT MEGA STACK FIX */
+body.account-page #header {
+  position: relative !important;
+  z-index: 9000 !important;
+  isolation: isolate !important;
+}
+
+body.account-page #header .pp-header,
+body.account-page #header .pp-topbar {
+  position: relative !important;
+  z-index: 9001 !important;
+}
+
+body.account-page #header .mega[data-prop-mega] {
+  position: relative !important;
+  z-index: 9002 !important;
+}
+
+body.account-page #header .mega[data-prop-mega] .mega-panel[data-mega] {
+  position: fixed !important;
+  z-index: 9010 !important;
+}
+
+body.account-page.pp-mega-open .account-layout,
+body.account-page.pp-mega-open .account-brand,
+body.account-page.pp-mega-open .account-brand__logo,
+body.account-page.pp-mega-open .account-nav {
+  position: relative !important;
+  z-index: 0 !important;
+}
+body.account-page #ppCartOverlay {
+  z-index: 9990 !important;
+}
+
+body.account-page #ppCartDrawer {
+  z-index: 10000 !important;
 }

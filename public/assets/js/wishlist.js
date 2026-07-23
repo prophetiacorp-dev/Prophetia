@@ -10,7 +10,7 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  const load = () => {
+  const rawLoad = () => {
     try {
       const data = JSON.parse(localStorage.getItem(KEY) || '[]');
       return Array.isArray(data) ? data.filter(p => p && p.id) : [];
@@ -19,7 +19,23 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
     }
   };
 
+  function getWishlistUser() {
+    return (
+      window.__ppAuthCurrentUser ||
+      window.__ppLastUser ||
+      window.__ppFirebaseAuth?.currentUser ||
+      null
+    );
+  }
+
+  function isWishlistUnlocked() {
+    return !!getWishlistUser();
+  }
+
+  const load = () => (isWishlistUnlocked() ? rawLoad() : []);
+
   const save = (list) => {
+    if (!isWishlistUnlocked()) return;
     localStorage.setItem(KEY, JSON.stringify(Array.isArray(list) ? list : []));
   };
 
@@ -30,6 +46,10 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
   const grid = $('#gridWishlist');
   const empty = $('#wlEmpty');
   const count = $('#wlCount');
+  const emptyTitle = empty?.querySelector('.wl-empty-title');
+  const emptySub = empty?.querySelector('.wl-empty-sub');
+  const emptyActions = empty?.querySelector('.wl-empty-actions');
+  const emptyActionsDefault = emptyActions?.innerHTML || '';
 
   const selectionPanel = $('[data-wishlist-selection]');
   const recommendedPanel = $('[data-wishlist-recommended]');
@@ -154,9 +174,8 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
             data-remove
             data-id="${escapeHtml(p.id)}"
           >
-            <svg class="icon-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12.1 20.1C11.8 20.1 4 14.7 3.2 9.6C2.8 6.8 4.9 4.5 7.5 4.5c1.7 0 3.2.9 4.1 2.3A5 5 0 0 1 19 4.5c2.6 0 4.7 2.3 4.3 5.1c-.8 5.1-8.6 10.5-9.1 10.5z"
-                stroke="currentColor" stroke-width="1.5"/>
+            <svg class="icon-heart icon-heart--minimal" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 20.25s-7.35-4.72-8.2-9.82C3.32 7.55 5.22 5.35 7.86 5.35c1.72 0 3.12.9 4.14 2.28 1.02-1.38 2.42-2.28 4.14-2.28 2.64 0 4.54 2.2 4.06 5.08C19.35 15.53 12 20.25 12 20.25Z" />
             </svg>
           </button>
         </div>
@@ -198,15 +217,41 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
   }));
 }
 
+  function renderEmptyState(isAuthenticated) {
+    if (!empty) return;
+
+    if (!isAuthenticated) {
+      if (emptyTitle) emptyTitle.textContent = 'Inicia sesión para ver tu selección';
+      if (emptySub) {
+        emptySub.textContent = 'Tu wishlist solo se muestra cuando accedes con tu cuenta Prophetia.';
+      }
+      if (emptyActions) {
+        emptyActions.innerHTML = `
+          <button class="btn btn--ghost" type="button" data-wishlist-login>
+            Iniciar sesión
+          </button>
+        `;
+      }
+      return;
+    }
+
+    if (emptyTitle) emptyTitle.textContent = 'Tu selección está vacía';
+    if (emptySub) emptySub.textContent = 'Explora nuestras categorías y añade tus favoritos.';
+    if (emptyActions) emptyActions.innerHTML = emptyActionsDefault;
+  }
+
   function render() {
+    const isAuthenticated = isWishlistUnlocked();
     const items = load();
 
     if (grid) {
-      grid.innerHTML = items.map(card).join('');
+      grid.innerHTML = isAuthenticated ? items.map(card).join('') : '';
     }
 
+    renderEmptyState(isAuthenticated);
+
     if (empty) {
-      empty.hidden = items.length > 0;
+      empty.hidden = isAuthenticated && items.length > 0;
     }
 
     if (count) {
@@ -275,9 +320,23 @@ notifyWishlistUpdated();
     });
   }
 
+  function bindWishlistLoginAction() {
+    if (!empty || empty.__ppWishlistLoginBound) return;
+    empty.__ppWishlistLoginBound = true;
+
+    empty.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-wishlist-login]');
+      if (!button) return;
+
+      event.preventDefault();
+      document.getElementById('ppAuthLogoBtn')?.click();
+    });
+  }
+
   function initWishlist() {
     bindWishlistTabs();
     bindRemoveEvents();
+    bindWishlistLoginAction();
     render();
 
     const initialHash = (window.location.hash || '').replace('#', '');
@@ -290,5 +349,11 @@ notifyWishlistUpdated();
     document.addEventListener('DOMContentLoaded', initWishlist);
   }
 
-  window.addEventListener('partials:ready', updateHeaderBadge);
+  window.addEventListener('partials:ready', () => {
+    updateHeaderBadge();
+    render();
+  });
+
+  window.addEventListener('pp:auth-ready', render);
+  window.addEventListener('pp:auth-changed', render);
 })();

@@ -4,8 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Mi contenido — PROPHETIA</title>
-  <meta name="description" content="Área personal de PROPHETIA. Gestiona tu contenido guardado, pedidos, reservas y preferencias." />
+  <title>Mi perfil — PROPHETIA</title>
+  <meta
+  name="description"
+  content="Área personal de PROPHETIA. Consulta tu perfil, pedidos, reservas, piezas guardadas, rangos y beneficios."
+>
   <meta name="robots" content="noindex,nofollow" />
   <meta name="theme-color" content="#f7f4ee" />
 
@@ -29,6 +32,7 @@
   <link rel="stylesheet" href="assets/css/popup.css">
   <link rel="stylesheet" href="assets/css/cookies.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
+  <link rel="stylesheet" href="assets/css/tribe-xp-toast.css">
 
   <!-- Página cuenta -->
   <link rel="stylesheet" href="assets/css/account-content.css">
@@ -58,13 +62,13 @@
     <nav class="account-nav" aria-label="Área de cliente">
       <div class="container account-nav__inner">
         <div class="account-nav__links">
-          <a href="/my-content" aria-current="page">Mi contenido</a>
+          <a href="/my-content" aria-current="page">Mi perfil</a>
           <a href="/drop-calendar">Mi calendario</a>
           <a href="/vault">Vault</a>
           <a href="/pedidos">Pedidos</a>
           <a href="/reservas">Reservas</a>
           <a href="/wishlist">Lista de deseos</a>
-          <a href="/account">Cuenta</a>
+          <a href="/account">Datos de cuenta</a>
           <a href="/addresses">Libro de direcciones</a>
           <a href="/my-services">Mis servicios</a>
         </div>
@@ -82,7 +86,7 @@
           <p class="account-kicker">PROPHETIA ACCOUNT</p>
 
           <h1 class="account-title">
-            Mi contenido
+            Mi perfil
           </h1>
 
           <p class="account-lede">
@@ -151,12 +155,12 @@
 
     <div class="account-tribe__details">
       <p>
-        <span>Legacy Points</span>
+        <span>Legacy Points conseguidos</span>
 <strong data-tribe-lifetime>0 LP</strong>
       </p>
 
       <p>
-        <span>Restante</span>
+        <span>LP Restantes</span>
         <strong data-tribe-remaining>100 LP</strong>
       </p>
     </div>
@@ -274,10 +278,13 @@
           </a>
 
           <a class="account-card" href="/account">
-            <span class="account-card__number">04</span>
-            <h3>Cuenta</h3>
-            <p>Gestiona tus datos personales, preferencias de comunicación y configuración.</p>
-          </a>
+  <span class="account-card__number">04</span>
+  <h3>Datos de cuenta</h3>
+  <p>
+    Gestiona tus datos personales, preferencias de comunicación
+    y configuración de acceso.
+  </p>
+</a>
 
           <a class="account-card" href="/addresses">
             <span class="account-card__number">05</span>
@@ -325,6 +332,7 @@
 <script src="/assets/js/cart.js" defer></script>
 <script src="/assets/js/script.js" defer></script>
 <script src="/assets/js/account-content.js" defer></script>
+<script src="/assets/js/tribe-xp-toast.js" defer></script>
 <script src="/assets/js/popup.js" defer></script>
 <script src="/assets/js/cookies.js" defer></script>
 

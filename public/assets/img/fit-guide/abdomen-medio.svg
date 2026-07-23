@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 160" role="img" aria-labelledby="title desc">
+  <title id="title">Abdomen medio</title>
+  <desc id="desc">Silueta monolineal Prophetia con abdomen medio.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M92 18 C84 39 83 58 89 79 C96 104 81 124 72 143" stroke="#111" stroke-width="3.3"/>
+    <path d="M126 18 C116 43 127 63 136 83 C144 104 134 126 121 143" stroke="#111" stroke-width="3.3"/>
+    <path d="M106 35 C108 57 114 78 111 98 C109 116 104 130 100 140" stroke="#111" stroke-width="2.2" opacity=".45"/>
+    <path d="M151 66 C155 79 154 95 148 109" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+  </g>
+</svg>

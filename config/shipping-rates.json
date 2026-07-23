@@ -1,0 +1,74 @@
+{
+  "freeShippingFrom": 40,
+  "countries": {
+    "ES": {
+      "name": "España",
+      "enabled": true,
+      "currency": "EUR",
+      "methods": {
+        "home": {
+          "enabled": true,
+          "label": "Entrega a domicilio",
+          "defaultCarrier": "ctt_express",
+          "freeShippingFrom": 40,
+          "carriers": {
+            "ctt_express": {
+              "label": "CTT Express",
+              "price": 4.95,
+              "estimatedDelivery": "2–5 días laborables"
+            },
+            "correos": {
+              "label": "Correos",
+              "price": 4.5,
+              "estimatedDelivery": "3–7 días laborables"
+            },
+            "seur": {
+              "label": "SEUR",
+              "price": 5.95,
+              "estimatedDelivery": "24–72 h laborables"
+            }
+          },
+          "regions": {
+            "Baleares": {
+              "carrier": "correos",
+              "price": 6.95,
+              "freeShippingFrom": 60,
+              "estimatedDelivery": "3–7 días laborables"
+            },
+            "Las Palmas": {
+              "enabled": false,
+              "message": "Envío a Canarias disponible próximamente."
+            },
+            "Santa Cruz de Tenerife": {
+              "enabled": false,
+              "message": "Envío a Canarias disponible próximamente."
+            },
+            "Ceuta": {
+              "enabled": false,
+              "message": "Envío a Ceuta disponible próximamente."
+            },
+            "Melilla": {
+              "enabled": false,
+              "message": "Envío a Melilla disponible próximamente."
+            }
+          }
+        },
+        "store": {
+          "enabled": false,
+          "label": "Recogida en tienda",
+          "message": "Recogida en tienda disponible próximamente."
+        }
+      }
+    },
+    "PT": {
+      "name": "Portugal",
+      "enabled": false,
+      "message": "Envío a Portugal disponible próximamente."
+    },
+    "FR": {
+      "name": "Francia",
+      "enabled": false,
+      "message": "Envío a Francia disponible próximamente."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 160" role="img" aria-labelledby="title desc">
+  <title id="title">Abdomen abultado</title>
+  <desc id="desc">Silueta monolineal Prophetia con abdomen abultado.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M91 18 C83 39 82 58 89 79 C97 104 81 125 72 143" stroke="#111" stroke-width="3.3"/>
+    <path d="M126 18 C116 42 145 61 153 86 C162 115 139 132 121 143" stroke="#111" stroke-width="3.3"/>
+    <path d="M106 35 C109 57 116 78 112 99 C109 116 104 130 100 140" stroke="#111" stroke-width="2.2" opacity=".45"/>
+    <path d="M166 70 C174 90 170 115 156 130" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+  </g>
+</svg>

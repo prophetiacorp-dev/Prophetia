@@ -4,10 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Mi cuenta · PROPHETIA — Silent Luxury</title>
+  <title>Datos de cuenta · PROPHETIA — Silent Luxury</title>
   <meta name="description" content="Área de cliente de PROPHETIA: datos de cuenta, pedidos y preferencias.">
+  <meta name="robots" content="noindex,nofollow">
 
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/img/logo/propnegrovf.svg" type="image/svg+xml" />
 
   <!-- CSS base Prophetia (igual que index) -->
   <!-- BASE -->
@@ -61,16 +62,17 @@
     <!-- NAV CUENTA -->
     <nav class="account-nav" aria-label="Área de cliente">
       <div class="container account-nav__inner">
-        <div class="account-nav__links">
-          <a href="/my-content">Mi contenido</a>
-          <a href="/drop-calendar">Mi calendario</a>
-          <a href="/pedidos">Pedidos</a>
-          <a href="/reservas">Reservas</a>
-          <a href="/wishlist">Lista de deseos</a>
-          <a href="/account" aria-current="page">Cuenta</a>
-          <a href="/addresses">Libro de direcciones</a>
-          <a href="/my-services">Mis servicios</a>
-        </div>
+      <div class="account-nav__links">
+  <a href="/my-content">Mi perfil</a>
+  <a href="/drop-calendar">Mi calendario</a>
+  <a href="/vault">Vault</a>
+  <a href="/pedidos">Pedidos</a>
+  <a href="/reservas">Reservas</a>
+  <a href="/wishlist">Lista de deseos</a>
+  <a href="/account" aria-current="page">Datos de cuenta</a>
+  <a href="/addresses">Libro de direcciones</a>
+  <a href="/my-services">Mis servicios</a>
+</div>
 
         <button class="account-nav__logout" type="button" data-pp-logout>
           Cerrar sesión
@@ -84,7 +86,7 @@
 
         <header class="account-page-title">
           <p class="account-kicker">CUENTA PROPHETIA</p>
-          <h1 class="account-title">Cuenta</h1>
+          <h1 class="account-title">Datos de cuenta</h1>
           <p class="account-lede">
             Gestiona tus datos personales, preferencias de exploración y configuración
             de acceso dentro de tu espacio Prophetia.
@@ -122,11 +124,17 @@
           <h2 class="account-section__title">Información personal</h2>
 
           <div class="account-section__content">
-            <button class="account-edit" type="button">
+            <button
+              class="account-edit"
+              type="button"
+              data-account-edit-personal
+              aria-expanded="false"
+              aria-controls="accountPersonalForm"
+            >
               Editar
             </button>
 
-            <div class="account-data">
+            <div class="account-data" data-account-personal-view>
               <div class="account-data__row">
                 <span class="account-data__label">Género</span>
                 <span class="account-data__value" data-account-gender>—</span>
@@ -167,6 +175,100 @@
                 <span class="account-data__value" data-account-address>—</span>
               </div>
             </div>
+
+            <form
+              id="accountPersonalForm"
+              class="account-personal-form"
+              data-account-personal-form
+              hidden
+            >
+              <div class="account-personal-form__grid">
+                <label class="account-field">
+                  <span>Género</span>
+                  <select name="gender" autocomplete="sex">
+                    <option value="">Seleccionar</option>
+                    <option value="female">Mujer</option>
+                    <option value="male">Hombre</option>
+                    <option value="other">Otro</option>
+                    <option value="na">Prefiero no decirlo</option>
+                  </select>
+                </label>
+
+                <label class="account-field">
+                  <span>Nombre</span>
+                  <input name="firstName" type="text" autocomplete="given-name" required>
+                </label>
+
+                <label class="account-field">
+                  <span>Apellidos</span>
+                  <input name="lastName" type="text" autocomplete="family-name" required>
+                </label>
+
+                <label class="account-field">
+                  <span>Cumpleaños</span>
+                  <input name="birthISO" type="date" autocomplete="bday">
+                </label>
+
+                <label class="account-field">
+                  <span>País/región</span>
+                  <input name="country" type="text" autocomplete="country-name" placeholder="España">
+                </label>
+
+                <div class="account-field account-field--phone">
+                  <span>Teléfono</span>
+                  <div class="account-phone-fields">
+                    <label>
+                      <span class="sr-only">Prefijo telefónico</span>
+                      <input
+                        name="phoneCode"
+                        type="tel"
+                        autocomplete="tel-country-code"
+                        inputmode="tel"
+                        maxlength="6"
+                        aria-label="Prefijo telefónico"
+                        placeholder="+34"
+                      >
+                    </label>
+                    <label>
+                      <span class="sr-only">Número de teléfono</span>
+                      <input
+                        name="phone"
+                        type="tel"
+                        autocomplete="tel-national"
+                        inputmode="tel"
+                        aria-label="Número de teléfono"
+                      >
+                    </label>
+                  </div>
+                </div>
+
+                <label class="account-field account-field--wide">
+                  <span>Dirección personal</span>
+                  <textarea name="address" rows="3" autocomplete="street-address"></textarea>
+                </label>
+              </div>
+
+              <div class="account-personal-form__actions">
+                <button
+                  class="account-btn account-btn--ghost"
+                  type="button"
+                  data-account-personal-cancel
+                >
+                  Cancelar
+                </button>
+                <button class="account-btn" type="submit" data-account-personal-save>
+                  Guardar cambios
+                </button>
+              </div>
+
+              <p
+                class="account-personal-form__status"
+                data-account-personal-status
+                role="status"
+                aria-live="polite"
+                hidden
+              ></p>
+            </form>
           </div>
         </section>
 

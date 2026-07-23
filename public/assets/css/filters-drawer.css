@@ -9,7 +9,7 @@
 :root{
   /* Overlay */
   --pp-fd-overlay-bg: rgba(0,0,0,.25);
-  --pp-fd-overlay-z: 900;
+  --pp-fd-overlay-z: 2600;
 
   /* Drawer */
   --pp-fd-drawer-bg: #fff;
@@ -451,4 +451,15 @@
     linear-gradient(45deg, #e8e8e8 25%, transparent 25%) 0 0/8px 8px,
     linear-gradient(45deg, transparent 75%, #e8e8e8 75%) 0 0/8px 8px,
     #fff;
+}
+
+/* Tallas siempre en columna dentro del drawer */
+:is(.men-filters-panel, .women-filters-panel)[data-panel="talla"].is-active{
+  display:block;
+}
+
+:is(.men-filters-panel, .women-filters-panel)[data-panel="talla"] :is(.men-check, .women-check){
+  display:flex;
+  align-items:center;
+  width:max-content;
 }

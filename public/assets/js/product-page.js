@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const sizeBtn = document.getElementById('pdpSizeBtn');
 const colorBtn = document.getElementById('pdpColorBtn');
 const versionBtn = document.getElementById('pdpVersionBtn');
+const cutBtn = document.getElementById('pdpCutBtn');
 
 const fitGuideAttrBtn = document.getElementById('pdpFitGuideBtn');
 const fitGuideVal = document.getElementById('pdpFitGuideVal');
@@ -18,6 +19,7 @@ const fitGuideLinkBtn = document.querySelector('[data-tab="fit-guide"]');
       const params = new URLSearchParams(location.search);
 const slug = params.get('slug') || params.get('id');
 const urlVersion = (params.get('version') || '').trim().toLowerCase();
+const urlCut = (params.get('cut') || '').trim().toLowerCase();
 
      // 2) Cargar catálogo (con try/catch)
      const money = (n = 0) => {
@@ -59,6 +61,7 @@ function addProductToCart(product) {
       String(item.id || '') === String(safeProduct.id || '') &&
       String(item.size || '') === String(safeProduct.size || '') &&
       String(item.color || '') === String(safeProduct.color || '') &&
+      String(item.cut || '') === String(safeProduct.cut || '') &&
       String(item.version || '') === String(safeProduct.version || '')
     );
   });
@@ -85,15 +88,22 @@ let tribeProfile = null;
 
 const TRIBE_RANK_ORDER = {
   'tribe-member': 0,
+  'member': 0,
   'initiate': 1,
   'adeptus': 2,
   'oracle': 3,
+  'archivist': 4,
   'seer': 4,
   'prophet': 5
 };
 
 function normalizeRankId(rankId = '') {
-  return String(rankId || '').trim().toLowerCase();
+  const clean = String(rankId || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-');
+
+  return clean === 'seer' ? 'archivist' : clean;
 }
 
 function hasRequiredTribeRank(userRankId = '', requiredRankId = '') {
@@ -184,7 +194,9 @@ try {
       await ppGetProductById(slug) ||
       await ppGetProductBySlug(slug);
 
-    prod = remoteProd || localProd;
+    prod = remoteProd && localProd
+      ? { ...remoteProd, ...localProd }
+      : (remoteProd || localProd);
   } catch (firebaseErr) {
     console.warn('[PDP] Firestore no disponible. Usando catalog.json:', firebaseErr);
     prod = localProd;
@@ -214,6 +226,41 @@ window.ppBreadcrumbs?.build({ currentLabel: (prod.title || 'Producto') });
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+const COLOR_META = {
+  beige: { label: 'Beige', value: '#c9bba4' },
+  latte: { label: 'Latte', value: '#d1a06f' },
+  rosa: { label: 'Rosa', value: '#d979a7' },
+  'blue-ice': { label: 'Blue Ice', value: '#dceef3' },
+  'off-white': { label: 'Blanco roto', value: '#f4f1e9' },
+  white: { label: 'Blanco', value: '#f7f6f2' },
+  black: { label: 'Negro', value: '#151515' },
+  navy: { label: 'Azul marino', value: '#1d2940' },
+  grey: { label: 'Gris', value: '#8a8a86' },
+  gray: { label: 'Gris', value: '#8a8a86' },
+  orange: { label: 'Naranja', value: '#c96f35' },
+  yellow: { label: 'Amarillo', value: '#d5b73f' },
+  brown: { label: 'Marrón', value: '#665143' },
+  green: { label: 'Verde', value: '#536853' }
+};
+
+function colorKey(value = '') {
+  return String(value ?? '').trim().toLowerCase();
+}
+
+function colorMetaOf(color = '') {
+  const key = colorKey(color);
+  if (COLOR_META[key]) return COLOR_META[key];
+
+  const label = key
+    ? key.split(/[-_\s]+/).filter(Boolean).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')
+    : 'Color';
+
+  return {
+    label,
+    value: key || '#77746f'
+  };
+}
+
    const rawG = (params.get('g') || params.get('gender') || localStorage.getItem('pp_gender') || 'hombre').toLowerCase();
 
 const GMAP = {
@@ -231,14 +278,75 @@ const media = (prod.media && (prod.media[prefGender] || prod.media.hombre || pro
 
 const FALLBACK_IMG = 'assets/img/logo/prophetia-emblem.png';
 
-const productVersions = Array.isArray(prod.versions) ? prod.versions : [];
+const configuredVersions = Array.isArray(prod.versions)
+  ? prod.versions
+  : [];
+
+function getSingleCutFromFit(fit = '') {
+  const normalizedFit = String(fit || '')
+    .trim()
+    .toLowerCase();
+
+  if (normalizedFit === 'oversized' || normalizedFit === 'oversize') {
+    return { id: 'oversize', label: 'Oversize', fit: 'oversized' };
+  }
+
+  if (normalizedFit === 'relaxed') {
+    return { id: 'relaxed', label: 'Relajado', fit: 'relaxed' };
+  }
+
+  if (normalizedFit === 'boxy') {
+    return { id: 'boxy', label: 'Boxy', fit: 'boxy' };
+  }
+
+  return { id: 'classic', label: 'Clásico', fit: normalizedFit || 'regular' };
+}
+
+const productCuts = Array.isArray(prod.cuts) && prod.cuts.length
+  ? prod.cuts
+  : [{
+      ...getSingleCutFromFit(prod.fit),
+      colors: Array.isArray(prod.colors) ? prod.colors : [],
+      versions: configuredVersions.map(version => String(version?.id || '')).filter(Boolean),
+      defaultVersion: configuredVersions.length === 1
+        ? String(configuredVersions[0]?.id || '')
+        : '',
+      virtual: true
+    }];
+
+const availableCuts = productCuts.map(cut => ({
+  id: String(cut.id || '').trim(),
+  label: String(cut.label || cut.id || '').trim(),
+  description: String(cut.description || '').trim(),
+  fit: String(cut.fit || '').trim(),
+  colors: Array.isArray(cut.colors) ? cut.colors.map(colorKey).filter(Boolean) : [],
+  versions: Array.isArray(cut.versions) ? cut.versions.map(String) : [],
+  defaultVersion: String(cut.defaultVersion || '').trim(),
+  virtual: cut.virtual === true
+})).filter(cut => cut.id);
+
+const productVersions = configuredVersions.length
+  ? configuredVersions
+  : [{
+      id: 'single',
+      label: 'Única',
+      price: prod.price,
+      virtual: true
+    }];
 
 const availableVersions = productVersions.map(v => ({
   id: String(v.id || '').trim(),
   label: String(v.label || v.id || '').trim(),
+  cut: String(v.cut || '').trim(),
   price: typeof v.price === 'number' ? v.price : prod.price,
-  cover: v.cover || FALLBACK_IMG,
-  images: Array.isArray(v.images) ? v.images.filter(Boolean) : []
+  cover: v.cover || '',
+  images: Array.isArray(v.images) ? v.images.filter(Boolean) : [],
+  mediaByColor: v.mediaByColor && typeof v.mediaByColor === 'object'
+    ? v.mediaByColor
+    : null,
+  available: v.available !== false,
+  comingSoon: v.comingSoon === true,
+  virtual: v.virtual === true
 })).filter(v => v.id);
 
 
@@ -271,6 +379,7 @@ const adBody  = document.getElementById('adBody');
 const adTitle = document.getElementById('adTitle');
 
 const state = {
+  cut: null,
   color: null,
   size: null,
   version: null
@@ -279,34 +388,52 @@ const PDP_SEL_KEY = 'pp_pdp_sel_v1';
 
 const prev = loadSel();
 
+const selectedCutFromUrl = availableCuts.find(cut => cut.id.toLowerCase() === urlCut) || null;
+const selectedCutFromHistory = availableCuts.find(cut => cut.id === prev?.cut) || null;
+const defaultCut = availableCuts.find(cut => cut.id === String(prod.defaultCut || '').trim()) || null;
+
+state.cut = selectedCutFromUrl?.id || selectedCutFromHistory?.id || defaultCut?.id || availableCuts[0]?.id || null;
+
+const initialSelectableVersions = getSelectableVersions();
 const selectedVersionFromUrl =
-  availableVersions.find(v => v.id.toLowerCase() === urlVersion) || null;
+  initialSelectableVersions.find(v => v.id.toLowerCase() === urlVersion) || null;
+
+const activeCutAtStart = getActiveCut();
+const defaultVersionAtStart = initialSelectableVersions.find(v => v.id === activeCutAtStart?.defaultVersion) || null;
 
 if (selectedVersionFromUrl) {
   state.version = selectedVersionFromUrl.id;
-} else if (prev?.version && availableVersions.some(v => v.id === prev.version)) {
+} else if (prev?.version && initialSelectableVersions.some(v => v.id === prev.version)) {
   state.version = prev.version;
-} else if (availableVersions.length === 1) {
-  state.version = availableVersions[0].id;
+} else if (defaultVersionAtStart) {
+  state.version = defaultVersionAtStart.id;
+} else if (initialSelectableVersions.length === 1) {
+  state.version = initialSelectableVersions[0].id;
 }
 
 const initialVersion = availableVersions.find(v => v.id === state.version) || null;
-
-let baseImages = dedupe(
-  initialVersion
-    ? (
-        Array.isArray(initialVersion.images) && initialVersion.images.length
-          ? initialVersion.images
-          : [initialVersion.cover]
-      )
-    : (
-        Array.isArray(media?.images) && media.images.length
-          ? media.images
-          : (typeof media?.cover === 'string' && media.cover)
-            ? [media.cover]
-            : []
-      )
+const initialVersionColor = colorKey(prod.color || prod.colors?.[0] || '');
+const initialVersionGenderImages = imagesFromMediaBucket(
+  mediaBucketOfColor(initialVersion?.mediaByColor, initialVersionColor)
 );
+const initialVersionImages = initialVersionGenderImages.length
+  ? initialVersionGenderImages
+  : initialVersion
+    ? dedupe([
+        ...(Array.isArray(initialVersion.images) ? initialVersion.images : []),
+        initialVersion.cover
+      ])
+    : [];
+
+let baseImages = initialVersionImages.length
+  ? initialVersionImages
+  : dedupe(
+      Array.isArray(media?.images) && media.images.length
+        ? media.images
+        : (typeof media?.cover === 'string' && media.cover)
+          ? [media.cover]
+          : []
+    );
 
 if (!baseImages.length) baseImages.push(FALLBACK_IMG);
 
@@ -496,6 +623,7 @@ function saveSel(){
     if (!prod?.id) return;
     const all = JSON.parse(localStorage.getItem(PDP_SEL_KEY) || '{}');
     all[prod.id] = {
+      cut: state.cut,
       color: state.color,
       size: state.size,
       version: state.version,
@@ -506,7 +634,7 @@ function saveSel(){
 }
 
 function openDrawer(title, html){
-  drawer.classList.remove('ad--details');
+  drawer.classList.remove('ad--details', 'ad--fit-guide');
 if (adTabs){
   adTabs.hidden = true;
   adTabs.innerHTML = '';
@@ -514,6 +642,7 @@ if (adTabs){
 
   adTitle.textContent = title;
   adBody.innerHTML = html;
+  drawer.classList.toggle('ad--fit-guide', String(html || '').includes('fit-guide--flow') || String(html || '').includes('fit-guide--v2'));
 
   // 🔒 Compatible con CSS que use .open o .is-open
   drawer.classList.add('open', 'is-open');
@@ -523,7 +652,7 @@ if (adTabs){
 }
 
 function closeDrawer(){
-  drawer.classList.remove('open', 'is-open', 'ad--details');
+  drawer.classList.remove('open', 'is-open', 'ad--details', 'ad--fit-guide');
   drawer.setAttribute('aria-hidden','true');
   document.body.classList.remove('drawer-open');
 
@@ -573,22 +702,122 @@ const variants = realVariants.length ? realVariants : (fallbackColors.flatMap(c 
     img: (prod.media?.hombre?.cover || prod.media?.mujer?.cover || baseImages[0])
   }))
 ));
+
+const PDP_STOCK_NOTIFY_ENDPOINT = '/api/reservations/notify';
 // =====================
 // HELPERS que faltaban (si no existen, el script revienta y no abre drawers)
 // =====================
 
 // Devuelve una imagen representativa para un color
+function getActiveCut(){
+  return availableCuts.find(cut => cut.id === state.cut) || null;
+}
+
+function getVersionOptionsForActiveCut(){
+  const activeCut = getActiveCut();
+
+  if (!activeCut) return availableVersions;
+
+  const scoped = availableVersions.filter(version =>
+    !version.cut || version.cut === activeCut.id || activeCut.versions.includes(version.id)
+  );
+
+  return scoped.length ? scoped : availableVersions;
+}
+
+function getSelectableVersions(){
+  return getVersionOptionsForActiveCut().filter(version => version.available !== false);
+}
+
 function getActiveVersion(){
   return availableVersions.find(v => v.id === state.version) || null;
 }
 
+function getSelectionSku(color = state.color, size = state.size){
+  const selectedColor = String(color || '').trim();
+  const selectedSize = String(size || '').trim();
+  const activeCut = getActiveCut();
+  const activeVersion = getActiveVersion();
+  const variant = getActiveVariants().find((item) => {
+    return item.color === selectedColor && item.size === selectedSize;
+  });
+
+  if (activeVersion && activeVersion.virtual !== true) {
+    return `${prod.id}_${activeCut?.id || 'default'}_${activeVersion.id}_${selectedColor}_${selectedSize}`
+      .replace(/\s+/g, '-');
+  }
+
+  return variant?.sku || `${prod.id}_${selectedColor}_${selectedSize}`.replace(/\s+/g, '-');
+}
+
+function getActiveVariants(){
+  if (!state.cut) return variants;
+
+  return variants.filter(variant => {
+    const variantCut = String(variant?.cut || '').trim();
+    return !variantCut || variantCut === state.cut;
+  });
+}
+
+function imagesFromMediaBucket(bucket) {
+  if (!bucket || typeof bucket !== 'object') return [];
+
+  return dedupe([
+    bucket.cover,
+    ...(Array.isArray(bucket.images) ? bucket.images : [])
+  ]);
+}
+
+function mediaBucketOfColor(mediaByColor, key) {
+  if (!mediaByColor || typeof mediaByColor !== 'object' || !key) return null;
+
+  const genderMap = mediaByColor[prefGender] || mediaByColor.hombre || mediaByColor.mujer || null;
+  return (genderMap && genderMap[key]) || mediaByColor[key] || null;
+}
+
+function imagesOfColor(color) {
+  const key = colorKey(color);
+  if (!key) return [];
+
+  const currentVersion = getActiveVersion();
+  const versionImages = imagesFromMediaBucket(
+    mediaBucketOfColor(currentVersion?.mediaByColor, key)
+  );
+
+  if (versionImages.length) return versionImages;
+
+  const productImages = imagesFromMediaBucket(
+    mediaBucketOfColor(prod.mediaByColor, key)
+  );
+
+  return productImages;
+}
+
+function applyColorGallery(color) {
+  const colorImages = imagesOfColor(color);
+
+  if (colorImages.length) {
+    setGallery(colorImages);
+    Z.images = colorImages;
+    zoomPaint(0);
+    return;
+  }
+
+  const first = imgOfColor(color);
+  const img = heroEl.querySelector('img');
+  if (img && first) img.src = first;
+}
+
 function imgOfColor(color){
+  const colorImages = imagesOfColor(color);
+  if (colorImages.length) return colorImages[0];
+
   const currentVersion = getActiveVersion();
   if (currentVersion) {
     return currentVersion.cover || currentVersion.images?.[0] || FALLBACK_IMG;
   }
 
-  const v = variants.find(x => String(x.color) === String(color));
+  const v = getActiveVariants().find(x => String(x.color) === String(color));
   if (v?.img) return v.img;
 
   const pref = (params.get('g') || params.get('gender') || localStorage.getItem('pp_gender') || 'hombre').toLowerCase();
@@ -600,7 +829,7 @@ function imgOfColor(color){
 // Devuelve tallas disponibles para un color
 function sizesForColor(color){
   return uniq(
-    variants
+    getActiveVariants()
       .filter(v => String(v.color) === String(color))
       .map(v => v.size)
   );
@@ -608,9 +837,335 @@ function sizesForColor(color){
 
 // Devuelve stock para combinación color+talla
 function stockOf(color, size){
-  const v = variants.find(x => String(x.color) === String(color) && String(x.size) === String(size));
+  const v = getActiveVariants().find(x => String(x.color) === String(color) && String(x.size) === String(size));
   const st = (v && typeof v.stock === 'number') ? v.stock : fallbackStock;
   return +st || 0;
+}
+
+let pdpStockModal = null;
+let pdpStockOptions = [];
+let pdpPreferredStockSku = '';
+
+function normalizeText(value = '') {
+  return String(value ?? '').trim();
+}
+
+function normalizeEmail(value = '') {
+  return normalizeText(value).toLowerCase();
+}
+
+function isValidEmail(value = '') {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeText(value));
+}
+
+function docSegment(value = '') {
+  return normalizeText(value)
+    .replace(/[\/\\#?\[\]]/g, '_')
+    .replace(/\s+/g, '_')
+    .slice(0, 150) || 'unknown';
+}
+
+function totalProductStock() {
+  if (realVariants.length) {
+    return getActiveVariants().reduce((total, variant) => {
+      return total + Math.max(0, Number(variant?.stock) || 0);
+    }, 0);
+  }
+
+  return prod.inStock === false ? 0 : fallbackStock;
+}
+
+function isProductOutOfStock() {
+  return totalProductStock() <= 0;
+}
+
+function getPdpUser() {
+  return (
+    window.__ppFirebaseAuth?.currentUser ||
+    window.__ppAuthCurrentUser ||
+    window.__ppLastUser ||
+    null
+  );
+}
+
+async function getPdpAuthHeaders() {
+  const user = getPdpUser();
+
+  if (!user || typeof user.getIdToken !== 'function') {
+    return {};
+  }
+
+  try {
+    const token = await user.getIdToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  } catch {
+    return {};
+  }
+}
+
+function getPdpProductUrl() {
+  return `${location.pathname}${location.search}${location.hash}`;
+}
+
+function getPdpStockOptions() {
+  const activeVariants = getActiveVariants();
+  const source = activeVariants.filter((variant) => {
+    return Math.max(0, Number(variant?.stock) || 0) <= 0;
+  });
+  const productId = normalizeText(prod.id || prod.slug || 'producto');
+
+  if (!activeVariants.length) {
+    return [{
+      sku: productId,
+      label: 'Producto Prophetia',
+      image: imgOfColor(state.color || prod.color || colors[0]) || baseImages[0] || FALLBACK_IMG
+    }];
+  }
+
+  return source.map((variant, index) => {
+    const label = [
+      normalizeText(getActiveCut()?.label || variant?.cut),
+      normalizeText(colorMetaOf(variant?.color).label),
+      normalizeText(variant?.size)
+    ].filter(Boolean).join(' · ');
+
+    return {
+      sku: normalizeText(variant?.sku || `${productId}_${index + 1}`),
+      label: label || normalizeText(variant?.sku) || `Variante ${index + 1}`,
+      image: variant?.img || variant?.image || imgOfColor(variant?.color || state.color || colors[0]) || baseImages[0] || FALLBACK_IMG,
+      color: normalizeText(variant?.color),
+      size: normalizeText(variant?.size)
+    };
+  });
+}
+
+function getPreferredStockOptionIndex(options = [], preferred = {}) {
+  const preferredSku = normalizeText(preferred.sku || pdpPreferredStockSku);
+  const color = normalizeText(preferred.color || state.color);
+  const size = normalizeText(preferred.size || state.size);
+
+  if (preferredSku) {
+    const skuIndex = options.findIndex((option) => option.sku === preferredSku);
+    if (skuIndex >= 0) return skuIndex;
+  }
+
+  if (!color && !size) return 0;
+
+  const index = options.findIndex((option) => {
+    return (
+      (!color || normalizeText(option.color).toLowerCase() === color.toLowerCase()) &&
+      (!size || normalizeText(option.size).toLowerCase() === size.toLowerCase())
+    );
+  });
+
+  return index >= 0 ? index : 0;
+}
+
+function ensurePdpStockModal() {
+  if (pdpStockModal) return pdpStockModal;
+
+  pdpStockModal = document.createElement('div');
+  pdpStockModal.className = 'pdp-stock-modal';
+  pdpStockModal.hidden = true;
+  pdpStockModal.innerHTML = `
+    <div class="pdp-stock-modal__card" role="dialog" aria-modal="true" aria-labelledby="pdpStockModalTitle">
+      <button class="pdp-stock-modal__close" type="button" data-pdp-stock-close aria-label="Cerrar">×</button>
+      <p class="pdp-stock-modal__kicker">Producto agotado</p>
+      <h2 id="pdpStockModalTitle" class="pdp-stock-modal__title">Informarme cuando esté disponible</h2>
+      <p class="pdp-stock-modal__copy" data-pdp-stock-copy></p>
+      <form class="pdp-stock-modal__form" data-pdp-stock-form>
+        <label class="pdp-stock-modal__field" data-pdp-stock-sku-field>
+          <span>Variante</span>
+          <select data-pdp-stock-sku></select>
+        </label>
+          <label class="pdp-stock-modal__field">
+            <span>Correo electrónico</span>
+            <input type="email" autocomplete="email" inputmode="email" data-pdp-stock-email required>
+          </label>
+          <small class="pdp-stock-modal__privacy">
+            Usaremos tu correo únicamente para este aviso. Consulta nuestra
+            <a href="/privacy">política de privacidad</a>.
+          </small>
+          <p class="pdp-stock-modal__status" data-pdp-stock-status aria-live="polite"></p>
+        <button class="pdp-stock-modal__submit" type="submit">Recibir aviso</button>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(pdpStockModal);
+
+  pdpStockModal.addEventListener('click', (event) => {
+    if (
+      event.target === pdpStockModal ||
+      event.target.closest('[data-pdp-stock-close]')
+    ) {
+      closePdpStockModal();
+    }
+  });
+
+  pdpStockModal
+    .querySelector('[data-pdp-stock-form]')
+    ?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      void submitPdpStockNotice();
+    });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !pdpStockModal.hidden) {
+      closePdpStockModal();
+    }
+  });
+
+  return pdpStockModal;
+}
+
+function setPdpStockStatus(message = '', isError = false) {
+  const status = pdpStockModal?.querySelector('[data-pdp-stock-status]');
+  if (!status) return;
+
+  status.textContent = message;
+  status.classList.toggle('is-error', isError);
+}
+
+function openPdpStockModal(preferred = {}) {
+  const modal = ensurePdpStockModal();
+  const copy = modal.querySelector('[data-pdp-stock-copy]');
+  const skuField = modal.querySelector('[data-pdp-stock-sku-field]');
+  const skuSelect = modal.querySelector('[data-pdp-stock-sku]');
+  const emailInput = modal.querySelector('[data-pdp-stock-email]');
+  const user = getPdpUser();
+
+  pdpPreferredStockSku = normalizeText(preferred.sku);
+  pdpStockOptions = getPdpStockOptions();
+
+  if (!pdpStockOptions.length) return;
+
+  if (copy) {
+    copy.textContent = `Déjanos tu correo y te avisaremos por email cuando ${prod.title || 'esta pieza'} vuelva a estar disponible.`;
+  }
+
+  if (skuSelect) {
+    skuSelect.innerHTML = pdpStockOptions.map((option, index) => {
+      return `<option value="${index}">${escapeHtml(option.label)}</option>`;
+    }).join('');
+    skuSelect.value = String(getPreferredStockOptionIndex(pdpStockOptions, preferred));
+  }
+
+  if (skuField) {
+    skuField.hidden = pdpStockOptions.length <= 1;
+  }
+
+  if (emailInput) {
+    emailInput.value = normalizeText(user?.email || '');
+  }
+
+  setPdpStockStatus('');
+  modal.hidden = false;
+
+  window.requestAnimationFrame(() => {
+    emailInput?.focus({ preventScroll: true });
+  });
+}
+
+function closePdpStockModal() {
+  if (!pdpStockModal) return;
+
+  pdpStockModal.hidden = true;
+  pdpStockOptions = [];
+  pdpPreferredStockSku = '';
+  setPdpStockStatus('');
+}
+
+function getSelectedPdpStockOption() {
+  const select = pdpStockModal?.querySelector('[data-pdp-stock-sku]');
+  const index = Number(select?.value || 0);
+  return pdpStockOptions[index] || pdpStockOptions[0] || null;
+}
+
+async function notifyPdpStockInterest(payload) {
+  const authHeaders = await getPdpAuthHeaders();
+  const response = await fetch(PDP_STOCK_NOTIFY_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeaders
+    },
+    body: JSON.stringify({
+      ...payload,
+      type: 'stock-waitlist',
+      source: 'pdp',
+      page: window.location.href
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data?.error || 'No se pudo guardar el aviso.');
+  }
+
+  return data;
+}
+
+async function submitPdpStockNotice() {
+  const emailInput = pdpStockModal?.querySelector('[data-pdp-stock-email]');
+  const submit = pdpStockModal?.querySelector('.pdp-stock-modal__submit');
+  const email = normalizeEmail(emailInput?.value || '');
+  const option = getSelectedPdpStockOption();
+  const user = getPdpUser();
+  const activeVersion = getActiveVersion();
+
+  if (!isValidEmail(email)) {
+    setPdpStockStatus('Introduce un correo válido.', true);
+    emailInput?.focus();
+    return;
+  }
+
+  if (!option) {
+    setPdpStockStatus('No se ha podido identificar la talla.', true);
+    return;
+  }
+
+  if (submit) {
+    submit.disabled = true;
+    submit.setAttribute('aria-busy', 'true');
+  }
+
+  setPdpStockStatus('Guardando aviso...');
+
+  try {
+    const serverResult = await notifyPdpStockInterest({
+      productId: normalizeText(prod.id || prod.slug),
+      title: prod.title || 'Pieza Prophetia',
+      sku: option.sku || normalizeText(prod.id || prod.slug),
+      variantLabel: option.label || '',
+      image: option.image || imgOfColor(state.color || colors[0]) || baseImages[0] || FALLBACK_IMG,
+      url: getPdpProductUrl(),
+      price: activeVersion?.price ?? prod.price ?? '',
+      email,
+      userId: user?.uid || '',
+      userEmail: user?.email || ''
+    });
+
+    closePdpStockModal();
+
+    if (typeof window.ppToast === 'function') {
+      window.ppToast(
+        serverResult?.alreadyRegistered
+          ? 'Ya tienes un aviso activo para esta talla'
+          : 'Aviso guardado. Te escribiremos cuando vuelva el stock',
+        getPdpProductUrl()
+      );
+    }
+  } catch (error) {
+    console.error('[PDP Stock] No se pudo guardar aviso:', error);
+    setPdpStockStatus('No se pudo guardar el aviso. Inténtalo de nuevo.', true);
+  } finally {
+    if (submit) {
+      submit.disabled = false;
+      submit.removeAttribute('aria-busy');
+    }
+  }
 }
 
 // Marca miniatura activa (si no existe, falla al clickar thumbs)
@@ -659,7 +1214,26 @@ const colorOptions = (() => {
 })();
 
 // ahora “colors” sale de las opciones
-const colors = colorOptions.map(o => o.color);
+function getSelectableColorOptions(){
+  const activeCut = getActiveCut();
+
+  if (activeCut?.colors?.length) {
+    return colorOptions.filter(option => activeCut.colors.includes(colorKey(option.color)));
+  }
+
+  const activeVariantColors = new Set(getActiveVariants().map(variant => colorKey(variant.color)).filter(Boolean));
+  return activeVariantColors.size
+    ? colorOptions.filter(option => activeVariantColors.has(colorKey(option.color)))
+    : colorOptions;
+}
+
+let colors = [];
+
+function syncColorsForCut(){
+  colors = getSelectableColorOptions().map(option => option.color);
+}
+
+syncColorsForCut();
 
 // ===== Restore selección (si existía) =====
 // Si viene color por URL (por redirección), tiene prioridad
@@ -668,9 +1242,7 @@ if (urlColor && colors.includes(urlColor)) {
   state.color = urlColor;
   state.size = null; // al cambiar color, fuerza re-selección de talla
   saveSel();
-}
-
-if (prev?.color && colors.includes(prev.color)) {
+} else if (prev?.color && colors.includes(prev.color)) {
   state.color = prev.color;
 }
 if (prev?.size && state.color && sizesForColor(state.color).includes(prev.size)) {
@@ -682,29 +1254,29 @@ syncAttrUI();
 
 // Ajusta imagen según color restaurado (opcional)
 if (state.color) {
-  const first = imgOfColor(state.color);
-  const img = heroEl.querySelector('img');
-  if (img && first) img.src = first;
+  applyColorGallery(state.color);
 }
 
 
 // Render COLOR (con “imagen del producto” tipo Prophetia)
 function renderColorPanel(){
-  if (!colorOptions.length) return `<p class="muted">Este producto no tiene colores configurados.</p>`;
+  const selectableColorOptions = getSelectableColorOptions();
+  if (!selectableColorOptions.length) return `<p class="muted">Este producto no tiene colores configurados.</p>`;
 
   return `
     <div class="ad-panel-content">
       <div class="opts" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
-        ${colorOptions.map(opt=>{
+        ${selectableColorOptions.map(opt=>{
           const c = opt.color;
           const active = (state.color===c) ? 'is-active' : '';
-          const src = opt.img || imgOfColor(c) || baseImages[0];
+          const src = imgOfColor(c) || opt.img || baseImages[0];
+          const meta = colorMetaOf(c);
 
           return `
             <button
               type="button"
               class="opt ${active}"
-              data-pick-color="${c}"
+              data-pick-color="${escapeHtml(c)}"
               data-target-id="${opt.targetId}"
               style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px;"
             >
@@ -712,8 +1284,8 @@ function renderColorPanel(){
                 <img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover">
               </div>
               <div style="display:flex;align-items:center;gap:10px;">
-                <span class="swatch" style="background:${c};"></span>
-                <span style="text-transform:capitalize">${c}</span>
+                <span class="swatch" style="background:${meta.value};"></span>
+                <span>${escapeHtml(meta.label)}</span>
               </div>
             </button>
           `;
@@ -735,11 +1307,65 @@ function renderSizePanel(){
       <div class="opts" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;">
         ${sizes.map(s=>{
           const st = stockOf(c,s);
-          const disabled = st<=0 ? 'disabled aria-disabled="true"' : '';
           const active = state.size===s ? 'is-active' : '';
+          if (st <= 0) {
+            const variant = getActiveVariants().find((entry) => {
+              return String(entry.color) === String(c) && String(entry.size) === String(s);
+            });
+            return `
+              <button
+                type="button"
+                class="opt is-out-of-stock"
+                data-notify-stock-size="${escapeHtml(String(s))}"
+                data-notify-stock-sku="${escapeHtml(String(variant?.sku || ''))}"
+                aria-label="Avisarme cuando la talla ${escapeHtml(String(s))} esté disponible"
+              >
+                <span>${escapeHtml(String(s))}</span>
+                <small>Avisarme</small>
+              </button>
+            `;
+          }
           return `
-            <button type="button" class="opt ${active}" data-pick-size="${s}" ${disabled} style="opacity:${st<=0?0.35:1}">
-              <span>${s}</span>
+            <button type="button" class="opt ${active}" data-pick-size="${escapeHtml(String(s))}">
+              <span>${escapeHtml(String(s))}</span>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderCutPanel(){
+  if (!availableCuts.length) {
+    return `<p class="muted">Este producto no tiene cortes configurados.</p>`;
+  }
+
+  return `
+    <div class="ad-panel-content">
+      <div class="opts" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
+        ${availableCuts.map(cut => {
+          const active = state.cut === cut.id ? 'is-active' : '';
+          const cutVersions = availableVersions.filter(version =>
+            !version.cut || version.cut === cut.id || cut.versions.includes(version.id)
+          );
+          const previewVersion = cutVersions.find(version => version.id === cut.defaultVersion) || cutVersions[0];
+          const img = previewVersion?.cover || previewVersion?.images?.[0] || baseImages[0] || FALLBACK_IMG;
+
+          return `
+            <button
+              type="button"
+              class="opt ${active}"
+              data-pick-cut="${escapeHtml(cut.id)}"
+              style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px;"
+            >
+              <div style="width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#f6f6f6;border:1px solid #eee;">
+                <img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;">
+                <span style="font-weight:600;">${escapeHtml(cut.label)}</span>
+                ${cut.description ? `<span style="font-size:13px;opacity:.72;">${escapeHtml(cut.description)}</span>` : ''}
+              </div>
             </button>
           `;
         }).join('')}
@@ -749,30 +1375,42 @@ function renderSizePanel(){
 }
 
 function renderVersionPanel(){
-  if (!availableVersions.length) {
+  const versionOptions = getVersionOptionsForActiveCut();
+  if (!versionOptions.length) {
     return `<p class="muted">Este producto no tiene versiones configuradas.</p>`;
   }
 
   return `
     <div class="ad-panel-content">
       <div class="opts" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
-        ${availableVersions.map(version => {
+        ${versionOptions.map(version => {
           const active = state.version === version.id ? 'is-active' : '';
-          const img = version.cover || version.images?.[0] || FALLBACK_IMG;
+          const unavailable = version.available === false;
+          const previewColor = colorKey(state.color || prod.color || colors[0] || '');
+          const genderImages = imagesFromMediaBucket(
+            mediaBucketOfColor(version.mediaByColor, previewColor)
+          );
+          const img = genderImages[0] || version.cover || version.images?.[0] || '';
+          const preview = img
+            ? `<img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover">`
+            : `<div style="width:100%;height:100%;display:grid;place-content:center;gap:7px;text-align:center;padding:18px;background:linear-gradient(145deg,#f4f1eb,#e9e3d8);color:#161616;">
+                <span style="font-family:var(--font-display,serif);font-size:22px;line-height:1;">${escapeHtml(version.label)}</span>
+                <span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.62;">Próximamente</span>
+              </div>`;
 
           return `
             <button
               type="button"
-              class="opt ${active}"
-              data-pick-version="${version.id}"
+              class="opt ${active} ${unavailable ? 'is-unavailable' : ''}"
+              ${unavailable ? 'disabled aria-disabled="true"' : `data-pick-version="${escapeHtml(version.id)}"`}
               style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px;"
             >
               <div style="width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#f6f6f6;border:1px solid #eee;">
-                <img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover">
+                ${preview}
               </div>
               <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;">
-                <span style="font-weight:600;">${version.label}</span>
-                <span style="font-size:13px;opacity:.72;">${money(version.price)}</span>
+                <span style="font-weight:600;">${escapeHtml(version.label)}</span>
+                <span style="font-size:13px;opacity:.72;">${unavailable ? 'Próximamente' : money(version.price)}</span>
               </div>
             </button>
           `;
@@ -783,13 +1421,36 @@ function renderVersionPanel(){
 }
 
 /* =========================================================
-   PROPHETIA · Intelligent Fit Guide
-   Recomendador de talla por altura, peso y fit deseado
+   PROPHETIA - Fit Guide Flow
+   Recorrido por pasos para recomendar talla.
    ========================================================= */
 
-const FIT_GUIDE_KEY = 'pp_fit_guide_v1';
+const FIT_GUIDE_KEY = 'pp_fit_guide_v2';
+const FIT_GUIDE_SHOP_PREF_KEY = 'pp_shop_preference';
 
 const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
+const FIT_SECTION_OPTIONS = [
+  { id: 'hombre', label: 'Hombre' },
+  { id: 'mujer', label: 'Mujer' },
+  { id: 'all', label: 'Todo Prophetia' }
+];
+const FIT_YEAR_OPTIONS = Array.from(
+  { length: 72 },
+  (_, index) => String(new Date().getFullYear() - 14 - index)
+);
+const FIT_GUIDE_ASSET_BASE = '/assets/img/guide/';
+const FIT_GUIDE_SILHOUETTES = Object.freeze({
+  abdomen: Object.freeze({
+    recto: Object.freeze({ src: 'recto.png', alt: 'Abdomen recto' }),
+    suave: Object.freeze({ src: 'suave.png', alt: 'Abdomen suave' }),
+    redondeado: Object.freeze({ src: 'redondeado.png', alt: 'Abdomen redondeado' })
+  }),
+  chest: Object.freeze({
+    narrow: Object.freeze({ src: 'estrecho.png', alt: 'Pecho estrecho' }),
+    medium: Object.freeze({ src: 'medio.png', alt: 'Pecho medio' }),
+    wide: Object.freeze({ src: 'ancho.png', alt: 'Pecho ancho' })
+  })
+});
 
 function sizeIndex(size) {
   const clean = String(size || '').trim().toUpperCase();
@@ -824,11 +1485,58 @@ function clampSizeIndex(index, availableSizes = []) {
   return closest;
 }
 
+function isFitGuideLoggedIn() {
+  return !!(
+    window.__ppAuthCurrentUser ||
+    window.__ppLastUser ||
+    window.__ppFirebaseAuth?.currentUser ||
+    document.body.classList.contains('pp-auth-logged')
+  );
+}
+
+function normalizeFitSection(value = '') {
+  const clean = String(value || '').trim().toLowerCase();
+
+  if (['men', 'man', 'hombre', 'male'].includes(clean)) return 'hombre';
+  if (['women', 'woman', 'mujer', 'female'].includes(clean)) return 'mujer';
+  if (clean === 'all') return 'all';
+
+  return '';
+}
+
+function normalizeFitAbdomen(value = '') {
+  const clean = String(value || '').trim().toLowerCase();
+
+  if (['recto', 'flat', 'plano'].includes(clean)) return 'recto';
+  if (['suave', 'medium', 'medio'].includes(clean)) return 'suave';
+  if (['redondeado', 'rounded', 'abultado'].includes(clean)) return 'redondeado';
+
+  return 'suave';
+}
+
+function getFitDefaultSection() {
+  const savedPref = normalizeFitSection(localStorage.getItem(FIT_GUIDE_SHOP_PREF_KEY));
+  if (savedPref) return savedPref;
+
+  const fromUrl = normalizeFitSection(params.get('g') || params.get('gender'));
+  if (fromUrl) return fromUrl;
+
+  const fromProduct = normalizeFitSection(prod.gender || prod.audience || prod.categoryGender);
+  if (fromProduct) return fromProduct;
+
+  return 'all';
+}
+
+function getFitSectionLabel(value = '') {
+  const clean = normalizeFitSection(value) || 'all';
+  return FIT_SECTION_OPTIONS.find((option) => option.id === clean)?.label || 'Todo Prophetia';
+}
+
 function getAvailableFitGuideSizes() {
   const color = state.color || colors[0] || null;
 
   const fromVariants = uniq(
-    variants
+    getActiveVariants()
       .filter((variant) => {
         const sameColor = !color || String(variant.color) === String(color);
         const inStock = Number(variant.stock ?? fallbackStock) > 0;
@@ -860,6 +1568,95 @@ function saveFitGuideProfile(profile = {}) {
   } catch {}
 }
 
+function clearFitGuideProfile() {
+  try {
+    localStorage.removeItem(FIT_GUIDE_KEY);
+  } catch {}
+}
+
+function getFitGuideProfile(overrides = {}) {
+  const saved = readFitGuideProfile();
+  const section = normalizeFitSection(saved.section) || getFitDefaultSection();
+
+  return {
+    section,
+    birthYear: saved.birthYear || '',
+    height: saved.height || '',
+    weight: saved.weight || '',
+    desiredFit: saved.desiredFit || 'relaxed',
+    abdomen: normalizeFitAbdomen(saved.abdomen),
+    chest: saved.chest || 'medium',
+    recommendedSize: saved.recommendedSize || '',
+    ...overrides
+  };
+}
+
+function updateFitGuideProfile(updates = {}) {
+  const next = {
+    ...getFitGuideProfile(),
+    ...updates
+  };
+
+  saveFitGuideProfile(next);
+  return next;
+}
+
+function getInitialFitGuideStep() {
+  const saved = readFitGuideProfile();
+
+  if (saved.recommendedSize) return 'result';
+  if (isFitGuideLoggedIn()) return 'measure';
+
+  return 'profile';
+}
+
+function getFitGuideSteps() {
+  return isFitGuideLoggedIn()
+    ? ['measure', 'preference', 'silhouette', 'result']
+    : ['profile', 'measure', 'preference', 'silhouette', 'result'];
+}
+
+function getFitGuideStepIndex(step) {
+  const steps = getFitGuideSteps();
+  const index = steps.indexOf(step);
+  return index === -1 ? 0 : index;
+}
+
+function renderFitGuideProgress(step) {
+  const steps = getFitGuideSteps();
+  const activeIndex = getFitGuideStepIndex(step);
+
+  return `
+    <div class="fit-guide__progress" aria-label="Progreso del recomendador">
+      ${steps.map((_, index) => `
+        <span class="${index <= activeIndex ? 'is-active' : ''}"></span>
+      `).join('')}
+    </div>
+  `;
+}
+
+function getFitIntentLabel(intent) {
+  const map = {
+    fitted: 'Ajustada',
+    relaxed: 'Normal',
+    oversized: 'Holgada'
+  };
+  return map[String(intent || '').toLowerCase()] || map.relaxed;
+}
+
+function getFitBodySignal(height, weight) {
+  const h = Number(height || 0);
+  const w = Number(weight || 0);
+  if (!h || !w) return 'Lectura neutra';
+
+  const bmi = w / Math.pow(h / 100, 2);
+  if (h >= 188 && bmi < 25) return 'Linea alta';
+  if (h <= 168 && bmi <= 23) return 'Perfil compacto';
+  if (bmi >= 28) return 'Mayor estructura';
+  if (bmi <= 20) return 'Perfil ligero';
+  return 'Proporcion equilibrada';
+}
+
 function estimateBaseSizeIndex(height, weight) {
   const h = Number(height || 0);
   const w = Number(weight || 0);
@@ -874,43 +1671,34 @@ function estimateBaseSizeIndex(height, weight) {
   return sizeIndex('XXL');
 }
 
-function computeFitRecommendation({ height, weight, desiredFit }) {
+function computeFitRecommendation(profile = {}) {
   const availableSizes = getAvailableFitGuideSizes();
 
   if (!availableSizes.length) {
     return {
       size: null,
       confidence: 'baja',
+      availableSizes: [],
       message: 'No hay tallas disponibles para esta pieza ahora mismo.'
     };
   }
 
-  let index = estimateBaseSizeIndex(height, weight);
-
-  const productFit = String(prod.fit || '').toLowerCase();
+  let index = estimateBaseSizeIndex(profile.height, profile.weight);
+  const desired = String(profile.desiredFit || 'relaxed').toLowerCase();
+  const productFit = String(getActiveCut()?.fit || prod.fit || '').toLowerCase();
   const productType = String(prod.type || prod.section || '').toLowerCase();
-  const desired = String(desiredFit || 'relaxed').toLowerCase();
 
-  /*
-    Ajuste por intención:
-    - fitted: más cerca del cuerpo
-    - relaxed: recomendación natural
-    - oversized: más volumen
-  */
   if (desired === 'fitted') index -= 1;
   if (desired === 'oversized') index += 1;
+  if (normalizeFitAbdomen(profile.abdomen) === 'redondeado') index += 1;
+  if (normalizeFitAbdomen(profile.abdomen) === 'recto') index -= 1;
+  if (profile.chest === 'wide') index += 1;
+  if (profile.chest === 'narrow') index -= 1;
 
-  /*
-    Si la prenda ya es oversized, no sobredimensionamos tanto.
-    El cerebro compra comodidad, pero el espejo decide si se queda.
-  */
   if (productFit === 'oversized' && desired === 'oversized') {
     index -= 1;
   }
 
-  /*
-    Hoodies/sudaderas suelen pedir más margen por capa interior.
-  */
   if (
     ['hoodie', 'sweatshirt'].includes(productType) ||
     ['hoodies', 'sudaderas-punto'].includes(String(prod.section || '').toLowerCase())
@@ -919,134 +1707,399 @@ function computeFitRecommendation({ height, weight, desiredFit }) {
   }
 
   const size = clampSizeIndex(index, availableSizes);
-
   const confidence =
     availableSizes.length >= 4 ? 'alta' :
     availableSizes.length >= 2 ? 'media' :
     'baja';
 
   const fitCopy = {
-    fitted: 'más ajustado al cuerpo',
-    relaxed: 'equilibrado y cómodo',
-    oversized: 'con más volumen visual'
+    fitted: 'más cerca del cuerpo',
+    relaxed: 'con lectura natural',
+    oversized: 'con más caída visual'
   };
 
   return {
     size,
     confidence,
-    message: `Recomendamos talla ${size} para un fit ${fitCopy[desired] || 'equilibrado y cómodo'}.`
+    availableSizes,
+    desiredFit: desired,
+    productFit: getActiveCut()?.fit || prod.fit || 'regular',
+    section: profile.section || getFitDefaultSection(),
+    bodySignal: getFitBodySignal(profile.height, profile.weight),
+    message: `Recomendamos talla ${size} para una silueta ${fitCopy[desired] || 'natural'}.`
   };
 }
 
-function renderFitGuidePanel() {
-  const saved = readFitGuideProfile();
-
-  const height = saved.height || '';
-  const weight = saved.weight || '';
-  const desiredFit = saved.desiredFit || 'relaxed';
-
-  return `
-    <div class="ad-panel-content fit-guide">
-      <p class="fit-guide__intro">
-        Introduce tus datos y Prophetia estimará la talla más adecuada para esta pieza.
-        La recomendación se adapta al tipo de prenda, fit y tallas disponibles.
-      </p>
-
-      <form class="fit-guide__form" data-fit-guide-form>
-        <div class="fit-guide__grid">
-          <label>
-            <span>Altura</span>
-            <input
-              type="number"
-              name="height"
-              min="130"
-              max="230"
-              step="1"
-              inputmode="numeric"
-              placeholder="Ej. 180"
-              value="${escapeHtml(height)}"
-              required
-            >
-            <small>cm</small>
-          </label>
-
-          <label>
-            <span>Peso</span>
-            <input
-              type="number"
-              name="weight"
-              min="35"
-              max="180"
-              step="1"
-              inputmode="numeric"
-              placeholder="Ej. 78"
-              value="${escapeHtml(weight)}"
-              required
-            >
-            <small>kg</small>
-          </label>
-        </div>
-
-        <label>
-          <span>Cómo quieres que quede</span>
-          <select name="desiredFit">
-            <option value="fitted" ${desiredFit === 'fitted' ? 'selected' : ''}>Más ajustada</option>
-            <option value="relaxed" ${desiredFit === 'relaxed' ? 'selected' : ''}>Cómoda / equilibrada</option>
-            <option value="oversized" ${desiredFit === 'oversized' ? 'selected' : ''}>Oversized</option>
-          </select>
-        </label>
-
-        <button type="submit" class="fit-guide__submit">
-          Calcular talla
-        </button>
-      </form>
-
-      <div class="fit-guide__result" data-fit-guide-result hidden></div>
-
-      <p class="fit-guide__note">
-        Recomendación orientativa. Si dudas entre dos tallas, elige la superior para más caída
-        y la inferior para un ajuste más limpio.
-      </p>
-    </div>
-  `;
+function getFitGuideProductImage() {
+  const selectedColor = state.color || colors[0] || null;
+  return imgOfColor(selectedColor) || baseImages[0] || prod.img || prod.image || FALLBACK_IMG;
 }
 
-function renderFitGuideResult(result) {
-  const box = document.querySelector('[data-fit-guide-result]');
-  if (!box) return;
+function getFitGuideCartProduct(size) {
+  if (!state.color && colors[0]) state.color = colors[0];
 
-  if (!result?.size) {
-    box.hidden = false;
-    box.innerHTML = `
-      <p class="fit-guide__resultKicker">FIT GUIDE</p>
-      <h4>Sin talla disponible</h4>
-      <p>${escapeHtml(result?.message || 'No se ha podido calcular una talla disponible.')}</p>
-    `;
+  const activeCut = getActiveCut();
+  const activeVersion = getActiveVersion();
+  const selectedColor = state.color || colors[0] || '';
+  const sku = getSelectionSku(selectedColor, size);
+
+  return {
+    id: prod.id,
+    sku,
+    title: prod.title,
+    cut: activeCut?.id || null,
+    cutLabel: activeCut?.label || null,
+    version: activeVersion?.id || null,
+    versionLabel: activeVersion?.label || null,
+    price: activeVersion?.price ?? prod.price,
+    color: selectedColor,
+    size,
+    qty: 1,
+    img: getFitGuideProductImage()
+  };
+}
+
+function applyFitGuideSize(size, options = {}) {
+  if (!size) return;
+
+  if (!state.color && colors[0]) state.color = colors[0];
+  state.size = size;
+
+  const fitGuideVal = document.getElementById('pdpFitGuideVal');
+  if (fitGuideVal) fitGuideVal.textContent = 'Aplicada ' + size;
+
+  syncAttrUI();
+  saveSel();
+  syncCTA();
+
+  if (options.close !== false) {
+    closeDrawer();
+  }
+}
+
+function addFitGuideSizeToCart(size) {
+  if (!size) return;
+
+  if (isProductOutOfStock()) {
+    openPdpStockModal();
     return;
   }
 
-  box.hidden = false;
-  box.innerHTML = `
-    <p class="fit-guide__resultKicker">RECOMENDACIÓN</p>
+  applyFitGuideSize(size, { close: false });
+  addProductToCart(getFitGuideCartProduct(size));
+  closeDrawer();
+}
 
-    <h4>Talla ${escapeHtml(result.size)}</h4>
-
-    <p>${escapeHtml(result.message)}</p>
-
-    <div class="fit-guide__resultMeta">
-      <span>Confianza: ${escapeHtml(result.confidence)}</span>
-      <span>Fit de la pieza: ${escapeHtml(prod.fit || 'regular')}</span>
-    </div>
-
-    <button type="button" class="fit-guide__select" data-fit-select-size="${escapeHtml(result.size)}">
-      Usar talla ${escapeHtml(result.size)}
+function renderFitGuideChoiceButton(name, value, label, active, extra = '') {
+  return `
+    <button
+      type="button"
+      class="fit-guide__choice ${active ? 'is-active' : ''}"
+      data-fit-choice="${escapeHtml(name)}"
+      data-fit-value="${escapeHtml(value)}"
+      aria-pressed="${active ? 'true' : 'false'}"
+    >
+      <span>${escapeHtml(label)}</span>
+      ${extra ? `<small>${escapeHtml(extra)}</small>` : ''}
     </button>
   `;
 }
+
+function getFitGuideSilhouetteAsset(group, value) {
+  const collection = FIT_GUIDE_SILHOUETTES[group];
+  if (!collection) return null;
+
+  return collection[value] || collection.suave || collection.medium || collection.recto || collection.narrow || null;
+}
+
+function renderFitGuideSilhouetteImage(group, value) {
+  const asset = getFitGuideSilhouetteAsset(group, value);
+  if (!asset) return '';
+
+  return `
+        <figure class="fit-guide__silhouetteFigure fit-guide__silhouetteFigure--${escapeHtml(group)}" data-fit-silhouette-figure="${escapeHtml(group)}">
+          <img src="${FIT_GUIDE_ASSET_BASE}${escapeHtml(asset.src)}" alt="${escapeHtml(asset.alt)}" loading="lazy">
+        </figure>`;
+}
+
+function updateFitGuideSilhouetteImage(root, group, value) {
+  const asset = getFitGuideSilhouetteAsset(group, value);
+  const figure = root?.querySelector(`[data-fit-silhouette-figure="${group}"]`);
+  const image = figure?.querySelector('img');
+
+  if (!asset || !image) return;
+
+  image.src = FIT_GUIDE_ASSET_BASE + asset.src;
+  image.alt = asset.alt;
+}
+
+function renderFitGuideShell(step, content, actionLabel, options = {}) {
+  const activeIndex = getFitGuideStepIndex(step);
+  const total = getFitGuideSteps().length;
+  const logged = isFitGuideLoggedIn();
+
+  return `
+    <div class="ad-panel-content fit-guide fit-guide--flow" data-fit-guide-root data-fit-step="${escapeHtml(step)}">
+      ${renderFitGuideProgress(step)}
+      <div class="fit-guide__context">
+        <span>Prophetia Fit System</span>
+        <span>${activeIndex + 1}/${total}</span>
+      </div>
+      <div class="fit-guide__screen">
+        ${content}
+      </div>
+      ${options.note ? `<p class="fit-guide__legal">${escapeHtml(options.note)}</p>` : ''}
+      ${actionLabel ? `
+        <div class="fit-guide__actions">
+          ${options.back ? '<button type="button" class="fit-guide__ghost" data-fit-back>Volver</button>' : ''}
+          <button type="submit" class="fit-guide__continue" form="${escapeHtml(options.formId || 'fitGuideForm')}">
+            ${escapeHtml(actionLabel)}
+          </button>
+        </div>
+      ` : ''}
+      ${logged && step === 'measure' ? '<p class="fit-guide__profile-note">Usamos tu perfil Prophetia para omitir datos ya conocidos.</p>' : ''}
+    </div>
+  `;
+}
+
+function renderFitGuideProfileStep(profile) {
+  const content = `
+    <form id="fitGuideForm" class="fit-guide__step" data-fit-step-form data-fit-step-form-name="profile">
+      <h4>Datos de referencia</h4>
+      <p>Para invitados, necesitamos una lectura mínima antes de calcular la talla.</p>
+
+      <section class="fit-guide__zaraBlock" aria-label="Sección favorita">
+        <span class="fit-guide__question">Sección favorita</span>
+        <div class="fit-guide__selectRow">
+          ${FIT_SECTION_OPTIONS.map((option) => renderFitGuideChoiceButton(
+            'section',
+            option.id,
+            option.label,
+            profile.section === option.id
+          )).join('')}
+        </div>
+        <input type="hidden" name="section" value="${escapeHtml(profile.section)}">
+      </section>
+
+      <label class="fit-guide__selectLike">
+        <span>Año de nacimiento <em>(opcional)</em></span>
+        <select name="birthYear">
+          <option value="">Seleccionar</option>
+          ${FIT_YEAR_OPTIONS.map((year) => `
+            <option value="${year}" ${String(profile.birthYear) === year ? 'selected' : ''}>${year}</option>
+          `).join('')}
+        </select>
+      </label>
+    </form>
+  `;
+
+  return renderFitGuideShell('profile', content, 'Continuar', {
+    note: 'Utilizamos estos datos solo para estimar la talla de esta pieza.'
+  });
+}
+
+function renderFitGuideMeasureStep(profile) {
+  const content = `
+    <form id="fitGuideForm" class="fit-guide__step" data-fit-step-form data-fit-step-form-name="measure">
+      <h4>Medidas principales</h4>
+      <p>Introduce altura y peso para situar la prenda sobre tu proporción real.</p>
+
+      <div class="fit-guide__metricStack">
+        <label class="fit-guide__measureField">
+          <span>Cuál es tu altura?</span>
+          <input type="number" name="height" min="130" max="230" step="1" inputmode="numeric" placeholder="180" value="${escapeHtml(profile.height)}" required>
+          <em>CM</em>
+        </label>
+
+        <label class="fit-guide__measureField">
+          <span>Cuál es tu peso?</span>
+          <input type="number" name="weight" min="35" max="180" step="1" inputmode="numeric" placeholder="78" value="${escapeHtml(profile.weight)}" required>
+          <em>KG</em>
+        </label>
+      </div>
+    </form>
+  `;
+
+  return renderFitGuideShell('measure', content, 'Continuar', {
+    back: !isFitGuideLoggedIn()
+  });
+}
+
+function renderFitGuidePreferenceStep(profile) {
+  const values = ['fitted', 'relaxed', 'oversized'];
+  const selectedIndex = Math.max(0, values.indexOf(profile.desiredFit));
+  const content = `
+    <form id="fitGuideForm" class="fit-guide__step" data-fit-step-form data-fit-step-form-name="preference">
+      <h4>Cómo te gusta llevar la ropa?</h4>
+      <p>Ajusta la intención de fit para que la recomendación no sea solo numerica.</p>
+
+      <div class="fit-guide__rangeWrap">
+        <input type="range" min="0" max="2" step="1" value="${selectedIndex}" name="desiredFitRange" data-fit-range>
+        <input type="hidden" name="desiredFit" value="${escapeHtml(profile.desiredFit)}">
+        <div class="fit-guide__rangeLabels" aria-hidden="true">
+          <span>Ajustada</span>
+          <span>Normal</span>
+          <span>Holgada</span>
+        </div>
+      </div>
+    </form>
+  `;
+
+  return renderFitGuideShell('preference', content, 'Continuar', { back: true });
+}
+
+function renderFitGuideSilhouetteStep(profile) {
+  const content = `
+    <form id="fitGuideForm" class="fit-guide__step fit-guide__step--silhouette" data-fit-step-form data-fit-step-form-name="silhouette">
+      <h4>Lectura de silueta</h4>
+      <p>Opcional. Afina la caída si quieres una recomendación más precisa.</p>
+
+      <section class="fit-guide__silhouetteBlock">
+        <span class="fit-guide__question">Abdomen <em>(opcional)</em></span>
+        ${renderFitGuideSilhouetteImage('abdomen', profile.abdomen)}
+        <div class="fit-guide__selectRow fit-guide__selectRow--wide">
+          ${renderFitGuideChoiceButton('abdomen', 'recto', 'Recto', normalizeFitAbdomen(profile.abdomen) === 'recto')}
+          ${renderFitGuideChoiceButton('abdomen', 'suave', 'Suave', normalizeFitAbdomen(profile.abdomen) === 'suave')}
+          ${renderFitGuideChoiceButton('abdomen', 'redondeado', 'Redondeado', normalizeFitAbdomen(profile.abdomen) === 'redondeado')}
+        </div>
+        <input type="hidden" name="abdomen" value="${escapeHtml(normalizeFitAbdomen(profile.abdomen))}">
+      </section>
+
+      <section class="fit-guide__silhouetteBlock">
+        <span class="fit-guide__question">Pecho <em>(opcional)</em></span>
+        ${renderFitGuideSilhouetteImage('chest', profile.chest)}
+        <div class="fit-guide__selectRow fit-guide__selectRow--wide">
+          ${renderFitGuideChoiceButton('chest', 'narrow', 'Estrecho', profile.chest === 'narrow')}
+          ${renderFitGuideChoiceButton('chest', 'medium', 'Medio', profile.chest === 'medium')}
+          ${renderFitGuideChoiceButton('chest', 'wide', 'Ancho', profile.chest === 'wide')}
+        </div>
+        <input type="hidden" name="chest" value="${escapeHtml(profile.chest)}">
+      </section>
+    </form>
+  `;
+
+  return renderFitGuideShell('silhouette', content, 'Ver recomendación', { back: true });
+}
+
+function renderFitGuideResultStep(profile) {
+  const result = computeFitRecommendation(profile);
+  const size = profile.recommendedSize || result.size;
+  const image = getFitGuideProductImage();
+
+  if (!size) {
+    const content = `
+      <section class="fit-guide__resultView fit-guide__resultView--empty">
+        <h4>Sin talla disponible</h4>
+        <p>${escapeHtml(result.message || 'No se ha podido calcular una talla disponible.')}</p>
+        <button type="button" class="fit-guide__ghost" data-fit-reset>Borrar datos</button>
+      </section>
+    `;
+
+    return renderFitGuideShell('result', content, '', { back: true });
+  }
+
+  const nextProfile = {
+    ...profile,
+    recommendedSize: size
+  };
+  saveFitGuideProfile(nextProfile);
+
+  const fitGuideVal = document.getElementById('pdpFitGuideVal');
+  if (fitGuideVal) fitGuideVal.textContent = `Sugerida ${size}`;
+
+  const content = `
+    <section class="fit-guide__resultView" aria-live="polite">
+      <figure class="fit-guide__productFigure">
+        <img src="${escapeHtml(image)}" alt="${escapeHtml(prod.title || 'Producto Prophetia')}">
+      </figure>
+
+      <div class="fit-guide__resultCopy">
+        <span>Talla</span>
+        <strong>${escapeHtml(size)}</strong>
+        <p>${escapeHtml(result.message)}</p>
+      </div>
+
+      <button type="button" class="fit-guide__addCart" data-fit-add-cart="${escapeHtml(size)}">
+        Añadir talla ${escapeHtml(size)}
+      </button>
+
+      <button type="button" class="fit-guide__textBtn" data-fit-edit>Editar</button>
+      <button type="button" class="fit-guide__textBtn fit-guide__textBtn--muted" data-fit-reset>Borrar datos</button>
+    </section>
+  `;
+
+  return renderFitGuideShell('result', content, '');
+}
+
+function renderFitGuidePanel(options = {}) {
+  const step = options.step || getInitialFitGuideStep();
+  const profile = getFitGuideProfile(options.profile || {});
+
+  if (step === 'profile') return renderFitGuideProfileStep(profile);
+  if (step === 'measure') return renderFitGuideMeasureStep(profile);
+  if (step === 'preference') return renderFitGuidePreferenceStep(profile);
+  if (step === 'silhouette') return renderFitGuideSilhouetteStep(profile);
+
+  return renderFitGuideResultStep(profile);
+}
+
+function renderFitGuideStep(step, profile = {}) {
+  adBody.innerHTML = renderFitGuidePanel({ step, profile });
+}
+
+function getFitPreviousStep(step) {
+  const steps = getFitGuideSteps();
+  const index = getFitGuideStepIndex(step);
+  return steps[Math.max(0, index - 1)] || steps[0];
+}
+
+function collectFitGuideFormData(form) {
+  const data = new FormData(form);
+  const step = String(form.dataset.fitStepFormName || 'measure');
+  const updates = {};
+
+  if (step === 'profile') {
+    updates.section = normalizeFitSection(data.get('section')) || getFitDefaultSection();
+    updates.birthYear = String(data.get('birthYear') || '').trim();
+  }
+
+  if (step === 'measure') {
+    updates.height = Number(data.get('height') || 0);
+    updates.weight = Number(data.get('weight') || 0);
+  }
+
+  if (step === 'preference') {
+    updates.desiredFit = String(data.get('desiredFit') || 'relaxed');
+  }
+
+  if (step === 'silhouette') {
+    updates.abdomen = normalizeFitAbdomen(data.get('abdomen') || 'suave');
+    updates.chest = String(data.get('chest') || 'medium');
+  }
+
+  updates.recommendedSize = '';
+  return updates;
+}
+
+function getNextFitGuideStep(step) {
+  if (step === 'profile') return 'measure';
+  if (step === 'measure') return 'preference';
+  if (step === 'preference') return 'silhouette';
+  return 'result';
+}
 function syncAttrUI(){
+  const activeCut = getActiveCut();
   const activeVersion = getActiveVersion();
 
-  document.getElementById('pdpColorVal').textContent = state.color ? state.color : 'Seleccionar';
+  const cutAttr = document.getElementById('pdpCutAttr');
+  if (cutAttr) cutAttr.hidden = !availableCuts.length;
+  const versionAttr = document.getElementById('pdpVersionAttr');
+  if (versionAttr) versionAttr.hidden = !availableVersions.length;
+  const cutValue = document.getElementById('pdpCutVal');
+  if (cutValue) cutValue.textContent = activeCut ? activeCut.label : 'Seleccionar';
+  document.getElementById('pdpColorVal').textContent = state.color
+    ? colorMetaOf(state.color).label
+    : 'Seleccionar';
   document.getElementById('pdpSizeVal').textContent  = state.size  ? state.size  : 'Seleccionar';
   document.getElementById('pdpVersionVal').textContent = activeVersion ? activeVersion.label : 'Seleccionar';
 }
@@ -1056,26 +2109,117 @@ function syncAttrUI(){
 drawer.addEventListener('click', (e)=>{
   const cbtn = e.target.closest('[data-pick-color]');
   const sbtn = e.target.closest('[data-pick-size]');
+  const stockSizeBtn = e.target.closest('[data-notify-stock-size]');
   const vbtn = e.target.closest('[data-pick-version]');
+  const cutOptionBtn = e.target.closest('[data-pick-cut]');
   const fitSizeBtn = e.target.closest('[data-fit-select-size]');
-  if (fitSizeBtn) {
-  e.preventDefault();
+  const fitAddCartBtn = e.target.closest('[data-fit-add-cart]');
+  const fitResetBtn = e.target.closest('[data-fit-reset]');
+  const fitEditBtn = e.target.closest('[data-fit-edit]');
+  const fitBackBtn = e.target.closest('[data-fit-back]');
+  const fitChoiceBtn = e.target.closest('[data-fit-choice]');
 
-  const recommendedSize = String(fitSizeBtn.dataset.fitSelectSize || '').trim();
+  if (fitChoiceBtn) {
+    e.preventDefault();
 
-  if (!recommendedSize) return;
+    const name = String(fitChoiceBtn.dataset.fitChoice || '').trim();
+    const value = String(fitChoiceBtn.dataset.fitValue || '').trim();
+    const root = fitChoiceBtn.closest('[data-fit-guide-root]');
+    const form = fitChoiceBtn.closest('form') || root?.querySelector('form');
+    const input = form?.querySelector(`input[name="${name}"]`);
 
-  if (!state.color && colors[0]) {
-    state.color = colors[0];
+    if (input) {
+      input.value = value;
+    }
+
+    root?.querySelectorAll(`[data-fit-choice="${name}"]`).forEach((btn) => {
+      const active = btn === fitChoiceBtn;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    });
+
+    if (name === 'abdomen' || name === 'chest') {
+      updateFitGuideSilhouetteImage(root, name, value);
+    }
+
+    return;
   }
 
-  state.size = recommendedSize;
+  if (stockSizeBtn) {
+    e.preventDefault();
+    state._intentAddToCart = false;
+    const preferred = {
+      sku: stockSizeBtn.dataset.notifyStockSku || '',
+      color: state.color || colors[0] || '',
+      size: stockSizeBtn.dataset.notifyStockSize || ''
+    };
+    closeDrawer();
+    openPdpStockModal(preferred);
+    return;
+  }
+
+  if (fitBackBtn) {
+    e.preventDefault();
+    const step = fitBackBtn.closest('[data-fit-guide-root]')?.dataset.fitStep || getInitialFitGuideStep();
+    renderFitGuideStep(getFitPreviousStep(step));
+    return;
+  }
+
+  if (fitEditBtn) {
+    e.preventDefault();
+    const profile = updateFitGuideProfile({ recommendedSize: '' });
+    renderFitGuideStep(isFitGuideLoggedIn() ? 'measure' : 'profile', profile);
+    return;
+  }
+
+  if (fitResetBtn) {
+    e.preventDefault();
+    clearFitGuideProfile();
+    const fitGuideVal = document.getElementById('pdpFitGuideVal');
+    if (fitGuideVal) fitGuideVal.textContent = 'Recomendar talla';
+    renderFitGuideStep(isFitGuideLoggedIn() ? 'measure' : 'profile');
+    return;
+  }
+
+  if (fitAddCartBtn) {
+    e.preventDefault();
+    addFitGuideSizeToCart(String(fitAddCartBtn.dataset.fitAddCart || '').trim());
+    return;
+  }
+
+  if (fitSizeBtn) {
+    e.preventDefault();
+    applyFitGuideSize(String(fitSizeBtn.dataset.fitSelectSize || '').trim());
+    return;
+  }
+if (cutOptionBtn){
+  const pickedCut = String(cutOptionBtn.dataset.pickCut || '').trim();
+  const cutData = availableCuts.find(cut => cut.id === pickedCut);
+  if (!cutData) return;
+
+  state.cut = cutData.id;
+
+  const selectableVersions = getSelectableVersions();
+  if (!selectableVersions.some(version => version.id === state.version)) {
+    const defaultVersion = selectableVersions.find(version => version.id === cutData.defaultVersion) || selectableVersions[0] || null;
+    state.version = defaultVersion?.id || null;
+  }
+
+  syncColorsForCut();
+  if (!state.color || !colors.includes(state.color)) {
+    state.color = colors[0] || null;
+  }
+  state.size = null;
 
   syncAttrUI();
   saveSel();
-  syncCTA();
   closeDrawer();
 
+  if (state.color) {
+    applyColorGallery(state.color);
+  }
+
+  syncCTA();
   return;
 }
 if (cbtn){
@@ -1100,18 +2244,13 @@ if (cbtn){
   saveSel();
   syncCTA();
 
-  // (opcional) cambia primera imagen según color (variants)
-  const first = imgOfColor(state.color);
-  if (first){
-    const img = heroEl.querySelector('img');
-    if (img) img.src = first;
-  }
+  applyColorGallery(state.color);
 
   return;
 }
 if (vbtn){
   const pickedVersion = String(vbtn.dataset.pickVersion || '').trim();
-  const versionData = availableVersions.find(v => v.id === pickedVersion);
+  const versionData = getSelectableVersions().find(v => v.id === pickedVersion);
   if (!versionData) return;
 
   state.version = versionData.id;
@@ -1119,10 +2258,14 @@ if (vbtn){
   saveSel();
   closeDrawer();
 
+  const galleryColor = state.color || prod.color || colors[0] || '';
+  const colorVersionImages = galleryColor ? imagesOfColor(galleryColor) : [];
   const versionImages = dedupe(
-    (versionData.images && versionData.images.length)
-      ? versionData.images
-      : [versionData.cover || FALLBACK_IMG]
+    colorVersionImages.length
+      ? colorVersionImages
+      : (versionData.images && versionData.images.length)
+        ? versionData.images
+        : [versionData.cover || baseImages[0] || FALLBACK_IMG]
   );
 
   setGallery(versionImages.length ? versionImages : [FALLBACK_IMG]);
@@ -1139,6 +2282,7 @@ if (sbtn){
   syncAttrUI();
   saveSel();
   closeDrawer();
+  syncCTA();
 
   // Si el CTA fue el que inició la selección, entonces sí añadimos
   if (state._intentAddToCart) {
@@ -1147,15 +2291,16 @@ if (sbtn){
     // aseguramos color por defecto si no hay
     if (!state.color && colors[0]) state.color = colors[0];
 
-    const v = variants.find(x => x.color === state.color && x.size === state.size);
-    const sku = v?.sku || `${prod.id}_${state.color}_${state.size}`.replace(/\s+/g,'-');
-
+ const activeCut = getActiveCut();
  const activeVersion = getActiveVersion();
+    const sku = getSelectionSku();
 
 const product = {
   id: prod.id,
   sku,
   title: prod.title,
+  cut: activeCut?.id || null,
+  cutLabel: activeCut?.label || null,
   version: activeVersion?.id || null,
   versionLabel: activeVersion?.label || null,
   price: activeVersion?.price ?? prod.price,
@@ -1173,26 +2318,41 @@ addProductToCart(product);
 
 });
 
+drawer.addEventListener('input', (e) => {
+  const range = e.target.closest('[data-fit-range]');
+  if (!range) return;
+
+  const values = ['fitted', 'relaxed', 'oversized'];
+  const next = values[Math.max(0, Math.min(2, Number(range.value || 1)))] || 'relaxed';
+  const form = range.closest('form');
+  const hidden = form?.querySelector('input[name="desiredFit"]');
+
+  if (hidden) {
+    hidden.value = next;
+  }
+});
+
 drawer.addEventListener('submit', (e) => {
-  const form = e.target.closest('[data-fit-guide-form]');
+  const form = e.target.closest('[data-fit-step-form]');
   if (!form) return;
 
   e.preventDefault();
 
-  const data = new FormData(form);
+  const step = String(form.dataset.fitStepFormName || 'measure');
+  const profile = updateFitGuideProfile(collectFitGuideFormData(form));
+  const nextStep = getNextFitGuideStep(step);
 
-  const profile = {
-    height: Number(data.get('height') || 0),
-    weight: Number(data.get('weight') || 0),
-    desiredFit: String(data.get('desiredFit') || 'relaxed')
-  };
+  if (nextStep === 'result') {
+    const result = computeFitRecommendation(profile);
+    const finalProfile = updateFitGuideProfile({
+      recommendedSize: result.size || ''
+    });
+    renderFitGuideStep('result', finalProfile);
+    return;
+  }
 
-  saveFitGuideProfile(profile);
-
-  const result = computeFitRecommendation(profile);
-  renderFitGuideResult(result);
+  renderFitGuideStep(nextStep, profile);
 });
-
 const DETAILS_TABS = [
   { id: 'details',   label: 'Todos los detalles' },
   { id: 'pack',      label: 'Empaquetado' },
@@ -1209,6 +2369,7 @@ function getProdDetailsData(){
 
 const materialsMain = prod.materialsMain || '';
 const materialsSections = Array.isArray(prod.materialsSections) ? prod.materialsSections : [];
+const sizeGuide = prod.sizeGuide && typeof prod.sizeGuide === 'object' ? prod.sizeGuide : null;
 
 const materials =
   prod.materialsText || prod.materials || ''; // fallback si no hay secciones
@@ -1230,7 +2391,7 @@ const materials =
   const desc =
     prod.long || prod.description || prod.short || '';
 
-return { desc, bullets, materials, materialsMain, materialsSections, pack, shipping, specsObj };
+return { desc, bullets, materials, materialsMain, materialsSections, pack, shipping, specsObj, sizeGuide };
 }
 
 function renderSpecs(specsObj){
@@ -1243,6 +2404,42 @@ function renderSpecs(specsObj){
         <div class="v">${v}</div>
       `).join('')}
     </div>
+  `;
+}
+
+function renderSizeGuide(sizeGuide){
+  const columns = Array.isArray(sizeGuide?.columns) ? sizeGuide.columns : [];
+  const rows = Array.isArray(sizeGuide?.rows) ? sizeGuide.rows : [];
+
+  if (!columns.length || !rows.length) return '';
+
+  const unit = String(sizeGuide?.unit || 'cm').trim();
+
+  return `
+    <section class="ad-size-guide" aria-label="Guía de tallas">
+      <div class="ad-size-guide__head">
+        <h4>Guía de tallas</h4>
+        <span>Medidas en ${escapeHtml(unit)}</span>
+      </div>
+      <div class="ad-size-guide__scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Medida</th>
+              ${columns.map(size => `<th scope="col">${escapeHtml(size)}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <th scope="row">${escapeHtml(row?.label || '')}</th>
+                ${columns.map((_, index) => `<td>${escapeHtml(row?.values?.[index] ?? '—')}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </section>
   `;
 }
 
@@ -1301,6 +2498,7 @@ function renderDetailsPanel(tabId){
         </ul>
       ` : ''}
       ${renderSpecs(d.specsObj)}
+      ${renderSizeGuide(d.sizeGuide)}
     </div>
   `;
 }
@@ -1344,6 +2542,7 @@ function openDetailsDrawer(initialTab = 'details'){
   drawer.classList.add('ad--details');
 
   const colorTxt = state.color || prod.color || (Array.isArray(prod.colors) ? prod.colors[0] : '') || '';
+  const activeCut = getActiveCut();
   const activeVersion = getActiveVersion();
   const imgSrc = imgOfColor(colorTxt) || baseImages[0];
   const shownPrice = (typeof activeVersion?.price === 'number') ? activeVersion.price : prod.price;
@@ -1360,6 +2559,7 @@ function openDetailsDrawer(initialTab = 'details'){
       </div>
       <div class="ad-producthead__meta">
         <div class="ad-producthead__name">${prod.title || ''}</div>
+        ${activeCut ? `<div class="ad-producthead__sub">Corte: ${activeCut.label}</div>` : ''}
         ${activeVersion ? `<div class="ad-producthead__sub">Versión: ${activeVersion.label}</div>` : ''}
         ${colorTxt ? `<div class="ad-producthead__sub">Color: ${colorTxt}</div>` : ''}
         <div class="ad-producthead__price">${(typeof shownPrice === 'number') ? money(shownPrice) : '—'}</div>
@@ -1376,10 +2576,21 @@ function openDetailsDrawer(initialTab = 'details'){
 
 
 // Botones de la ficha
+cutBtn?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  e.stopPropagation();
+  openDrawer('Corte', renderCutPanel());
+});
+
 sizeBtn.addEventListener('click', (e)=>{
   e.preventDefault();
   e.stopPropagation();
-  if (!state.color && colors[0]) state.color = colors[0];
+
+  if (!state.color) {
+    openDrawer('Color', renderColorPanel());
+    return;
+  }
+
   openDrawer('Talla', renderSizePanel());
 });
 
@@ -1403,7 +2614,7 @@ function openFitGuideDrawer(e) {
   e?.preventDefault();
   e?.stopPropagation();
 
-  openDrawer('Guía inteligente de talla', renderFitGuidePanel());
+  openDrawer('Guía Inteligente de Talla', renderFitGuidePanel());
 }
 
 fitGuideAttrBtn?.addEventListener('click', openFitGuideDrawer);
@@ -1419,18 +2630,22 @@ ctaBtn?.addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  if (!state.color && colors[0]) state.color = colors[0];
-
-  if (availableVersions.length && !state.version) {
-    state._intentAddToCart = true;
-    openDrawer('Versión', renderVersionPanel());
+  if (isProductOutOfStock()) {
+    openPdpStockModal();
     syncCTA();
     return;
   }
 
-  if (!state.size) {
+  if (availableCuts.length && !state.cut) {
     state._intentAddToCart = true;
-    openDrawer('Talla', renderSizePanel());
+    openDrawer('Corte', renderCutPanel());
+    syncCTA();
+    return;
+  }
+
+  if (getSelectableVersions().length && !state.version) {
+    state._intentAddToCart = true;
+    openDrawer('Versión', renderVersionPanel());
     syncCTA();
     return;
   }
@@ -1442,18 +2657,23 @@ ctaBtn?.addEventListener('click', (e) => {
     return;
   }
 
-  const v = variants.find(x => x.color === state.color && x.size === state.size);
-  const activeVersion = getActiveVersion();
+  if (!state.size) {
+    state._intentAddToCart = true;
+    openDrawer('Talla', renderSizePanel());
+    syncCTA();
+    return;
+  }
 
-  const sku =
-    activeVersion
-      ? `${prod.id}_${activeVersion.id}_${state.color}_${state.size}`.replace(/\s+/g,'-')
-      : (v?.sku || `${prod.id}_${state.color}_${state.size}`.replace(/\s+/g,'-'));
+  const activeCut = getActiveCut();
+  const activeVersion = getActiveVersion();
+  const sku = getSelectionSku();
 
 addProductToCart({
   id: prod.id,
   sku,
   title: prod.title,
+  cut: activeCut?.id || null,
+  cutLabel: activeCut?.label || null,
   version: activeVersion?.id || null,
   versionLabel: activeVersion?.label || null,
   price: activeVersion?.price ?? prod.price,
@@ -1470,9 +2690,7 @@ syncAttrUI();
 
 // Ajusta imagen según color restaurado (opcional)
 if (state.color) {
-  const first = imgOfColor(state.color);
-  const img = heroEl.querySelector('img');
-  if (img && first) img.src = first;
+  applyColorGallery(state.color);
 }
 
 
@@ -1481,7 +2699,7 @@ const ctaPriceEl = document.getElementById('pdpCtaPrice');
 
 
 
-function setCTA({ enabled, label, hint }){
+function setCTA({ enabled, label, hint, stockOut = false }){
   if (!ctaBtn) return;
 
   if (ctaLabelEl) ctaLabelEl.textContent = label;
@@ -1493,6 +2711,7 @@ if (ctaPriceEl) ctaPriceEl.textContent = money(activeVersion?.price ?? prod.pric
   ctaBtn.disabled = false;
   ctaBtn.setAttribute('aria-disabled', String(!enabled));
   ctaBtn.classList.toggle('is-disabled', !enabled);
+  ctaBtn.classList.toggle('is-out-of-stock', !!stockOut);
 
   if (hint) ctaBtn.setAttribute('data-hint', hint);
   else ctaBtn.removeAttribute('data-hint');
@@ -1507,11 +2726,23 @@ function escapeHtml(value = '') {
 }
 
 function computeCTALabel(){
-  if (availableVersions.length && !state.version) {
+  if (isProductOutOfStock()) {
+    return {
+      enabled: true,
+      label: 'Avisarme cuando haya stock',
+      hint: 'Elige la talla que quieres recibir como aviso',
+      stockOut: true
+    };
+  }
+
+  if (availableCuts.length && !state.cut) {
+    return { enabled:false, label:'Seleccionar corte', hint:'Selecciona un corte para continuar' };
+  }
+  if (getSelectableVersions().length && !state.version) {
     return { enabled:false, label:'Seleccionar versión', hint:'Selecciona una versión para continuar' };
   }
-  if (!state.size)  return { enabled:false, label:'Seleccionar talla', hint:'Selecciona una talla para continuar' };
   if (!state.color) return { enabled:false, label:'Seleccionar color', hint:'Selecciona un color para continuar' };
+  if (!state.size)  return { enabled:false, label:'Seleccionar talla', hint:'Selecciona una talla para continuar' };
   return { enabled:true,  label:'Añadir a la cesta', hint:'' };
 }
 
@@ -1525,10 +2756,26 @@ function syncCTA(){
 buyForm?.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (!state.color && colors[0]) state.color = colors[0];
+  if (isProductOutOfStock()) {
+    openPdpStockModal();
+    syncCTA();
+    return;
+  }
 
-  if (availableVersions.length && !state.version){
+  if (availableCuts.length && !state.cut){
+    openDrawer('Corte', renderCutPanel());
+    syncCTA();
+    return;
+  }
+
+  if (getSelectableVersions().length && !state.version){
     openDrawer('Versión', renderVersionPanel());
+    syncCTA();
+    return;
+  }
+
+  if (!state.color){
+    openDrawer('Color', renderColorPanel());
     syncCTA();
     return;
   }
@@ -1539,18 +2786,16 @@ buyForm?.addEventListener('submit', (e) => {
     return;
   }
 
-  const v = variants.find(x => x.color === state.color && x.size === state.size);
+  const activeCut = getActiveCut();
   const activeVersion = getActiveVersion();
-
-  const sku =
-    activeVersion
-      ? `${prod.id}_${activeVersion.id}_${state.color}_${state.size}`.replace(/\s+/g,'-')
-      : (v?.sku || `${prod.id}_${state.color}_${state.size}`.replace(/\s+/g,'-'));
+  const sku = getSelectionSku();
 
   const product = {
     id: prod.id,
     sku,
     title: prod.title,
+    cut: activeCut?.id || null,
+    cutLabel: activeCut?.label || null,
     version: activeVersion?.id || null,
     versionLabel: activeVersion?.label || null,
     price: activeVersion?.price ?? prod.price,

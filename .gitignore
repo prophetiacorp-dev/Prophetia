@@ -82,6 +82,7 @@ firebase-admin*.json
 
 # Datos reales del servidor
 data/orders.json
+data/stock-waitlist.json
 data/tribe-members.json
 data/private-drops.json
 data/private-drop-pages.json

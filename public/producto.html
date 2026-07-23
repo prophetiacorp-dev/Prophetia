@@ -104,18 +104,19 @@
 
         <!-- Atributos (Prophetia-like) -->
      <ul class="pdp-attrs" aria-label="Opciones del producto">
-  <li class="pdp-attr">
-    <button type="button" class="pdp-attr__btn" id="pdpSizeBtn" aria-haspopup="dialog">
-      <span class="pdp-attr__label">Talla</span>
-      <span class="pdp-attr__value" id="pdpSizeVal">Seleccionar</span>
+  <li class="pdp-attr" id="pdpCutAttr" hidden>
+    <button type="button" class="pdp-attr__btn" id="pdpCutBtn" aria-haspopup="dialog">
+      <span class="pdp-attr__label">Corte</span>
+      <span class="pdp-attr__value" id="pdpCutVal">Seleccionar</span>
     </button>
   </li>
-  <li class="pdp-attr">
-  <button type="button" class="pdp-attr__btn" id="pdpFitGuideBtn" aria-haspopup="dialog">
-    <span class="pdp-attr__label">Fit Guide</span>
-    <span class="pdp-attr__value" id="pdpFitGuideVal">Recomendar talla</span>
-  </button>
-</li>
+
+  <li class="pdp-attr" id="pdpVersionAttr" hidden>
+    <button type="button" class="pdp-attr__btn" id="pdpVersionBtn" aria-haspopup="dialog">
+      <span class="pdp-attr__label">Versión</span>
+      <span class="pdp-attr__value" id="pdpVersionVal">Seleccionar</span>
+    </button>
+  </li>
 
   <li class="pdp-attr">
     <button type="button" class="pdp-attr__btn" id="pdpColorBtn" aria-haspopup="dialog">
@@ -125,9 +126,9 @@
   </li>
 
   <li class="pdp-attr">
-    <button type="button" class="pdp-attr__btn" id="pdpVersionBtn" aria-haspopup="dialog">
-      <span class="pdp-attr__label">Versión</span>
-      <span class="pdp-attr__value" id="pdpVersionVal">Seleccionar</span>
+    <button type="button" class="pdp-attr__btn" id="pdpSizeBtn" aria-haspopup="dialog">
+      <span class="pdp-attr__label">Talla</span>
+      <span class="pdp-attr__value" id="pdpSizeVal">Seleccionar</span>
     </button>
   </li>
 </ul>
@@ -139,7 +140,7 @@
   </button>
 
   <button type="button" class="pdp-rowbtn" data-open="fit-guide" data-tab="fit-guide">
-    <span>Guía inteligente de talla</span><span aria-hidden="true">›</span>
+    <span>Guía Inteligente de Talla</span><span aria-hidden="true">›</span>
   </button>
 </div>
 

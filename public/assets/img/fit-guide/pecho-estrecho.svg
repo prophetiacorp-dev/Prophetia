@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 160" role="img" aria-labelledby="title desc">
+  <title id="title">Pecho estrecho</title>
+  <desc id="desc">Torso frontal monolineal Prophetia con pecho estrecho.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M99 24 C102 39 96 48 81 55 C70 60 65 78 62 103 L56 144" stroke="#111" stroke-width="3.2"/>
+    <path d="M131 24 C128 39 134 48 149 55 C160 60 165 78 168 103 L174 144" stroke="#111" stroke-width="3.2"/>
+    <path d="M89 78 C104 72 126 72 141 78" stroke="#111" stroke-width="2.7"/>
+    <path d="M100 58 C105 70 108 85 108 101" stroke="#111" stroke-width="2.1" opacity=".48"/>
+    <path d="M130 58 C125 70 122 85 122 101" stroke="#111" stroke-width="2.1" opacity=".48"/>
+    <path d="M47 80 C43 94 43 110 48 125" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+    <path d="M183 80 C187 94 187 110 182 125" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+  </g>
+</svg>

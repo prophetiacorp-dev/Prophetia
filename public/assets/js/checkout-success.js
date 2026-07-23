@@ -1,4 +1,4 @@
-//checkout-success.js//
+﻿//checkout-success.js//
     const money = (value, currency = 'EUR') => {
       return new Intl.NumberFormat('es-ES', {
         style: 'currency',
@@ -23,11 +23,230 @@ const replaceXpWithLp = (value = '') => {
   return String(value || '').replace(/\bXP\b/g, 'LP');
 };
 
+const isGuestSuccessOrder = (order = {}) => {
+  return order.customerType === 'guest' || Boolean(order.guestAccountIntent);
+};
+const normalizeCheckoutEmail = (value = '') => String(value || '').trim().toLowerCase();
+
+const getVerifiedSuccessUserSnapshot = (user = null) => {
+  const rawUser = user || window.__ppFirebaseAuth?.currentUser || window.__ppAuthCurrentUser || window.__ppLastUser || null;
+  const email = normalizeCheckoutEmail(rawUser?.email || '');
+  const uid = String(rawUser?.uid || '').trim();
+
+  if (!uid || !email || rawUser.emailVerified === false) return null;
+
+  return { uid, email };
+};
+
+const canExposeSuccessXpEvent = (order = {}, user = null) => {
+  if (isGuestSuccessOrder(order)) return false;
+
+  const verifiedUser = getVerifiedSuccessUserSnapshot(user);
+  const orderEmail = normalizeCheckoutEmail(order.customerEmail || '');
+
+  return Boolean(verifiedUser && orderEmail && verifiedUser.email === orderEmail);
+};
+
+async function markGuestAccountIntentForOrder(order = {}, email = '', sessionId = '') {
+  const orderDraftId = String(order.orderDraftId || '').trim();
+  const cleanEmail = normalizeCheckoutEmail(email || order.customerEmail || '');
+
+  if (!orderDraftId || !cleanEmail) return;
+
+  try {
+    await fetch('/api/guest-order-account-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderDraftId,
+        sessionId: String(sessionId || '').trim(),
+        email: cleanEmail
+      })
+    });
+  } catch (error) {
+    console.warn('[checkout-success] No se pudo marcar la cuenta invitada pendiente:', error);
+  }
+}
+
+const getShippingProfileFromOrder = (order = {}) => {
+  const shipping = order.shippingDetails || {};
+  const firstName = String(shipping.firstName || '').trim();
+  const lastName = String(shipping.lastName || '').trim();
+
+  return {
+    firstName,
+    lastName,
+    displayName: [firstName, lastName].filter(Boolean).join(' '),
+    gender: shipping.gender || '',
+    country: shipping.country || '',
+    phoneCode: shipping.phoneCode || '',
+    phone: shipping.phone || '',
+    termsAccepted: true
+  };
+};
+
+function renderGuestAccountInvite(order = {}, options = {}) {
+  const box = document.getElementById('ppGuestAccountInvite');
+  const actions = document.querySelector('.success-actions');
+  const ordersLink = actions?.querySelector('a[href="pedidos"]');
+
+  if (!box) return;
+
+  if (!isGuestSuccessOrder(order)) {
+    box.hidden = true;
+    box.innerHTML = '';
+    if (ordersLink) ordersLink.hidden = false;
+    return;
+  }
+
+  const email = String(order.customerEmail || '').trim().toLowerCase();
+  const sessionId = String(options.sessionId || '').trim();
+
+  if (ordersLink) ordersLink.hidden = true;
+
+  box.hidden = false;
+  box.innerHTML = `
+    <div class="success-guest-account__copy">
+      <p class="success-guest-account__kicker">Compra como invitado</p>
+      <h2>Crea tu cuenta Prophetia</h2>
+      <p>Guarda este pedido, tus direcciones y tu Vault con el mismo email de compra.</p>
+      <strong>${escapeHtml(email)}</strong>
+    </div>
+
+    <form class="success-guest-account__form" data-guest-account-form novalidate>
+      <label class="success-guest-account__field">
+        <span>Contraseña</span>
+        <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+      </label>
+
+      <label class="success-guest-account__field">
+        <span>Confirmar contraseña</span>
+        <input type="password" name="confirmPassword" autocomplete="new-password" minlength="8" required>
+      </label>
+
+      <label class="success-guest-account__check">
+        <input type="checkbox" name="terms" required>
+        <span>Acepto crear mi cuenta Prophetia con este email.</span>
+      </label>
+
+      <button class="success-btn" type="submit">Crear cuenta</button>
+      <p class="success-guest-account__message" data-guest-account-message role="status"></p>
+    </form>
+  `;
+
+  const form = box.querySelector('[data-guest-account-form]');
+  const message = box.querySelector('[data-guest-account-message]');
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const password = String(form.elements.password?.value || '');
+    const confirmPassword = String(form.elements.confirmPassword?.value || '');
+    const termsAccepted = Boolean(form.elements.terms?.checked);
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    const setMessage = (messageText, type = '') => {
+      if (!message) return;
+      message.textContent = messageText;
+      message.dataset.type = type;
+    };
+
+    if (!email) {
+      setMessage('No se ha podido recuperar el email del pedido.', 'error');
+      return;
+    }
+
+    if (password.length < 8) {
+      setMessage('La contraseña debe tener al menos 8 caracteres.', 'error');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage('Las contraseñas no coinciden.', 'error');
+      return;
+    }
+
+    if (!termsAccepted) {
+      setMessage('Confirma que quieres crear la cuenta con este email.', 'error');
+      return;
+    }
+
+    if (typeof window.ppCreateUserWithEmailPass !== 'function') {
+      setMessage('El registro no está disponible todavía. Recarga la página e inténtalo de nuevo.', 'error');
+      return;
+    }
+
+    try {
+      submitButton.disabled = true;
+      setMessage('Creando tu cuenta...', '');
+
+      const profile = getShippingProfileFromOrder(order);
+      await window.ppCreateUserWithEmailPass(email, password, profile.displayName, profile);
+      await markGuestAccountIntentForOrder(order, email, sessionId);
+
+      form.reset();
+      setMessage('Cuenta creada. Te hemos enviado un correo para verificarla antes de iniciar sesión.', 'success');
+      submitButton.textContent = 'Cuenta creada';
+    } catch (error) {
+      const code = String(error?.code || '');
+      const friendly = code === 'auth/email-already-in-use'
+        ? 'Este email ya tiene cuenta. Inicia sesión para vincular y consultar tus pedidos.'
+        : code === 'auth/weak-password'
+          ? 'La contraseña es demasiado débil. Usa al menos 8 caracteres.'
+          : 'No se ha podido crear la cuenta ahora. Revisa los datos e inténtalo de nuevo.';
+
+      setMessage(friendly, 'error');
+      submitButton.disabled = false;
+    }
+  });
+}
+
+function clearPurchasedCart(user = null) {
+  const uid = String(
+    user?.uid ||
+    window.__ppFirebaseAuth?.currentUser?.uid ||
+    window.__ppAuthCurrentUser?.uid ||
+    window.__ppLastUser?.uid ||
+    ''
+  ).trim();
+
+  const keys = new Set([
+    'pp_cart_v2',
+    'pp_cart_v3:guest',
+    'pp_checkout_order_draft_id',
+    'pp_checkout_email',
+    'pp_checkout_shipping',
+    'pp_checkout_shipping_details',
+    'pp_checkout_tribe_code',
+    'pp_checkout_step',
+    'pp_checkout_isGift',
+    'pp_checkout_invoiceWanted',
+    'pp_checkout_mode',
+    'pp_checkout_guest_account_intent'
+  ]);
+
+  if (uid) {
+    keys.add(`pp_cart_v3:user:${uid}`);
+  }
+
+  try {
+    keys.forEach((key) => localStorage.removeItem(key));
+
+    window.dispatchEvent(new CustomEvent('pp:cart-cleared-after-payment', {
+      detail: { uid }
+    }));
+  } catch (error) {
+    console.warn('[checkout-success] No se pudo limpiar la cesta pagada:', error);
+  }
+}
+
 const normalizeRankId = (rank = 'member') => {
-  return String(rank || 'member')
+  const clean = String(rank || 'member')
     .trim()
     .toLowerCase()
     .replace(/\s+/g, '-');
+
+  return clean === 'seer' ? 'archivist' : clean;
 };
 
 const getRankEmblemSrc = (rank = 'member') => {
@@ -496,7 +715,7 @@ const safeSteps = steps.length
 
   const visualRankId = normalizeRankId(currentRank);
   const isProphet = visualRankId === 'prophet' || isProphetRankId(currentRankId);
-  
+
 const nextGoalPreview = getNextGoalPreview(xpEvent);
 
 
@@ -882,7 +1101,7 @@ function renderUnlockedRewards(xpEvent = {}) {
     </h2>
 
     <p class="success-rewards__text">
-      Tu código privado ya está disponible en Mi contenido. También lo recibirás por email si tu cuenta tiene notificaciones activas.
+      Tu código privado ya está disponible en Mi perfil. También lo recibirás por email si tu cuenta tiene notificaciones activas.
     </p>
 
     <div class="success-rewards__list">
@@ -910,7 +1129,7 @@ function renderUnlockedRewards(xpEvent = {}) {
     </div>
 
     <a class="success-rewards__link" href="/my-content">
-      Ver en Mi contenido
+      Ver en Mi perfil
     </a>
   `;
 }
@@ -978,21 +1197,19 @@ async function waitForSuccessFirebaseUser(timeoutMs = 5000) {
 
       try {
         const headers = {};
+        let successUser = null;
 
 try {
   const user = await waitForSuccessFirebaseUser();
+  successUser = user;
 
-  if (!user?.getIdToken) {
-    throw new Error('Debes iniciar sesión para consultar este pedido.');
+  if (user?.getIdToken) {
+    const token = await user.getIdToken();
+    headers.Authorization = `Bearer ${token}`;
   }
-
-  const token = await user.getIdToken();
-  headers.Authorization = `Bearer ${token}`;
 } catch (error) {
   console.warn('[checkout-success] No se pudo obtener token Firebase:', error);
-  throw new Error('Debes iniciar sesión para consultar este pedido.');
 }
-
 const res = await fetch(`/api/order-by-session?session_id=${encodeURIComponent(sessionId)}`, {
   headers
 });
@@ -1078,25 +1295,37 @@ const res = await fetch(`/api/order-by-session?session_id=${encodeURIComponent(s
         }).join('');
 
         orderBox.textContent = JSON.stringify(order, null, 2);
+        renderGuestAccountInvite(order, { sessionId });
 
       if (isPaid) {
-  localStorage.removeItem('pp_cart_v2');
-  localStorage.removeItem('pp_checkout_order_draft_id');
+  clearPurchasedCart(successUser);
 
-if (order.tribeXpEvent && Number(order.tribeXpEvent.pointsEarned || 0) > 0) {
-  const xpSoundType = getXpEventSoundType(order.tribeXpEvent);
+  if (isGuestSuccessOrder(order)) {
+    try {
+      localStorage.removeItem('pp_tribe_xp_event');
+      sessionStorage.removeItem('pp_pending_xp_sound_type');
+    } catch {}
+  }
+
+if (canExposeSuccessXpEvent(order, successUser) && order.tribeXpEvent && Number(order.tribeXpEvent.pointsEarned || 0) > 0) {
+  const exposedXpEvent = {
+    ...order.tribeXpEvent,
+    customerType: 'account',
+    checkoutMode: 'account'
+  };
+  const xpSoundType = getXpEventSoundType(exposedXpEvent);
 
   try {
     sessionStorage.setItem('pp_pending_xp_sound_type', xpSoundType);
   } catch {}
 
   localStorage.setItem('pp_tribe_xp_event', JSON.stringify({
-    ...order.tribeXpEvent,
+    ...exposedXpEvent,
     storedAt: Date.now()
   }));
 
-  playSuccessXpAnimation(order.tribeXpEvent);
-  renderUnlockedRewards(order.tribeXpEvent);
+  playSuccessXpAnimation(exposedXpEvent);
+  renderUnlockedRewards(exposedXpEvent);
 }
 }
       } catch (err) {

@@ -1,0 +1,468 @@
+﻿/* =========================================================
+   PROPHETIA - Collection mega panel lock
+   Keeps collection pages visually distinct while making the
+   shared header mega panel full-bleed, legible and consistent.
+   ========================================================= */
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) #header,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header.pp-header,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header.pp-header > .container {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-inline: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header.pp-header > .container {
+  padding-inline: 22px !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  position: fixed !important;
+  top: var(--pp-header-h, var(--hdr-h, 64px)) !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100vw !important;
+  min-width: 100vw !important;
+  max-width: 100vw !important;
+  min-height: clamp(360px, 43vh, 520px) !important;
+  max-height: min(72dvh, 560px) !important;
+  margin: 0 0 0 -50vw !important;
+  padding: clamp(34px, 5vh, 56px) clamp(30px, 5vw, 72px) !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  border: 0 !important;
+  border-top: 1px solid rgba(17, 17, 17, .10) !important;
+  border-bottom: 1px solid rgba(17, 17, 17, .10) !important;
+  border-radius: 0 !important;
+
+  background:
+    linear-gradient(180deg, rgba(250, 248, 242, .972), rgba(242, 238, 230, .952)) !important;
+  color: #111 !important;
+  box-shadow:
+    0 28px 86px rgba(0, 0, 0, .18),
+    inset 0 1px 0 rgba(255, 255, 255, .74) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(118%) !important;
+  backdrop-filter: blur(14px) saturate(118%) !important;
+  transform-origin: top center !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega].is-open .mega-panel[data-mega] {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid {
+  display: grid !important;
+  grid-template-columns: minmax(150px, .88fr) minmax(130px, .66fr) minmax(170px, .9fr) minmax(210px, 1.05fr) !important;
+  width: min(100%, 1180px) !important;
+  margin: 0 auto !important;
+  align-items: start !important;
+  gap: clamp(28px, 6vw, 112px) !important;
+  opacity: 1 !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid--collections {
+  grid-template-columns: minmax(180px, 280px) minmax(230px, 1fr) !important;
+  align-items: center !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-col {
+  display: grid !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  background: transparent !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .panel,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-col,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] section.panel {
+  background: transparent !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] :is(a, button, span, small, li) {
+  text-shadow: none !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] :is(a:not(.mega-originals), li, span, small) {
+  color: rgba(17, 17, 17, .72) !important;
+  opacity: 1 !important;
+  text-transform: none !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] a:not(.mega-originals) {
+  display: inline-flex !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  line-height: 1.42 !important;
+  letter-spacing: .005em !important;
+  text-decoration: none !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] a:not(.mega-originals):hover,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] a:not(.mega-originals):focus-visible {
+  color: #050505 !important;
+  transform: translateX(2px) !important;
+  text-decoration: none !important;
+}
+
+html body:is(.ms-page, .lfts-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle,
+html body:is(.ms-page, .lfts-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle:hover,
+html body:is(.ms-page, .lfts-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle:focus-visible,
+html body:is(.ms-page, .lfts-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle.is-active,
+html body:is(.ms-page, .lfts-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"] {
+  color: #050505 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body:is(.ms-page, .lfts-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle.is-active::after,
+html body:is(.ms-page, .lfts-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"]::after {
+  background: #050505 !important;
+  opacity: 1 !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .pp-topbar {
+  background:
+    radial-gradient(circle at 0 0, rgba(184, 167, 255, .10), transparent 55%),
+    linear-gradient(to right, #05050a, #0a0a12, #05050a) !important;
+  color: var(--ahp-ink) !important;
+  border-bottom: 1px solid rgba(183, 255, 60, .22) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .70) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle:hover,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle:focus-visible,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle.is-active,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"] {
+  color: var(--ahp-ink) !important;
+  opacity: 1 !important;
+  font-family: var(--ahp-font-ui, var(--font-ui, Inter, system-ui, sans-serif)) !important;
+  font-style: italic !important;
+  font-size: .75rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: .16em !important;
+  text-transform: uppercase !important;
+  text-shadow: none !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle:hover,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle:focus-visible {
+  color: var(--rave-lime, #b7ff3c) !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle.is-active,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"] {
+  color: var(--ahp-ink) !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle.is-active::after,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"]::after {
+  background: var(--rave-lime, #b7ff3c) !important;
+  box-shadow: 0 0 10px rgba(183, 255, 60, .28) !important;
+  opacity: 1 !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header .search-inline .search-input,
+html body.ahp-page.pp-mega-open .pp-header.pp-header .search-inline .search-input:focus {
+  color: var(--ahp-ink) !important;
+  background: transparent !important;
+  border-bottom-color: rgba(243, 241, 234, .72) !important;
+  box-shadow: none !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header .search-inline .search-input::placeholder {
+  color: rgba(243, 241, 234, .55) !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header :is(.icon-btn, #ppAuthLogoBtn, #ppSavedBtn, #ppCartBtn),
+html body.ahp-page.pp-mega-open .pp-header.pp-header :is(svg, svg path, svg circle, svg rect) {
+  color: var(--ahp-ink) !important;
+  stroke: currentColor !important;
+  opacity: 1 !important;
+}
+
+html body.ahp-page.pp-mega-open .pp-header.pp-header #ppAuthLogoBtn img,
+html body.ahp-page.pp-mega-open .pp-header.pp-header #ppProfileChip img {
+  filter: brightness(0) invert(1) !important;
+  opacity: .95 !important;
+}
+
+@media (max-width: 1024px) {
+  html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid,
+  html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid--collections {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 26px 42px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+    top: var(--pp-header-h, var(--hdr-h, 60px)) !important;
+    max-height: calc(100dvh - var(--pp-header-h, var(--hdr-h, 60px))) !important;
+    padding: 18px var(--edge, 18px) 28px !important;
+  }
+
+  html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid,
+  html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid--collections {
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+  }
+}
+/* =========================================================
+   COLLECTIONS - Mega open legibility lock
+   Keeps each collection typography while making the shared
+   header readable in every open mega state.
+   ========================================================= */
+
+html body.ms-page {
+  --collection-mega-header-bg:
+    radial-gradient(circle at 0 0, rgba(198, 162, 100, .16), transparent 55%),
+    linear-gradient(to right, #070a10, #0c0f18, #070910);
+  --collection-mega-header-ink: var(--ms-ink, #f5f5f0);
+  --collection-mega-header-muted: rgba(245, 245, 240, .62);
+  --collection-mega-header-rule: rgba(245, 245, 240, .72);
+  --collection-mega-active-line: var(--ms-gold, #c6a264);
+  --collection-mega-nav-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --collection-mega-nav-style: normal;
+  --collection-mega-nav-weight: 500;
+  --collection-mega-nav-transform: none;
+  --collection-mega-nav-spacing: .06em;
+  --collection-mega-panel-bg:
+    linear-gradient(180deg, rgba(250, 248, 242, .972), rgba(242, 238, 230, .952));
+  --collection-mega-panel-ink: #111;
+  --collection-mega-panel-muted: rgba(17, 17, 17, .72);
+  --collection-mega-panel-hover: var(--ms-gold, #c6a264);
+}
+
+html body.lfts-page {
+  --collection-mega-header-bg:
+    linear-gradient(180deg, rgba(250, 247, 239, .98), rgba(241, 234, 222, .96));
+  --collection-mega-header-ink: var(--lfts-ink, #121212);
+  --collection-mega-header-muted: rgba(18, 18, 18, .58);
+  --collection-mega-header-rule: rgba(18, 18, 18, .68);
+  --collection-mega-active-line: var(--lfts-ink, #121212);
+  --collection-mega-nav-family: var(--lfts-font-ui, var(--font-ui, Inter, system-ui, sans-serif));
+  --collection-mega-nav-style: normal;
+  --collection-mega-nav-weight: 500;
+  --collection-mega-nav-transform: none;
+  --collection-mega-nav-spacing: .08em;
+  --collection-mega-panel-bg:
+    linear-gradient(180deg, rgba(250, 247, 239, .976), rgba(239, 232, 221, .956));
+  --collection-mega-panel-ink: var(--lfts-ink, #121212);
+  --collection-mega-panel-muted: rgba(18, 18, 18, .70);
+  --collection-mega-panel-hover: #000;
+}
+
+html body.ahp-page {
+  --collection-mega-header-bg:
+    radial-gradient(circle at 0 0, rgba(184, 167, 255, .10), transparent 55%),
+    linear-gradient(to right, #05050a, #0a0a12, #05050a);
+  --collection-mega-header-ink: var(--ahp-ink, #f3f1ea);
+  --collection-mega-header-muted: rgba(243, 241, 234, .58);
+  --collection-mega-header-rule: rgba(243, 241, 234, .72);
+  --collection-mega-active-line: var(--rave-lime, #b7ff3c);
+  --collection-mega-nav-family: var(--ahp-font-ui, var(--font-ui, Inter, system-ui, sans-serif));
+  --collection-mega-nav-style: italic;
+  --collection-mega-nav-weight: 400;
+  --collection-mega-nav-transform: uppercase;
+  --collection-mega-nav-spacing: .16em;
+  --collection-mega-panel-bg:
+    radial-gradient(circle at 0 0, rgba(184, 167, 255, .12), transparent 56%),
+    linear-gradient(180deg, rgba(6, 7, 12, .972), rgba(4, 5, 10, .952));
+  --collection-mega-panel-ink: rgba(243, 241, 234, .92);
+  --collection-mega-panel-muted: rgba(243, 241, 234, .74);
+  --collection-mega-panel-hover: var(--rave-lime, #b7ff3c);
+}
+
+html body.archive-page {
+  --collection-mega-header-bg: rgba(244, 239, 232, .94);
+  --collection-mega-header-ink: var(--archive-ink, #111214);
+  --collection-mega-header-muted: rgba(17, 18, 20, .55);
+  --collection-mega-header-rule: rgba(17, 18, 20, .62);
+  --collection-mega-active-line: var(--archive-ink, #111214);
+  --collection-mega-nav-family: var(--font-ui, Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --collection-mega-nav-style: normal;
+  --collection-mega-nav-weight: 500;
+  --collection-mega-nav-transform: none;
+  --collection-mega-nav-spacing: .02em;
+  --collection-mega-panel-bg:
+    linear-gradient(180deg, rgba(250, 247, 241, .976), rgba(238, 231, 220, .956));
+  --collection-mega-panel-ink: var(--archive-ink, #111214);
+  --collection-mega-panel-muted: rgba(17, 18, 20, .68);
+  --collection-mega-panel-hover: #000;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .pp-topbar {
+  background: var(--collection-mega-header-bg) !important;
+  color: var(--collection-mega-header-ink) !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle:hover,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle:focus-visible,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle.is-active,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"] {
+  color: var(--collection-mega-header-ink) !important;
+  font-family: var(--collection-mega-nav-family) !important;
+  font-style: var(--collection-mega-nav-style) !important;
+  font-weight: var(--collection-mega-nav-weight) !important;
+  letter-spacing: var(--collection-mega-nav-spacing) !important;
+  text-transform: var(--collection-mega-nav-transform) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle:hover,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle:focus-visible {
+  color: var(--collection-mega-panel-hover) !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle.is-active::after,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .mega-toggle[aria-expanded="true"]::after {
+  background: var(--collection-mega-active-line) !important;
+  opacity: 1 !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .search-inline .search-input,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .search-inline .search-input:focus {
+  color: var(--collection-mega-header-ink) !important;
+  border-bottom-color: var(--collection-mega-header-rule) !important;
+  background: transparent !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header .search-inline .search-input::placeholder {
+  color: var(--collection-mega-header-muted) !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header :is(.pp-right, .pp-right a, .pp-right button, .icon-btn, #ppSavedBtn, #ppCartBtn),
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page).pp-mega-open .pp-header.pp-header :is(svg, svg path, svg circle, svg rect) {
+  color: var(--collection-mega-header-ink) !important;
+  stroke: currentColor !important;
+  opacity: 1 !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  background: var(--collection-mega-panel-bg) !important;
+  color: var(--collection-mega-panel-ink) !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega],
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] * {
+  font-family: var(--collection-mega-nav-family) !important;
+  font-style: var(--collection-mega-nav-style) !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] :is(a:not(.mega-originals), li, span, small, button:not(.mega-toggle)) {
+  color: var(--collection-mega-panel-muted) !important;
+  opacity: 1 !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] a:not(.mega-originals):hover,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] a:not(.mega-originals):focus-visible {
+  color: var(--collection-mega-panel-hover) !important;
+}
+html body:is(.ms-page, .ahp-page).pp-mega-open .pp-header.pp-header #ppCartBtn .pp-cart-count__disc {
+  color: #fff !important;
+  fill: #fff !important;
+}
+
+html body:is(.ms-page, .ahp-page).pp-mega-open .pp-header.pp-header #ppCartBtn .pp-cart-count__value {
+  color: #050505 !important;
+}
+
+html body.ms-page.pp-mega-open .pp-header.pp-header #ppAuthLogoBtn img,
+html body.ms-page.pp-mega-open .pp-header.pp-header #ppProfileChip img {
+  filter: brightness(0) invert(1) !important;
+  opacity: .95 !important;
+}
+/* =========================================================
+   COLLECTIONS - Mega panel layout parity
+   Matches the regular clothing-page mega panel spacing so
+   collection columns do not drift toward the center.
+   ========================================================= */
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) {
+  margin: 0 !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) #header,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header.pp-header {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-panel[data-mega] {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100vw !important;
+  min-width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: clamp(34px, 5vh, 56px) clamp(24px, 1.65vw, 36px) clamp(42px, 6vh, 68px) !important;
+  max-height: calc(100dvh - var(--pp-header-h, var(--hdr-h, 68px))) !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid,
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid--with-originals {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  grid-template-columns:
+    minmax(150px, .92fr)
+    minmax(150px, .82fr)
+    minmax(190px, .95fr)
+    minmax(220px, 1.08fr) !important;
+  column-gap: clamp(64px, 9.4vw, 190px) !important;
+  row-gap: 30px !important;
+  align-items: start !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-grid--collections {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  grid-template-columns: minmax(190px, .8fr) minmax(260px, 1.2fr) !important;
+  column-gap: clamp(96px, 16vw, 280px) !important;
+  align-items: start !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-col {
+  gap: 12px !important;
+}
+
+html body:is(.ms-page, .lfts-page, .ahp-page, .archive-page) .pp-header .mega[data-prop-mega] .mega-originals {
+  justify-self: start !important;
+  align-self: start !important;
+  width: min(100%, 340px) !important;
+  margin-top: clamp(44px, 8vh, 96px) !important;
+}
+
+html body.ms-page .pp-header.pp-header,
+html body.ms-page .pp-header.pp-header .pp-topbar,
+html body.ms-page.pp-mega-open .pp-header.pp-header,
+html body.ms-page.pp-mega-open .pp-header.pp-header .pp-topbar {
+  background: linear-gradient(to right, #070a10, #0c0f18, #070910) !important;
+}

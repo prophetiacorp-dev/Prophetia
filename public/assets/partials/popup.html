@@ -25,26 +25,113 @@
   Únete a Prophetia Tribe y recibe acceso anticipado, códigos privados y beneficios reservados para miembros.
 </p>
 
-      <form class="tribe-form" id="tribeForm" autocomplete="on" novalidate>
-        <label class="sr-only" for="tribeName">Nombre</label>
-        <input id="tribeName" name="name" type="text" placeholder="Nombre" required>
 
-        <label class="sr-only" for="tribeEmail">Correo electrónico</label>
-        <input id="tribeEmail" name="email" type="email" placeholder="Correo electrónico" required>
+<form class="tribe-form" id="tribeForm" autocomplete="on" novalidate>
 
-        <label class="tribe-check">
-          <input id="tribeOptIn" name="optin" type="checkbox">
-          <span>Quiero recibir novedades, acceso anticipado y beneficios privados.</span>
-        </label>
+  <aside class="tribe-membership-note" role="note">
+    <strong class="tribe-membership-note__title">
+      Suscripción a Prophetia Tribe
+    </strong>
 
-        <div class="tribe-dob">
-  <div><input id="dobDD" name="dobDD" inputmode="numeric" maxlength="2" placeholder="DD" required></div>
-  <div><input id="dobMM" name="dobMM" inputmode="numeric" maxlength="2" placeholder="MM" required></div>
-  <div><input id="dobYY" name="dobYY" inputmode="numeric" maxlength="4" placeholder="YYYY" required></div>
-</div>
+    <span class="tribe-membership-note__text">
+      Los datos introducidos se utilizarán exclusivamente para gestionar tu
+      suscripción a Prophetia Tribe, verificar el acceso y comunicar descuentos,
+      beneficios y experiencias privadas de la marca. Esta suscripción no crea
+      una cuenta oficial de usuario en Prophetia.
+    </span>
+  </aside>
 
-        <button class="tribe-btn" type="submit">ENTRAR EN LA TRIBE</button>
-      </form>
+  <label class="sr-only" for="tribeName">Nombre</label>
+  <input
+    id="tribeName"
+    name="name"
+    type="text"
+    placeholder="Nombre"
+    autocomplete="name"
+    required
+  >
+
+  <label class="sr-only" for="tribeEmail">Correo electrónico</label>
+  <input
+    id="tribeEmail"
+    name="email"
+    type="email"
+    placeholder="Correo electrónico"
+    autocomplete="email"
+    required
+  >
+
+  <label class="tribe-check">
+    <input id="tribeOptIn" name="optin" type="checkbox">
+
+    <span>
+      Quiero recibir novedades, acceso anticipado y beneficios privados.
+    </span>
+  </label>
+
+  <fieldset class="tribe-dob-fieldset">
+    <legend class="tribe-dob-title">
+      Fecha de nacimiento
+    </legend>
+
+    <p id="tribeDobHelp" class="tribe-dob-help">
+      Los siguientes campos corresponden al día, mes y año de nacimiento.
+    </p>
+
+    <div class="tribe-dob" aria-describedby="tribeDobHelp">
+      <div>
+        <input
+          id="dobDD"
+          name="dobDD"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="2"
+          placeholder="DD"
+          autocomplete="bday-day"
+          aria-label="Día de nacimiento"
+          required
+        >
+      </div>
+
+      <div>
+        <input
+          id="dobMM"
+          name="dobMM"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="2"
+          placeholder="MM"
+          autocomplete="bday-month"
+          aria-label="Mes de nacimiento"
+          required
+        >
+      </div>
+
+      <div>
+        <input
+          id="dobYY"
+          name="dobYY"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="4"
+          placeholder="YYYY"
+          autocomplete="bday-year"
+          aria-label="Año de nacimiento"
+          required
+        >
+      </div>
+    </div>
+  </fieldset>
+
+  <button class="tribe-btn" type="submit">
+    ENTRAR EN LA TRIBE
+  </button>
+</form>
+
+
 
       <!-- ===== Estado de éxito tras enviar ===== -->
       <div id="tribeSuccess" class="tribe-success" hidden aria-live="polite">
@@ -68,10 +155,138 @@
 </div>
 
 <!-- Botón flotante para reabrir Prophetia Tribe -->
-<button id="tribeReopen" class="tribe-reopen" aria-label="Abrir Prophetia Tribe" hidden>
-  <img class="tribe-reopen__img" src="/assets/img/logo/prophetia-emblem.svg" alt="" />
+
+<button
+  id="tribeReopen"
+  class="tribe-reopen"
+  type="button"
+  aria-label="Abrir Prophetia Tribe: acceso privado, descuentos y beneficios"
+  hidden
+>
+  <span
+    class="tribe-reopen__emblem"
+    aria-hidden="true"
+  >
+    <img
+      class="tribe-reopen__img"
+      src="/assets/img/logo/prophetia-emblem.svg"
+      alt=""
+    >
+  </span>
+
+  <span
+    class="tribe-reopen__plus"
+    aria-hidden="true"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      width="15"
+      height="15"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.2"
+      stroke-linecap="round"
+    >
+      <path d="M12 5v14"></path>
+      <path d="M5 12h14"></path>
+    </svg>
+  </span>
+
+  <span
+    class="tribe-reopen__hint"
+    aria-hidden="true"
+  >
+    <strong>Prophetia Tribe</strong>
+    <small>Puedes volver a abrir tu acceso aquí</small>
+  </span>
 </button>
+
+
 <!-- ===== /Prophetia Tribe ===== -->
+
+<!-- ===== Primer acceso · Descubrimiento del perfil ===== -->
+<dialog
+  id="ppProfileOnboarding"
+  class="pp-profile-onboarding"
+  aria-labelledby="ppProfileOnboardingTitle"
+  aria-describedby="ppProfileOnboardingText"
+>
+  <article class="pp-profile-onboarding__card">
+    <button
+      class="pp-profile-onboarding__close"
+      type="button"
+      data-profile-onboarding-close
+      aria-label="Cerrar y continuar más tarde"
+    >
+      ×
+    </button>
+
+    <div class="pp-profile-onboarding__emblem" aria-hidden="true">
+      <img
+        src="/assets/img/logo/emblem.svg"
+        alt=""
+        width="76"
+        height="76"
+      >
+    </div>
+
+    <p class="pp-profile-onboarding__kicker">
+      Tu recorrido comienza aquí
+    </p>
+
+    <h2
+      id="ppProfileOnboardingTitle"
+      class="pp-profile-onboarding__title"
+    >
+      Tu archivo Prophetia está abierto
+    </h2>
+
+    <p
+      id="ppProfileOnboardingText"
+      class="pp-profile-onboarding__text"
+    >
+      Explora tu perfil para descubrir misiones, rangos,
+      beneficios y experiencias reservadas para tu recorrido.
+    </p>
+
+    <div
+      class="pp-profile-onboarding__features"
+      aria-label="Contenido disponible en el perfil"
+    >
+      <span>Misiones</span>
+      <span>Rangos</span>
+      <span>Beneficios</span>
+    </div>
+
+    <div class="pp-profile-onboarding__actions">
+      <button
+        class="pp-profile-onboarding__primary"
+        type="button"
+        data-profile-onboarding-open
+      >
+        Descubrir mi perfil
+      </button>
+
+      <button
+        class="pp-profile-onboarding__secondary"
+        type="button"
+        data-profile-onboarding-later
+      >
+        Más tarde
+      </button>
+    </div>
+
+    <p
+      class="pp-profile-onboarding__status"
+      data-profile-onboarding-status
+      role="status"
+      aria-live="polite"
+      hidden
+    ></p>
+  </article>
+</dialog>
+<!-- ===== /Primer acceso ===== -->
+
 
 
 <!-- ===== Cookies (GDPR) ===== -->
@@ -80,7 +295,7 @@
     <div class="cc-text">
       Utilizamos cookies propias y de terceros, y otras tecnologías similares para mejorar su experiencia y analizar el uso. 
       Puede aceptar todas, rechazarlas o configurar sus preferencias. 
-      Consulte nuestro <a href="#" class="cc-link">Aviso legal sobre privacidad</a>.
+Consulte nuestra <a href="/privacy" class="cc-link">política de privacidad</a>.
     </div>
 
     <div class="cc-actions">

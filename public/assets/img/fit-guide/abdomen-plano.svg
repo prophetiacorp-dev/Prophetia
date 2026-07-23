@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 160" role="img" aria-labelledby="title desc">
+  <title id="title">Abdomen plano</title>
+  <desc id="desc">Silueta monolineal Prophetia con abdomen plano.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M94 18 C86 38 84 58 89 79 C95 104 80 124 71 143" stroke="#111" stroke-width="3.3"/>
+    <path d="M127 19 C119 43 118 64 122 84 C127 108 121 128 112 143" stroke="#111" stroke-width="3.3"/>
+    <path d="M106 36 C107 58 112 78 109 99 C107 116 102 130 99 140" stroke="#111" stroke-width="2.2" opacity=".45"/>
+    <path d="M143 62 C145 75 145 88 142 100" stroke="#b6a36c" stroke-width="2.4" opacity=".72"/>
+  </g>
+</svg>

@@ -299,3 +299,121 @@ body.view-list .plp-grid .card-media img{ aspect-ratio: 16/10; }
     pointer-events: auto;
   }
 }
+
+/* =========================================================
+   MUJER · Carousel nav unified final
+   The grid and the carousel script now share one overlay control path.
+   ========================================================= */
+body.women-page #plp-grid .card.has-carousel,
+body.women-page #plp-grid .card.has-carousel .plp-media{
+  position: relative;
+}
+
+body.women-page #plp-grid .card.has-carousel > .nav.prev,
+body.women-page #plp-grid .card.has-carousel > .nav.next,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.prev,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.next{
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 50%;
+  z-index: 30;
+  width: var(--pp-card-nav-button-size, 44px);
+  height: var(--pp-card-nav-button-size, 44px);
+  min-width: var(--pp-card-nav-button-size, 44px);
+  min-height: var(--pp-card-nav-button-size, 44px);
+  max-width: var(--pp-card-nav-button-size, 44px);
+  max-height: var(--pp-card-nav-button-size, 44px);
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--pp-card-nav-border, rgba(0,0,0,.18));
+  border-radius: 999px;
+  background-color: var(--pp-card-nav-bg, rgba(255,255,255,.92));
+  background-image: var(--pp-nav-icon, var(--pp-nav-logo, url("/assets/img/logo/emblemblanco.svg")));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--pp-card-nav-icon-size, var(--pp-nav-icon-size, 18px));
+  box-shadow: var(--pp-card-nav-shadow, 0 8px 18px rgba(0,0,0,.10));
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-size 160ms ease;
+}
+
+body.women-page #plp-grid .card.has-carousel > .nav.prev,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.prev{
+  left: 10px;
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-prev, 180deg));
+}
+
+body.women-page #plp-grid .card.has-carousel > .nav.next,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.next{
+  right: 10px;
+  transform: translateY(-50%) rotate(var(--pp-nav-rot-next, 0deg));
+}
+
+body.women-page #plp-grid .card.has-carousel > .nav.prev svg,
+body.women-page #plp-grid .card.has-carousel > .nav.next svg,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.prev svg,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.next svg,
+body.women-page #plp-grid .card.has-carousel > .nav.prev::before,
+body.women-page #plp-grid .card.has-carousel > .nav.next::before,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.prev::before,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.next::before{
+  display: none;
+}
+
+body.women-page #plp-grid .card.has-carousel:hover > .nav.prev,
+body.women-page #plp-grid .card.has-carousel:hover > .nav.next,
+body.women-page #plp-grid .card.has-carousel:hover .plp-media > .nav.prev,
+body.women-page #plp-grid .card.has-carousel:hover .plp-media > .nav.next{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.women-page #plp-grid .card.has-carousel > .nav.prev:hover,
+body.women-page #plp-grid .card.has-carousel > .nav.next:hover,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.prev:hover,
+body.women-page #plp-grid .card.has-carousel .plp-media > .nav.next:hover{
+  border-color: var(--pp-card-nav-border-hover, rgba(0,0,0,.28));
+  box-shadow: var(--pp-card-nav-shadow-hover, 0 10px 22px rgba(0,0,0,.14));
+  background-size: calc(var(--pp-card-nav-icon-size, var(--pp-nav-icon-size, 18px)) + 2px);
+}
+
+body.women-page #plp-grid .card.has-carousel.is-quick-add-open > .nav.prev,
+body.women-page #plp-grid .card.has-carousel.is-quick-add-open > .nav.next,
+body.women-page #plp-grid .card.has-carousel.is-quick-add-open .plp-media > .nav.prev,
+body.women-page #plp-grid .card.has-carousel.is-quick-add-open .plp-media > .nav.next{
+  display: none;
+}
+
+body.women-page:is(.hoodies-page, .streetwear-page) #plp-grid .card.has-carousel{
+  --pp-card-nav-bg: rgba(5,6,10,.74);
+  --pp-card-nav-border: rgba(245,245,239,.22);
+  --pp-card-nav-border-hover: rgba(245,245,239,.42);
+  --pp-card-nav-shadow: 0 14px 32px rgba(0,0,0,.52), 0 0 18px rgba(160,120,255,.14);
+  --pp-card-nav-shadow-hover: 0 16px 36px rgba(0,0,0,.60), 0 0 24px rgba(160,120,255,.22);
+  --pp-nav-icon: url("/assets/img/logo/emblemblancovf.svg");
+}
+
+@media (hover: none){
+  body.women-page #plp-grid .card.has-carousel > .nav.prev,
+  body.women-page #plp-grid .card.has-carousel > .nav.next,
+  body.women-page #plp-grid .card.has-carousel .plp-media > .nav.prev,
+  body.women-page #plp-grid .card.has-carousel .plp-media > .nav.next{
+    opacity: .92;
+    pointer-events: auto;
+  }
+}

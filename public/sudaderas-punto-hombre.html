@@ -30,7 +30,7 @@
   </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- ===== Prophetia CSS · Silent Luxury Architecture ===== -->
   <link rel="stylesheet" href="assets/css/tokens.css">
@@ -54,12 +54,11 @@
   <link rel="stylesheet" href="assets/css/wishlist.css">
  <link rel="stylesheet" href="assets/css/men.css">
 <link rel="stylesheet" href="assets/css/sud-hombre.css">
-<link rel="stylesheet" href="assets/css/streetwear.css">
 
 
-  <!-- Más adelante puedes crear assets/css/streetwear.css y engancharlo aquí -->
 
 <!-- PANEL, LOGIN Y CARRITO -->
+  <link rel="stylesheet" href="assets/css/quick-add.css">
   <link rel="stylesheet" href="assets/css/auth.css">
   <link rel="stylesheet" href="assets/css/cart.css">
   
@@ -67,16 +66,19 @@
 
   <!-- UTILS & FIXES -->
   <link rel="stylesheet" href="assets/css/utilities.css">
-  <link rel="stylesheet" href="assets/css/popup.css">
-  <link rel="stylesheet" href="assets/css/cookies.css">
-  <link rel="stylesheet" href="assets/css/overrides.css">
+<link rel="stylesheet" href="assets/css/popup.css">
+<link rel="stylesheet" href="assets/css/cookies.css">
+<link rel="stylesheet" href="assets/css/overrides.css">
+<link rel="stylesheet" href="assets/css/punto-filters-drawer.css">
+<link rel="stylesheet" href="assets/css/plp-hero-spacing.css">
+<link rel="stylesheet" href="assets/css/plp-ui-universal.css">
 
   <!-- FONTS -->
   
   <!-- Tipos base Silent Luxury; luego en CSS puedes aplicar una “urbana” sólo en .streetwear-page -->
 </head>
 
-<body class="men-page sud-men-page"
+<body data-quick-add-enabled data-quick-add-theme="light" class="men-page sud-men-page"
       data-page="men-sudaderas"
       data-bc-root-label="Hombre"
       data-bc-root-href="/hombre"
@@ -86,7 +88,8 @@
 
   <div id="header" role="banner" aria-label="Cabecera"></div>
 
-  <main id="main" tabindex="-1">
+<main id="main" tabindex="-1">
+  <h1 class="sr-only">Sudaderas de punto para hombre</h1>
 <section class="pp-hero hero--two-cols" aria-label="Sudaderas de punto">
       <div class="pp-hero__media">
         <a class="floating-logo" href="/home" aria-label="Inicio Prophetia">
@@ -137,16 +140,21 @@
           >
             Filtros
           </button>
-          <details class="pp-sort">
-  <summary class="pp-sort-trigger">Ordenar</summary>
-
-  <div class="pp-sort-menu" role="menu" aria-label="Ordenar productos">
-    <button type="button" class="pp-sort-option" data-sort="featured">Relevancia</button>
-    <button type="button" class="pp-sort-option" data-sort="price-asc">Precio: menor a mayor</button>
-    <button type="button" class="pp-sort-option" data-sort="price-desc">Precio: mayor a menor</button>
-    <button type="button" class="pp-sort-option" data-sort="name-asc">Nombre: A-Z</button>
-  </div>
-</details>
+          <div id="menSortControl" class="pp-sort">
+            <button id="menSortButton" type="button" class="pp-btn pp-sort-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="menSortMenu">
+              Ordenar por
+            </button>
+            <div id="menSortMenu" class="pp-sort-menu" role="listbox" aria-labelledby="menSortButton" hidden>
+              <button type="button" role="option" class="pp-sort-option is-active" data-sort="relevance" aria-selected="true">Destacados</button>
+              <button type="button" role="option" class="pp-sort-option" data-sort="best-selling" aria-selected="false">Más vendidos</button>
+              <button type="button" role="option" class="pp-sort-option" data-sort="name-asc" aria-selected="false">Alfabéticamente, A-Z</button>
+              <button type="button" role="option" class="pp-sort-option" data-sort="name-desc" aria-selected="false">Alfabéticamente, Z-A</button>
+              <button type="button" role="option" class="pp-sort-option" data-sort="price-asc" aria-selected="false">Precio, menor a mayor</button>
+              <button type="button" role="option" class="pp-sort-option" data-sort="price-desc" aria-selected="false">Precio, mayor a menor</button>
+              <button type="button" role="option" class="pp-sort-option" data-sort="oldest" aria-selected="false">Fecha, antiguos primero</button>
+              <button type="button" role="option" class="pp-sort-option" data-sort="newest" aria-selected="false">Fecha, recientes primero</button>
+            </div>
+          </div>
         </div>
         <div class="pp-filter-right">
           <label class="pp-check">
@@ -314,7 +322,7 @@
   <!-- Toast -->
   <div id="ppToast" hidden>
     <span id="ppToastMsg">Añadido a artículos guardados</span>
-    <a id="ppToastAction" href="wishlist" aria-label="Abrir Mi selección">Ver</a>
+    <a id="ppToastAction" href="/wishlist" aria-label="Abrir Mi selección">Ver</a>
   </div>
 
   <div id="popup-area"></div>
@@ -342,5 +350,7 @@
 
 
 
+  <script src="assets/js/quick-add.js" defer></script>
+  <script type="module" src="/assets/js/plp-reservations.js"></script>
 </body>
 </html>

@@ -50,93 +50,7 @@ body.camisetas-page .pp-hero-title{
   color: #555;
 }
 
-/* =========================================================
-   TOOLBAR · FILTROS / ORDENAR / EN STOCK / VISTA
-   (misma anchura que el hero + menú HOMBRE por encima)
-   ========================================================= */
 
-.camisetas-page .pp-filters {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-
-  padding-inline: var(--pp-edge-men);
-  padding-block: 10px;
-
- 
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.camisetas-page .pp-filter-left,
-.camisetas-page .pp-filter-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.camisetas-page .pp-btn {
-  border: none;
-  background: transparent;
-  padding: 4px 0;
-  cursor: pointer;
-  font: inherit;
-}
-
-.camisetas-page .pp-btn:hover {
-  opacity: 0.7;
-}
-
-
-/* =========================================================
-   GRID DE PRODUCTOS · PLP
-   ========================================================= */
-
-.camisetas-page .pp-plp {
-  padding-inline: var(--pp-edge-men);
-  padding-top: 24px;
-  padding-bottom: 72px;
-}
-
-/* ===== GRID CAMISETAS · ESTILO Prophetia ===== */
-.camisetas-page .plp-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  column-gap: clamp(32px, 4vw, 56px);
-  row-gap: clamp(48px, 5vw, 72px);
-  align-items: flex-start;
-}
-
-/* En pantallas grandes fijamos 4 columnas editoriales */
-@media (min-width: 1440px) {
-  .camisetas-page .plp-grid {
-    grid-template-columns: repeat(4, minmax(260px, 1fr));
-  }
-}
-
-
-/* Ajustes suaves para las tarjetas */
-.camisetas-page .product-card,
-.camisetas-page .card {
-  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
-  background: #fff;
-}
-
-.camisetas-page .card__title,
-.camisetas-page .product-card__title {
-  font-size: 0.9rem;
-  margin-top: 8px;
-}
-
-.camisetas-page .card__price,
-.camisetas-page .product-card__price {
-  font-size: 0.9rem;
-  margin-top: 4px;
-}
 
 
 
@@ -190,75 +104,20 @@ box-shadow:
 }
 
 
-/* ============================================
-   FILTROS / ORDEN · PEGADOS A LOS EXTREMOS
-   ============================================ */
 
-.camisetas-page .pp-filters {
-  width: 100%;
-  max-width: none;
-  padding-inline: var(--pp-edge-men); /* coincidencia con hero */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-/* Izquierda: Filtros / Ordenar */
-.camisetas-page .pp-filter-left {
-  display: flex;
-  gap: 22px;
-}
-
-/* Derecha: En stock / Vista */
-.camisetas-page .pp-filter-right {
-  display: flex;
-  gap: 22px;
-}
-
-
-body.camisetas-page {
-  --pp-edge-global: 40px;
-}
-
-.camisetas-page .pp-filters,
-.camisetas-page .pp-plp,
-.camisetas-page .pp-collection-hero {
-  padding-inline: var(--pp-edge-global);
-}
 /* ============================================
    CARRIL Prophetia PARA CAMISETAS · FILTROS + GRID
    ============================================ */
 
-/* Gutter global de la página camisetas */
-body.camisetas-page {
-  --pp-edge-global: 40px; /* prueba 32–40px hasta que te cuadre visualmente */
-}
 
-/* Barra de filtros a ancho completo, como Prophetia */
-.camisetas-page .pp-filters.container {
-  max-width: none;          /* quita el tope de 1320px del .container */
-  width: 100%;
-  margin: 0;                /* fuera el centrado auto */
-  padding-inline: var(--pp-edge-global);
-  box-sizing: border-box;
-}
+
 
 /* Subhero (SILENT LUXURY HOMBRE) alineado al mismo carril */
 .camisetas-page .pp-collection-hero.container {
   max-width: none;
   width: 100%;
   margin: 0;
-  padding-inline: var(--pp-edge-global);
-  box-sizing: border-box;
-}
-
-/* Grid de productos alineado al mismo carril */
-.camisetas-page .pp-plp.container {
-  max-width: none;
-  width: 100%;
-  margin: 0;
-  padding-inline: var(--pp-edge-global);
+  padding-inline: var(--pp-edge-cam);
   box-sizing: border-box;
 }
 body.camisetas-page .pp-btn {
@@ -302,25 +161,6 @@ body.camisetas-page .pp-hero-title{
   letter-spacing: 0.12em;
 }
 
-
-
-
-
-
-/* ===== FONDO MURAL UNIFICADO CAMISETAS ===== */
-
-
-
-
-/* ===== FOOTER CAMISETAS · MISMO FONDO MURAL ===== */
-
-body.camisetas-page #footer,
-body.camisetas-page .site-footer,
-body.camisetas-page .footer-inner {
-  background: #ffffff;   /* fondo blanco sólido */
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
 
 /* =========================================================
    TOOLBAR · Igualar a breadcrumb (tamaño + casing)
@@ -391,272 +231,6 @@ body.camisetas-page .pp-filters{
 
 
 
-/* =========================================================
-   CAMISETAS · HERO + BREADCRUMB + TOOLBAR (single source of truth)
-   - Sin transforms (evita solapes)
-   - Breadcrumb absoluto dentro del hero
-   - Toolbar sticky con fondo controlado
-   ========================================================= */
-
-body.camisetas-page{
-  --pp-edge-cam: 40px;
-  --hdr-h: var(--pp-header-h, 72px);
-
-  /* logo */
-  --logo-x-camisetas: -15px;
-  --logo-y-camisetas: -48px;
-
-  /* breadcrumb */
-  --bc-top: 18px;          /* separación desde arriba del hero */
-  --bc-right: 40px;        /* alineado al carril */
-}
-
-/* HERO (en flujo normal) */
-body.camisetas-page .pp-hero.hero--two-cols{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  padding: 42px var(--pp-edge-cam) 26px;
-  min-height: 260px;
-  box-sizing: border-box;
-  background: transparent;
-}
-
-/* media */
-body.camisetas-page .pp-hero__media{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 140px;
-  position: relative;
-  overflow: visible;
-}
-
-/* logo flotante */
-body.camisetas-page .pp-hero__media .floating-logo{
-  position: absolute;
-  left: var(--logo-x-camisetas);
-  top: calc(var(--hdr-h) + var(--logo-y-camisetas));
-}
-
-body.camisetas-page .pp-hero__media .floating-logo img{
-  height: 100px;
-  width: auto;
-  display: block;
-  object-fit: contain;
-}
-
-/* breadcrumb: ABSOLUTO (sin transform, no rompe flujo) */
-body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero{
-  position: absolute;
-  top: var(--bc-top);
-  right: var(--bc-right);
-
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  border: 0;
-
-  font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  color: rgba(0,0,0,0.70);
-}
-
-body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero a{
-  color: rgba(0,0,0,0.80);
-  text-decoration: none;
-}
-body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero a:hover{
-  color: rgba(0,0,0,0.95);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero .pp-bc__sep{
-  color: rgba(0,0,0,0.35);
-}
-
-/* aside: EN FLUJO (sin transform) */
-body.camisetas-page .pp-hero__side{
-  align-self: flex-end;
-  margin-left: auto;
-  max-width: 360px;
-
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  padding: 0;
-  color: #000;
-}
-
-body.camisetas-page .pp-hero__title{
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-  text-transform: none;
-  margin: 0 0 10px;
-}
-
-body.camisetas-page .pp-hero__list a{
-  font-family: var(--font-ui);
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  text-transform: none;
-  text-decoration: none;
-  color: rgba(0,0,0,0.62);
-}
-
-/* TOOLBAR sticky (elige fondo aquí) */
-body.camisetas-page .pp-filters.container{
-  max-width: none;
-  width: 100%;
-  margin: 0;
-  padding: 10px var(--pp-edge-cam);
-  box-sizing: border-box;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-
-  position: sticky;
-  top: var(--pp-header-h, 72px);
-  z-index: 50;
-
-  /* OPCIÓN A (recomendado): blur editorial, NO “blanco a bloque” */
- background: transparent !important;
-backdrop-filter: none !important;
--webkit-backdrop-filter: none !important;
-
-
-  /* Si quieres 100% transparente, cambia lo de arriba por:
-     background: transparent;
-     backdrop-filter: none;
-  */
-}
-
-/* Responsive */
-@media (max-width:1024px){
-  body.camisetas-page .pp-hero.hero--two-cols{ padding-inline: 24px; }
-  body.camisetas-page .pp-filters.container{ padding-inline: 24px; }
-  body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero{ right: 24px; }
-}
-
-@media (max-width: 640px) {
-  body.camisetas-page {
-    --pp-edge-cam: var(--edge, 16px);
-    --logo-x-camisetas: 0px;
-    --logo-y-camisetas: -28px;
-    --bc-top: 14px;
-    --bc-right: var(--edge, 16px);
-  }
-
-  body.camisetas-page .pp-hero.hero--two-cols {
-    padding: 32px var(--pp-edge-cam) 22px;
-    min-height: 230px;
-    gap: 22px;
-  }
-
-  body.camisetas-page .pp-hero__media {
-    min-height: 112px;
-    justify-content: flex-start;
-  }
-
-  body.camisetas-page .pp-hero__media .floating-logo {
-    left: 0;
-    top: calc(var(--hdr-h) + var(--logo-y-camisetas));
-  }
-
-  body.camisetas-page .pp-hero__media .floating-logo img {
-    height: clamp(72px, 24vw, 94px);
-  }
-
-  body.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero {
-    position: relative;
-    top: auto;
-    right: auto;
-    order: -1;
-    width: 100%;
-    font-size: 0.72rem;
-  }
-
-  body.camisetas-page .pp-hero__side {
-    align-self: flex-start;
-    margin-left: 0;
-    max-width: none;
-    width: 100%;
-  }
-
-  body.camisetas-page .pp-hero__title {
-    font-size: 0.95rem;
-    margin-bottom: 12px;
-  }
-
-  body.camisetas-page .pp-hero__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 18px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  body.camisetas-page .pp-hero__list a {
-    min-height: 36px;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  body.camisetas-page .pp-filters.container {
-    position: sticky;
-    top: var(--pp-header-h, 60px);
-
-    padding: 10px var(--pp-edge-cam);
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-
-    background: rgba(255,255,255,.62) !important;
-    backdrop-filter: blur(10px) saturate(1.2) !important;
-    -webkit-backdrop-filter: blur(10px) saturate(1.2) !important;
-  }
-
-  body.camisetas-page .pp-filter-left,
-  body.camisetas-page .pp-filter-right {
-    width: 100%;
-    justify-content: space-between;
-    gap: 14px;
-  }
-
-  body.camisetas-page .pp-filter-right {
-    align-self: auto;
-  }
-
-  body.camisetas-page .pp-btn,
-  body.camisetas-page .pp-filters .pp-check {
-    min-height: 36px;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  body.camisetas-page .pp-plp.container {
-    padding-inline: var(--pp-edge-cam);
-    padding-top: 20px;
-  }
-
-  body.camisetas-page .plp-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 14px;
-    row-gap: 34px;
-  }
-}
 /* Header/topbar transparentes sobre el mural (solo camisetas) */
 body.camisetas-page .pp-topbar,
 body.camisetas-page .pp-header{
@@ -736,31 +310,7 @@ body.camisetas-page::after {
   opacity: .12;
 }
 
-/* =========================================================
-   CAMISETAS · Small mobile polish
-   ========================================================= */
 
-@media (max-width: 390px) {
-  body.camisetas-page .plp-grid {
-    grid-template-columns: 1fr;
-    row-gap: 34px;
-  }
-
-  body.camisetas-page .pp-filter-left,
-  body.camisetas-page .pp-filter-right {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  body.camisetas-page .pp-hero__list {
-    display: grid;
-    gap: 6px;
-  }
-
-  body.camisetas-page .pp-hero__list a {
-    min-height: 34px;
-  }
-}
 
 /* =========================================================
    CAMISETAS · FINAL RESPONSIVE AUTHORITY
@@ -868,6 +418,31 @@ body.camisetas-page .pp-filters.container {
   box-shadow: none;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+/* =========================================================
+   CAMISETAS HOMBRE · Toolbar breathing fix
+   Separación correcta entre Filtros / Ordenar / En stock / Vista
+   ========================================================= */
+
+body.camisetas-page .pp-filters.container .pp-filter-left,
+body.camisetas-page .pp-filters.container .pp-filter-right{
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 1.8vw, 28px);
+  flex-wrap: wrap;
+}
+
+body.camisetas-page .pp-filters.container .pp-check{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+body.camisetas-page .pp-filters.container .pp-btn,
+body.camisetas-page .pp-filters.container .pp-check span{
+  white-space: nowrap;
 }
 
 /* Grid producto */
@@ -1185,4 +760,385 @@ body.camisetas-page #menFiltersOverlay {
 /* Cuando abras los filtros, SÍ debe capturar clics para poder cerrarlos */
 body.camisetas-page #menFiltersOverlay.is-open {
   pointer-events: auto;
+}
+/* =========================================================
+   CAMISETAS HOMBRE - UX/UI trial: quiet luxury PLP
+   Reduce visual noise and brings products closer to the fold.
+   ========================================================= */
+
+body.men-page.camisetas-page {
+  --pp-edge-cam: clamp(24px, 2.6vw, 48px);
+  --cam-surface: #f7f4ed;
+  --cam-surface-soft: #fbfaf6;
+  --cam-ink: #080706;
+  --cam-muted: rgba(8, 7, 6, .62);
+  --cam-line: rgba(8, 7, 6, .12);
+  background-color: var(--cam-surface) !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.62) 0%, rgba(247,244,237,.94) 46%, rgba(247,244,237,1) 100%),
+    var(--pp-canvas-bg, none) !important;
+  background-size: cover, cover !important;
+  background-position: center top, center top !important;
+  background-attachment: scroll, fixed !important;
+  color: var(--cam-ink);
+}
+
+body.men-page.camisetas-page::before {
+  background: rgba(255,255,255,.62) !important;
+  mix-blend-mode: normal !important;
+  opacity: .86 !important;
+}
+
+body.men-page.camisetas-page::after {
+  opacity: .025 !important;
+}
+
+body.men-page.camisetas-page .pp-header,
+body.men-page.camisetas-page .pp-topbar {
+  background: transparent !important;
+}
+
+body.men-page.camisetas-page .pp-hero.hero--two-cols {
+  min-height: clamp(300px, 40vh, 430px) !important;
+  padding-top: clamp(18px, 2.4vh, 34px) !important;
+  padding-bottom: clamp(20px, 3vh, 36px) !important;
+  gap: clamp(18px, 2.4vw, 34px) !important;
+  background: transparent !important;
+}
+
+body.men-page.camisetas-page:not(.women-page) {
+  --logo-x-camisetas: clamp(-20px, -1.2vw, 0px);
+  --logo-y-camisetas: clamp(-82px, -5.6vw, -52px);
+  --logo-size-camisetas: clamp(520px, 48vw, 820px);
+}
+
+body.men-page.camisetas-page .pp-hero__media {
+  min-height: clamp(140px, 18vh, 210px) !important;
+}
+
+body.men-page.camisetas-page .pp-breadcrumb.pp-breadcrumb--hero {
+  top: clamp(12px, 1.6vw, 24px) !important;
+  right: var(--pp-edge-cam) !important;
+  color: var(--cam-muted) !important;
+}
+
+body.men-page.camisetas-page .pp-hero__side {
+  max-width: clamp(230px, 16vw, 310px) !important;
+  margin-top: -8px !important;
+  color: var(--cam-ink) !important;
+}
+
+body.men-page.camisetas-page .pp-hero__title {
+  margin: 0 0 12px !important;
+  font: 500 clamp(20px, 1.35vw, 26px)/1.1 var(--font-display, Georgia, serif) !important;
+  letter-spacing: 0 !important;
+  color: var(--cam-ink) !important;
+}
+
+body.men-page.camisetas-page .pp-hero__list {
+  display: grid !important;
+  gap: 9px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+body.men-page.camisetas-page .pp-hero__list a {
+  color: var(--cam-ink) !important;
+  font: 400 14px/1.25 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-decoration: none !important;
+}
+
+body.men-page.camisetas-page .pp-hero__list a:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+body.men-page.camisetas-page .pp-filters.container {
+  position: relative !important;
+  top: auto !important;
+  z-index: 40 !important;
+  padding-top: 8px !important;
+  padding-bottom: 18px !important;
+  background: transparent !important;
+  color: var(--cam-ink) !important;
+}
+
+body.men-page.camisetas-page .pp-filters.container .pp-filter-left,
+body.men-page.camisetas-page .pp-filters.container .pp-filter-right {
+  gap: clamp(18px, 1.8vw, 30px) !important;
+}
+
+body.men-page.camisetas-page .pp-filters.container .pp-btn,
+body.men-page.camisetas-page .pp-filters.container .pp-check,
+body.men-page.camisetas-page .pp-filters.container .pp-check span {
+  color: var(--cam-ink) !important;
+  font: 400 13px/1.2 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.men-page.camisetas-page .pp-filters.container .pp-btn:hover {
+  opacity: .58 !important;
+}
+
+body.men-page.camisetas-page .pp-plp.container {
+  padding-inline: var(--pp-edge-cam) !important;
+  padding-top: 0 !important;
+}
+
+body.men-page.camisetas-page #plp-grid.plp-grid,
+body.men-page.camisetas-page .pp-plp .plp-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: clamp(34px, 4vw, 64px) clamp(18px, 2vw, 36px) !important;
+  align-items: start !important;
+}
+
+body.men-page.camisetas-page #plp-grid .card,
+body.men-page.camisetas-page .pp-plp .card,
+body.men-page.camisetas-page #plp-grid .product-card,
+body.men-page.camisetas-page .pp-plp .product-card {
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.men-page.camisetas-page #plp-grid .card-media,
+body.men-page.camisetas-page .pp-plp .card-media {
+  aspect-ratio: 4 / 5 !important;
+  border-radius: 0 !important;
+  background: #f1f0ec !important;
+  box-shadow: none !important;
+}
+
+body.men-page.camisetas-page #plp-grid .card-media img,
+body.men-page.camisetas-page .pp-plp .card-media img {
+  object-fit: cover !important;
+  transform: none !important;
+  transition: opacity 180ms ease !important;
+}
+
+body.men-page.camisetas-page #plp-grid .card:hover .card-media img,
+body.men-page.camisetas-page .pp-plp .card:hover .card-media img {
+  opacity: .94 !important;
+  transform: none !important;
+}
+
+body.men-page.camisetas-page .card-body,
+body.men-page.camisetas-page .pp-plp .card-body {
+  padding: 12px 0 0 !important;
+  row-gap: 3px !important;
+}
+
+body.men-page.camisetas-page .card-title,
+body.men-page.camisetas-page .card-title a,
+body.men-page.camisetas-page .pp-plp .card-body h3,
+body.men-page.camisetas-page .pp-plp .card-body h3 a {
+  font: 400 13px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  color: var(--cam-ink) !important;
+}
+
+body.men-page.camisetas-page .card-sub,
+body.men-page.camisetas-page .pp-plp .card-body p:nth-of-type(1) {
+  color: var(--cam-muted) !important;
+  font: 400 12px/1.45 var(--font-ui, Inter, system-ui, sans-serif) !important;
+}
+
+body.men-page.camisetas-page .card-meta,
+body.men-page.camisetas-page .pp-plp .card-body p:nth-of-type(2),
+body.men-page.camisetas-page .pp-plp .card-price {
+  color: var(--cam-ink) !important;
+  font: 400 12px/1.35 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.men-page.camisetas-page .card .icon-btn.save {
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+  width: 36px !important;
+  height: 36px !important;
+  border: 1px solid rgba(8, 7, 6, .7) !important;
+  background: rgba(251,250,246,.76) !important;
+  color: var(--cam-ink) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+body.men-page.camisetas-page #menFiltersDrawer.men-filters-drawer {
+  background: var(--cam-surface-soft) !important;
+  color: var(--cam-ink) !important;
+  box-shadow: -18px 0 60px rgba(0, 0, 0, .14) !important;
+}
+
+body.men-page.camisetas-page #menFiltersOverlay.is-open {
+  background: rgba(8, 7, 6, .18) !important;
+}
+
+@media (max-width: 1180px) {
+  body.men-page.camisetas-page #plp-grid.plp-grid,
+  body.men-page.camisetas-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.men-page.camisetas-page {
+    --pp-edge-cam: var(--edge, 16px);
+  }
+
+  body.men-page.camisetas-page .pp-hero.hero--two-cols {
+    min-height: 280px !important;
+    padding-top: 20px !important;
+  }
+
+  body.men-page.camisetas-page:not(.women-page) {
+    --logo-x-camisetas: 0px;
+    --logo-y-camisetas: -48px;
+    --logo-size-camisetas: clamp(300px, 86vw, 520px);
+  }
+
+  body.men-page.camisetas-page .pp-filters.container {
+    background: rgba(247,244,237,.86) !important;
+    border-top: 1px solid var(--cam-line) !important;
+    border-bottom: 1px solid var(--cam-line) !important;
+  }
+
+  body.men-page.camisetas-page #plp-grid.plp-grid,
+  body.men-page.camisetas-page .pp-plp .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 32px 14px !important;
+  }
+}
+
+/* =========================================================
+   CAMISETAS HOMBRE - Functional PLP controls
+   Filters sizes, sort dropdown and dense view.
+   ========================================================= */
+
+body.men-page.camisetas-page .men-filters-panel[data-panel="talla"].is-active {
+  display: grid !important;
+  align-content: start !important;
+  justify-items: start !important;
+  gap: 18px !important;
+}
+
+body.men-page.camisetas-page .men-filters-panel[data-panel="talla"] .men-check {
+  display: inline-grid !important;
+  grid-template-columns: 16px auto !important;
+  align-items: center !important;
+  justify-content: start !important;
+  gap: 14px !important;
+  min-height: 22px !important;
+  width: auto !important;
+  color: var(--cam-muted, rgba(8,7,6,.62)) !important;
+  font: 400 14px/1.2 var(--font-ui, Inter, system-ui, sans-serif) !important;
+}
+
+body.men-page.camisetas-page .men-filters-panel[data-panel="talla"] .men-check input {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: #080706 !important;
+}
+
+body.men-page.camisetas-page .pp-sort {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+body.men-page.camisetas-page .pp-sort-trigger {
+  min-width: 0;
+}
+
+body.men-page.camisetas-page .pp-sort-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 120;
+  width: min(320px, calc(100vw - 48px));
+  padding: 6px;
+  border: 1px solid rgba(8, 7, 6, .22);
+  border-radius: 0;
+  background: rgba(251, 250, 246, .98);
+  box-shadow: 0 18px 44px rgba(8, 7, 6, .12);
+}
+
+body.men-page.camisetas-page .pp-sort-menu[hidden] {
+  display: none !important;
+}
+
+body.men-page.camisetas-page .pp-sort-option {
+  width: 100%;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--cam-ink, #080706);
+  font: 400 13px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  text-align: left;
+  cursor: pointer;
+}
+
+body.men-page.camisetas-page .pp-sort-option:hover,
+body.men-page.camisetas-page .pp-sort-option.is-active {
+  background: rgba(8, 7, 6, .08);
+}
+
+body.men-page.camisetas-page .pp-view-toggle[aria-pressed="true"] {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+body.men-page.camisetas-page.is-plp-dense-view #plp-grid.plp-grid,
+body.men-page.camisetas-page.is-plp-dense-view .pp-plp .plp-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: clamp(28px, 3vw, 52px) clamp(14px, 1.5vw, 26px) !important;
+}
+
+body.men-page.camisetas-page.is-plp-dense-view #plp-grid .card-media,
+body.men-page.camisetas-page.is-plp-dense-view .pp-plp .card-media {
+  aspect-ratio: 3 / 4 !important;
+}
+
+@media (min-width: 1600px) {
+  body.men-page.camisetas-page.is-plp-dense-view #plp-grid.plp-grid,
+  body.men-page.camisetas-page.is-plp-dense-view .pp-plp .plp-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  body.men-page.camisetas-page.is-plp-dense-view #plp-grid.plp-grid,
+  body.men-page.camisetas-page.is-plp-dense-view .pp-plp .plp-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.men-page.camisetas-page .pp-sort {
+    position: static;
+  }
+
+  body.men-page.camisetas-page .pp-sort-menu {
+    top: auto;
+    left: var(--pp-edge-cam, 16px);
+    right: var(--pp-edge-cam, 16px);
+    width: auto;
+  }
+
+  body.men-page.camisetas-page.is-plp-dense-view #plp-grid.plp-grid,
+  body.men-page.camisetas-page.is-plp-dense-view .pp-plp .plp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 28px 10px !important;
+  }
 }

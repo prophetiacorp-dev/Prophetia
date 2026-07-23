@@ -217,6 +217,90 @@ body.account-page {
   word-break: break-word;
 }
 
+/* Edición de información personal */
+.account-personal-form {
+  display: grid;
+  gap: 22px;
+  max-width: 760px;
+  padding-right: 90px;
+}
+
+.account-personal-form[hidden] {
+  display: none !important;
+}
+
+.account-personal-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+}
+
+.account-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.account-field--wide {
+  grid-column: 1 / -1;
+}
+
+.account-field input,
+.account-field select,
+.account-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(0,0,0,.28);
+  border-radius: 0;
+  background: rgba(255,255,255,.42);
+  color: #111;
+  padding: 10px 2px;
+  outline: none;
+  font: 400 14px/1.4 var(--font-ui, Inter, system-ui, sans-serif);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.account-field textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.account-field input:focus,
+.account-field select:focus,
+.account-field textarea:focus {
+  border-bottom-color: #111;
+  box-shadow: 0 1px 0 #111;
+}
+
+.account-phone-fields {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.account-personal-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.account-personal-form__status {
+  margin: -6px 0 0;
+  color: rgba(0,0,0,.66);
+  font: 400 13px/1.45 var(--font-ui, Inter, system-ui, sans-serif);
+}
+
+.account-personal-form__status.is-error {
+  color: #9d1c20;
+}
+
 /* Preferencia género / exploración */
 .account-pref {
   display: flex;
@@ -328,9 +412,23 @@ body.account-page {
     padding-right: 0;
   }
 
+  .account-personal-form {
+    padding-right: 0;
+  }
+
   .account-data__row {
     grid-template-columns: 1fr;
     gap: 4px;
+  }
+}
+
+@media (max-width: 620px) {
+  .account-personal-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-field--wide {
+    grid-column: auto;
   }
 }
 
@@ -403,4 +501,41 @@ body.account-page.pp-auth-logged [data-pp-account-guest] {
 
 body.account-page.pp-auth-guest [data-pp-account-logged] {
   display: none !important;
+}
+/* PROPHETIA ACCOUNT MEGA STACK FIX */
+body.account-page #header {
+  position: relative !important;
+  z-index: 9000 !important;
+  isolation: isolate !important;
+}
+
+body.account-page #header .pp-header,
+body.account-page #header .pp-topbar {
+  position: relative !important;
+  z-index: 9001 !important;
+}
+
+body.account-page #header .mega[data-prop-mega] {
+  position: relative !important;
+  z-index: 9002 !important;
+}
+
+body.account-page #header .mega[data-prop-mega] .mega-panel[data-mega] {
+  position: fixed !important;
+  z-index: 9010 !important;
+}
+
+body.account-page.pp-mega-open .account-layout,
+body.account-page.pp-mega-open .account-brand,
+body.account-page.pp-mega-open .account-brand__logo,
+body.account-page.pp-mega-open .account-nav {
+  position: relative !important;
+  z-index: 0 !important;
+}
+body.account-page #ppCartOverlay {
+  z-index: 9990 !important;
+}
+
+body.account-page #ppCartDrawer {
+  z-index: 10000 !important;
 }
