@@ -915,6 +915,14 @@ function showReopenCoachmark() {
 
 function shouldAutoOpenTribe() {
   /*
+    Durante el pre-lanzamiento damos prioridad a los avisos de producto.
+    Tribe sigue accesible desde su botón, pero no interrumpe al visitante.
+  */
+  if (window.ppStorefront?.salesEnabled === false) {
+    return false;
+  }
+
+  /*
     Solo visitantes y usuarios confirmados como no miembros
     pueden recibir la presentación automática.
   */

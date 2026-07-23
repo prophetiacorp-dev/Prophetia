@@ -1,4 +1,161 @@
 
+/* =========================================================
+   PROPHETIA · STOREFRONT MODE
+   Fail-closed: mientras no llegue la configuración, no se vende.
+   ========================================================= */
+(function initStorefrontMode() {
+  if (window.ppStorefront?.ready) return;
+
+  let resolveReady;
+  const state = {
+    salesEnabled: false,
+    loaded: false,
+    mode: 'prelaunch',
+    label: 'Próximamente',
+    message: 'Estamos preparando el primer drop Atlas. Explora la colección y activa el aviso para tu talla.',
+    ready: new Promise((resolve) => {
+      resolveReady = resolve;
+    })
+  };
+
+  window.ppStorefront = state;
+
+  function ensurePrelaunchBanner() {
+    if (state.salesEnabled || document.body.classList.contains('checkout-page')) {
+      document.getElementById('ppPrelaunchBanner')?.remove();
+      return null;
+    }
+
+    let banner = document.getElementById('ppPrelaunchBanner');
+    if (!banner) {
+      banner = document.createElement('section');
+      banner.id = 'ppPrelaunchBanner';
+      banner.className = 'pp-prelaunch-banner';
+      banner.setAttribute('role', 'status');
+      banner.setAttribute('aria-label', 'Estado del lanzamiento');
+      banner.innerHTML = `
+        <strong>PRÓXIMAMENTE</strong>
+        <span data-prelaunch-message></span>
+      `;
+
+      const headerHost = document.getElementById('header');
+      if (headerHost) headerHost.insertAdjacentElement('beforebegin', banner);
+      else document.body.prepend(banner);
+    }
+
+    const message = banner.querySelector('[data-prelaunch-message]');
+    if (message) message.textContent = state.message;
+    return banner;
+  }
+
+  function renderCheckoutGate() {
+    if (!document.body.classList.contains('checkout-page')) return;
+
+    const shell = document.querySelector('.ck-shell');
+    const existing = document.getElementById('ppPrelaunchGate');
+
+    if (state.salesEnabled) {
+      if (shell) shell.hidden = false;
+      existing?.remove();
+      return;
+    }
+
+    if (shell) shell.hidden = true;
+    if (existing) return;
+
+    const gate = document.createElement('section');
+    gate.id = 'ppPrelaunchGate';
+    gate.className = 'pp-prelaunch-gate';
+    gate.setAttribute('aria-labelledby', 'ppPrelaunchGateTitle');
+    gate.innerHTML = `
+      <p class="pp-prelaunch-gate__kicker">PRIMER DROP · ATLAS</p>
+      <h1 id="ppPrelaunchGateTitle">Próximamente</h1>
+      <p>${state.message}</p>
+      <a href="/hombre">Explorar la colección</a>
+    `;
+
+    document.querySelector('main.ck')?.appendChild(gate);
+  }
+
+  function syncPrelaunchCart() {
+    const button = document.querySelector('.cart-checkout, [data-cart-checkout]');
+    if (!button) return;
+
+    if (state.salesEnabled) {
+      button.removeAttribute('aria-disabled');
+      if (button.dataset.prelaunchLabel === 'true') {
+        button.textContent = 'Finalizar compra';
+        delete button.dataset.prelaunchLabel;
+      }
+      return;
+    }
+
+    button.textContent = 'Ventas próximamente';
+    button.dataset.prelaunchLabel = 'true';
+    button.setAttribute('aria-disabled', 'true');
+  }
+
+  function applyStorefrontMode() {
+    document.documentElement.dataset.storefrontMode = state.mode;
+    document.body.classList.toggle('pp-prelaunch-mode', !state.salesEnabled);
+    ensurePrelaunchBanner();
+    renderCheckoutGate();
+    syncPrelaunchCart();
+  }
+
+  window.ppShowPrelaunchNotice = () => {
+    const banner = ensurePrelaunchBanner();
+    if (banner) {
+      banner.classList.remove('is-emphasized');
+      void banner.offsetWidth;
+      banner.classList.add('is-emphasized');
+      banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    renderCheckoutGate();
+  };
+
+  window.addEventListener('partials:ready', syncPrelaunchCart);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyStorefrontMode, { once: true });
+  } else {
+    applyStorefrontMode();
+  }
+
+  fetch('/api/storefront-config', {
+    cache: 'no-store',
+    headers: { Accept: 'application/json' }
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then((config) => {
+      state.salesEnabled = config?.salesEnabled === true;
+      state.mode = state.salesEnabled ? 'sales' : 'prelaunch';
+      state.label = String(config?.label || state.label);
+      state.message = String(config?.message || state.message);
+    })
+    .catch((error) => {
+      console.warn('[storefront] configuración no disponible; ventas bloqueadas:', error.message);
+      state.salesEnabled = false;
+      state.mode = 'prelaunch';
+    })
+    .finally(() => {
+      state.loaded = true;
+      applyStorefrontMode();
+      resolveReady(state);
+      window.dispatchEvent(new CustomEvent('pp:storefront-config', {
+        detail: {
+          salesEnabled: state.salesEnabled,
+          mode: state.mode
+        }
+      }));
+    });
+})();
+
   /* =============== Utils =============== */
   const $  = (sel, el = document) => el.querySelector(sel);
   const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));

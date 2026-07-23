@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     (async function initPDP() {
+      await window.ppStorefront?.ready;
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const sizeBtn = document.getElementById('pdpSizeBtn');
@@ -915,9 +916,11 @@ function getPdpProductUrl() {
 
 function getPdpStockOptions() {
   const activeVariants = getActiveVariants();
-  const source = activeVariants.filter((variant) => {
-    return Math.max(0, Number(variant?.stock) || 0) <= 0;
-  });
+  const source = window.ppStorefront?.salesEnabled === false
+    ? activeVariants
+    : activeVariants.filter((variant) => {
+        return Math.max(0, Number(variant?.stock) || 0) <= 0;
+      });
   const productId = normalizeText(prod.id || prod.slug || 'producto');
 
   if (!activeVariants.length) {
@@ -1040,6 +1043,7 @@ function openPdpStockModal(preferred = {}) {
   const skuSelect = modal.querySelector('[data-pdp-stock-sku]');
   const emailInput = modal.querySelector('[data-pdp-stock-email]');
   const user = getPdpUser();
+  const prelaunch = window.ppStorefront?.salesEnabled === false;
 
   pdpPreferredStockSku = normalizeText(preferred.sku);
   pdpStockOptions = getPdpStockOptions();
@@ -1047,8 +1051,17 @@ function openPdpStockModal(preferred = {}) {
   if (!pdpStockOptions.length) return;
 
   if (copy) {
-    copy.textContent = `Déjanos tu correo y te avisaremos por email cuando ${prod.title || 'esta pieza'} vuelva a estar disponible.`;
+    copy.textContent = prelaunch
+      ? `Déjanos tu correo y te avisaremos cuando abramos el primer drop de ${prod.title || 'esta pieza'}.`
+      : `Déjanos tu correo y te avisaremos por email cuando ${prod.title || 'esta pieza'} vuelva a estar disponible.`;
   }
+
+  const kicker = modal.querySelector('.pdp-stock-modal__kicker');
+  const title = modal.querySelector('.pdp-stock-modal__title');
+  if (kicker) kicker.textContent = prelaunch ? 'Primer drop' : 'Producto agotado';
+  if (title) title.textContent = prelaunch
+    ? 'Avísame del lanzamiento'
+    : 'Informarme cuando esté disponible';
 
   if (skuSelect) {
     skuSelect.innerHTML = pdpStockOptions.map((option, index) => {
@@ -2631,13 +2644,34 @@ const ctaBtn  = document.getElementById('pdpCta') || document.getElementById('pd
 // 🔒 Blindaje: nunca refrescar por submit accidental
 buyForm?.addEventListener('submit', (e) => e.preventDefault(), true);
 
+// En pre-lanzamiento el aviso de la pieza tiene prioridad sobre cualquier
+// manejador global (Tribe, carrito, etc.). La captura también cubre CTAs que
+// puedan ser reemplazados al renderizar la ficha.
+document.addEventListener('click', (e) => {
+  const target = e.target?.closest?.('#pdpCta, #pdpcta');
+  if (!target || window.ppStorefront?.salesEnabled !== false) return;
+
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  openPdpStockModal({
+    sku: getSelectionSku(),
+    color: state.color,
+    size: state.size
+  });
+  syncCTA();
+}, true);
+
 // 🔒 Blindaje: el CTA se maneja por click (no por submit)
 ctaBtn?.addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  if (isProductOutOfStock()) {
-    openPdpStockModal();
+  if (window.ppStorefront?.salesEnabled === false || isProductOutOfStock()) {
+    openPdpStockModal({
+      sku: getSelectionSku(),
+      color: state.color,
+      size: state.size
+    });
     syncCTA();
     return;
   }
@@ -2732,6 +2766,15 @@ function escapeHtml(value = '') {
 }
 
 function computeCTALabel(){
+  if (window.ppStorefront?.salesEnabled === false) {
+    return {
+      enabled: true,
+      label: 'Avísame del lanzamiento',
+      hint: 'Elige la talla que quieres recibir como aviso',
+      stockOut: true
+    };
+  }
+
   if (isProductOutOfStock()) {
     return {
       enabled: true,
@@ -2762,8 +2805,12 @@ function syncCTA(){
 buyForm?.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (isProductOutOfStock()) {
-    openPdpStockModal();
+  if (window.ppStorefront?.salesEnabled === false || isProductOutOfStock()) {
+    openPdpStockModal({
+      sku: getSelectionSku(),
+      color: state.color,
+      size: state.size
+    });
     syncCTA();
     return;
   }

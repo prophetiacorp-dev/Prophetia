@@ -31,6 +31,10 @@ import {
   let activeStockOptions = [];
   let stockModal = null;
 
+  function isPrelaunch() {
+    return window.ppStorefront?.salesEnabled === false;
+  }
+
   function normalize(value = "") {
     return String(value ?? "").trim();
   }
@@ -481,21 +485,25 @@ import {
 
   function createStockNotifyButton(card, product) {
     const button = document.createElement("button");
+    const prelaunch = isPrelaunch();
 
     button.type = "button";
     button.className = "pp-stock-notify-btn";
     button.dataset.stockNotify = "";
-    button.textContent = "Avisarme cuando haya stock";
+    button.textContent = prelaunch ? "Avísame del lanzamiento" : "Avisarme cuando haya stock";
     button.setAttribute(
       "aria-label",
-      `Avisarme cuando haya stock de ${getProductTitle(card, product)}`
+      prelaunch
+        ? `Avísame del lanzamiento de ${getProductTitle(card, product)}`
+        : `Avisarme cuando haya stock de ${getProductTitle(card, product)}`
     );
 
     return button;
   }
 
   function syncStockNotify(card, product) {
-    const out = isOutOfStock(product);
+    const prelaunch = isPrelaunch();
+    const out = prelaunch || isOutOfStock(product);
     const quickAddToggle = card.querySelector("[data-quick-add-toggle], .pp-quick-add-toggle");
     let button = card.querySelector(STOCK_NOTIFY_SELECTOR);
 
@@ -513,6 +521,14 @@ import {
     if (!button) {
       button = createStockNotifyButton(card, product);
     }
+
+    button.textContent = prelaunch ? "Avísame del lanzamiento" : "Avisarme cuando haya stock";
+    button.setAttribute(
+      "aria-label",
+      prelaunch
+        ? `Avísame del lanzamiento de ${getProductTitle(card, product)}`
+        : `Avisarme cuando haya stock de ${getProductTitle(card, product)}`
+    );
 
     if (quickAddToggle) {
       quickAddToggle.hidden = true;
@@ -702,7 +718,7 @@ import {
     }
 
     return variants
-      .filter((variant) => Math.max(0, Number(variant?.stock) || 0) <= 0)
+      .filter((variant) => isPrelaunch() || Math.max(0, Number(variant?.stock) || 0) <= 0)
       .map((variant, index) => {
       const label = [
         getVariantPartLabel(variant?.cut, "cut"),
@@ -805,9 +821,19 @@ import {
     const emailInput = modal.querySelector("[data-stock-modal-email]");
     const title = getProductTitle(card, product);
     const user = getCurrentUser();
+    const prelaunch = isPrelaunch();
+
+    const kicker = modal.querySelector(".pp-stock-modal__kicker");
+    const modalTitle = modal.querySelector(".pp-stock-modal__title");
+    if (kicker) kicker.textContent = prelaunch ? "Primer drop" : "Producto agotado";
+    if (modalTitle) modalTitle.textContent = prelaunch
+      ? "Avísame del lanzamiento"
+      : "Avisarme cuando haya stock";
 
     if (copy) {
-      copy.textContent = `Déjanos tu correo y te avisaremos por email cuando ${title} vuelva a estar disponible.`;
+      copy.textContent = prelaunch
+        ? `Déjanos tu correo y te avisaremos cuando abramos el primer drop de ${title}.`
+        : `Déjanos tu correo y te avisaremos por email cuando ${title} vuelva a estar disponible.`;
     }
 
     if (skuSelect) {
@@ -906,7 +932,9 @@ import {
       showNotice(
         serverResult?.alreadyRegistered
           ? "Ya tienes un aviso activo para esta talla"
-          : "Aviso guardado. Te escribiremos cuando vuelva el stock",
+          : isPrelaunch()
+            ? "Aviso guardado. Te escribiremos cuando abramos el drop"
+            : "Aviso guardado. Te escribiremos cuando vuelva el stock",
         snapshot.url
       );
       closeStockModal();
@@ -931,7 +959,11 @@ import {
     }
 
     syncCollectionPill(card, product);
-    placeReserveButton(card, product);
+    if (isPrelaunch()) {
+      card.querySelector(RESERVE_SELECTOR)?.remove();
+    } else {
+      placeReserveButton(card, product);
+    }
     syncStockNotify(card, product);
     card.classList.add("has-plp-reserve");
   }
@@ -957,6 +989,7 @@ import {
 
   window.addEventListener("pp:auth-changed", syncGrid);
   window.addEventListener("pp:auth-ready", syncGrid);
+  window.addEventListener("pp:storefront-config", syncGrid);
 
   document.addEventListener("pp:stock-notify-variant", (event) => {
     const detail = event?.detail || {};

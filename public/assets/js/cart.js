@@ -789,6 +789,11 @@ if (cartButton) {
 }
 
 function addToCart(product, options = {}) {
+  if (window.ppStorefront?.salesEnabled !== true) {
+    window.ppShowPrelaunchNotice?.();
+    return null;
+  }
+
   if (!product || !product.id) {
     return null;
   }
@@ -1063,6 +1068,10 @@ renderCart();
       const checkoutBtn = e.target.closest('.cart-checkout, [data-cart-checkout]');
       if (checkoutBtn) {
         e.preventDefault();
+        if (window.ppStorefront?.salesEnabled !== true) {
+          window.ppShowPrelaunchNotice?.();
+          return;
+        }
         window.location.assign('/checkout#nav-js-basket-checkoutnc');
         return;
       }

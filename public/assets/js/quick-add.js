@@ -703,7 +703,8 @@ if (
       document.createElement("button");
 
     const available =
-      variant.stock > 0;
+      variant.stock > 0 &&
+      window.ppStorefront?.salesEnabled === true;
 
     button.type = "button";
     button.className =
@@ -1480,7 +1481,8 @@ function observeQuickAddGrid() {
   });
 }
 
-function startQuickAdd() {
+async function startQuickAdd() {
+  await window.ppStorefront?.ready;
   observeQuickAddGrid();
 
   window.requestAnimationFrame(

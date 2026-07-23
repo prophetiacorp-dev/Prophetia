@@ -63,6 +63,12 @@ if (!getApps().length) {
 */
 const PORT = process.env.PORT || 4242;
 const SITE_URL = process.env.SITE_URL || `http://127.0.0.1:${PORT}`;
+const SALES_ENABLED = /^(1|true|yes|on)$/i.test(
+  String(
+    process.env.SALES_ENABLED ??
+    (process.env.NODE_ENV === 'production' ? 'false' : 'true')
+  ).trim()
+);
 /*
   PRODUCCIÓN:
   Validación de variables críticas.
@@ -4786,7 +4792,23 @@ app.get('/api/health', (req, res) => {
       email: Boolean(hasConfiguredResend() && isValidEmail(process.env.ORDER_INTERNAL_EMAIL)),
       firebaseAdmin: Boolean(getApps().length),
       persistentData: Boolean(process.env.DATA_DIR)
+    },
+    storefront: {
+      salesEnabled: SALES_ENABLED,
+      mode: SALES_ENABLED ? 'sales' : 'prelaunch'
     }
+  });
+});
+
+app.get('/api/storefront-config', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    salesEnabled: SALES_ENABLED,
+    mode: SALES_ENABLED ? 'sales' : 'prelaunch',
+    label: SALES_ENABLED ? 'Ventas abiertas' : 'Próximamente',
+    message: SALES_ENABLED
+      ? 'El drop de Prophetia está disponible.'
+      : 'Estamos preparando el primer drop Atlas. Explora la colección y activa el aviso para tu talla.'
   });
 });
 
@@ -5067,7 +5089,12 @@ app.post('/api/reservations/notify', async (req, res) => {
       });
     }
 
-    if (type === 'stock-waitlist' && variant && getVariantStock(variant) > 0) {
+    if (
+      SALES_ENABLED &&
+      type === 'stock-waitlist' &&
+      variant &&
+      getVariantStock(variant) > 0
+    ) {
       return res.status(409).json({
         error: 'Esta talla ya está disponible para comprar.'
       });
@@ -6075,6 +6102,14 @@ shippingRate: order.shippingRate || null,
 });
 app.post('/api/create-checkout-session', async (req, res) => {
   try {
+    if (!SALES_ENABLED) {
+      res.set('Retry-After', '3600');
+      return res.status(503).json({
+        code: 'STOREFRONT_PRELAUNCH',
+        error: 'Las ventas todavía no están abiertas. Activa el aviso de tu talla y te escribiremos para el lanzamiento.'
+      });
+    }
+
     const { cart, email, shippingDetails, gift, invoice, discountCode, guestAccountIntent } = req.body || {};
 
     const firebaseUser = await getOptionalFirebaseUser(req);
