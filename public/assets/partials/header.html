@@ -294,6 +294,51 @@
   </div>
 </header>
 
+<!-- Navegación móvil: se muestra solo por debajo de 760px. -->
+<nav class="pp-mobile-dock" aria-label="Navegación móvil">
+  <button class="pp-mobile-dock__item pp-mobile-dock__item--menu" type="button" data-pp-mobile-menu aria-controls="ppMobileMenuPanel" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <span>Menú</span>
+  </button>
+
+  <button class="pp-mobile-dock__item" type="button" data-pp-mobile-search aria-controls="ppMobileMenuPanel" aria-expanded="false" aria-label="Buscar">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4 4"/></svg>
+  </button>
+
+  <button class="pp-mobile-dock__item pp-mobile-dock__item--brand" type="button" data-pp-mobile-account aria-label="Cuenta Prophetia">
+    <img src="/assets/img/logo/emblem.svg" alt="">
+  </button>
+
+  <button class="pp-mobile-dock__item pp-mobile-dock__item--cart" type="button" data-pp-mobile-cart aria-label="Abrir cesta">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.75 8.25h10.5l.76 10.08a1.75 1.75 0 0 1-1.75 1.92H7.74a1.75 1.75 0 0 1-1.75-1.92l.76-10.08Z"/><path d="M9.1 9V6.75a2.9 2.9 0 0 1 5.8 0V9"/></svg>
+    <span class="pp-mobile-dock__count" data-pp-mobile-cart-count hidden>0</span>
+  </button>
+</nav>
+
+<aside id="ppMobileMenuPanel" class="pp-mobile-panel" aria-hidden="true" aria-labelledby="ppMobileMenuTitle" hidden>
+  <div class="pp-mobile-panel__head">
+    <strong id="ppMobileMenuTitle">PROPHETIA</strong>
+    <button type="button" data-pp-mobile-close aria-label="Cerrar menú">×</button>
+  </div>
+
+  <form class="pp-mobile-panel__search" role="search" action="/colecciones" method="get">
+    <label class="sr-only" for="ppMobileSearchInput">Buscar</label>
+    <input id="ppMobileSearchInput" name="q" type="search" autocomplete="off" placeholder="Buscar en Prophetia">
+    <button type="submit" aria-label="Buscar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4 4"/></svg>
+    </button>
+  </form>
+
+  <nav class="pp-mobile-panel__links" aria-label="Secciones Prophetia">
+    <a href="/mujer">Mujer</a>
+    <a href="/hombre">Hombre</a>
+    <a href="/colecciones">Colecciones</a>
+    <a href="/prophetia-originals">Prophetia Originals</a>
+    <a href="/about">Prophetia House</a>
+    <a href="/wishlist">Guardados</a>
+  </nav>
+</aside>
+
 <!-- ===== MODAL Auth Prophetia ===== -->
 <dialog id="ppAuthModal" class="modal modal--sidepanel" aria-modal="true" aria-labelledby="authTitle">
   <div class="modal-card">

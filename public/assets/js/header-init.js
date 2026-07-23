@@ -218,6 +218,114 @@ function normalizeHeaderAuthIcons() {
   }
 }
 
+/* =========================================================
+   PROPHETIA · Navegación inferior móvil
+   La web conserva el header de escritorio por encima de 760px.
+   ========================================================= */
+function initMobileDock() {
+  const dock = document.querySelector('.pp-mobile-dock');
+  const panel = document.getElementById('ppMobileMenuPanel');
+  if (!dock || !panel || dock.dataset.ppMobileBound === 'true') return;
+
+  dock.dataset.ppMobileBound = 'true';
+  document.body.classList.add('pp-mobile-dock-active');
+
+  const menuButton = dock.querySelector('[data-pp-mobile-menu]');
+  const searchButton = dock.querySelector('[data-pp-mobile-search]');
+  const accountButton = dock.querySelector('[data-pp-mobile-account]');
+  const cartButton = dock.querySelector('[data-pp-mobile-cart]');
+  const closeButton = panel.querySelector('[data-pp-mobile-close]');
+  const searchInput = panel.querySelector('#ppMobileSearchInput');
+  const mobileCount = dock.querySelector('[data-pp-mobile-cart-count]');
+
+  function setExpanded(value) {
+    const expanded = value ? 'true' : 'false';
+    menuButton?.setAttribute('aria-expanded', expanded);
+    searchButton?.setAttribute('aria-expanded', expanded);
+  }
+
+  function openPanel({ focusSearch = false } = {}) {
+    panel.hidden = false;
+    panel.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('pp-mobile-panel-open');
+    setExpanded(true);
+
+    window.requestAnimationFrame(() => {
+      if (focusSearch) searchInput?.focus({ preventScroll: true });
+      else closeButton?.focus({ preventScroll: true });
+    });
+  }
+
+  function closePanel() {
+    panel.hidden = true;
+    panel.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('pp-mobile-panel-open');
+    setExpanded(false);
+  }
+
+  function clickHeaderControl(selector) {
+    const control = document.querySelector(selector);
+    if (control instanceof HTMLElement) control.click();
+  }
+
+  function syncMobileCartCount() {
+    const source = document.querySelector('#ppCartCount [data-cart-count-value]');
+    const value = Math.max(0, Number.parseInt(source?.textContent || '0', 10) || 0);
+    if (!mobileCount) return;
+
+    mobileCount.textContent = String(value);
+    mobileCount.hidden = value <= 0;
+    cartButton?.setAttribute(
+      'aria-label',
+      value > 0 ? `Abrir cesta, ${value} artículo${value === 1 ? '' : 's'}` : 'Abrir cesta, vacía'
+    );
+  }
+
+  menuButton?.addEventListener('click', () => openPanel());
+  searchButton?.addEventListener('click', () => openPanel({ focusSearch: true }));
+  closeButton?.addEventListener('click', closePanel);
+
+  accountButton?.addEventListener('click', () => {
+    const selector = document.body.classList.contains('pp-auth-logged')
+      ? '#ppProfileChip'
+      : '#ppAuthLogoBtn';
+    clickHeaderControl(selector);
+  });
+
+  cartButton?.addEventListener('click', () => clickHeaderControl('#ppCartBtn'));
+
+  panel.addEventListener('click', (event) => {
+    if (event.target.closest('a')) closePanel();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !panel.hidden) closePanel();
+  });
+
+  const sourceCount = document.getElementById('ppCartCount');
+  if (sourceCount) {
+    new MutationObserver(syncMobileCartCount).observe(sourceCount, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true
+    });
+  }
+
+  window.addEventListener('pp:cart-updated', syncMobileCartCount);
+  window.matchMedia?.('(min-width: 761px)').addEventListener?.('change', (event) => {
+    if (event.matches) closePanel();
+  });
+
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/home';
+  panel.querySelectorAll('a[href]').forEach((link) => {
+    const href = new URL(link.href, window.location.origin).pathname.replace(/\/$/, '') || '/home';
+    if (href === currentPath) link.setAttribute('aria-current', 'page');
+  });
+
+  syncMobileCartCount();
+}
+
 function initFooterTribeForm() {
   const form = document.querySelector('[data-footer-tribe-form]');
   if (!form || form.dataset.footerTribeBound === 'true') return;
@@ -1207,10 +1315,12 @@ window.addEventListener('partials:ready', () => {
 
 
 window.addEventListener("partials:ready", normalizeHeaderAuthIcons);
+window.addEventListener("partials:ready", initMobileDock);
 window.addEventListener("pp:auth-changed", normalizeHeaderAuthIcons);
 
 document.addEventListener("DOMContentLoaded", () => {
   normalizeHeaderAuthIcons();
+  initMobileDock();
 });
 
 const ppAuthClassObserver = new MutationObserver(() => {

@@ -2311,3 +2311,260 @@ body.men-page .pp-plp .card-body {
     text-align: left;
   }
 }
+
+/* =========================================================
+   PROPHETIA · MOBILE WEB SHELL
+   Misma web, navegación específica por ancho de pantalla.
+   ========================================================= */
+.pp-mobile-dock,
+.pp-mobile-panel {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --pp-mobile-dock-h: 58px;
+  }
+
+  body.pp-mobile-dock-active {
+    padding-bottom: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom));
+  }
+
+  body.pp-mobile-panel-open {
+    overflow: hidden;
+  }
+
+  body.pp-mobile-dock-active .pp-header {
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.pp-mobile-dock-active .pp-header > .container {
+    display: none !important;
+  }
+
+  .pp-mobile-dock {
+    position: fixed;
+    z-index: 4100;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    min-height: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom));
+    padding: 0 10px env(safe-area-inset-bottom);
+    border-top: 1px solid rgba(17, 17, 17, .16);
+    background: rgba(255, 255, 255, .97);
+    color: #111;
+    box-shadow: 0 -8px 26px rgba(0, 0, 0, .04);
+    backdrop-filter: blur(14px);
+  }
+
+  .pp-mobile-dock__item {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: var(--pp-mobile-dock-h);
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: 500 13px/1 var(--font-ui, Inter, system-ui, sans-serif);
+    cursor: pointer;
+  }
+
+  .pp-mobile-dock__item svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pp-mobile-dock__item--brand img {
+    width: 23px;
+    height: 23px;
+    object-fit: contain;
+  }
+
+  .pp-mobile-dock__count {
+    position: absolute;
+    top: 7px;
+    left: calc(50% + 8px);
+    display: grid;
+    min-width: 16px;
+    height: 16px;
+    place-items: center;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  .pp-mobile-dock__count[hidden] {
+    display: none !important;
+  }
+
+  .pp-mobile-panel {
+    position: fixed;
+    z-index: 4050;
+    inset: 0 0 calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom)) 0;
+    display: flex;
+    flex-direction: column;
+    padding: max(20px, env(safe-area-inset-top)) 20px 28px;
+    overflow-y: auto;
+    background: #f7f5f0;
+    color: #111;
+  }
+
+  .pp-mobile-panel[hidden] {
+    display: none !important;
+  }
+
+  .pp-mobile-panel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(17, 17, 17, .18);
+  }
+
+  .pp-mobile-panel__head strong {
+    font: 500 20px/1 var(--font-display, Georgia, serif);
+    letter-spacing: .12em;
+  }
+
+  .pp-mobile-panel__head button,
+  .pp-mobile-panel__search button {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 28px;
+    cursor: pointer;
+  }
+
+  .pp-mobile-panel__search {
+    display: grid;
+    grid-template-columns: 1fr 44px;
+    align-items: center;
+    margin: 24px 0 16px;
+    border-bottom: 1px solid #111;
+  }
+
+  .pp-mobile-panel__search input {
+    min-width: 0;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: 400 16px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  .pp-mobile-panel__search svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .pp-mobile-panel__links {
+    display: grid;
+  }
+
+  .pp-mobile-panel__links a {
+    display: flex;
+    min-height: 56px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(17, 17, 17, .14);
+    color: inherit;
+    font: 400 18px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+    text-decoration: none;
+  }
+
+  .pp-mobile-panel__links a::after {
+    content: '›';
+    font-size: 24px;
+    font-weight: 300;
+  }
+
+  .pp-mobile-panel__links a[aria-current='page'] {
+    font-weight: 600;
+  }
+
+  body.pp-mobile-dock-active #cc-banner {
+    bottom: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 10px) !important;
+  }
+
+  body.pp-mobile-dock-active #tribeReopen.tribe-reopen {
+    bottom: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 14px) !important;
+  }
+
+  /* PLP móvil: dos piezas por fila, sin tarjetas sobredimensionadas. */
+  body:is(.men-page, .women-page) #plp-grid.plp-grid,
+  body:is(.men-page, .women-page) .pp-plp .plp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 26px 4px !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid :is(.card, .product-card),
+  body:is(.men-page, .women-page) .pp-plp :is(.card, .product-card) {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 0 12px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid .card-media,
+  body:is(.men-page, .women-page) .pp-plp .card-media {
+    aspect-ratio: 4 / 5.35 !important;
+    border-radius: 0 !important;
+    background: #f2f1ee !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid .card-media img,
+  body:is(.men-page, .women-page) .pp-plp .card-media img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid :is(.card-description, .card-desc),
+  body:is(.men-page, .women-page) .pp-plp :is(.card-description, .card-desc) {
+    display: none !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid :is(.card-title, .card-title a),
+  body:is(.men-page, .women-page) .pp-plp :is(.card-title, .card-title a) {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid .pp-stock-notify-btn,
+  body:is(.men-page, .women-page) .pp-plp .pp-stock-notify-btn {
+    min-height: 38px !important;
+    padding-inline: 8px !important;
+    font-size: 10px !important;
+    letter-spacing: .02em !important;
+  }
+}
