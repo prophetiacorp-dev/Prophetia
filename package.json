@@ -9,6 +9,9 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
+    "normalize:mobile": "node scripts/normalize-mobile-html.js --write",
+    "check:mobile": "node scripts/normalize-mobile-html.js",
+    "check:mobile-parity": "node scripts/validate-mobile-parity.js",
     "sync:stock": "node scripts/sync-launch-stock.js",
     "check": "node --experimental-vm-modules scripts/validate-production.js",
     "check:technical": "node --experimental-vm-modules scripts/validate-production.js --allow-legal-placeholder"

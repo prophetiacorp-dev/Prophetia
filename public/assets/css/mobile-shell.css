@@ -1,0 +1,3155 @@
+/* =========================================================
+   PROPHETIA · MOBILE PARITY LAYER
+   Capa final compartida. Todo cambio visual queda limitado a
+   móvil/tablet vertical; el escritorio conserva su cascada.
+   ========================================================= */
+
+.pp-mobile-dock,
+.pp-mobile-panel {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  :root {
+    --pp-mobile-dock-h: 58px;
+    --pp-mobile-edge: clamp(10px, 3.2vw, 18px);
+  }
+
+  html {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  body {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  body :where(main, section, article, aside, nav, form, fieldset, .container) {
+    min-width: 0;
+  }
+
+  body :where(.container) {
+    box-sizing: border-box !important;
+    max-width: 100%;
+  }
+
+  body :where(img, video, canvas, svg) {
+    max-width: 100%;
+  }
+
+  body.pp-mobile-dock-active {
+    padding-bottom: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 24px);
+  }
+
+  body.pp-mobile-panel-open,
+  body.pp-mobile-panel-open main {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  /* El header de escritorio desaparece: no se reduce dentro del móvil. */
+  body #header,
+  body #header .pp-header {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  html body:is(
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) #header,
+  html body:is(
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.streetwear-page,
+    .women-page.streetwear-page
+  ) .pp-header.pp-header {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  body #header .pp-header {
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  body #header .pp-header > .container {
+    display: none !important;
+  }
+
+  .pp-mobile-dock:not([hidden]) {
+    position: fixed;
+    z-index: 4100;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    min-height: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom));
+    padding: 0 max(10px, env(safe-area-inset-left), env(safe-area-inset-right))
+      env(safe-area-inset-bottom);
+    border: 0;
+    border-top: 1px solid rgba(17, 17, 17, .16);
+    background: rgba(255, 255, 255, .98);
+    color: #111;
+    box-shadow: 0 -8px 26px rgba(0, 0, 0, .04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .pp-mobile-dock__item {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: var(--pp-mobile-dock-h);
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    appearance: none;
+    background: transparent;
+    color: inherit;
+    font: 500 12px/1 var(--font-ui, Inter, system-ui, sans-serif);
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .pp-mobile-dock__item:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -5px;
+  }
+
+  .pp-mobile-dock__item svg {
+    width: 23px;
+    height: 23px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pp-mobile-dock__item--brand img {
+    width: 23px;
+    height: 23px;
+    object-fit: contain;
+  }
+
+  .pp-mobile-dock__count {
+    position: absolute;
+    top: 7px;
+    left: calc(50% + 8px);
+    display: grid;
+    min-width: 16px;
+    height: 16px;
+    place-items: center;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  .pp-mobile-dock__count[hidden],
+  .pp-mobile-panel[hidden],
+  .pp-mobile-menu__section[hidden] {
+    display: none;
+  }
+
+  /* Panel completo inspirado en la shell Android, conservando rutas web. */
+  .pp-mobile-panel:not([hidden]) {
+    position: fixed;
+    z-index: 4050;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100vw;
+    padding: max(16px, env(safe-area-inset-top)) var(--pp-mobile-edge)
+      max(44px, calc(24px + env(safe-area-inset-bottom)));
+    padding-inline: max(var(--pp-mobile-edge), env(safe-area-inset-left), env(safe-area-inset-right));
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-padding-bottom: max(44px, calc(24px + env(safe-area-inset-bottom)));
+    scrollbar-width: none;
+    background: #f7f5f0;
+    color: #111;
+  }
+
+  .pp-mobile-panel:not([hidden])::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pp-mobile-panel__head {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(17, 17, 17, .18);
+  }
+
+  .pp-mobile-panel__back {
+    display: inline-flex !important;
+    width: auto !important;
+    min-width: 44px;
+    align-items: center;
+    justify-content: flex-start !important;
+    gap: 2px;
+    font: 400 14px/1 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  }
+
+  .pp-mobile-panel__back[hidden] {
+    display: block !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .pp-mobile-panel__back span:first-child {
+    font-size: 25px;
+    line-height: .8;
+  }
+
+  .pp-mobile-panel__logo {
+    display: block;
+    width: min(52vw, 210px);
+    max-width: calc(100% - 60px);
+    height: auto;
+    object-fit: contain;
+  }
+
+  .pp-mobile-panel__head button,
+  .pp-mobile-panel__search button {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    appearance: none;
+    background: transparent;
+    color: inherit;
+    font-size: 28px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .pp-mobile-panel__search {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    align-items: center;
+    margin: 18px 0 12px;
+    border-bottom: 1px solid #111;
+    transition: border-color .16s ease, box-shadow .16s ease;
+  }
+
+  .pp-mobile-panel__search input {
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 0 44px 0 2px;
+    border: 0;
+    border-radius: 0;
+    outline: 0;
+    appearance: none;
+    background: transparent;
+    color: inherit;
+    font: 400 16px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  .pp-mobile-panel__search input:focus-visible {
+    outline: 0;
+  }
+
+  .pp-mobile-panel__search:focus-within {
+    border-bottom-color: #705f39;
+    box-shadow: 0 2px 0 rgba(112, 95, 57, .72);
+  }
+
+  .pp-mobile-panel__search input::-webkit-search-cancel-button {
+    display: none;
+    appearance: none;
+  }
+
+  .pp-mobile-panel__search-clear {
+    position: absolute;
+    top: 50%;
+    right: 44px;
+    transform: translateY(-50%);
+    font-size: 18px !important;
+    line-height: 1;
+  }
+
+  .pp-mobile-panel__search-clear[hidden] {
+    display: none;
+  }
+
+  .pp-mobile-panel__search svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .pp-mobile-search-results[hidden] {
+    display: none;
+  }
+
+  .pp-mobile-search-results {
+    display: grid;
+    flex: 0 0 auto;
+    min-width: 0;
+    max-height: min(46dvh, 420px);
+    margin: 0 0 16px;
+    padding: 4px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    border-block: 1px solid rgba(17, 17, 17, .12);
+  }
+
+  .pp-mobile-search-results::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pp-mobile-search-results > p {
+    margin: 0;
+    padding: 16px 2px;
+    color: rgba(17, 17, 17, .66);
+    font: 400 14px/1.45 var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  .pp-mobile-search-result {
+    display: grid;
+    min-width: 0;
+    min-height: 64px;
+    align-content: center;
+    gap: 4px;
+    padding: 10px 2px;
+    border-bottom: 1px solid rgba(17, 17, 17, .1);
+    color: inherit;
+    text-decoration: none;
+    touch-action: manipulation;
+  }
+
+  .pp-mobile-search-result:last-child {
+    border-bottom: 0;
+  }
+
+  .pp-mobile-search-result :is(strong, span) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .pp-mobile-search-result span {
+    color: rgba(17, 17, 17, .62);
+    font-size: 12px;
+  }
+
+  .pp-mobile-panel__tabs {
+    display: flex;
+    gap: 20px;
+    min-width: 0;
+    padding: 6px 0 22px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .pp-mobile-panel__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pp-mobile-panel__content {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .pp-mobile-panel__content > .pp-mobile-menu__section:not([hidden]) {
+    display: flex;
+    flex: 1 1 100%;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+  }
+
+  .pp-mobile-panel__content > .pp-mobile-menu__section[hidden] {
+    display: none;
+  }
+
+  .pp-mobile-panel__tab {
+    min-height: 44px;
+    flex: 0 0 auto;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    border-radius: 0;
+    appearance: none;
+    background: transparent;
+    color: inherit;
+    font: 500 12px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+    cursor: pointer;
+  }
+
+  .pp-mobile-panel__tab[aria-selected='true'] {
+    border-bottom-color: currentColor;
+  }
+
+  .pp-mobile-menu__section {
+    min-width: 0;
+  }
+
+  .pp-mobile-menu__views {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    overflow-x: hidden;
+    contain: paint;
+  }
+
+  .pp-mobile-menu__views > .pp-mobile-menu__views-track {
+    min-height: 0;
+  }
+
+  .pp-mobile-menu__views-track {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    gap: 0;
+    transform: translate3d(0, 0, 0);
+    transition: transform 280ms cubic-bezier(.22, .61, .36, 1);
+    will-change: transform;
+  }
+
+  .pp-mobile-menu__section.is-submenu-open .pp-mobile-menu__views-track {
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  .pp-mobile-menu__views-track > .pp-mobile-menu__level {
+    display: block;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+
+  .pp-mobile-menu__views-track > .pp-mobile-menu__level::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pp-mobile-menu__sublevel-title {
+    margin: 0 0 18px;
+    padding-top: 8px;
+    font: 500 13px/1.3 var(--font-ui, Inter, system-ui, sans-serif);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .pp-mobile-menu__eyebrow {
+    margin: 18px 0 4px;
+    color: rgba(17, 17, 17, .54);
+    font: 500 10px/1.3 var(--font-ui, Inter, system-ui, sans-serif);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .pp-mobile-menu__eyebrow:first-child {
+    margin-top: 0;
+  }
+
+  .pp-mobile-menu__level[hidden] {
+    display: none;
+  }
+
+  .pp-mobile-menu__level[aria-hidden='true'] {
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pp-mobile-menu__views-track {
+      transition-duration: .01ms;
+    }
+  }
+
+  .pp-mobile-menu__level-trigger {
+    display: flex;
+    width: 100%;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    appearance: none;
+    background: transparent;
+    color: inherit;
+    font: 400 16px/1.25 var(--font-ui, Inter, system-ui, sans-serif);
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .pp-mobile-menu__level-trigger::after {
+    content: '›';
+    margin-left: 16px;
+    color: rgba(17, 17, 17, .58);
+    font-size: 22px;
+    font-weight: 300;
+  }
+
+  .pp-mobile-menu__level-trigger:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  .pp-mobile-menu__links {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pp-mobile-menu__links + .pp-mobile-menu__links {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(17, 17, 17, .12);
+  }
+
+  .pp-mobile-menu__links a {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    color: inherit;
+    font: 400 16px/1.25 var(--font-ui, Inter, system-ui, sans-serif);
+    text-decoration: none;
+  }
+
+  .pp-mobile-menu__links a[aria-expanded][aria-controls]::after {
+    content: '›';
+    margin-left: auto;
+    font-size: 20px;
+    font-weight: 300;
+    transition: transform .16s ease;
+  }
+
+  .pp-mobile-menu__links a[aria-expanded='true'][aria-controls]::after {
+    transform: rotate(90deg);
+  }
+
+  .pp-mobile-menu__links--secondary a {
+    min-height: 44px;
+    color: rgba(17, 17, 17, .68);
+    font-size: 14px;
+  }
+
+  .pp-mobile-menu__links a[aria-current='page'] {
+    font-weight: 650;
+  }
+
+  body.pp-mobile-panel-open .pp-mobile-dock:not([hidden]) {
+    display: none;
+  }
+
+  .pp-mobile-panel__utility {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin-top: auto;
+    padding-top: 34px;
+    color: rgba(17, 17, 17, .66);
+    font: 400 12px/1.4 var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  .pp-mobile-panel__utility a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  .pp-mobile-panel__brand {
+    display: flex;
+    justify-content: center;
+    padding: 26px 0 max(12px, env(safe-area-inset-bottom));
+  }
+
+  .pp-mobile-panel__brand img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+  }
+
+  /* Banner de prelanzamiento fino y estable en todo el rango móvil. */
+  .pp-prelaunch-banner {
+    min-height: 44px;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px 7px;
+    padding: 7px max(10px, env(safe-area-inset-right)) 7px max(10px, env(safe-area-inset-left));
+    overflow: visible;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .pp-prelaunch-banner strong {
+    flex: 0 0 auto;
+    font-size: 9px;
+    letter-spacing: .14em;
+  }
+
+  .pp-prelaunch-banner [data-prelaunch-message] {
+    display: inline;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: 10px;
+  }
+
+  .pp-prelaunch-banner::after {
+    content: none;
+    display: none;
+  }
+
+  .pp-prelaunch-gate {
+    box-sizing: border-box;
+    width: calc(100% - 20px);
+    max-width: 680px;
+    max-height: calc(100dvh - 20px);
+    margin: max(10px, env(safe-area-inset-top)) auto;
+    padding-block: clamp(24px, 8vw, 44px);
+    padding-inline: max(var(--pp-mobile-edge), env(safe-area-inset-left), env(safe-area-inset-right));
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+  }
+
+  .pp-prelaunch-gate a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  body.pp-mobile-dock-active #cc-banner {
+    bottom: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 10px);
+  }
+
+  body.pp-mobile-dock-active #tribeReopen.tribe-reopen {
+    display: none !important;
+  }
+
+  /* Catálogos Hombre/Mujer: hero vertical y carriles sin ancho fijo. */
+  body:is(.men-page, .women-page) {
+    --pp-edge-men: var(--pp-mobile-edge);
+    --pp-edge-women: var(--pp-mobile-edge);
+  }
+
+  body.streetwear-page {
+    --street-footer-bottom-x: 0px;
+    --street-footer-legal-x: 0px;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.layout-men, .layout-women, .pp-hero.hero--two-cols) {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 12px var(--pp-mobile-edge) 0;
+  }
+
+  body:is(.men-page, .women-page)
+  .hero:is(.hero--men, .hero--women) {
+    min-height: 0 !important;
+    height: auto !important;
+    align-items: start;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.hero-left, .hero-right, .hero-main, .hero-side, .pp-hero__side,
+      .plp-wrap, .plp-wrap .container, #plp-grid, .pp-plp) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body:is(.men-page, .women-page) .pp-hero__media {
+    width: 100%;
+    max-width: 100%;
+    align-self: stretch;
+    min-height: clamp(118px, 26vw, 180px);
+    overflow: hidden !important;
+  }
+
+  body:is(.men-page, .women-page) .hero-frame {
+    position: relative;
+    left: 0 !important;
+    right: auto !important;
+    width: 100%;
+    height: clamp(190px, 58vw, 300px);
+    min-height: 190px;
+    max-height: 300px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Los MP4 locales pueden ser punteros Git LFS: la imagen queda detrás
+     y solo se descubre cuando JS confirma que no llegó un frame válido. */
+  body.women-page .hero.hero--women .hero-frame {
+    background: #0b0b0b url("/assets/img/portadas/covermask.png") center / cover no-repeat;
+  }
+
+  body.men-page .hero.hero--men .hero-frame {
+    background: #11101a url("/assets/img/portadas/aft.png") center 44% / cover no-repeat;
+  }
+
+  body:is(.men-page, .women-page)
+  .hero-frame.pp-mobile-video-fallback .hero-video__media {
+    opacity: 0;
+  }
+
+  body:is(.men-page, .women-page) .hero-video,
+  body:is(.men-page, .women-page) .hero-video__media {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body:is(.men-page, .women-page) .hero-video__media {
+    display: block;
+    object-fit: cover;
+    transition: opacity .18s ease;
+  }
+
+  /* overrides.css fija aquí un wordmark de 920 px; en móvil se contiene. */
+  body:is(.men-page, .women-page, .men-page.streetwear-page, .women-page.streetwear-page)
+  .pp-hero__media .floating-logo {
+    top: max(12px, env(safe-area-inset-top)) !important;
+    left: 0 !important;
+    width: min(76vw, 360px) !important;
+    max-width: 100% !important;
+  }
+
+  body:is(.men-page, .women-page, .men-page.streetwear-page, .women-page.streetwear-page)
+  .pp-hero__media .floating-logo img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  body:is(.men-page, .women-page) .hero-frame .floating-logo {
+    top: 50% !important;
+    left: 50% !important;
+    width: min(86%, 340px) !important;
+    max-width: 86% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  body:is(.men-page, .women-page) .hero-frame .floating-logo img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  body:is(.men-page, .women-page, .men-page.streetwear-page, .women-page.streetwear-page)
+  .pp-hero .pp-breadcrumb--hero {
+    top: auto !important;
+    right: auto !important;
+    bottom: 10px !important;
+    left: var(--pp-mobile-edge) !important;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  body:is(.men-page, .women-page) .brand-band {
+    max-width: 100%;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  body:is(.men-page, .women-page) .brand-band img,
+  body:is(.men-page, .women-page) .page-logo img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.men-toolbar.container, .women-toolbar.container, .pp-filters.container,
+      .plp-wrap .container) {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: var(--pp-mobile-edge);
+  }
+
+  body:is(.men-page, .women-page) .pp-filters.container {
+    top: 0;
+    min-height: 48px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  body:is(.men-page, .women-page) .pp-filters.container::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.women-page .women-band__side {
+    position: static;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 var(--pp-mobile-edge);
+    overflow: visible;
+    transform: none !important;
+  }
+
+  body.women-page .women-band__title {
+    margin: 0 0 10px;
+    line-height: 1.2;
+  }
+
+  body.women-page .women-band__list {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  body.women-page .women-band__list li,
+  body.women-page .women-band__list a {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  body.women-page .women-band__list a {
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 10px 0;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.men-toolbar.container, .women-toolbar.container) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 12px;
+    padding-block: 10px 14px;
+    border-top: 1px solid rgba(17, 17, 17, .12);
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.men-toolbar__left, .women-toolbar__left) {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.men-toolbar__right, .women-toolbar__right) {
+    display: flex;
+    width: 100%;
+    min-height: 44px;
+    align-items: center;
+    gap: 10px;
+    padding-top: 2px;
+    border-top: 1px solid rgba(17, 17, 17, .08);
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.men-toolbar__right, .women-toolbar__right) label {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.3;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.men-btn-ghost, .women-btn-ghost, .men-select select, .women-select select) {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  body:is(.men-page, .women-page) :is(.men-select, .women-select) {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body:is(.men-page, .women-page) :is(.men-select, .women-select) select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.pp-hero__list a, .pp-filters .pp-btn, .pp-filters .pp-check,
+      .pp-sort-trigger, .pp-sort-option) {
+    min-height: 44px;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    align-items: start;
+    justify-content: stretch;
+    gap: 24px 6px;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas) :is(.card, .product-card) {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 0 0 10px !important;
+    overflow: hidden !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.plp-media, .card-media, .img-wrap) {
+    width: 100% !important;
+    min-width: 0 !important;
+    aspect-ratio: 4 / 5.35 !important;
+    overflow: hidden !important;
+    border-radius: 0 !important;
+    background: #f2f1ee !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.plp-media img, .card-media img, .img-wrap img) {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: contain !important;
+    transform: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-body, .product-card__body) {
+    min-width: 0 !important;
+    padding: 9px 3px 0 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-title, .card-title a, .product-card__title) {
+    overflow-wrap: anywhere;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-sub, .card-meta, .price, .card-price) {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-description, .card-desc) {
+    display: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.icon-btn.save, .ico-btn.save, .save-btn) {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  body:is(.men-page, .women-page) .pp-stock-notify-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 7px 5px !important;
+    white-space: normal !important;
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+    letter-spacing: .01em !important;
+  }
+
+  /* Filtros móviles: jerarquía editorial y controles sin apariencia nativa. */
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer) {
+    background: #f7f5f0;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-head, .women-filters-head) {
+    padding-inline: 24px;
+    padding-bottom: 16px;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-head-top, .women-filters-head-top) {
+    min-height: 56px;
+    align-items: center;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-tabs, .women-filters-tabs) {
+    display: flex;
+    gap: 24px;
+    margin-top: 12px;
+    padding-bottom: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-tabs, .women-filters-tabs)::-webkit-scrollbar {
+    display: none;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-tab, .women-filters-tab) {
+    min-width: max-content;
+    padding-inline: 0;
+    white-space: nowrap;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-body, .women-filters-body) {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 22px 24px calc(112px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-panel, .women-filters-panel) {
+    padding-top: 4px;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-swatch-list, .women-swatch-list) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 28px;
+    row-gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-swatch, .women-swatch, .men-check, .women-check) {
+    display: flex;
+    min-width: 0;
+    min-height: 44px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-swatch-label, .women-swatch-label, .men-check-label, .women-check-label) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-swatch-dot, .women-swatch-dot) {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    box-sizing: border-box;
+    border: 1px solid rgba(17, 17, 17, .42);
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-foot, .women-filters-foot) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    padding: 12px 24px max(16px, env(safe-area-inset-bottom));
+    background: #f7f5f0;
+    box-shadow: 0 -8px 20px rgba(17, 17, 17, .08);
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-foot-inner, .women-filters-foot-inner) {
+    display: grid;
+    gap: 10px;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer, .men-filters-drawer, .women-filters-drawer)
+  :is(.men-filters-cta, .women-filters-cta) {
+    min-height: 48px;
+    background: #171717;
+    color: #fff;
+  }
+
+  /* Checkbox editorial para toolbar y drawers. */
+  body:is(.men-page, .women-page)
+  :is(.pp-filters input[type="checkbox"], .men-check input, .women-check input) {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    box-sizing: border-box;
+    margin: 0;
+    border: 1.5px solid #171717;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.pp-filters input[type="checkbox"], .men-check input, .women-check input):checked {
+    border-color: #171717;
+    background: #171717;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.pp-filters input[type="checkbox"], .men-check input, .women-check input):checked::after {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 4px;
+    margin: 5px 0 0 5px;
+    border-bottom: 1.5px solid #f7f5f0;
+    border-left: 1.5px solid #f7f5f0;
+    transform: rotate(-45deg);
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.pp-filters input[type="checkbox"], .men-check input, .women-check input):focus-visible {
+    outline: 2px solid #705f39;
+    outline-offset: 4px;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.pp-filters input[type="checkbox"], .men-check input, .women-check input):disabled {
+    opacity: .45;
+    cursor: not-allowed;
+  }
+
+  /* Los drawers cubren el viewport y siempre quedan sobre el dock. */
+  :is(#menFiltersOverlay, #womenFiltersOverlay) {
+    z-index: 4390;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer) {
+    z-index: 4400;
+    width: min(100vw, 420px);
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    box-sizing: border-box;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+    overflow: hidden;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer)
+  :is(.men-filters-close, .women-filters-close,
+      .men-filters-tab, .women-filters-tab,
+      .men-swatch, .women-swatch,
+      .men-filters-clear, .women-filters-clear,
+      .men-filters-cta, .women-filters-cta) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer)
+  :is(.men-check, .women-check) {
+    min-height: 44px !important;
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer)
+  :is(.men-filters-head, .women-filters-head) {
+    min-height: calc(60px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+  }
+
+  :is(#menFiltersDrawer, #womenFiltersDrawer)
+  :is(.men-filters-foot, .women-filters-foot) {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  /* PDP: galería horizontal, prenda completa y CTA sobre el dock. */
+  body.pdp {
+    padding-bottom: calc(var(--pp-mobile-dock-h) + 78px + env(safe-area-inset-bottom));
+  }
+
+  body.pdp .brand-band {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0;
+    padding-inline: var(--pp-mobile-edge);
+    transform: none;
+    overflow: hidden;
+  }
+
+  body.pdp .brand-band .container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    transform: none;
+  }
+
+  body.pdp .brand-band .page-logo {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    transform: none;
+  }
+
+  body.pdp .brand-band .page-logo img,
+  body.pdp .brand-band .page-logo__img {
+    width: min(88vw, 420px);
+    max-width: 100%;
+  }
+
+  body.pdp .product-wrap.container {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 20px;
+    padding-inline: var(--pp-mobile-edge);
+  }
+
+  body.pdp :is(.pdp-gallery, .pdp-hero, .pdp-panel, .pdp-shot) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.pdp .pdp-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  body.pdp .pdp-hero {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  body.pdp .pdp-hero::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.pdp .pdp-shot {
+    flex: 0 0 100%;
+    aspect-ratio: 4 / 5.35;
+    scroll-snap-align: start;
+    overflow: hidden;
+    background: #f2f1ee;
+  }
+
+  body.pdp .pdp-shot img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    display: block;
+    object-fit: contain;
+  }
+
+  body.pdp .pdp-thumbs {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+  }
+
+  body.pdp .pdp-panel {
+    position: static;
+    justify-self: stretch;
+    padding-top: 2px;
+  }
+
+  body.pdp .pdp-attr__btn,
+  body.pdp .pdp-rowbtn {
+    min-height: 48px;
+  }
+
+  body.pdp .pdp-buy {
+    position: fixed;
+    z-index: 4000;
+    right: max(var(--pp-mobile-edge), env(safe-area-inset-right));
+    bottom: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 8px);
+    left: max(var(--pp-mobile-edge), env(safe-area-inset-left));
+    margin: 0;
+  }
+
+  body.pdp #pdpCta {
+    width: 100%;
+    min-height: 52px;
+    height: auto;
+    padding-inline: 18px;
+    border-radius: 999px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .16);
+  }
+
+  body.pdp .ad-panel {
+    width: 100%;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    box-sizing: border-box;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  }
+
+  body.pdp .ad:is(.open, .is-open) {
+    z-index: 4400;
+  }
+
+  body.pdp .ad-head {
+    min-height: calc(64px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+  }
+
+  body.pdp .ad-body {
+    min-height: 0;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  body.pdp :is(.ad-close, .pdp-stock-modal__close,
+               .ad-tab, .ad-optrow, .fit-guide__choice,
+               .fit-guide__continue, .fit-guide__addCart,
+               .fit-guide__ghost, .fit-guide__textBtn,
+               .pdp-stock-modal__submit) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  body.pdp :is(.fit-guide, .pdp-stock-modal__field)
+  :is(input:not([type="range"]), select) {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  /* Carrito: al abrirse ocupa toda la pantalla y sustituye al dock. */
+  body.pp-cart-open .pp-mobile-dock {
+    display: none;
+  }
+
+  #ppCartOverlay {
+    z-index: 4390;
+  }
+
+  #ppCartDrawer {
+    z-index: 4400;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    box-sizing: border-box;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+    overflow: hidden;
+  }
+
+  #ppCartDrawer :is(.pp-cart-body, .cart-list, .pp-cart-actions, .cart-foot) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #ppCartDrawer .pp-cart-header {
+    min-height: calc(64px + env(safe-area-inset-top));
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+
+  #ppCartDrawer .cart-foot {
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+  }
+
+  #ppCartDrawer :is(.pp-cart-close, .cart-item__remove, .cart-qty button) {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  #ppCartDrawer :is(.pp-cart-btn, .cart-checkout) {
+    min-height: 48px;
+  }
+
+  .pp-cart-confirm.is-visible {
+    z-index: 4520;
+  }
+
+  .pp-cart-confirm :is(.pp-cart-confirm__close, .pp-cart-confirm__actions button) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  #tribeModal:is(.is-open, .open) {
+    z-index: 4450;
+  }
+
+  #tribeModal .tribe-panel {
+    max-width: 100vw;
+    max-height: 100dvh;
+    box-sizing: border-box;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+    overflow-y: auto;
+  }
+
+  #tribeModal :is(.tribe-close, .tribe-btn) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  #tribeModal .tribe-form :is(input:not([type="checkbox"]), select, textarea) {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  :is(#ppAuthModal, #ppAccountPanel)[open],
+  #ppProfileOnboarding[open] {
+    z-index: 4500;
+  }
+
+  :is(#ppAuthModal, #ppAccountPanel)
+  :is(.modal-close, .modal-back, .pp-accountpanel-close),
+  #ppProfileOnboarding .pp-profile-onboarding__close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  :is(#ppAuthModal, #ppAccountPanel)
+  :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  body:is(.pp-cart-open, .pp-filters-open, .drawer-open, .modal-open)
+  :is(.pp-mobile-dock:not([hidden]), .pdp-buy) {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  @supports selector(body:has(*)) {
+    body:has(:is(#ppAuthModal[open], #ppAccountPanel[open], #ppProfileOnboarding[open],
+                 #tribeModal.is-open, #tribeModal.open, .pdp-stock-modal:not([hidden]),
+                 #pdpZoom:not(.hidden), .pp-cart-confirm.is-visible))
+    :is(.pp-mobile-dock:not([hidden]), .pdp-buy) {
+      visibility: hidden;
+      pointer-events: none;
+    }
+  }
+
+  /* Wishlist: dos tarjetas compactas como el catálogo móvil. */
+  body.wishlist-page :is(main.wl-layout, .wl-results) {
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: var(--pp-mobile-edge);
+  }
+
+  body.wishlist-page .wl-nav {
+    top: 0;
+    scrollbar-width: none;
+  }
+
+  body.wishlist-page .wl-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.wishlist-page .wl-nav {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  body.wishlist-page .wishlist-grid {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+    gap: 22px 8px;
+    margin-top: 24px;
+  }
+
+  body.wishlist-page .wishlist-grid .product-card {
+    min-width: 0;
+    border-radius: 0;
+  }
+
+  body.wishlist-page .wishlist-grid .product-card .img-wrap {
+    aspect-ratio: 4 / 5.35;
+    border-radius: 0;
+  }
+
+  body.wishlist-page .wishlist-grid .product-card .img-wrap img {
+    object-fit: contain;
+  }
+
+  body.wishlist-page .wishlist-card-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Cuenta: una sola columna y navegación táctil desplazable. */
+  body.account-page
+  :is(.account-layout, .account-main, .account-hero__copy,
+      .account-hero__panel, .account-section__content) {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.account-page
+  :is(.account-section, .account-hero__grid,
+      .account-personal-form__grid, .account-cards,
+      .account-calendar-preview__inner, .account-vault-preview__inner) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.account-page .account-nav__inner {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding-inline: max(var(--pp-mobile-edge), env(safe-area-inset-left), env(safe-area-inset-right));
+  }
+
+  body.account-page .account-nav__links {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  body.account-page .account-nav__links a,
+  body.account-page .account-nav__logout {
+    display: inline-flex;
+    min-height: 44px;
+    flex: 0 0 auto;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  body.account-page .account-nav__links::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.account-page .account-data__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  body.account-page .account-brand {
+    max-width: 100%;
+    padding: 22px var(--pp-mobile-edge);
+    overflow: hidden;
+  }
+
+  body.account-page .account-brand .container {
+    display: flex;
+    justify-content: center;
+  }
+
+  body.account-page .account-brand__logo {
+    max-width: 100%;
+    transform: none;
+  }
+
+  body.account-page .account-brand__logo img {
+    max-width: min(88vw, 420px);
+    height: clamp(64px, 16vw, 96px);
+    object-fit: contain;
+  }
+
+  body.account-page main :is(button, input[type="submit"], input[type="button"]) {
+    min-height: 44px;
+  }
+
+  body.account-page main
+  :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link {
+    display: inline-flex !important;
+    min-height: 44px !important;
+    align-items: center !important;
+  }
+
+  /* En táctil no existe hover: todas las ventajas Tribe quedan visibles. */
+  body.account-page.my-content-page
+  .account-tribe .account-tribe__benefits li:nth-child(n) {
+    max-height: none;
+    min-height: 44px;
+    padding: 10px 10px 10px 28px;
+    overflow: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.account-page.my-content-page .account-tribe .account-tribe__benefits::after {
+    content: none;
+    display: none;
+  }
+
+  /* Footer: sin anchos mínimos y siempre por encima del dock. */
+  .site-footer,
+  #footer {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .site-footer {
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  body:is(.originals-page, .ahp-page) .site-footer {
+    --footer-ink: #f7f7f1;
+    --footer-muted: rgba(247, 247, 241, .76);
+    --footer-soft: rgba(247, 247, 241, .54);
+    --footer-line: rgba(247, 247, 241, .14);
+    --footer-field-bg: rgba(255, 255, 255, .06);
+    --footer-field-border: rgba(247, 247, 241, .30);
+    --footer-button-bg: #f7f7f1;
+    --footer-button-ink: #050505;
+    --footer-logo-opacity: .16;
+    --footer-logo-filter: brightness(0) invert(1);
+  }
+
+  body.ahp-page .brand-band .container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding-inline: max(var(--pp-mobile-edge), env(safe-area-inset-left), env(safe-area-inset-right));
+  }
+
+  body.ahp-page .brand-band .page-logo {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+
+  body.ahp-page .brand-band .page-logo img {
+    width: min(86vw, 360px);
+    max-width: 100%;
+    height: auto;
+    margin-left: 0;
+    object-fit: contain;
+  }
+
+  .site-footer :is(.footer-editorial, .footer-panel, .footer-inner.container,
+                   .footer-bottom.container, .brand-col, .news-row) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .site-footer .footer-bottom.container {
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+
+  .site-footer .footer-bottom .legal {
+    flex-wrap: wrap;
+    transform: none !important;
+  }
+
+  .site-footer :is(input, select, textarea, button) {
+    max-width: 100%;
+  }
+
+  .site-footer .news-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .site-footer .news-row :is(input, button) {
+    width: 100%;
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .site-footer :is(.footer-col a, .footer-bottom a, .socials a) {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  /* Checkout: columnas flexibles, tabs desplazables y campos sin zoom iOS. */
+  body.checkout-page {
+    --pp-page-pad: var(--pp-mobile-edge);
+    padding-bottom: env(safe-area-inset-bottom);
+    overflow-x: hidden;
+  }
+
+  body.checkout-page
+  :is(.ck, .ck-shell, .ck-grid, .checkoutnc-left-col,
+      .checkoutnc-right-col, .checkoutnc-right-content,
+      .tab-content, .tab-pane, .ck-box) {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.checkout-page .ck-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.checkout-page .lw-header-checkoutnc {
+    height: auto;
+    min-height: calc(72px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+  }
+
+  body.checkout-page .capds-checkoutnc-header-container {
+    min-width: 0;
+    padding-inline: max(var(--pp-mobile-edge), env(safe-area-inset-left), env(safe-area-inset-right));
+  }
+
+  body.checkout-page :is(.nav.nav-tabs, .capds-panel-nav .nav.nav-tabs) {
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  body.checkout-page :is(.nav.nav-tabs, .capds-panel-nav .nav.nav-tabs)::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.checkout-page .nav.nav-tabs .nav-link {
+    min-height: 44px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  body.checkout-page
+  :is(.ck-form, .ck-payForm, .ck-tribeDiscount)
+  :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+  body.checkout-page :is(.ck-tribeDiscount__input, .cin-input) {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  body.checkout-page .custom-input-number.cartnc-qty input[type="number"] {
+    font-size: 16px !important;
+  }
+
+  body.checkout-page :is(.cin-decrement, .cin-increment) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  body.checkout-page
+  :is(.ck-primary, .capds-checkout-button, .ck-confirmPay,
+      .ck-auth__switch-btn, .ck-auth__secondary,
+      .ck-tribeDiscount__btn, .ck-guest-checkout__button) {
+    min-height: 48px;
+  }
+
+  /* Índice y páginas editoriales de colecciones. */
+  body.colecciones-index-page
+  :is(.pp-collections-hero__inner, .pp-collections-cards) {
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.colecciones-index-page .pp-col-card,
+  body.colecciones-index-page .pp-col-card__media {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body:is(.ms-page, .lfts-page, .ahp-page)
+  :is(.cat-layout, .hero-inner, .hero-main, .hero-side, .tiles, .tile) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body:is(.ms-page, .lfts-page, .ahp-page)
+  :is(.hero-inner, .tiles) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.archive-page
+  :is(.archive-grid, .archive-gallery-grid, .archive-version-modal__grid),
+  body.archive-piece-page
+  :is(.piece-editorial__grid, .piece-gallery__grid, .piece-notes__grid) {
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Originals mantiene su identidad, con tarjetas comprables compactas. */
+  body.originals-page :is(.po-hero, .po-copy, .po-code-grid) {
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.originals-page .po-drop-grid {
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 8px;
+  }
+
+  body.originals-page .po-piece,
+  body.originals-page .po-piece__media {
+    min-width: 0;
+  }
+
+  body.originals-page .po-piece__media {
+    aspect-ratio: 4 / 5.35;
+  }
+
+  body.originals-page .po-piece__media img {
+    object-fit: contain;
+  }
+
+  body.originals-page .po-piece__body h3 {
+    font-size: 13px;
+  }
+
+  body.originals-page .po-piece__meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 9px;
+  }
+
+  /* Portada: una composición vertical real, sin escritorio encogido. */
+  body.home-page
+  :is(.home-editorial-gateway, .pp-post-hero__grid, .values.container) {
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.home-page #home_hero
+  :is(.hero-frame, .hero-video, .hero-video__media) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* El vídeo está en LFS: esta portada local queda como fallback visible. */
+  body.home-page #home_hero .hero-frame {
+    height: clamp(440px, 72dvh, 640px);
+    min-height: 0;
+    max-height: calc(100dvh - env(safe-area-inset-top));
+    overflow: hidden;
+    background-color: #1b1320;
+    background-image: linear-gradient(180deg, rgba(12, 8, 14, .08), rgba(12, 8, 14, .36)),
+      url("../img/portadas/aft.png");
+    background-position: center 42%;
+    background-size: cover;
+  }
+
+  body.home-page #home_hero .hero-video__media {
+    height: 100%;
+    object-fit: cover;
+    background: transparent url("../img/portadas/aft.png") center 42% / cover no-repeat;
+  }
+
+  body.home-page #home_hero .floating-logo {
+    top: max(18px, env(safe-area-inset-top));
+    right: max(var(--pp-mobile-edge), env(safe-area-inset-right));
+    left: max(var(--pp-mobile-edge), env(safe-area-inset-left));
+    width: auto;
+    max-width: none;
+    transform: none;
+  }
+
+  body.home-page #home_hero .floating-logo img {
+    width: min(78vw, 360px);
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 479px) {
+  .pp-mobile-panel__tabs {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 18px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .pp-mobile-panel__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pp-mobile-panel__tab {
+    width: auto;
+    min-width: max-content;
+    padding: 4px 0;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 679px) {
+  body:is(.men-page, .women-page, .men-page.streetwear-page, .women-page.streetwear-page)
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 680px) and (max-width: 820px) {
+  body:is(.men-page, .women-page, .men-page.streetwear-page, .women-page.streetwear-page)
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap-inline: 10px;
+  }
+
+  body.wishlist-page .wishlist-grid,
+  body.originals-page .po-drop-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 359px) {
+  :root {
+    --pp-mobile-edge: 8px;
+  }
+
+  .pp-mobile-dock__item--menu span {
+    display: none;
+  }
+
+  .pp-mobile-panel__tabs {
+    gap: 16px;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    gap-inline: 4px;
+  }
+}
+
+@media (min-width: 821px) and (max-width: 1023px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: clip;
+  }
+}
+
+/* Packaging editorial global del drawer PDP. */
+body.pdp #attrDrawer .ad-panel {
+  background: #f7f5f0;
+  opacity: 1;
+}
+
+.pp-product-packaging {
+  display: grid;
+  gap: 28px;
+  min-width: 0;
+  padding: 4px 0 32px;
+}
+
+.pp-product-packaging-copy {
+  min-width: 0;
+  max-width: 46rem;
+}
+
+.pp-product-packaging-title {
+  margin: 0 0 20px;
+  font: 500 1.35rem/1.2 var(--font-display, Georgia, serif);
+}
+
+.pp-product-packaging-copy p {
+  margin: 0;
+  font: 400 15px/1.65 var(--font-ui, Inter, system-ui, sans-serif);
+}
+
+.pp-product-packaging-copy p + p {
+  margin-top: 16px;
+}
+
+.pp-product-packaging-note {
+  color: rgba(17, 17, 17, .62);
+  font-size: 13px !important;
+}
+
+.pp-product-packaging-media {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.pp-product-packaging-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.pp-product-packaging-image[hidden] {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  body.pdp #attrDrawer .ad-panel {
+    background: #f7f5f0;
+    opacity: 1;
+  }
+
+  body.pdp #attrDrawer .ad-body {
+    background: #f7f5f0;
+  }
+
+  body.pdp #attrDrawer .pp-product-packaging {
+    gap: 28px;
+    padding: 4px 24px max(32px, env(safe-area-inset-bottom));
+  }
+
+  body.pdp #attrDrawer .pp-product-packaging-copy {
+    max-width: none;
+  }
+
+  body.pdp #attrDrawer .pp-product-packaging-copy p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  body.pdp #attrDrawer .pp-product-packaging-media {
+    width: 100%;
+  }
+}
+
+@media (min-width: 821px) {
+  body.pdp #attrDrawer .pp-product-packaging {
+    padding: 4px 0 36px;
+  }
+
+  body.pdp #attrDrawer .pp-product-packaging-media {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-mobile-dock *,
+  .pp-mobile-panel * {
+    scroll-behavior: auto;
+    transition-duration: .01ms;
+    animation-duration: .01ms;
+    animation-iteration-count: 1;
+  }
+}
+
+@media (max-width: 820px) and (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  :is(.pp-mobile-dock, .pp-mobile-panel,
+      #menFiltersOverlay, #womenFiltersOverlay,
+      #menFiltersDrawer, #womenFiltersDrawer,
+      #ppCartOverlay, #ppCartDrawer, .pp-cart-confirm__dialog,
+      body.pdp .ad, body.pdp .ad-panel, body.pdp .ad-backdrop,
+      #tribeModal, #tribeModal .tribe-panel, #tribeModal .tribe-backdrop,
+      #ppAuthModal, #ppAccountPanel, #ppProfileOnboarding,
+      body.pdp .pdp-buy,
+      body.my-content-page .account-tribe__benefits li) {
+    scroll-behavior: auto;
+    transition-duration: .01ms;
+    animation-duration: .01ms;
+    animation-iteration-count: 1;
+  }
+
+  body.home-page #home_hero .hero-video__media {
+    display: none;
+  }
+}
+
+/* =========================================================
+   PLP MÓVIL · Editorial de dos columnas
+   Solo móvil; el carrusel y sus imágenes siguen disponibles
+   para escritorio y para la galería de producto.
+   ========================================================= */
+@media (max-width: 820px) {
+  /* Las etiquetas de colección usan todo el ancho interior de la imagen
+     para mantener completos los nombres reales en cards de dos columnas. */
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-collection-pill {
+    right: 8px;
+    left: 8px;
+    width: auto;
+    max-width: none;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding-inline: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: clip;
+    font-size: clamp(9px, 2.5vw, 11px);
+    letter-spacing: .08em;
+    line-height: 1;
+    transform: none;
+  }
+
+  /* El estado textual inferior permanece en ::after; se elimina
+     únicamente el badge visual duplicado dentro de la imagen. */
+  .plp-grid .card.is-plp-out-of-stock
+  .card-badges > .card-badge.is-out {
+    display: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 22px 8px;
+    align-items: start;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card, .product-card) {
+    position: relative;
+    min-width: 0;
+    overflow: visible !important;
+  }
+
+  /* En el grid solo se muestra la imagen inicial del producto. */
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.nav.prev, .nav.next,
+      .carousel-dots, .carousel-indicators,
+      [data-carousel-indicators]) {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.plp-media, .card-media, .img-wrap) {
+    position: relative;
+    aspect-ratio: 4 / 5.35 !important;
+    overflow: hidden !important;
+    background: #f2f1ee !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.plp-media img, .card-media img, .img-wrap img) {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* Los swatches y controles decorativos no invaden la tarjeta móvil.
+     Las variantes del panel Quick Add permanecen disponibles. */
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.pp-card-colors, .pp-card-cuts,
+      .card-colors, .color-swatches, .product-swatches,
+      .swatches, .variant-swatches) {
+    display: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-description, .card-desc, .product-card__description) {
+    display: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-body, .product-card__body) {
+    min-width: 0;
+    padding: 9px 3px 0 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-title, .card-title a, .product-card__title) {
+    display: block;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.card-meta, .card-price, .price, .product-card__price) {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Wishlist sigue visible y táctil; Quick Add usa un + discreto. */
+  body:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  :is(.icon-btn.save, .ico-btn.save, .save-btn) {
+    z-index: 4;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  body[data-quick-add-enabled]
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-quick-add-toggle {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border: 1px solid rgba(17, 17, 17, .18);
+    border-radius: 999px;
+    background: rgba(248, 244, 236, .94);
+    color: #17130f;
+    font-size: 21px;
+  }
+
+  body[data-quick-add-enabled]
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-quick-add-toggle:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  /* Sustituye el CTA circular de aviso por una indicación textual discreta. */
+  body[data-quick-add-enabled]
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-stock-notify-btn {
+    display: none !important;
+  }
+
+  body[data-quick-add-enabled]
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .card.is-plp-out-of-stock::after {
+    content: 'Agotado';
+    display: block;
+    margin-top: 7px;
+    color: rgba(17, 17, 17, .58);
+    font: 500 10px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* =========================================================
+     PLP MÓVIL UNIFICADO · MUJER Y HOMBRE
+     Orden compartido:
+     hero → breadcrumb → título → categorías → toolbar → grid
+     ========================================================= */
+
+  body:is(.men-page, .women-page)
+  :is(.pp-hero.hero--two-cols) {
+    display: flex !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    flex-direction: column;
+    gap: 0 !important;
+    padding: 16px var(--pp-mobile-edge) 0 !important;
+    overflow: visible !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__media {
+    position: relative !important;
+    display: flex !important;
+    width: 100% !important;
+    min-height: clamp(84px, 22vw, 118px) !important;
+    height: clamp(84px, 22vw, 118px) !important;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: visible !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__media .floating-logo {
+    position: static !important;
+    display: block !important;
+    width: min(58vw, 250px) !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__media .floating-logo img {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 76px !important;
+    object-fit: contain !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero .pp-breadcrumb--hero {
+    position: static !important;
+    display: flex !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 24px;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    white-space: nowrap;
+    flex-wrap: nowrap !important;
+    font: 400 11px/1.3 var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero .pp-breadcrumb--hero::-webkit-scrollbar {
+    display: none;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero .pp-breadcrumb--hero > * {
+    flex: 0 0 auto;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__side {
+    position: static !important;
+    display: block !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 0 16px !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__title {
+    display: block !important;
+    max-width: 100%;
+    margin: 0 0 14px !important;
+    overflow: hidden;
+    font: 500 clamp(24px, 7vw, 36px)/1.08 var(--font-display, Georgia, serif) !important;
+    text-overflow: ellipsis;
+    text-wrap: balance;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__nav {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__list {
+    display: flex !important;
+    width: max-content;
+    min-width: 100%;
+    max-width: none !important;
+    align-items: stretch;
+    gap: 18px;
+    margin: 0 !important;
+    padding: 0 0 4px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    list-style: none;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__list li {
+    flex: 0 0 auto;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__list a {
+    display: inline-flex !important;
+    min-height: 44px;
+    align-items: center;
+    padding: 0 !important;
+    white-space: nowrap;
+    font: 400 13px/1.25 var(--font-ui, Inter, system-ui, sans-serif);
+    text-decoration: none;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-hero__list a[aria-current='page'] {
+    font-weight: 650;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(.bb-spacer, .sud-spacer) {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-collection-page {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-collection-hero {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-filters.container {
+    position: static !important;
+    display: flex !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-height: 56px !important;
+    height: auto !important;
+    align-items: center;
+    gap: 18px;
+    margin: 0 !important;
+    padding: 8px var(--pp-mobile-edge) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 18%, transparent);
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-filters.container::-webkit-scrollbar {
+    display: none;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-filter-left,
+  body:is(.men-page, .women-page)
+  .pp-filter-right {
+    display: flex !important;
+    flex: 0 0 auto;
+    min-width: max-content;
+    align-items: center;
+    gap: 14px;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-filter-right {
+    margin-left: auto;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-filters .pp-btn,
+  body:is(.men-page, .women-page)
+  .pp-filters .pp-check,
+  body:is(.men-page, .women-page)
+  .pp-sort-trigger {
+    min-height: 40px !important;
+    height: 40px;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-filters .pp-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font: 400 12px/1.2 var(--font-ui, Inter, system-ui, sans-serif);
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-sort {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-sort-menu {
+    z-index: 20;
+  }
+
+  body:is(.men-page, .women-page)
+  .pp-plp.container {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 18px var(--pp-mobile-edge)
+      calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 34px) !important;
+  }
+
+  body:is(.men-page, .women-page)
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid, #gridCamisetas) {
+    margin-top: 0 !important;
+  }
+
+  /* =========================================================
+     CAMISETAS DE PUNTO HOMBRE · CONSOLIDACIÓN MÓVIL
+     Solo max-width: 820px y solo body.men-page.camisetas-page.
+     Orden: logo → breadcrumbs → categorías → toolbar → grid.
+     ========================================================= */
+
+  body.men-page.camisetas-page .pp-hero.hero--two-cols {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 16px var(--pp-mobile-edge) 0 !important;
+    gap: 0 !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__media {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-width: 100% !important;
+    margin: 0 0 12px !important;
+    overflow: visible !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__media .floating-logo {
+    position: static !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__media .floating-logo img {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero .pp-breadcrumb--hero {
+    position: static !important;
+    display: flex !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 24px !important;
+    height: auto !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero .pp-breadcrumb--hero::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero .pp-breadcrumb--hero > * {
+    flex: 0 0 auto !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__side {
+    position: static !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 0 8px !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  /* Conserva el encabezado semántico sin duplicar visualmente la categoría. */
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__title {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    white-space: normal !important;
+    border: 0 !important;
+    color: #111 !important;
+    font: 500 clamp(22px, 6vw, 30px)/1.08 var(--font-display, Georgia, serif) !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__nav {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__list {
+    display: flex !important;
+    width: max-content !important;
+    min-width: 100% !important;
+    max-width: none !important;
+    align-items: stretch !important;
+    gap: 18px !important;
+    margin: 0 !important;
+    padding: 0 0 4px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    list-style: none !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__list::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__list li {
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.men-page.camisetas-page .pp-hero__list a {
+    display: inline-flex !important;
+    min-height: 44px !important;
+    align-items: center !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font: 400 13px/1.25 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  }
+
+  body.men-page.camisetas-page .pp-filters.container {
+    position: static !important;
+    display: flex !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 64px !important;
+    height: auto !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 8px var(--pp-mobile-edge) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent) !important;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent) !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+  }
+
+  body.men-page.camisetas-page .pp-filters.container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body.men-page.camisetas-page .pp-filter-left,
+  body.men-page.camisetas-page .pp-filter-right {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  body.men-page.camisetas-page .pp-filter-right {
+    margin-left: auto !important;
+  }
+
+  body.men-page.camisetas-page .pp-filters .pp-btn,
+  body.men-page.camisetas-page .pp-filters .pp-check,
+  body.men-page.camisetas-page .pp-sort-trigger {
+    min-height: 40px !important;
+    height: 40px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  body.men-page.camisetas-page .pp-filters .pp-check {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    margin: 0 !important;
+  }
+
+  body.men-page.camisetas-page .pp-plp.container {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 var(--pp-mobile-edge)
+      calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 34px) !important;
+  }
+
+  body.men-page.camisetas-page
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    transform: none !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero.hero--two-cols {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 16px 24px 0 !important;
+    gap: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__media {
+    order: 1 !important;
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__media .floating-logo {
+    position: static !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__media .floating-logo img {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero .pp-breadcrumb--hero {
+    order: 2 !important;
+    position: static !important;
+    display: flex !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 24px !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    padding: 10px 0 12px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+    color: rgba(17, 17, 17, .68) !important;
+    background: transparent !important;
+    transform: none !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero .pp-breadcrumb--hero::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero .pp-breadcrumb--hero > * {
+    flex: 0 0 auto !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__side {
+    order: 3 !important;
+    position: static !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 0 14px !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__list {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    gap: 14px !important;
+    margin: 0 !important;
+    padding: 0 0 14px !important;
+    overflow: visible !important;
+    list-style: none !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__list li {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-hero__list a {
+    display: inline-flex !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    min-height: 32px !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #111 !important;
+    font: 400 14px/1.25 var(--font-ui, Inter, system-ui, sans-serif) !important;
+    white-space: normal !important;
+    text-decoration: none !important;
+  }
+
+  body[data-page="men-camisetas"] .pp-filters.container {
+    position: static !important;
+    display: flex !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 56px !important;
+    height: auto !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 18px !important;
+    margin: 0 !important;
+    padding: 8px var(--pp-mobile-edge) !important;
+    overflow: hidden !important;
+    border-top: 1px solid currentColor !important;
+    border-bottom: 1px solid currentColor !important;
+    border-color: color-mix(in srgb, currentColor 18%, transparent) !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    color: #111 !important;
+  }
+
+  body[data-page="men-camisetas"] .pp-filters.container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body[data-page="men-camisetas"] .pp-filter-left,
+  body[data-page="men-camisetas"] .pp-filter-right {
+    display: flex !important;
+    flex: 0 1 auto !important;
+    flex-basis: auto !important;
+    min-width: 0 !important;
+    width: auto !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+  }
+
+  body[data-page="men-camisetas"] .pp-filter-right {
+    margin: 0 0 0 auto !important;
+  }
+
+  body[data-page="men-camisetas"] .pp-filters .pp-btn,
+  body[data-page="men-camisetas"] .pp-filters .pp-check,
+  body[data-page="men-camisetas"] .pp-sort-trigger {
+    min-width: 0 !important;
+    min-height: 40px !important;
+    height: 40px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  body[data-page="men-camisetas"] .pp-filters .pp-check {
+    display: inline-flex !important;
+    width: auto !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font: 400 12px/1.2 var(--font-ui, Inter, system-ui, sans-serif) !important;
+  }
+
+  body[data-page="men-camisetas"] .pp-filters input[type="checkbox"] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    flex: 0 0 22px !important;
+    margin: 0 !important;
+  }
+
+  body[data-page="men-camisetas"],
+  body[data-page="men-camisetas"] #main,
+  body[data-page="men-camisetas"] .pp-collection-page,
+  body[data-page="men-camisetas"] .pp-plp.container {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  body[data-page="men-camisetas"] {
+    background-color: var(--cam-surface, #f7f4ed) !important;
+    background-image:
+      linear-gradient(180deg, rgba(255,255,255,.62) 0%, rgba(247,244,237,.94) 46%, rgba(247,244,237,1) 100%),
+      var(--pp-canvas-bg, none) !important;
+    background-size: cover, cover !important;
+    background-position: center top, center top !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll, fixed !important;
+  }
+
+  body[data-page="men-camisetas"] #main,
+  body[data-page="men-camisetas"] .pp-collection-page,
+  body[data-page="men-camisetas"] .pp-plp.container {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+
+  body[data-page="men-camisetas"] #plp-grid {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-collection-page::before,
+  body[data-plp-page="camisetas-punto-hombre"] .pp-collection-page::after,
+  body[data-plp-page="camisetas-punto-hombre"] .pp-filters.container::before,
+  body[data-plp-page="camisetas-punto-hombre"] .pp-filters.container::after {
+    content: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"] .pp-plp.container {
+    padding-right: 24px !important;
+    padding-bottom: calc(var(--pp-mobile-dock-h) + env(safe-area-inset-bottom) + 34px) !important;
+    padding-left: 24px !important;
+  }
+
+  body[data-plp-page="camisetas-punto-hombre"]
+  :is(#plp-grid.plp-grid, .pp-plp .plp-grid) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    transform: none !important;
+  }
+
+  @media (max-width: 374px) {
+    body[data-page="men-camisetas"] .pp-hero.hero--two-cols,
+    body[data-page="men-camisetas"] .pp-plp.container {
+      padding-right: 10px !important;
+      padding-left: 10px !important;
+    }
+
+    body[data-page="men-camisetas"] .pp-filters.container {
+      min-height: 56px !important;
+      padding: 8px 10px !important;
+      gap: 6px !important;
+      overflow: hidden !important;
+    }
+
+    body[data-page="men-camisetas"] .pp-filter-left,
+    body[data-page="men-camisetas"] .pp-filter-right {
+      gap: 6px !important;
+    }
+
+    body[data-page="men-camisetas"] .pp-filters .pp-btn,
+    body[data-page="men-camisetas"] .pp-filters .pp-check,
+    body[data-page="men-camisetas"] .pp-sort-trigger {
+      font-size: 12px !important;
+    }
+
+    body[data-page="men-camisetas"] .pp-filters input[type="checkbox"] {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      flex-basis: 20px !important;
+    }
+  }
+
+  @media (max-width: 359px) {
+    body.men-page.camisetas-page .pp-hero__list {
+      gap: 14px !important;
+    }
+
+    body.men-page.camisetas-page .pp-filter-left,
+    body.men-page.camisetas-page .pp-filter-right {
+      gap: 7px !important;
+    }
+
+    body.men-page.camisetas-page .pp-filters.container {
+      font-size: 11px !important;
+    }
+  }
+
+  @supports not (color: color-mix(in srgb, currentColor 18%, transparent)) {
+    body:is(.men-page, .women-page)
+    .pp-filters.container {
+      border-color: rgba(17, 17, 17, .18);
+    }
+
+    body.men-page.camisetas-page .pp-filters.container {
+      border-color: rgba(17, 17, 17, .18) !important;
+    }
+  }
+}

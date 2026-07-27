@@ -294,8 +294,8 @@
   </div>
 </header>
 
-<!-- Navegación móvil: se muestra solo por debajo de 760px. -->
-<nav class="pp-mobile-dock" aria-label="Navegación móvil">
+<!-- Navegación móvil. Permanece oculta hasta que JS confirma la capa responsive. -->
+<nav class="pp-mobile-dock" aria-label="Navegación móvil" hidden>
   <button class="pp-mobile-dock__item pp-mobile-dock__item--menu" type="button" data-pp-mobile-menu aria-controls="ppMobileMenuPanel" aria-expanded="false">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     <span>Menú</span>
@@ -309,34 +309,173 @@
     <img src="/assets/img/logo/emblem.svg" alt="">
   </button>
 
-  <button class="pp-mobile-dock__item pp-mobile-dock__item--cart" type="button" data-pp-mobile-cart aria-label="Abrir cesta">
+  <button class="pp-mobile-dock__item pp-mobile-dock__item--cart" type="button" data-pp-mobile-cart aria-controls="ppCartDrawer" aria-expanded="false" aria-label="Abrir cesta, vacía">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.75 8.25h10.5l.76 10.08a1.75 1.75 0 0 1-1.75 1.92H7.74a1.75 1.75 0 0 1-1.75-1.92l.76-10.08Z"/><path d="M9.1 9V6.75a2.9 2.9 0 0 1 5.8 0V9"/></svg>
     <span class="pp-mobile-dock__count" data-pp-mobile-cart-count hidden>0</span>
   </button>
 </nav>
 
-<aside id="ppMobileMenuPanel" class="pp-mobile-panel" aria-hidden="true" aria-labelledby="ppMobileMenuTitle" hidden>
+<aside id="ppMobileMenuPanel" class="pp-mobile-panel" aria-hidden="true" aria-labelledby="ppMobileMenuTitle" role="dialog" aria-modal="true" hidden>
   <div class="pp-mobile-panel__head">
-    <strong id="ppMobileMenuTitle">PROPHETIA</strong>
+    <button
+      type="button"
+      class="pp-mobile-panel__back"
+      data-pp-mobile-back
+      aria-label="Volver al nivel anterior"
+      hidden
+    >
+      <span aria-hidden="true">‹</span>
+      <span> Atrás</span>
+    </button>
+    <img id="ppMobileMenuTitle" class="pp-mobile-panel__logo" src="/assets/img/logo/propnegrovf.svg" alt="PROPHETIA" width="2648" height="354">
     <button type="button" data-pp-mobile-close aria-label="Cerrar menú">×</button>
   </div>
 
   <form class="pp-mobile-panel__search" role="search" action="/colecciones" method="get">
     <label class="sr-only" for="ppMobileSearchInput">Buscar</label>
-    <input id="ppMobileSearchInput" name="q" type="search" autocomplete="off" placeholder="Buscar en Prophetia">
-    <button type="submit" aria-label="Buscar">
+    <input id="ppMobileSearchInput" name="q" type="search" autocomplete="off" enterkeyhint="search" aria-autocomplete="list" placeholder="Buscar en Prophetia">
+    <button class="pp-mobile-panel__search-clear" type="button" data-pp-mobile-search-clear aria-label="Borrar búsqueda" hidden>×</button>
+    <button class="pp-mobile-panel__search-submit" type="submit" aria-label="Buscar">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4 4"/></svg>
     </button>
   </form>
 
-  <nav class="pp-mobile-panel__links" aria-label="Secciones Prophetia">
-    <a href="/mujer">Mujer</a>
-    <a href="/hombre">Hombre</a>
-    <a href="/colecciones">Colecciones</a>
-    <a href="/prophetia-originals">Prophetia Originals</a>
-    <a href="/about">Prophetia House</a>
-    <a href="/wishlist">Guardados</a>
+  <nav class="pp-mobile-panel__tabs" role="tablist" aria-label="Secciones principales">
+    <button id="ppMobileTabWomen" class="pp-mobile-panel__tab" type="button" role="tab" aria-selected="true" aria-controls="ppMobileSectionWomen" data-pp-mobile-tab="women">Mujer</button>
+    <button id="ppMobileTabMen" class="pp-mobile-panel__tab" type="button" role="tab" aria-selected="false" aria-controls="ppMobileSectionMen" data-pp-mobile-tab="men" tabindex="-1">Hombre</button>
+    <button id="ppMobileTabCollections" class="pp-mobile-panel__tab" type="button" role="tab" aria-selected="false" aria-controls="ppMobileSectionCollections" data-pp-mobile-tab="collections" tabindex="-1">Colecciones</button>
+    <button id="ppMobileTabHouse" class="pp-mobile-panel__tab" type="button" role="tab" aria-selected="false" aria-controls="ppMobileSectionHouse" data-pp-mobile-tab="house" tabindex="-1">Prophetia House</button>
+    <button id="ppMobileTabOriginals" class="pp-mobile-panel__tab" type="button" role="tab" aria-selected="false" aria-controls="ppMobileSectionOriginals" data-pp-mobile-tab="originals" tabindex="-1">Originals</button>
   </nav>
+
+  <div class="pp-mobile-panel__content" data-pp-mobile-sections>
+    <section id="ppMobileSectionWomen" class="pp-mobile-menu__section" role="tabpanel" aria-labelledby="ppMobileTabWomen" data-pp-mobile-section="women">
+      <div class="pp-mobile-menu__views">
+        <div class="pp-mobile-menu__views-track">
+          <div class="pp-mobile-menu__level" data-pp-mobile-level="root">
+        <p class="pp-mobile-menu__eyebrow">Nuevo</p>
+        <ul class="pp-mobile-menu__links">
+          <li><a href="/prophetia-originals">Prophetia Originals</a></li>
+        </ul>
+
+        <p class="pp-mobile-menu__eyebrow">Todo Mujer</p>
+        <ul class="pp-mobile-menu__links">
+          <li><a href="/mujer">Todo Mujer</a></li>
+        </ul>
+
+        <p class="pp-mobile-menu__eyebrow">Prêt-à-porter</p>
+        <ul class="pp-mobile-menu__links">
+          <li>
+            <button
+              type="button"
+              class="pp-mobile-menu__level-trigger"
+              data-pp-mobile-level-trigger="women-ready"
+              aria-expanded="false"
+              aria-controls="ppMobileLevelWomenReady"
+            >
+              Prêt-à-porter
+            </button>
+          </li>
+        </ul>
+      </div>
+
+          <div id="ppMobileLevelWomenReady" class="pp-mobile-menu__level" data-pp-mobile-level="women-ready" aria-hidden="true" inert hidden>
+            <h2 class="pp-mobile-menu__sublevel-title">Prêt-à-porter mujer</h2>
+            <ul class="pp-mobile-menu__links">
+              <li><a href="/mujer">Todo Prêt-à-porter mujer</a></li>
+              <li><a href="/camisetas-punto-mujer">Camisetas de punto</a></li>
+              <li><a href="/sudaderas-punto-mujer">Sudaderas de punto</a></li>
+              <li><a href="/hoodies-mujer">Hoodies</a></li>
+              <li><a href="/streetwear-mujer">Streetwear</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ppMobileSectionMen" class="pp-mobile-menu__section" role="tabpanel" aria-labelledby="ppMobileTabMen" data-pp-mobile-section="men" hidden>
+      <div class="pp-mobile-menu__views">
+        <div class="pp-mobile-menu__views-track">
+          <div class="pp-mobile-menu__level" data-pp-mobile-level="root">
+        <p class="pp-mobile-menu__eyebrow">Nuevo</p>
+        <ul class="pp-mobile-menu__links">
+          <li><a href="/prophetia-originals">Prophetia Originals</a></li>
+        </ul>
+
+        <p class="pp-mobile-menu__eyebrow">Todo Hombre</p>
+        <ul class="pp-mobile-menu__links">
+          <li><a href="/hombre">Todo Hombre</a></li>
+        </ul>
+
+        <p class="pp-mobile-menu__eyebrow">Prêt-à-porter</p>
+        <ul class="pp-mobile-menu__links">
+          <li>
+            <button
+              type="button"
+              class="pp-mobile-menu__level-trigger"
+              data-pp-mobile-level-trigger="men-ready"
+              aria-expanded="false"
+              aria-controls="ppMobileLevelMenReady"
+            >
+              Prêt-à-porter
+            </button>
+          </li>
+        </ul>
+      </div>
+
+          <div id="ppMobileLevelMenReady" class="pp-mobile-menu__level" data-pp-mobile-level="men-ready" aria-hidden="true" inert hidden>
+            <h2 class="pp-mobile-menu__sublevel-title">Prêt-à-porter hombre</h2>
+            <ul class="pp-mobile-menu__links">
+              <li><a href="/hombre">Todo Prêt-à-porter hombre</a></li>
+              <li><a href="/camisetas-punto-hombre">Camisetas de punto</a></li>
+              <li><a href="/sudaderas-punto-hombre">Sudaderas de punto</a></li>
+              <li><a href="/hoodies">Hoodies</a></li>
+              <li><a href="/streetwear-hombre">Streetwear</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ppMobileSectionCollections" class="pp-mobile-menu__section" role="tabpanel" aria-labelledby="ppMobileTabCollections" data-pp-mobile-section="collections" hidden>
+      <ul class="pp-mobile-menu__links">
+        <li><a href="/colecciones">Todas las colecciones</a></li>
+        <li><a href="/assets/collects/ms">Myth Series</a></li>
+        <li><a href="/assets/collects/lfts">Letters From The Soul</a></li>
+        <li><a href="/assets/collects/ahp">AfterHour Prophetia</a></li>
+        <li><a href="/assets/collects/archive-summer">Archive</a></li>
+      </ul>
+    </section>
+
+    <section id="ppMobileSectionHouse" class="pp-mobile-menu__section" role="tabpanel" aria-labelledby="ppMobileTabHouse" data-pp-mobile-section="house" hidden>
+      <ul class="pp-mobile-menu__links">
+        <li><a href="/my-services">Prophetia Tribe</a></li>
+        <li><a href="/account">Mi perfil</a></li>
+        <li><a href="/pedidos">Mis pedidos</a></li>
+        <li><a href="/wishlist">Lista de deseos</a></li>
+        <li><a href="/addresses">Libro de direcciones</a></li>
+        <li><a href="/about">Prophetia House Essence</a></li>
+        <li><a href="/studio">Studio</a></li>
+        <li><a href="/musica">Música</a></li>
+        <li><a href="/events">Eventos</a></li>
+      </ul>
+    </section>
+
+    <section id="ppMobileSectionOriginals" class="pp-mobile-menu__section" role="tabpanel" aria-labelledby="ppMobileTabOriginals" data-pp-mobile-section="originals" hidden>
+      <ul class="pp-mobile-menu__links">
+        <li><a href="/prophetia-originals">Prophetia Originals</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="pp-mobile-panel__utility">
+    <a href="/wishlist">Lista de deseos</a>
+    <span>España (Español)</span>
+    <a href="/contact">Contacto</a>
+  </div>
+  <div class="pp-mobile-panel__brand" aria-hidden="true">
+    <img src="/assets/img/logo/emblem.svg" alt="">
+  </div>
 </aside>
 
 <!-- ===== MODAL Auth Prophetia ===== -->

@@ -4110,7 +4110,19 @@ app.use(express.static(PUBLIC_DIR, {
       return;
     }
 
-    if (/\.(js|css)$/i.test(filePath)) {
+    const isHtmlOrPartial =
+      /\.html?$/i.test(filePath) ||
+      /[\\/]assets[\\/]partials[\\/]/i.test(filePath) ||
+      /manifest(?:\.webmanifest|\.json)$/i.test(filePath);
+
+    if (isHtmlOrPartial) {
+      // El documento, los parciales y el manifest deben revalidarse siempre:
+      // así nunca se combina un header nuevo con una capa responsive antigua.
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    } else if (/\.json$/i.test(filePath)) {
+      // Catálogo/stock público: no conservar una respuesta potencialmente antigua.
+      res.setHeader('Cache-Control', 'no-store');
+    } else if (/\.(js|css)$/i.test(filePath)) {
       // CSS y JS deben revalidarse en cada carga para no mezclar una
       // parcial nueva con estilos o comportamiento de un despliegue anterior.
       res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');

@@ -28,8 +28,8 @@ body.women-page.camisetas-page .pp-hero.hero--two-cols{
   flex-direction: column;
   gap: 30px;
 
-  padding: 42px var(--pp-edge-camw) 26px;
-  min-height: 260px;
+  padding: 20px var(--pp-edge-camw) 10px; /* Ajustar según sea necesario */
+  min-height: auto; /* Ajustar según sea necesario */
   box-sizing: border-box;
   background: transparent;
 }
@@ -38,7 +38,7 @@ body.women-page.camisetas-page .pp-hero__media{
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 140px;
+  min-height: auto; /* Ajustar según sea necesario */
   position: relative;
   overflow: visible;
 }
@@ -79,7 +79,7 @@ body.women-page.camisetas-page .pp-breadcrumb--hero {
 body.women-page.camisetas-page .pp-hero__side{
   align-self: flex-end;
   margin-left: auto;
-  max-width: 360px;
+  max-width: 100%; /* Ajustar según sea necesario */
 
   background: transparent;
   border: 0;
@@ -91,22 +91,23 @@ body.women-page.camisetas-page .pp-hero__side{
 body.women-page.camisetas-page .pp-hero__title{
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: 1.2rem; /* Ajustar según sea necesario */
   letter-spacing: 0.06em;
-  margin: 0 0 10px;
+  margin: 20px 0 10px; /* Ajustar según sea necesario */
 }
 
 body.women-page.camisetas-page .pp-hero__list{
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Ajustar según sea necesario */
 }
 
 body.women-page.camisetas-page .pp-hero__list a{
   font-family: var(--font-ui, Inter, system-ui, -apple-system, sans-serif);
-  font-size: 0.78rem;
+  font-size: 0.8rem; /* Ajustar según sea necesario */
   letter-spacing: 0.06em;
   text-decoration: none;
   color: rgba(0,0,0,0.62);
@@ -142,8 +143,8 @@ body.women-page.camisetas-page .pp-filters.container{
   gap: 16px;
   flex-wrap: wrap;
 
-  position: sticky;
-  top: var(--pp-header-h, 64px);
+  position: relative; /* Cambiar a relative para evitar sticky en móvil */
+  top: auto;
   z-index: 50;
 
   background: transparent;
@@ -181,11 +182,12 @@ body.women-page.camisetas-page .pp-plp.container{
   margin: 0;
   padding-inline: var(--pp-edge-camw);
   box-sizing: border-box;
+  margin-top: 20px; /* Ajustar según sea necesario */
 }
 
 body.women-page.camisetas-page #plp-grid.plp-grid{
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* Cambiar a 2 columnas para móvil */
   gap: clamp(16px, 2.2vw, 30px);
   align-items: start;
 }
@@ -303,17 +305,25 @@ body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media:focus-wit
 }
 
 /* Responsive */
-@media (max-width: 640px){
+@media (max-width: 820px){
 
-  body.women-page.camisetas-page .pp-breadcrumb--hero{
+  body[data-plp-page="camisetas-punto-mujer"] .pp-hero__media .floating-logo {
+    order: 1;
+  }
+
+  body[data-plp-page="camisetas-punto-mujer"] .pp-breadcrumb--hero{
     position: relative;
     top: auto;
     right: auto;
     left: auto;
     width: 100%;
-    order: -1;
+    order: 2;
     font-size: .72rem;
     white-space: normal;
+  }
+
+  body[data-plp-page="camisetas-punto-mujer"] .pp-hero__side {
+    order: 3;
   }
 }
 
@@ -327,18 +337,24 @@ body.women-page.camisetas-page #plp-grid .card.has-carousel .plp-media:focus-wit
 
 
 body.women-page.camisetas-page .pp-hero__media .floating-logo {
-  position: absolute !important;
-  left: var(--logo-x-camw) !important;
-  top: calc(var(--hdr-h, var(--pp-header-h, 64px)) + var(--logo-y-camw)) !important;
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
   transform: none !important;
   z-index: 2;
   line-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: var(--logo-size-camw) !important;
+  margin-top: 20px; /* Ajustar según sea necesario */
 }
 
 body.women-page.camisetas-page .pp-hero__media .floating-logo img {
-  width: var(--logo-size-camw) !important;
-  height: auto !important;
-  max-width: none !important;
+  width: 100%;
+  height: auto;
+  max-width: var(--logo-size-camw) !important;
   display: block;
   object-fit: contain;
 }

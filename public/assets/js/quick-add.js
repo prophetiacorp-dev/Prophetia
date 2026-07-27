@@ -22,10 +22,25 @@
 const selectedColors = new Map();
 const selectedCuts = new Map();
 const closeTimers = new WeakMap();
+const portalRestoreTimers = new WeakMap();
 const skipFocusOpen = new WeakSet();
 
 let activeCard = null;
 let observedGrid = null;
+
+function resolveOwnerCard(target) {
+  const directCard = target?.closest?.(".card.has-quick-add");
+  if (directCard) {
+    return directCard;
+  }
+
+  const panel = target?.closest?.("[data-quick-add-panel]");
+  return panel?.__ppQuickAddOwnerCard || null;
+}
+
+function canSellVariant() {
+  return window.ppStorefront?.salesEnabled !== false;
+}
 let gridObserver = null;
 
 const MOBILE_QUICK_ADD_QUERY =
@@ -472,11 +487,88 @@ const COLOR_META = {
   }
 
   function getPanel(card) {
+    if (!card) return null;
+
     return (
-      card?.querySelector(
+      card.__ppQuickAddPanel ||
+      card.querySelector(
         "[data-quick-add-panel]"
-      ) || null
+      ) ||
+      null
     );
+  }
+
+  function clearPortalRestoreTimer(panel) {
+    const timer = portalRestoreTimers.get(panel);
+
+    if (!timer) return;
+
+    window.clearTimeout(timer);
+    portalRestoreTimers.delete(panel);
+  }
+
+  function restoreMobilePanel(panel) {
+    if (!panel?.__ppQuickAddPortalParent) return;
+
+    clearPortalRestoreTimer(panel);
+
+    const parent = panel.__ppQuickAddPortalParent;
+    const nextSibling = panel.__ppQuickAddPortalNextSibling;
+
+    panel.classList.remove(
+      "is-mobile-portal",
+      "is-mobile-portal-open"
+    );
+
+    if (
+      nextSibling &&
+      nextSibling.parentNode === parent
+    ) {
+      parent.insertBefore(panel, nextSibling);
+    } else {
+      parent.appendChild(panel);
+    }
+
+    delete panel.__ppQuickAddPortalParent;
+    delete panel.__ppQuickAddPortalNextSibling;
+    delete panel.__ppQuickAddOwnerCard;
+    delete panel.__ppQuickAddOwnerProduct;
+    delete panel.__ppQuickAddOriginToggle;
+  }
+
+  function portalPanelToBody(card, panel) {
+    if (
+      !isMobileQuickAdd() ||
+      !card ||
+      !panel ||
+      panel.__ppQuickAddPortalParent
+    ) {
+      return;
+    }
+
+    panel.__ppQuickAddPortalParent = panel.parentNode;
+    panel.__ppQuickAddPortalNextSibling = panel.nextSibling;
+
+    document.body.appendChild(panel);
+    panel.classList.add("is-mobile-portal");
+  }
+
+  function schedulePanelRestore(panel) {
+    if (!panel?.__ppQuickAddPortalParent) return;
+
+    clearPortalRestoreTimer(panel);
+
+    const timer = window.setTimeout(() => {
+      if (
+        !panel.classList.contains(
+          "is-mobile-portal-open"
+        )
+      ) {
+        restoreMobilePanel(panel);
+      }
+    }, 300);
+
+    portalRestoreTimers.set(panel, timer);
   }
 
   function getToggle(card) {
@@ -525,6 +617,17 @@ const COLOR_META = {
     const panel = getPanel(card);
     const toggle = getToggle(card);
 
+    if (panel) {
+      panel.classList.remove(
+        "is-mobile-portal-open"
+      );
+      panel.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+      panel.inert = true;
+    }
+
     card.classList.remove(
       "is-quick-add-open"
     );
@@ -548,25 +651,29 @@ const COLOR_META = {
 
         if (stillClosed) {
           panel.hidden = true;
+          schedulePanelRestore(panel);
         }
       }, 180);
     }
 
-if (activeCard === card) {
+    const originToggle =
+      panel?.__ppQuickAddOriginToggle || toggle;
+
+    if (activeCard === card) {
   activeCard = null;
 }
 
 closeMobileBackdrop();
 
-if (restoreFocus && toggle) {
-  skipFocusOpen.add(toggle);
+if (restoreFocus && originToggle) {
+  skipFocusOpen.add(originToggle);
 
-  toggle.focus({
+  originToggle.focus({
     preventScroll: true
   });
 
   window.requestAnimationFrame(() => {
-    skipFocusOpen.delete(toggle);
+    skipFocusOpen.delete(originToggle);
   });
 }
   }
@@ -599,12 +706,27 @@ if (restoreFocus && toggle) {
 
     clearCloseTimer(card);
     closeOtherCards(card);
+    clearPortalRestoreTimer(panel);
+
+    panel.__ppQuickAddOwnerCard = card;
+    panel.__ppQuickAddOwnerProduct = getProduct(card);
+    panel.__ppQuickAddOriginToggle = toggle;
+
+    portalPanelToBody(card, panel);
 
     panel.hidden = false;
+    panel.inert = false;
+    panel.setAttribute(
+      "aria-hidden",
+      "false"
+    );
 
     window.requestAnimationFrame(() => {
       card.classList.add(
         "is-quick-add-open"
+      );
+      panel.classList.add(
+        "is-mobile-portal-open"
       );
     });
 
@@ -620,18 +742,19 @@ activeCard = card;
 
 openMobileBackdrop();
 
-if (
-  focusFirstSize &&
-  !isMobileQuickAdd()
-) {
+if (focusFirstSize || isMobileQuickAdd()) {
       window.requestAnimationFrame(() => {
-        panel
-          .querySelector(
+        const focusTarget =
+          panel.querySelector(
             "[data-quick-add-size]:not(:disabled)"
-          )
-          ?.focus({
-            preventScroll: true
-          });
+          ) ||
+          panel.querySelector(
+            "[data-quick-add-close]"
+          );
+
+        focusTarget?.focus({
+          preventScroll: true
+        });
       });
     }
   }
@@ -704,7 +827,7 @@ if (
 
     const available =
       variant.stock > 0 &&
-      window.ppStorefront?.salesEnabled === true;
+      canSellVariant();
 
     button.type = "button";
     button.className =
@@ -724,7 +847,7 @@ if (
     button.dataset.quickAddStock =
       String(variant.stock);
 
-    button.disabled = false;
+    button.disabled = !available;
 
     button.setAttribute(
       "aria-label",
@@ -741,12 +864,27 @@ if (
 
     if (!available) {
       button.classList.add("is-out");
-      button.dataset.quickAddNotifyStock = "";
 
-      const notifyLabel = document.createElement("small");
-      notifyLabel.className = "pp-quick-add-size__notify";
-      notifyLabel.textContent = "Avisarme";
-      button.appendChild(notifyLabel);
+      const row = document.createElement("div");
+      row.className = "pp-quick-add-size-row";
+
+      const notifyButton = document.createElement("button");
+      notifyButton.type = "button";
+      notifyButton.className = "pp-quick-add-size__notify";
+      notifyButton.dataset.quickAddNotifyStock = "";
+      notifyButton.dataset.quickAddSize = variant.size;
+      notifyButton.dataset.quickAddSku = variant.sku;
+      notifyButton.dataset.quickAddColor = variant.color;
+      notifyButton.textContent = "Avisarme";
+      notifyButton.setAttribute(
+        "aria-label",
+        `Avisarme cuando la talla ${variant.size}, color ${
+          getColorMeta(variant.color).label
+        }, vuelva a estar disponible`
+      );
+
+      row.append(button, notifyButton);
+      return row;
     }
 
     return button;
@@ -1149,6 +1287,7 @@ function ensureQuickAddStage(card) {
     );
 
     panel.hidden = true;
+    card.__ppQuickAddPanel = panel;
 
     const header =
       document.createElement("div");
@@ -1177,9 +1316,29 @@ function ensureQuickAddStage(card) {
     selectedColor.dataset.quickAddColorLabel =
       "";
 
+    const price =
+      document.createElement("p");
+
+    price.className =
+      "pp-quick-add-panel__price";
+
+    const numericPrice = Number(
+      product?.price
+    );
+
+    price.textContent = Number.isFinite(
+      numericPrice
+    )
+      ? new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "EUR"
+        }).format(numericPrice)
+      : "";
+
     heading.append(
       kicker,
-      selectedColor
+      selectedColor,
+      price
     );
 
     const closeButton =
@@ -1847,7 +2006,10 @@ window.ppTopNotice?.(
         button.dataset.quickAddStock
       );
 
-      button.disabled = !Number.isFinite(stock);
+      button.disabled = !(
+        stock > 0 &&
+        canSellVariant()
+      );
     });
   }
 }
@@ -1984,10 +2146,7 @@ window.addEventListener(
   document.addEventListener(
     "pointerout",
     (event) => {
-      const card =
-        event.target.closest(
-          ".card.has-quick-add"
-        );
+      const card = resolveOwnerCard(event.target);
 
       if (!card) return;
 
@@ -2163,9 +2322,7 @@ if (backdrop) {
         event.preventDefault();
         event.stopPropagation();
 
-        const card = closeButton.closest(
-          ".card.has-quick-add"
-        );
+        const card = resolveOwnerCard(closeButton);
 
         closeQuickAdd(card, {
           restoreFocus: true
@@ -2185,11 +2342,15 @@ if (backdrop) {
         event.preventDefault();
         event.stopPropagation();
 
-        const card = sizeButton.closest(
-          ".card.has-quick-add"
-        );
-
-        const product = getProduct(card);
+        const card = resolveOwnerCard(sizeButton);
+        const product =
+          card &&
+          (getProduct(card) ||
+            sizeButton.closest("[data-quick-add-panel]")
+              ? sizeButton.closest("[data-quick-add-panel]")
+                  ? sizeButton.closest("[data-quick-add-panel]").__ppQuickAddOwnerProduct
+                  : getProduct(card)
+              : getProduct(card));
 
         if (
           card &&
@@ -2224,16 +2385,17 @@ if (backdrop) {
         if (
           !card ||
           !product ||
-          sizeButton.disabled
+          sizeButton.disabled ||
+          !canSellVariant()
         ) {
           return;
         }
 
-    void addVariantToCart(
-  card,
-  product,
-  sizeButton
-);
+        void addVariantToCart(
+          card,
+          product,
+          sizeButton
+        );
 
         return;
       }
@@ -2249,11 +2411,13 @@ if (backdrop) {
         event.preventDefault();
         event.stopPropagation();
 
-        const card = fitGuideButton.closest(
-          ".card.has-quick-add"
-        );
-
-        const product = getProduct(card);
+        const card = resolveOwnerCard(fitGuideButton);
+        const panel =
+          fitGuideButton.closest("[data-quick-add-panel]");
+        const product =
+          (card && getProduct(card)) ||
+          panel?.__ppQuickAddOwnerProduct ||
+          null;
 
         if (card && product) {
           openFitGuide(
@@ -2272,6 +2436,9 @@ if (backdrop) {
         activeCard &&
         !event.target.closest(
           ".card.has-quick-add"
+        ) &&
+        !event.target.closest(
+          "[data-quick-add-panel]"
         )
       ) {
         closeQuickAdd(activeCard);

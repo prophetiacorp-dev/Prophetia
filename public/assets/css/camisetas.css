@@ -990,6 +990,14 @@ body.men-page.camisetas-page #menFiltersOverlay.is-open {
 @media (max-width: 760px) {
   body.men-page.camisetas-page {
     --pp-edge-cam: var(--edge, 16px);
+    background-color: var(--cam-surface) !important;
+    background-image:
+      linear-gradient(180deg, rgba(255,255,255,.62) 0%, rgba(247,244,237,.94) 46%, rgba(247,244,237,1) 100%),
+      var(--pp-canvas-bg, none) !important;
+    background-size: cover, cover !important;
+    background-position: center top, center top !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll, fixed !important;
   }
 
   body.men-page.camisetas-page .pp-hero.hero--two-cols {

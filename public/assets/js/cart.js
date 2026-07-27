@@ -14,6 +14,8 @@
 
   let previousCartQty = null;
   let badgeAnimationTimer = null;
+  let cartReturnFocus = null;
+  const mobileCartQuery = window.matchMedia('(max-width: 820px)');
 
 function escapeHtml(value = '') {
   return String(value ?? '')
@@ -471,6 +473,164 @@ function getCartNodes() {
   return { drawer, overlay, list, total };
 }
 
+function insertAfter(referenceNode, node) {
+  const parent = referenceNode?.parentElement;
+
+  if (!parent || !node) {
+    return;
+  }
+
+  parent.insertBefore(node, referenceNode.nextSibling);
+}
+
+function ensureCartPackagingHook(drawer) {
+  const body = drawer?.querySelector('.pp-cart-body');
+  const list = drawer?.querySelector('#ppCartList');
+
+  if (!body || !list) {
+    return null;
+  }
+
+  const hooks = Array.from(
+    drawer.querySelectorAll('[data-pp-cart-packaging]')
+  );
+
+  const hook = hooks.shift() || document.createElement('section');
+
+  hooks.forEach((duplicate) => {
+    duplicate.remove();
+  });
+
+  hook.className = 'pp-cart-packaging';
+  hook.setAttribute('data-pp-cart-packaging', '');
+  hook.setAttribute('aria-labelledby', 'ppCartPackagingTitle');
+  hook.hidden = true;
+
+  if (!hook.querySelector('img')) {
+    hook.innerHTML = `
+      <div class="pp-cart-packaging__copy">
+        <h5 id="ppCartPackagingTitle">Packaging PROPHETIA</h5>
+        <p>Tu pedido se prepara en el packaging oficial de PROPHETIA.</p>
+      </div>
+      <img
+        class="pp-cart-packaging__image"
+        src="/assets/img/pack/packaging.png"
+        alt="Packaging oficial de PROPHETIA"
+        loading="lazy"
+        decoding="async"
+      >
+    `;
+
+    const image = hook.querySelector('.pp-cart-packaging__image');
+
+    image?.addEventListener('error', () => {
+      image.hidden = true;
+    }, { once: true });
+  }
+
+  if (hook.parentElement !== body || hook.previousElementSibling !== list) {
+    insertAfter(list, hook);
+  }
+
+  return hook;
+}
+
+function ensureCartServiceLinks(drawer) {
+  const body = drawer?.querySelector('.pp-cart-body');
+  const list = drawer?.querySelector('#ppCartList');
+  const packaging = drawer?.querySelector('[data-pp-cart-packaging]');
+
+  if (!body || !list || !packaging) {
+    return null;
+  }
+
+  const links = Array.from(
+    drawer.querySelectorAll('[data-pp-cart-service-links]')
+  );
+
+  const services = links.shift() || document.createElement('nav');
+
+  links.forEach((duplicate) => {
+    duplicate.remove();
+  });
+
+  services.className = 'pp-cart-service-links';
+  services.setAttribute('data-pp-cart-service-links', '');
+  services.setAttribute('aria-label', 'Información de la cesta');
+
+  if (!services.children.length) {
+    services.innerHTML = `
+      <a href="/shipping">
+        <span>Plazo de entrega estimado</span>
+        <span aria-hidden="true">›</span>
+      </a>
+      <a href="/devoluciones">
+        <span>Envío y devoluciones</span>
+        <span aria-hidden="true">›</span>
+      </a>
+      <a href="/contact">
+        <span>Contacto</span>
+        <span aria-hidden="true">›</span>
+      </a>
+    `;
+  }
+
+  services.hidden = true;
+
+  if (services.parentElement !== body || services.previousElementSibling !== packaging) {
+    insertAfter(packaging, services);
+  }
+
+  return services;
+}
+
+function normalizeCartStructure(drawer) {
+  const body = drawer?.querySelector('.pp-cart-body');
+  const footer = drawer?.querySelector('.cart-foot');
+
+  if (!body) {
+    return;
+  }
+
+  if (footer && footer.parentElement !== drawer) {
+    drawer.appendChild(footer);
+  }
+}
+
+function updateMobileCartUi(totalQty) {
+  const visibleQuantity = totalQty > 99 ? '99+' : String(totalQty);
+  const mobileTriggers = document.querySelectorAll(
+    '[data-pp-mobile-cart], #ppCartBtn, [data-cart-open]'
+  );
+
+  mobileTriggers.forEach((trigger) => {
+    trigger.setAttribute(
+      'aria-label',
+      totalQty === 0
+        ? 'Abrir cesta, vacía'
+        : totalQty === 1
+          ? 'Abrir cesta, 1 artículo'
+          : `Abrir cesta, ${totalQty} artículos`
+    );
+
+    if (trigger.matches('[data-pp-mobile-cart]')) {
+      const count = trigger.querySelector('[data-pp-mobile-cart-count]');
+      if (count) {
+        count.textContent = visibleQuantity;
+        count.hidden = totalQty <= 0;
+      }
+    }
+  });
+
+  const heading = document.querySelector(
+    '#ppCartDrawer .pp-cart-header h4, #cartDrawer .pp-cart-header h4'
+  );
+
+  if (heading) {
+    heading.textContent = `Cesta · ${visibleQuantity}`;
+  }
+}
+
 function moveCartNodesToBody() {
   const { drawer, overlay } = getCartNodes();
 
@@ -574,26 +734,39 @@ function renderCart() {
     total
   } = getCartNodes();
 
+  const packaging = ensureCartPackagingHook(drawer);
+  const services = ensureCartServiceLinks(drawer);
+
+  normalizeCartStructure(drawer);
+
   if (!list || !total) {
     return;
   }
 
   const items = readCart();
-  const emptyState = drawer?.querySelector('.pp-cart-empty');
 
   if (!items.length) {
-    list.innerHTML = '';
-    list.hidden = true;
+    drawer?.querySelectorAll('.pp-cart-empty').forEach((node) => {
+      if (!list.contains(node)) {
+        node.remove();
+      }
+    });
 
-    if (emptyState) {
-      emptyState.hidden = false;
-    } else {
-      list.innerHTML = `
-        <div class="cart-empty">
-          <p class="cart-empty__text">Tu cesta está vacía</p>
-        </div>
-      `;
-      list.hidden = false;
+    list.hidden = false;
+    list.innerHTML = `
+      <div class="cart-empty pp-cart-empty">
+        <p class="cart-empty__text">Tu cesta está vacía</p>
+        <p class="cart-empty__copy">Descubre las piezas disponibles de PROPHETIA.</p>
+        <a class="cart-empty__link" href="/colecciones">Seguir explorando</a>
+      </div>
+    `;
+
+    if (packaging) {
+      packaging.hidden = true;
+    }
+
+    if (services) {
+      services.hidden = true;
     }
 
     total.textContent = money(0);
@@ -601,8 +774,12 @@ function renderCart() {
     return;
   }
 
-  if (emptyState) {
-    emptyState.hidden = true;
+  if (packaging) {
+    packaging.hidden = false;
+  }
+
+  if (services) {
+    services.hidden = false;
   }
 
   list.hidden = false;
@@ -646,9 +823,9 @@ ${size ? `Talla: ${size}` : ''}
 
           <div class="cart-item__bottom">
             <div class="cart-qty" aria-label="Cantidad">
-              <button type="button" data-cart-qty="${safeKey}" data-delta="-1">−</button>
-              <span>${qty}</span>
-              <button type="button" data-cart-qty="${safeKey}" data-delta="1">+</button>
+              <button type="button" data-cart-qty="${safeKey}" data-delta="-1" aria-label="Reducir cantidad de ${title}">−</button>
+              <span aria-live="polite">${qty}</span>
+              <button type="button" data-cart-qty="${safeKey}" data-delta="1" aria-label="Aumentar cantidad de ${title}">+</button>
             </div>
 
             <strong class="cart-item__price">${money(price * qty)}</strong>
@@ -785,6 +962,7 @@ if (cartButton) {
   );
 }
 
+  updateMobileCartUi(totalQty);
   previousCartQty = totalQty;
 }
 
@@ -928,6 +1106,26 @@ function addToCart(product, options = {}) {
       if (event.key === 'Escape' || event.key === 'Esc') {
         event.preventDefault();
         cancel();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !mobileCartQuery.matches) return;
+      const focusable = Array.from(dialog?.querySelectorAll(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ) || []).filter((node) => !node.closest('[hidden]'));
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!dialog.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus({ preventScroll: true });
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
@@ -985,7 +1183,7 @@ function addToCart(product, options = {}) {
     changeQty(key, numericDelta);
   }
 
-function openCart() {
+function openCart(returnFocusTarget = null) {
   const { drawer, overlay } = getCartNodes();
   if (!drawer || !overlay) {
     console.warn('[cart] Drawer u overlay no encontrados');
@@ -994,21 +1192,55 @@ function openCart() {
 
   renderCart();
 
+  if (mobileCartQuery.matches &&
+      !drawer.classList.contains('open') && !drawer.classList.contains('is-open')) {
+    cartReturnFocus = returnFocusTarget instanceof HTMLElement
+      ? returnFocusTarget
+      : (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+  }
+
   drawer.classList.add('open', 'is-open');
+  drawer.setAttribute('role', 'dialog');
+  drawer.setAttribute('aria-modal', 'true');
+  if (!drawer.hasAttribute('aria-label') && !drawer.hasAttribute('aria-labelledby')) {
+    drawer.setAttribute('aria-label', 'Cesta de compra');
+  }
   drawer.setAttribute('aria-hidden', 'false');
 
   overlay.classList.add('active', 'open', 'is-open');
   overlay.setAttribute('aria-hidden', 'false');
 
-  const trigger = document.getElementById('ppCartBtn');
-  if (trigger) trigger.setAttribute('aria-expanded', 'true');
+  document
+    .querySelectorAll('#ppCartBtn, [data-pp-mobile-cart], [data-cart-open]')
+    .forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', 'true');
+    });
 
   body.classList.add('no-scroll', 'pp-cart-open');
+
+  if (mobileCartQuery.matches) {
+    const focusDrawer = () => {
+      if (!drawer.classList.contains('open') && !drawer.classList.contains('is-open')) return;
+      const focusTarget = drawer.querySelector(
+        '[data-close="cart"], .cart-close, .pp-cart-close, button, a[href]'
+      );
+      focusTarget?.focus?.({ preventScroll: true });
+    };
+    focusDrawer();
+    window.requestAnimationFrame(() => {
+      if (!drawer.contains(document.activeElement)) focusDrawer();
+    });
+    window.setTimeout(() => {
+      if (!drawer.contains(document.activeElement)) focusDrawer();
+    }, 80);
+  }
 }
 
 function closeCart() {
   const { drawer, overlay } = getCartNodes();
   if (!drawer || !overlay) return;
+
+  const wasOpen = drawer.classList.contains('open') || drawer.classList.contains('is-open');
 
   drawer.classList.remove('open', 'is-open');
   drawer.setAttribute('aria-hidden', 'true');
@@ -1016,10 +1248,18 @@ function closeCart() {
   overlay.classList.remove('active', 'open', 'is-open');
   overlay.setAttribute('aria-hidden', 'true');
 
-  const trigger = document.getElementById('ppCartBtn');
-  if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  document
+    .querySelectorAll('#ppCartBtn, [data-pp-mobile-cart], [data-cart-open]')
+    .forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', 'false');
+    });
 
   body.classList.remove('no-scroll', 'pp-cart-open');
+
+  if (wasOpen && cartReturnFocus?.isConnected) {
+    cartReturnFocus.focus?.({ preventScroll: true });
+  }
+  cartReturnFocus = null;
 }
 
   function bindCart() {
@@ -1031,8 +1271,9 @@ function closeCart() {
     listenersBound = true;
 
    moveCartNodesToBody();
-closeCart();
-renderCart();
+   normalizeCartStructure(getCartNodes().drawer);
+   closeCart();
+   renderCart();
 
     body.addEventListener('click', (e) => {
       const openTrigger = e.target.closest('#cartOpen, #cartopen, #ppCartBtn, .js-open-cart, [data-cart-open]');
@@ -1084,8 +1325,35 @@ renderCart();
     }, true);
 
     document.addEventListener('keydown', (e) => {
+      const { drawer } = getCartNodes();
+      const isOpen = Boolean(
+        drawer?.classList.contains('open') || drawer?.classList.contains('is-open')
+      );
+      if (!isOpen) return;
+
       if (e.key === 'Escape' || e.key === 'Esc') {
+        if (mobileCartQuery.matches) e.preventDefault();
         closeCart();
+        return;
+      }
+
+      if (e.key !== 'Tab' || !mobileCartQuery.matches) return;
+      const focusable = Array.from(drawer.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter((node) => !node.closest('[hidden]') && node.getAttribute('aria-hidden') !== 'true');
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!drawer.contains(document.activeElement)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus({ preventScroll: true });
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     }, true);
   }

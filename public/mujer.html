@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mujer · PROPHETIA — Silent Luxury</title>
   <meta name="description" content="Colección Mujer de PROPHETIA: camisetas, hoodies y sudaderas de punto. Silent Luxury editorial con inspiración mediterránea." />
 <link rel="manifest" href="/manifest.json">
@@ -53,13 +53,14 @@
   <link rel="stylesheet" href="assets/css/utilities.css">
   <link rel="stylesheet" href="assets/css/popup.css">
   <link rel="stylesheet" href="assets/css/cookies.css">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=20260723-mobile3">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=20260724-mobile-parity1">
   <link rel="stylesheet" href="assets/css/plp-ui-universal.css">
 
   <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/mobile-shell.css?v=20260724-mobile-parity1" data-pp-mobile-shell>
 </head>
 
 <body data-quick-add-enabled data-quick-add-theme="light" class="pp-collection-page women-page" data-page="women">
@@ -81,14 +82,19 @@
 
           <!-- Vídeo editorial Mujer (cambia el src al que tengas) -->
           <div class="hero-video" aria-label="Vídeo colección Mujer">
-            <video class="hero-video__media" playsinline autoplay muted loop>
+            <video class="hero-video__media"
+                   playsinline
+                   autoplay
+                   muted
+                   loop
+                   poster="/assets/img/portadas/covermask.png">
               <source src="assets/video/heromujer.mp4" type="video/mp4">
             </video>
           </div>
         </div>
       </div>
 
-      <aside class="hero-right women-band__side">
+      <div class="women-band__side">
         <h1 class="women-band__title">Mujer</h1>
         <ul class="women-band__list">
           <li><a href="streetwear-mujer">Streetwear</a></li>
@@ -96,7 +102,7 @@
           <li><a href="hoodies-mujer">Hoodies</a></li>
           <li><a href="sudaderas-punto-mujer">Sudaderas de punto</a></li>
         </ul>
-      </aside>
+      </div>
     </section>
 
     <!-- =======================
@@ -367,7 +373,7 @@
   <!-- Scripts globales -->
   <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/firebase-auth.js"></script>
-<script defer src="/assets/js/header-init.js?v=20260723-mobile3"></script>
+<script defer src="/assets/js/header-init.js?v=20260724-mobile-parity1"></script>
   <script src="assets/js/script.js" defer></script>
   <script src="assets/js/popup.js" defer></script>
   <script src="assets/js/cookies.js" defer></script>

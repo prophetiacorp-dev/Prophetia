@@ -163,14 +163,56 @@
 
   /* =============== Parciales (header/footer) =============== */
   let partialsInjected = false;
+  let partialsInjectionPromise = null;
 
   async function injectPartial(hostId, url) {
     const host = document.getElementById(hostId);
-    if (!host) return;
+    if (!host) return false;
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status} @ ${url}`);
     host.innerHTML = await res.text();
+    return true;
   }
+
+function getAuthModal() {
+  return document.getElementById('ppAuthModal');
+}
+
+function portalNodeToBody(node) {
+  if (!(node instanceof HTMLElement) || !document.body) return false;
+
+  let origin = node.__ppPortalOrigin;
+  if (!origin?.anchor?.isConnected) {
+    // Un nodo ya huérfano en body nunca debe tomar body como nuevo origen.
+    if (!node.parentNode || node.parentElement === document.body) return false;
+
+    const anchor = document.createComment(`pp-portal-origin:${node.id || node.className || node.tagName}`);
+    const parent = node.parentNode;
+    parent.insertBefore(anchor, node);
+    origin = { anchor, parent };
+    node.__ppPortalOrigin = origin;
+  }
+
+  if (node.parentElement !== document.body) document.body.appendChild(node);
+  return node.parentElement === document.body;
+}
+
+function restorePortaledNode(node, { removeIfOrphaned = false } = {}) {
+  const origin = node?.__ppPortalOrigin;
+  if (!origin) return false;
+
+  const canRestore = origin.anchor?.parentNode && origin.parent?.isConnected;
+  if (canRestore) {
+    origin.anchor.parentNode.insertBefore(node, origin.anchor.nextSibling);
+  } else if (removeIfOrphaned) {
+    node.remove();
+  }
+
+  origin.anchor?.remove();
+  delete node.__ppPortalOrigin;
+  return Boolean(canRestore);
+}
+
 function waitForGlobalFn(fnName, timeoutMs = 1800) {
   const start = Date.now();
   return new Promise((resolve) => {
@@ -221,23 +263,68 @@ function normalizeHeaderAuthIcons() {
 
 /* =========================================================
    PROPHETIA · Navegación inferior móvil
-   La web conserva el header de escritorio por encima de 760px.
+   La hoja mobile-shell.css decide el modo hasta 820px. El dock
+   queda fail-closed si esa hoja no está disponible.
    ========================================================= */
 function initMobileDock() {
-  const dock = document.querySelector('.pp-mobile-dock');
-  const panel = document.getElementById('ppMobileMenuPanel');
-  if (!dock || !panel || dock.dataset.ppMobileBound === 'true') return;
+  const headerHost = document.getElementById('header');
+  const previousController = window.__ppMobileDockController;
+  if (previousController?.isCurrentHeader?.(headerHost)) {
+    previousController.sync?.();
+    return;
+  }
+  previousController?.destroy?.({ removeNodes: true });
+
+  const dock = headerHost?.querySelector('.pp-mobile-dock');
+  const panel = headerHost?.querySelector('#ppMobileMenuPanel');
+  if (!headerHost || !dock || !panel) return;
+  if (dock.dataset.ppMobileBound === 'true') delete dock.dataset.ppMobileBound;
+
+  const lifecycle = new AbortController();
+  const { signal } = lifecycle;
+  let destroyed = false;
+  let cartCountObserver = null;
+  let headerObserver = null;
+  let legacyMediaListener = false;
+  let controllerApi = null;
+  const listenerCleanups = [];
+
+  function listen(target, type, listener, options = {}) {
+    if (!target?.addEventListener) return false;
+    try {
+      target.addEventListener(type, listener, { ...options, signal });
+    } catch {
+      target.addEventListener(type, listener, options);
+    }
+    listenerCleanups.push(() => {
+      target.removeEventListener?.(type, listener, Boolean(options.capture));
+    });
+    return true;
+  }
 
   dock.dataset.ppMobileBound = 'true';
-  document.body.classList.add('pp-mobile-dock-active');
 
+  const mobileQuery = window.matchMedia('(max-width: 820px)');
+  const mobileStyles = document.querySelector('link[data-pp-mobile-shell]');
   const menuButton = dock.querySelector('[data-pp-mobile-menu]');
   const searchButton = dock.querySelector('[data-pp-mobile-search]');
   const accountButton = dock.querySelector('[data-pp-mobile-account]');
   const cartButton = dock.querySelector('[data-pp-mobile-cart]');
   const closeButton = panel.querySelector('[data-pp-mobile-close]');
+  const backButton = panel.querySelector('[data-pp-mobile-back]');
   const searchInput = panel.querySelector('#ppMobileSearchInput');
+  const searchForm = searchInput?.closest('form');
+  const searchClearButton = panel.querySelector('[data-pp-mobile-search-clear]');
   const mobileCount = dock.querySelector('[data-pp-mobile-cart-count]');
+  const tabs = Array.from(panel.querySelectorAll('[data-pp-mobile-tab]'));
+  const sections = Array.from(panel.querySelectorAll('[data-pp-mobile-section]'));
+  const menuTracks = Array.from(panel.querySelectorAll('.pp-mobile-menu__views-track'));
+  let returnFocus = null;
+  let catalogPromise = null;
+  let searchTimer = 0;
+  let searchRevision = 0;
+  let searchResults = null;
+  let activeSublevel = null;
 
   function setExpanded(value) {
     const expanded = value ? 'true' : 'false';
@@ -245,23 +332,485 @@ function initMobileDock() {
     searchButton?.setAttribute('aria-expanded', expanded);
   }
 
+  function sectionForPath(pathname) {
+    if (pathname === '/hombre' || pathname === '/hoodies' || pathname.endsWith('-hombre')) {
+      return 'men';
+    }
+
+    if (pathname === '/mujer' || pathname === '/hoodies-mujer' || pathname.endsWith('-mujer')) {
+      return 'women';
+    }
+
+    if (pathname === '/colecciones' || pathname.startsWith('/assets/collects/')) {
+      return 'collections';
+    }
+
+    if (['/about', '/studio', '/musica', '/events'].includes(pathname)) return 'house';
+    if (pathname === '/prophetia-originals') return 'originals';
+    if ([
+      '/account',
+      '/my-services',
+      '/my-content',
+      '/pedidos',
+      '/addresses',
+      '/reservas',
+      '/drop-calendar',
+      '/vault',
+      '/prophet-private',
+      '/wishlist'
+    ].includes(pathname)) {
+      return 'house';
+    }
+
+    return 'women';
+  }
+
+  function activateSection(name, { focus = false } = {}) {
+    const selectedTab = tabs.find((tab) => tab.dataset.ppMobileTab === name) || tabs[0];
+    if (!selectedTab) return;
+
+    const selectedName = selectedTab.dataset.ppMobileTab;
+    tabs.forEach((tab) => {
+      const active = tab === selectedTab;
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      tab.tabIndex = active ? 0 : -1;
+    });
+
+    sections.forEach((section) => {
+      const isSelected = section.dataset.ppMobileSection === selectedName;
+      section.hidden = !isSelected;
+      section.classList.remove('is-submenu-open');
+      section.querySelectorAll('[data-pp-mobile-level]').forEach((level) => {
+        level.hidden = false;
+        level.classList.remove('is-active');
+      });
+    });
+
+    activeSublevel = null;
+    syncSublevelState();
+
+    if (!panel.hidden) {
+      selectedTab.scrollIntoView({ block: 'nearest', inline: 'center' });
+    }
+    if (focus) selectedTab.focus({ preventScroll: true });
+  }
+
+  function syncSublevelState({ keepSublevelInteractive = false } = {}) {
+    const activeSection = sections.find((section) => !section.hidden);
+    const level = activeSection?.querySelector(
+      `[data-pp-mobile-level="${activeSublevel || 'root'}"]`
+    );
+    const triggers = activeSection
+      ? Array.from(activeSection.querySelectorAll('[data-pp-mobile-level-trigger]'))
+      : [];
+
+    sections.forEach((section) => {
+      const isActiveSection = section === activeSection;
+      section.classList.toggle('is-submenu-open', isActiveSection && Boolean(activeSublevel));
+
+      section.querySelectorAll('[data-pp-mobile-level]').forEach((item) => {
+        const isCurrentLevel = item === level;
+        const keepInteractive = keepSublevelInteractive &&
+          item !== level &&
+          item.dataset.ppMobileLevel !== 'root';
+        const isExposed = isCurrentLevel || keepInteractive;
+
+        item.hidden = false;
+        item.classList.toggle('is-active', isCurrentLevel);
+        item.setAttribute('aria-hidden', isExposed ? 'false' : 'true');
+        item.inert = !isExposed;
+      });
+    });
+
+    triggers.forEach((trigger) => {
+      const isActive = trigger.dataset.ppMobileLevelTrigger === activeSublevel;
+      trigger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+    });
+
+    backButton.hidden = !activeSublevel;
+    backButton.setAttribute('aria-hidden', activeSublevel ? 'false' : 'true');
+  }
+
+  function openSublevel(name, { focus = true } = {}) {
+    const activeSection = sections.find((section) => !section.hidden);
+    const target = activeSection?.querySelector(`[data-pp-mobile-level="${name}"]`);
+    if (!target) return;
+
+    activeSublevel = name;
+    syncSublevelState();
+
+    if (focus) {
+      window.requestAnimationFrame(() => {
+        target.querySelector('a, button')?.focus({ preventScroll: true });
+      });
+    }
+  }
+
+  function closeSublevel({ focus = true } = {}) {
+    if (!activeSublevel) return false;
+
+    activeSublevel = null;
+    syncSublevelState({ keepSublevelInteractive: true });
+
+    let finalized = false;
+    const finalize = () => {
+      if (finalized) return;
+      finalized = true;
+      syncSublevelState();
+
+      if (focus) {
+        window.requestAnimationFrame(() => {
+          panel.querySelector('[data-pp-mobile-level-trigger][aria-expanded="false"]')
+            ?.focus({ preventScroll: true });
+        });
+      }
+    };
+
+    const track = menuTracks.find((item) => item.closest('.is-submenu-open'));
+    if (track) {
+      track.addEventListener('transitionend', (event) => {
+        if (event.propertyName === 'transform') finalize();
+      }, { once: true });
+      window.setTimeout(finalize, 320);
+    } else {
+      finalize();
+    }
+
+    return true;
+  }
+
+  function closePanel({ restoreFocus = true } = {}) {
+    const wasOpen = !panel.hidden;
+    activeSublevel = null;
+    syncSublevelState();
+    panel.hidden = true;
+    panel.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('pp-mobile-panel-open');
+    setExpanded(false);
+
+    if (wasOpen && restoreFocus && returnFocus instanceof HTMLElement) {
+      returnFocus.focus({ preventScroll: true });
+    }
+    returnFocus = null;
+  }
+
+  function mobileStylesAreReady() {
+    return Boolean(mobileStyles?.sheet);
+  }
+
+  function nodeBelongsToCurrentHeader(node) {
+    if (!node?.isConnected) return false;
+    if (headerHost.contains(node)) return true;
+
+    const anchor = node.__ppPortalOrigin?.anchor;
+    return Boolean(anchor?.isConnected && headerHost.contains(anchor));
+  }
+
+  function portaledAuthModals() {
+    return Array.from(document.querySelectorAll('#ppAuthModal')).filter((modal) => {
+      const origin = modal.__ppPortalOrigin;
+      return origin?.parent === headerHost || Boolean(origin?.anchor && headerHost.contains(origin.anchor));
+    });
+  }
+
+  function closePortaledAuth(modal) {
+    if (!modal?.open) return;
+    const isPrimaryModal = getAuthModal() === modal;
+    if (isPrimaryModal && typeof window.ppCloseAuth === 'function') {
+      window.ppCloseAuth({ restoreFocus: false });
+      return;
+    }
+
+    try { modal.close(); } catch {}
+    if (isPrimaryModal) document.body.classList.remove('no-scroll');
+  }
+
+  function restoreMobilePortals({ removeNodes = false } = {}) {
+    portaledAuthModals().forEach((modal) => {
+      closePortaledAuth(modal);
+      restorePortaledNode(modal, { removeIfOrphaned: true });
+      if (removeNodes) modal.remove();
+    });
+
+    restorePortaledNode(dock, { removeIfOrphaned: true });
+    restorePortaledNode(panel, { removeIfOrphaned: true });
+
+    if (removeNodes) {
+      dock.remove();
+      panel.remove();
+    }
+  }
+
+  function isCurrentHeader(candidate) {
+    return !destroyed &&
+      candidate === headerHost &&
+      nodeBelongsToCurrentHeader(dock) &&
+      nodeBelongsToCurrentHeader(panel);
+  }
+
+  function destroy({ removeNodes = false } = {}) {
+    if (destroyed) return;
+    destroyed = true;
+
+    window.clearTimeout(searchTimer);
+    searchRevision += 1;
+    closePanel({ restoreFocus: false });
+    lifecycle.abort();
+    listenerCleanups.splice(0).forEach((cleanup) => cleanup());
+    cartCountObserver?.disconnect();
+    headerObserver?.disconnect();
+    if (legacyMediaListener) mobileQuery.removeListener?.(syncDockVisibility);
+
+    restoreMobilePortals({ removeNodes });
+    document.body.classList.remove('pp-mobile-dock-active', 'pp-mobile-panel-open');
+    delete dock.dataset.ppMobileBound;
+
+    if (window.__ppMobileDockController === controllerApi) {
+      delete window.__ppMobileDockController;
+    }
+  }
+
+  function ensureSearchResults() {
+    if (searchResults?.isConnected) return searchResults;
+    if (!searchForm) return null;
+
+    searchResults = document.createElement('div');
+    searchResults.id = 'ppMobileSearchResults';
+    searchResults.className = 'pp-mobile-search-results';
+    searchResults.setAttribute('aria-live', 'polite');
+    searchResults.setAttribute('aria-label', 'Resultados de búsqueda');
+    searchResults.hidden = true;
+    searchForm.insertAdjacentElement('afterend', searchResults);
+
+    searchInput?.setAttribute('aria-controls', searchResults.id);
+    searchInput?.setAttribute('aria-expanded', 'false');
+    return searchResults;
+  }
+
+  function setSearchExpanded(value) {
+    searchInput?.setAttribute('aria-expanded', value ? 'true' : 'false');
+  }
+
+  function syncSearchClearButton() {
+    if (!searchClearButton) return;
+    const hasText = Boolean(searchInput?.value);
+    searchClearButton.hidden = !hasText;
+    searchClearButton.disabled = !hasText;
+  }
+
+  function clearSearchResults() {
+    const container = ensureSearchResults();
+    if (!container) return;
+    container.replaceChildren();
+    container.hidden = true;
+    container.removeAttribute('aria-busy');
+    delete container.dataset.state;
+    setSearchExpanded(false);
+    syncSearchClearButton();
+  }
+
+  function renderSearchStatus(message, state) {
+    const container = ensureSearchResults();
+    if (!container) return;
+
+    const status = document.createElement('p');
+    status.textContent = message;
+    container.replaceChildren(status);
+    container.dataset.state = state;
+    container.hidden = false;
+    container.removeAttribute('aria-busy');
+    setSearchExpanded(true);
+  }
+
+  function normalizeSearchText(value) {
+    return String(value ?? '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase('es')
+      .trim();
+  }
+
+  function catalogSearchText(item) {
+    const labels = Array.isArray(item?.labels)
+      ? item.labels.map((label) => typeof label === 'string' ? label : label?.label)
+      : [];
+
+    return normalizeSearchText([
+      item?.id,
+      item?.slug,
+      item?.title,
+      item?.short,
+      item?.section,
+      item?.collection,
+      item?.gender,
+      item?.type,
+      ...labels
+    ].filter(Boolean).join(' '));
+  }
+
+  function loadCatalog() {
+    if (!catalogPromise) {
+      catalogPromise = fetch('/assets/data/catalog.json', {
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+        signal
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then((payload) => {
+          if (Array.isArray(payload)) return payload;
+          if (Array.isArray(payload?.products)) return payload.products;
+          throw new Error('Formato de catálogo no reconocido');
+        })
+        .catch((error) => {
+          catalogPromise = null;
+          throw error;
+        });
+    }
+
+    return catalogPromise;
+  }
+
+  function renderCatalogResults(items) {
+    const container = ensureSearchResults();
+    if (!container) return;
+
+    const fragment = document.createDocumentFragment();
+    items.forEach((item) => {
+      const id = String(item?.id || '').trim();
+      const slug = String(item?.slug || '').trim();
+      const productId = slug || id;
+      if (!productId) return;
+
+      const link = document.createElement('a');
+      link.className = 'pp-mobile-search-result';
+      link.href = `/producto?id=${encodeURIComponent(productId)}`;
+
+      const title = document.createElement('strong');
+      title.textContent = String(item?.title || id);
+      link.appendChild(title);
+
+      const metaParts = [item?.collection, item?.section, item?.type]
+        .map((value) => String(value || '').replace(/-/g, ' ').trim())
+        .filter(Boolean);
+      if (metaParts.length) {
+        const meta = document.createElement('span');
+        meta.textContent = metaParts.join(' · ');
+        link.appendChild(meta);
+      }
+
+      fragment.appendChild(link);
+    });
+
+    if (!fragment.childNodes.length) {
+      renderSearchStatus('No hay resultados para esta búsqueda.', 'empty');
+      return;
+    }
+
+    container.replaceChildren(fragment);
+    container.dataset.state = 'results';
+    container.hidden = false;
+    container.removeAttribute('aria-busy');
+    setSearchExpanded(true);
+  }
+
+  async function runMobileSearch(rawQuery) {
+    const query = String(rawQuery || '').trim();
+    const revision = ++searchRevision;
+    syncSearchClearButton();
+
+    if (!query) {
+      clearSearchResults();
+      return;
+    }
+
+    if (query.length < 2) {
+      renderSearchStatus('Escribe al menos 2 caracteres.', 'minimum');
+      return;
+    }
+
+    renderSearchStatus('Buscando…', 'loading');
+    ensureSearchResults()?.setAttribute('aria-busy', 'true');
+
+    try {
+      const catalog = await loadCatalog();
+      if (revision !== searchRevision) return;
+
+      const normalizedQuery = normalizeSearchText(query);
+      const matches = catalog
+        .filter((item) => item?.active !== false && (String(item?.slug || '').trim() || String(item?.id || '').trim()))
+        .map((item, index) => {
+          const title = normalizeSearchText(item?.title);
+          const id = normalizeSearchText(item?.id);
+          const haystack = catalogSearchText(item);
+          let score = 3;
+          if (title.startsWith(normalizedQuery)) score = 0;
+          else if (title.includes(normalizedQuery)) score = 1;
+          else if (id.includes(normalizedQuery)) score = 2;
+          return { item, index, score, matches: haystack.includes(normalizedQuery) };
+        })
+        .filter((entry) => entry.matches)
+        .sort((a, b) => a.score - b.score || a.index - b.index)
+        .slice(0, 8)
+        .map((entry) => entry.item);
+
+      if (!matches.length) {
+        renderSearchStatus('No hay resultados para esta búsqueda.', 'empty');
+        return;
+      }
+
+      renderCatalogResults(matches);
+    } catch (error) {
+      if (revision !== searchRevision) return;
+      console.error('[mobile-search] catálogo no disponible:', error);
+      renderSearchStatus('No se ha podido cargar la búsqueda. Inténtalo de nuevo.', 'error');
+    }
+  }
+
+  function syncDockVisibility() {
+    if (destroyed) return;
+    if (!isCurrentHeader(document.getElementById('header'))) {
+      destroy({ removeNodes: true });
+      Promise.resolve().then(initMobileDock);
+      return;
+    }
+
+    const active = mobileQuery.matches && mobileStylesAreReady();
+    if (!active) closePanel({ restoreFocus: false });
+
+    if (active) {
+      const dockReady = portalNodeToBody(dock);
+      const panelReady = portalNodeToBody(panel);
+      if (!dockReady || !panelReady) {
+        destroy({ removeNodes: true });
+        return;
+      }
+    } else {
+      restoreMobilePortals();
+    }
+
+    dock.hidden = !active;
+    document.body.classList.toggle('pp-mobile-dock-active', active);
+  }
+
   function openPanel({ focusSearch = false } = {}) {
+    if (!mobileQuery.matches || !mobileStylesAreReady()) return;
+
+    returnFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : menuButton;
     panel.hidden = false;
     panel.setAttribute('aria-hidden', 'false');
     document.body.classList.add('pp-mobile-panel-open');
     setExpanded(true);
+    syncSearchClearButton();
 
     window.requestAnimationFrame(() => {
       if (focusSearch) searchInput?.focus({ preventScroll: true });
       else closeButton?.focus({ preventScroll: true });
     });
-  }
-
-  function closePanel() {
-    panel.hidden = true;
-    panel.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('pp-mobile-panel-open');
-    setExpanded(false);
   }
 
   function clickHeaderControl(selector) {
@@ -282,30 +831,148 @@ function initMobileDock() {
     );
   }
 
-  menuButton?.addEventListener('click', () => openPanel());
-  searchButton?.addEventListener('click', () => openPanel({ focusSearch: true }));
-  closeButton?.addEventListener('click', closePanel);
+  tabs.forEach((tab, index) => {
+    listen(tab, 'click', () => {
+      activateSection(tab.dataset.ppMobileTab, { focus: true });
+    });
 
-  accountButton?.addEventListener('click', () => {
-    const selector = document.body.classList.contains('pp-auth-logged')
-      ? '#ppProfileChip'
-      : '#ppAuthLogoBtn';
-    clickHeaderControl(selector);
+    listen(tab, 'keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+
+      let nextIndex = index;
+      if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+      if (event.key === 'Home') nextIndex = 0;
+      if (event.key === 'End') nextIndex = tabs.length - 1;
+      activateSection(tabs[nextIndex]?.dataset.ppMobileTab, { focus: true });
+    });
   });
 
-  cartButton?.addEventListener('click', () => clickHeaderControl('#ppCartBtn'));
+  listen(menuButton, 'click', () => openPanel());
+  listen(searchButton, 'click', () => openPanel({ focusSearch: true }));
+  listen(closeButton, 'click', () => closePanel());
 
-  panel.addEventListener('click', (event) => {
-    if (event.target.closest('a')) closePanel();
+  listen(backButton, 'click', () => {
+    closeSublevel();
   });
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !panel.hidden) closePanel();
+  listen(panel, 'click', (event) => {
+    const trigger = event.target.closest('[data-pp-mobile-level-trigger]');
+    if (!trigger || !panel.contains(trigger)) return;
+
+    event.preventDefault();
+    openSublevel(trigger.dataset.ppMobileLevelTrigger);
+  });
+
+  listen(accountButton, 'click', () => {
+    closePanel({ restoreFocus: false });
+    if (document.body.classList.contains('pp-auth-logged')) {
+      window.location.assign('/my-content');
+      return;
+    }
+
+    const modal = getAuthModal();
+    if (modal) portalNodeToBody(modal);
+
+    if (typeof window.ppOpenAuth === 'function') window.ppOpenAuth();
+    else clickHeaderControl('#ppAuthLogoBtn');
+  });
+
+  listen(cartButton, 'click', () => {
+    closePanel({ restoreFocus: false });
+    if (typeof window.ppOpenCart === 'function') {
+      window.ppOpenCart(cartButton);
+      return;
+    }
+    clickHeaderControl('#ppCartBtn');
+  });
+
+  listen(panel, 'click', (event) => {
+    if (event.target.closest('a')) closePanel({ restoreFocus: false });
+  });
+
+  listen(searchInput, 'input', () => {
+    window.clearTimeout(searchTimer);
+    searchRevision += 1;
+    const value = searchInput.value;
+    syncSearchClearButton();
+
+    if (!value.trim()) {
+      clearSearchResults();
+      return;
+    }
+
+    searchTimer = window.setTimeout(() => runMobileSearch(value), 160);
+  });
+
+  listen(searchClearButton, 'click', () => {
+    window.clearTimeout(searchTimer);
+    searchRevision += 1;
+    if (searchInput) searchInput.value = '';
+    clearSearchResults();
+    searchInput?.focus({ preventScroll: true });
+  });
+
+  listen(searchInput, 'keydown', (event) => {
+    if (event.key !== 'ArrowDown') return;
+    const firstResult = ensureSearchResults()?.querySelector('.pp-mobile-search-result');
+    if (!firstResult) return;
+    event.preventDefault();
+    firstResult.focus({ preventScroll: true });
+  });
+
+  listen(searchForm, 'submit', (event) => {
+    event.preventDefault();
+    window.clearTimeout(searchTimer);
+    runMobileSearch(searchInput?.value || '');
+  });
+
+  listen(ensureSearchResults(), 'keydown', (event) => {
+    if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+    const links = Array.from(searchResults.querySelectorAll('.pp-mobile-search-result'));
+    const index = links.indexOf(document.activeElement);
+    if (index < 0) return;
+
+    event.preventDefault();
+    const nextIndex = event.key === 'ArrowDown'
+      ? Math.min(index + 1, links.length - 1)
+      : index === 0 ? -1 : index - 1;
+
+    if (nextIndex < 0) searchInput?.focus({ preventScroll: true });
+    else links[nextIndex]?.focus({ preventScroll: true });
+  });
+
+  listen(document, 'keydown', (event) => {
+    if (panel.hidden) return;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      if (!closeSublevel()) closePanel();
+      return;
+    }
+
+    if (event.key !== 'Tab') return;
+    const focusable = Array.from(panel.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter((element) => !element.closest('[hidden]'));
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
 
   const sourceCount = document.getElementById('ppCartCount');
   if (sourceCount) {
-    new MutationObserver(syncMobileCartCount).observe(sourceCount, {
+    cartCountObserver = new MutationObserver(syncMobileCartCount);
+    cartCountObserver.observe(sourceCount, {
       childList: true,
       subtree: true,
       characterData: true,
@@ -313,18 +980,84 @@ function initMobileDock() {
     });
   }
 
-  window.addEventListener('pp:cart-updated', syncMobileCartCount);
-  window.matchMedia?.('(min-width: 761px)').addEventListener?.('change', (event) => {
-    if (event.matches) closePanel();
+  try {
+    window.addEventListener('pp:cart-updated', syncMobileCartCount, { signal });
+  } catch {
+    window.addEventListener('pp:cart-updated', syncMobileCartCount);
+  }
+  listenerCleanups.push(() => {
+    window.removeEventListener('pp:cart-updated', syncMobileCartCount);
   });
+  if (mobileQuery.addEventListener) {
+    listen(mobileQuery, 'change', syncDockVisibility);
+  } else if (mobileQuery.addListener) {
+    mobileQuery.addListener(syncDockVisibility);
+    legacyMediaListener = true;
+  }
+  listen(mobileStyles, 'load', syncDockVisibility, { once: true });
+
+  controllerApi = {
+    destroy,
+    isCurrentHeader,
+    sync: syncDockVisibility
+  };
+  window.__ppMobileDockController = controllerApi;
+  headerObserver = new MutationObserver(() => {
+    if (destroyed) return;
+    if (isCurrentHeader(document.getElementById('header'))) return;
+    destroy({ removeNodes: true });
+    Promise.resolve().then(initMobileDock);
+  });
+  headerObserver.observe(headerHost, { childList: true });
+  if (headerHost.parentNode) {
+    headerObserver.observe(headerHost.parentNode, { childList: true });
+  }
 
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/home';
+  activateSection(sectionForPath(currentPath));
   panel.querySelectorAll('a[href]').forEach((link) => {
     const href = new URL(link.href, window.location.origin).pathname.replace(/\/$/, '') || '/home';
     if (href === currentPath) link.setAttribute('aria-current', 'page');
   });
 
   syncMobileCartCount();
+  syncDockVisibility();
+}
+
+function initMobileHeroVideoFallbacks() {
+  const mobileQuery = window.matchMedia('(max-width: 820px)');
+  const videos = document.querySelectorAll(
+    'body:is(.men-page, .women-page) .hero-frame .hero-video__media'
+  );
+
+  videos.forEach((video) => {
+    const frame = video.closest('.hero-frame');
+    if (!frame || video.dataset.ppMobileFallbackBound === 'true') return;
+
+    video.dataset.ppMobileFallbackBound = 'true';
+    let fallbackTimer = 0;
+
+    const revealFallback = () => {
+      if (!mobileQuery.matches || video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return;
+      frame.classList.add('pp-mobile-video-fallback');
+    };
+
+    const revealVideo = () => {
+      window.clearTimeout(fallbackTimer);
+      frame.classList.remove('pp-mobile-video-fallback');
+    };
+
+    video.addEventListener('loadeddata', revealVideo);
+    video.addEventListener('canplay', revealVideo);
+    video.addEventListener('error', revealFallback);
+    video.addEventListener('stalled', revealFallback);
+    video.querySelectorAll('source').forEach((source) => {
+      source.addEventListener('error', revealFallback);
+    });
+
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) revealVideo();
+    else fallbackTimer = window.setTimeout(revealFallback, 900);
+  });
 }
 
 function initFooterTribeForm() {
@@ -368,88 +1101,118 @@ function initFooterTribeForm() {
     }
   });
 }
- // --- DESPUÉS ---
-async function injectHeaderFooter() {
-  if (partialsInjected) return;
+function finalizeHeaderPartial() {
+  normalizeHeaderAuthIcons();
 
-  const t = {
-    h: '/assets/partials/header.html',
-    f: '/assets/partials/footer.html',
-    p: '/assets/partials/popup.html',
-  };
+  // Dedupe defensivo para navegaciones parciales o inyecciones repetidas.
+  const allAuth = Array.from(document.querySelectorAll('#ppAuthModal'));
+  if (allAuth.length > 1) {
+    const preferred =
+      allAuth.find((item) => item.closest('#header') && item.querySelector('.auth-bottom')) ||
+      allAuth.find((item) => item.querySelector('.auth-bottom')) ||
+      allAuth.find((item) => item.closest('#header')) ||
+      allAuth[allAuth.length - 1];
+
+    allAuth.filter((item) => item !== preferred).forEach((item) => item.remove());
+    console.log('[partials] ppAuthModal dedupe -> kept hasBottom:', !!preferred?.querySelector?.('.auth-bottom'));
+  }
+
+  const modal = getAuthModal();
+  if (modal && !modal.querySelector('.auth-bottom')) {
+    const body = modal.querySelector('.modal-body');
+    if (body) {
+      body.insertAdjacentHTML('beforeend', `
+        <div class="auth-bottom">
+          <div class="auth-benefits" data-auth-benefits>
+            <a href="/wishlist" class="sp-benefit-link">Lista de deseos</a>
+            <a href="/my-services" class="sp-benefit-link">Beneficios y servicios</a>
+            <a href="/pedidos" class="sp-benefit-link">Seguimiento de pedido</a>
+          </div>
+          <div class="auth-social" data-auth-social aria-label="Acceso con proveedores">
+            <p class="auth-social__title">O continúa con</p>
+            <div class="auth-social__row" role="group" aria-label="Proveedores">
+              <button type="button" class="auth-social__iconbtn auth-social__iconbtn--google" data-pp-google aria-label="Continuar con Google">
+                <img class="auth-social__icon" src="/assets/img/logo/google.png" alt="" width="18" height="18" loading="lazy" decoding="async">
+              </button>
+              <button type="button" class="auth-social__iconbtn auth-social__iconbtn--apple" data-pp-apple disabled aria-disabled="true"
+                aria-label="Continuar con Apple" title="Apple requiere Apple Developer Program (de pago)">
+                <img class="auth-social__icon" src="/assets/img/logo/apple-provider.svg" alt="" width="18" height="18" loading="lazy" decoding="async">
+              </button>
+            </div>
+            <p class="auth-social__note">Apple estará disponible próximamente.</p>
+          </div>
+        </div>
+      `);
+      console.warn('[AUTH] injected missing .auth-bottom fallback (header partial outdated)');
+    }
+  }
+
+  if (!modal?.querySelector('.auth-bottom')) {
+    console.error('[partials] header inyectado NO contiene .auth-bottom. Revisa /assets/partials/header.html servido.');
+  }
+
+  partialsInjected = true;
+  initMobileDock();
+  setHeaderHeightVar();
+}
+
+async function loadPartialSafely(name, hostId, url, onReady) {
+  let status = 'loaded';
 
   try {
-    await injectPartial('header', t.h);
-    console.log('[partials] header OK:', t.h);
-
-    await injectPartial('footer', t.f);
-    console.log('[partials] footer OK:', t.f);
-    initFooterTribeForm();
-
-    await injectPartial('popup-area', t.p);
-    console.log('[partials] popup OK:', t.p);
-    normalizeHeaderAuthIcons();
-
-    // 1) DEDUPE (por si Swup/recargas parciales dejaron residuos)
-    const allAuth = Array.from(document.querySelectorAll('#ppAuthModal'));
-    if (allAuth.length > 1) {
-      const preferred =
-        allAuth.find(m => m.closest('#header') && m.querySelector('.auth-bottom')) ||
-        allAuth.find(m => m.querySelector('.auth-bottom')) ||
-        allAuth.find(m => m.closest('#header')) ||
-        allAuth[allAuth.length - 1];
-
-      allAuth.filter(m => m !== preferred).forEach(m => m.remove());
-      console.log('[partials] ppAuthModal dedupe -> kept hasBottom:', !!preferred?.querySelector?.('.auth-bottom'));
+    const injected = await injectPartial(hostId, url);
+    if (!injected) {
+      console.info(`[partials] ${name} omitido: no existe #${hostId}`);
+      return { name, status: 'skipped' };
     }
-
-    // 2) Modal definitivo
-    const modal = document.querySelector('#header #ppAuthModal');
-
-    // 3) Fallback auth-bottom si el partial está desactualizado
-    if (modal && !modal.querySelector('.auth-bottom')) {
-      const body = modal.querySelector('.modal-body');
-      if (body) {
-        body.insertAdjacentHTML('beforeend', `
-          <div class="auth-bottom">
-            <div class="auth-benefits" data-auth-benefits>
-           <a href="/wishlist" class="sp-benefit-link">Lista de deseos</a>
-<a href="/my-services" class="sp-benefit-link">Beneficios y servicios</a>
-<a href="/pedidos" class="sp-benefit-link">Seguimiento de pedido</a>
-            </div>
-            <div class="auth-social" data-auth-social aria-label="Acceso con proveedores">
-              <p class="auth-social__title">O continúa con</p>
-              <div class="auth-social__row" role="group" aria-label="Proveedores">
-                <button type="button" class="auth-social__iconbtn auth-social__iconbtn--google" data-pp-google aria-label="Continuar con Google">
-                  <img class="auth-social__icon" src="/assets/img/logo/google.png" alt="" width="18" height="18" loading="lazy" decoding="async">
-                </button>
-                <button type="button" class="auth-social__iconbtn auth-social__iconbtn--apple" data-pp-apple disabled aria-disabled="true"
-                  aria-label="Continuar con Apple" title="Apple requiere Apple Developer Program (de pago)">
-                  <img class="auth-social__icon" src="/assets/img/logo/apple-provider.svg" alt="" width="18" height="18" loading="lazy" decoding="async">
-                </button>
-              </div>
-              <p class="auth-social__note">Apple estará disponible próximamente.</p>
-            </div>
-          </div>
-        `);
-        console.warn('[AUTH] injected missing .auth-bottom fallback (header partial outdated)');
-      }
-    }
-
-    // 4) Reset binds del modal final
-    if (modal) delete modal.__ppStepsBound;
-
-    // 5) Sanity check
-    const okBottom = !!document.getElementById('header')?.querySelector('#ppAuthModal .auth-bottom');
-    if (!okBottom) {
-      console.error('[partials] header inyectado NO contiene .auth-bottom. Revisa /assets/partials/header.html servido.');
-    }
-
-    partialsInjected = true;
-    window.dispatchEvent(new CustomEvent('partials:ready'));
-  } catch (e) {
-    console.error('[PROPHETIA] No se pudieron inyectar parciales:', e);
+  } catch (error) {
+    console.error(`[partials] ${name} no disponible:`, error);
+    const existingHost = document.getElementById(hostId);
+    if (!existingHost?.firstElementChild) return { name, status: 'failed' };
+    status = 'existing';
+    console.warn(`[partials] ${name}: se conserva el contenido existente de #${hostId}`);
   }
+
+  try {
+    onReady?.();
+    console.log(`[partials] ${name} ${status === 'loaded' ? 'OK' : 'inicializado'}:`, url);
+    return { name, status };
+  } catch (error) {
+    console.error(`[partials] ${name} no pudo inicializarse:`, error);
+    return { name, status: 'failed' };
+  }
+}
+
+async function injectHeaderFooter() {
+  if (partialsInjectionPromise) return partialsInjectionPromise;
+
+  const paths = {
+    header: '/assets/partials/header.html',
+    footer: '/assets/partials/footer.html',
+    popup: '/assets/partials/popup.html'
+  };
+
+  partialsInjectionPromise = (async () => {
+    const headerResult = await loadPartialSafely(
+      'header',
+      'header',
+      paths.header,
+      finalizeHeaderPartial
+    );
+    const footerResult = await loadPartialSafely(
+      'footer',
+      'footer',
+      paths.footer,
+      initFooterTribeForm
+    );
+    const popupResult = await loadPartialSafely('popup', 'popup-area', paths.popup);
+    const results = [headerResult, footerResult, popupResult];
+    const detail = Object.fromEntries(results.map(({ name, status }) => [name, status]));
+    window.dispatchEvent(new CustomEvent('partials:ready', { detail }));
+    return detail;
+  })();
+
+  return partialsInjectionPromise;
 }
 
 
@@ -471,6 +1234,7 @@ async function injectHeaderFooter() {
 (function defineAuthBinder(){
   const state = { step: 'email', email: '', loginMode: 'password' }; // password | google
   const q = (sel, root=document) => root.querySelector(sel);
+  let authReturnFocus = null;
 
   /* =========================================================
      PROPHETIA · FECHA HÍBRIDA
@@ -724,13 +1488,34 @@ async function decideFlowByEmail(email){
 
 
 
+  function isVisibleFocusTarget(element) {
+    return element instanceof HTMLElement &&
+      element.isConnected &&
+      !element.hidden &&
+      element.getAttribute('aria-hidden') !== 'true' &&
+      element.getClientRects().length > 0;
+  }
 
-
-  function closeAuth(){
-    const modal = document.querySelector('#header #ppAuthModal');
-    if (!modal) return;
+  function closeAuth({ restoreFocus = true } = {}){
+    const modal = getAuthModal();
+    if (!modal?.open) return;
     try { if (modal.open) modal.close(); } catch {}
     document.body.classList.remove('no-scroll');
+
+    const focusTarget = authReturnFocus;
+    authReturnFocus = null;
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => {
+        const fallbackSelectors = window.matchMedia('(max-width: 820px)').matches
+          ? ['[data-pp-mobile-account]', '#ppProfileChip', '#ppAuthLogoBtn']
+          : ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]'];
+        const fallback = fallbackSelectors
+          .map((selector) => document.querySelector(selector))
+          .find(isVisibleFocusTarget);
+        const target = isVisibleFocusTarget(focusTarget) ? focusTarget : fallback;
+        target?.focus({ preventScroll: true });
+      });
+    }
   }
 
   function closeAuthWhenLoggedIn() {
@@ -986,8 +1771,15 @@ setTimeout(() => {
 
 
   function openAuth(step = 'email'){
-    const modal = document.querySelector('#header #ppAuthModal');
+    const modal = getAuthModal();
     if (!modal) return;
+
+    if (window.matchMedia('(max-width: 820px)').matches) portalNodeToBody(modal);
+    if (!modal.open && document.activeElement instanceof HTMLElement) {
+      authReturnFocus = document.activeElement.closest('#ppMobileMenuPanel')
+        ? document.querySelector('[data-pp-mobile-account]')
+        : document.activeElement;
+    }
 
     const targetStep = step === 'login' || step === 'register' ? step : 'email';
     showStep(modal, targetStep);
@@ -1038,14 +1830,14 @@ document.addEventListener('click', (e) => {
 
   if (explicitAuth) {
     e.preventDefault();
-    if (!partialsInjected || !document.querySelector('#header #ppAuthModal')) return;
+    if (!partialsInjected || !getAuthModal()) return;
     openAuth(explicitAuth.matches('[data-pp-open-register]') ? 'register' : 'login');
     return;
   }
 
   if (guestBtn) {
     e.preventDefault();
-    if (!partialsInjected || !document.querySelector('#header #ppAuthModal')) return;
+    if (!partialsInjected || !getAuthModal()) return;
     openAuth();
     return;
   }
@@ -1073,14 +1865,18 @@ document.addEventListener('click', (e) => {
 
   // Backdrop click
   document.addEventListener('click', (e) => {
-    const modal = document.querySelector('#header #ppAuthModal');
+    const modal = getAuthModal();
     if (!modal || !modal.open) return;
     if (e.target !== modal) return;
     closeAuth();
   });
 
   // ESC
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAuth(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const modal = getAuthModal();
+    if (modal?.open) closeAuth();
+  });
 
   // Expose globals
   window.ppOpenAuth  = openAuth;
@@ -1317,11 +2113,13 @@ window.addEventListener('partials:ready', () => {
 
 window.addEventListener("partials:ready", normalizeHeaderAuthIcons);
 window.addEventListener("partials:ready", initMobileDock);
+window.addEventListener("partials:ready", initMobileHeroVideoFallbacks);
 window.addEventListener("pp:auth-changed", normalizeHeaderAuthIcons);
 
 document.addEventListener("DOMContentLoaded", () => {
   normalizeHeaderAuthIcons();
   initMobileDock();
+  initMobileHeroVideoFallbacks();
 });
 
 const ppAuthClassObserver = new MutationObserver(() => {

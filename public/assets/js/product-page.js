@@ -3,6 +3,172 @@ document.addEventListener('DOMContentLoaded', () => {
       await window.ppStorefront?.ready;
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const pdpMobileQuery = window.matchMedia('(max-width: 820px)');
+const pdpReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const PDP_FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])'
+].join(', ');
+
+function getPdpFocusable(container) {
+  if (!(container instanceof HTMLElement)) return [];
+
+  return $$(PDP_FOCUSABLE_SELECTOR, container).filter((element) => {
+    return (
+      element instanceof HTMLElement &&
+      !element.hidden &&
+      !element.closest('[hidden]') &&
+      element.getAttribute('aria-hidden') !== 'true' &&
+      element.getClientRects().length > 0
+    );
+  });
+}
+
+function focusPdpMobileLayer(container, preferredSelector = '') {
+  if (!pdpMobileQuery.matches || !(container instanceof HTMLElement)) return;
+
+  window.requestAnimationFrame(() => {
+    const preferred = preferredSelector
+      ? container.querySelector(preferredSelector)
+      : null;
+    const target = preferred instanceof HTMLElement
+      ? preferred
+      : getPdpFocusable(container)[0];
+
+    target?.focus({ preventScroll: true });
+  });
+}
+
+function trapPdpMobileFocus(event, container) {
+  if (!pdpMobileQuery.matches || event.key !== 'Tab') return false;
+
+  const focusable = getPdpFocusable(container);
+  if (!focusable.length) return false;
+
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+
+  if (!container.contains(active)) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus({ preventScroll: true });
+    return true;
+  }
+
+  if (event.shiftKey && active === first) {
+    event.preventDefault();
+    last.focus({ preventScroll: true });
+    return true;
+  }
+
+  if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus({ preventScroll: true });
+    return true;
+  }
+
+  return false;
+}
+
+function restorePdpMobileFocus(target, { defer = true } = {}) {
+  if (!(target instanceof HTMLElement)) return;
+
+  const restore = () => {
+    if (
+      target.isConnected &&
+      !target.hidden &&
+      !target.closest('[hidden]') &&
+      target.getClientRects().length > 0
+    ) {
+      target.focus({ preventScroll: true });
+    }
+  };
+
+  if (defer) window.requestAnimationFrame(restore);
+  else restore();
+}
+
+function setPdpDialogTriggerState(trigger, dialogId, expanded) {
+  if (!(trigger instanceof HTMLElement)) return;
+
+  trigger.setAttribute('aria-haspopup', 'dialog');
+  trigger.setAttribute('aria-controls', dialogId);
+  trigger.setAttribute('aria-expanded', String(Boolean(expanded)));
+}
+
+function syncPdpLayerMotion(container) {
+  if (!(container instanceof HTMLElement)) return;
+
+  container.querySelectorAll(
+    '.ad-backdrop, .ad-panel, .lb-backdrop, .lb-figure, .lb-img'
+  ).forEach((element) => {
+    if (!(element instanceof HTMLElement)) return;
+
+    if (pdpReducedMotionQuery.matches) {
+      element.dataset.ppPdpReducedMotion = 'true';
+      element.style.animationDuration = '.01ms';
+      element.style.transitionDuration = '.01ms';
+    } else if (element.dataset.ppPdpReducedMotion === 'true') {
+      delete element.dataset.ppPdpReducedMotion;
+      element.style.removeProperty('animation-duration');
+      element.style.removeProperty('transition-duration');
+    }
+  });
+}
+
+function showPdpActionError(message, { fatal = false } = {}) {
+  const purchase = document.querySelector('.pdp-purchase') || document.getElementById('pInfo');
+  let status = document.getElementById('pdpActionStatus');
+
+  if (!status && purchase) {
+    status = document.createElement('p');
+    status.id = 'pdpActionStatus';
+    status.className = 'pdp-short';
+    status.setAttribute('role', 'alert');
+    status.setAttribute('aria-live', 'assertive');
+    status.style.color = '#7a1f1f';
+    status.style.margin = '12px 0';
+    const buyForm = document.getElementById('buyForm');
+    if (buyForm?.parentElement === purchase) purchase.insertBefore(status, buyForm);
+    else purchase.appendChild(status);
+  }
+
+  if (status) {
+    status.hidden = false;
+    status.textContent = message;
+  }
+
+  const cta = document.getElementById('pdpCta') || document.getElementById('pdpcta');
+  const label = cta?.querySelector('.pdp-cta__label');
+  if (label) label.textContent = fatal ? 'Producto no disponible' : 'Cesta no disponible';
+  if (cta) {
+    cta.disabled = fatal;
+    cta.setAttribute('aria-disabled', String(fatal));
+    cta.classList.toggle('is-disabled', fatal);
+    if (!fatal) cta.setAttribute('data-hint', 'La cesta no respondió. Vuelve a intentarlo.');
+    if (status) cta.setAttribute('aria-describedby', status.id);
+  }
+
+  if (typeof window.ppToast === 'function' && document.getElementById('ppToast')) {
+    window.ppToast(message, window.location.href);
+  }
+}
+
+function clearPdpActionError() {
+  const status = document.getElementById('pdpActionStatus');
+  if (status) {
+    status.hidden = true;
+    status.textContent = '';
+  }
+
+  const cta = document.getElementById('pdpCta') || document.getElementById('pdpcta');
+  cta?.removeAttribute('aria-describedby');
+  syncCTA();
+}
 const sizeBtn = document.getElementById('pdpSizeBtn');
 const colorBtn = document.getElementById('pdpColorBtn');
 const versionBtn = document.getElementById('pdpVersionBtn');
@@ -18,7 +184,12 @@ const fitGuideLinkBtn = document.querySelector('[data-tab="fit-guide"]');
 
       // 1) slug/id
       const params = new URLSearchParams(location.search);
-const slug = params.get('slug') || params.get('id');
+const PRODUCT_REFERENCE_ALIASES = Object.freeze({
+  'atlas-prophetia': 'atlas-seal',
+  forgave: 'letter-for-self'
+});
+const requestedProductReference = String(params.get('slug') || params.get('id') || '').trim();
+const slug = PRODUCT_REFERENCE_ALIASES[requestedProductReference.toLowerCase()] || requestedProductReference;
 const urlVersion = (params.get('version') || '').trim().toLowerCase();
 const urlCut = (params.get('cut') || '').trim().toLowerCase();
 
@@ -33,55 +204,39 @@ function addProductToCart(product) {
     ...product
   };
 
-  if (typeof window.ppAddToCart === 'function') {
-    window.ppAddToCart(safeProduct);
-    return;
-  }
-
-  const CART_KEY = 'pp_cart_v2';
-
-  let cart = [];
-
   try {
-    cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-    if (!Array.isArray(cart)) cart = [];
-  } catch {
-    cart = [];
-  }
-
-  const productSku = String(safeProduct.sku || '').trim();
-
-  const existing = cart.find((item) => {
-    const itemSku = String(item.sku || '').trim();
-
-    if (productSku && itemSku) {
-      return itemSku === productSku;
+    if (typeof window.ppCart?.add === 'function') {
+      const added = window.ppCart.add(safeProduct);
+      if (added === null) {
+        if (window.ppStorefront?.salesEnabled !== false) {
+          showPdpActionError('No hemos podido añadir la pieza. Inténtalo de nuevo.');
+        }
+        return false;
+      }
+      clearPdpActionError();
+      return true;
     }
 
-    return (
-      String(item.id || '') === String(safeProduct.id || '') &&
-      String(item.size || '') === String(safeProduct.size || '') &&
-      String(item.color || '') === String(safeProduct.color || '') &&
-      String(item.cut || '') === String(safeProduct.cut || '') &&
-      String(item.version || '') === String(safeProduct.version || '')
-    );
-  });
-
-  if (existing) {
-    existing.qty = (+existing.qty || 1) + (+safeProduct.qty || 1);
-  } else {
-    cart.push(safeProduct);
+    if (typeof window.ppAddToCart === 'function') {
+      const added = window.ppAddToCart(safeProduct);
+      if (added === null) {
+        if (window.ppStorefront?.salesEnabled !== false) {
+          showPdpActionError('No hemos podido añadir la pieza. Inténtalo de nuevo.');
+        }
+        return false;
+      }
+      clearPdpActionError();
+      return true;
+    }
+  } catch (error) {
+    console.error('[PDP Cart] La API oficial no pudo añadir el producto:', error);
+    showPdpActionError('La cesta no está disponible ahora mismo. Inténtalo de nuevo en unos segundos.');
+    return false;
   }
 
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-
-  window.ppCart?.updateBadges?.();
-
-  if (typeof window.ppOpenCart === 'function') {
-    window.ppOpenCart();
-  } else {
-    window.dispatchEvent(new CustomEvent('pp:cart-updated'));
-  }
+  console.error('[PDP Cart] La API oficial de cesta todavía no está disponible.');
+  showPdpActionError('La cesta todavía se está preparando. Inténtalo de nuevo en unos segundos.');
+  return false;
 }
 let items = [];
 let prod = null;
@@ -183,17 +338,23 @@ async function loadLocalCatalog() {
 try {
   items = await loadLocalCatalog();
 
-  const localProd =
-    items.find(p => String(p.slug || '') === String(slug)) ||
-    items.find(p => String(p.id || '') === String(slug)) ||
-    items[0];
+  const localProd = slug
+    ? (
+        items.find(p => String(p.slug || '') === String(slug)) ||
+        items.find(p => String(p.id || '') === String(slug)) ||
+        null
+      )
+    : null;
 
   try {
     const { ppGetProductById, ppGetProductBySlug } = await import('/assets/js/firebase-products.js');
 
-    const remoteProd =
-      await ppGetProductById(slug) ||
-      await ppGetProductBySlug(slug);
+    const remoteProd = slug
+      ? (
+          await ppGetProductById(slug) ||
+          await ppGetProductBySlug(slug)
+        )
+      : null;
 
     prod = remoteProd && localProd
       ? { ...remoteProd, ...localProd }
@@ -203,10 +364,20 @@ try {
     prod = localProd;
   }
 
-  if (!prod) throw new Error('Producto no encontrado');
+  if (!prod) {
+    throw new Error(
+      requestedProductReference
+        ? `Producto no encontrado: ${requestedProductReference}`
+        : 'Falta el identificador del producto'
+    );
+  }
   tribeProfile = await loadTribeProfileForPDP();
 } catch (err) {
   console.error('[PDP] Fallo cargando producto:', err);
+  showPdpActionError(
+    'No hemos podido encontrar esta pieza. Vuelve al catálogo para elegir otro producto.',
+    { fatal: true }
+  );
   return;
 }
 
@@ -360,7 +531,7 @@ function setGallery(images) {
   const safeImages = Array.isArray(images) && images.length ? images : [FALLBACK_IMG];
 
   heroEl.innerHTML = safeImages.map((src, i) => `
-    <button type="button" class="pdp-shot" data-i="${i}" aria-label="click to zoom">
+    <button type="button" class="pdp-shot" data-i="${i}" aria-label="Ampliar imagen ${i + 1}" aria-haspopup="dialog" aria-controls="pdpZoom" aria-expanded="false">
       <picture class="pdp-picture">
         <img src="${src}" alt="${prod.title} — imagen ${i + 1}" loading="lazy" decoding="async" draggable="false">
       </picture>
@@ -378,6 +549,23 @@ function setGallery(images) {
 const drawer = document.getElementById('attrDrawer');
 const adBody  = document.getElementById('adBody');
 const adTitle = document.getElementById('adTitle');
+let drawerReturnFocus = null;
+let drawerTrigger = null;
+
+const PDP_DRAWER_TRIGGERS = [
+  cutBtn,
+  versionBtn,
+  colorBtn,
+  sizeBtn,
+  detailsBtn,
+  shippingBtn,
+  fitGuideAttrBtn,
+  fitGuideLinkBtn
+].filter((trigger) => trigger instanceof HTMLElement);
+
+PDP_DRAWER_TRIGGERS.forEach((trigger) => {
+  setPdpDialogTriggerState(trigger, 'attrDrawer', false);
+});
 
 const state = {
   cut: null,
@@ -447,6 +635,9 @@ const Z = {
   i: 0,
   images: baseImages
 };
+let zoomReturnFocus = null;
+let zoomTrigger = null;
+Z.el.setAttribute('aria-label', `Vista ampliada de ${prod.title || 'producto'}`);
 
 function zoomPaint(idx) {
   Z.i = idx;
@@ -458,20 +649,40 @@ function zoomPaint(idx) {
 
 zoomPaint(0);
 
-function zoomOpen(idx) {
+function zoomOpen(idx, trigger = null) {
+  zoomTrigger = trigger instanceof HTMLElement ? trigger : null;
+  setPdpDialogTriggerState(zoomTrigger, 'pdpZoom', true);
+
+  if (pdpMobileQuery.matches) {
+    zoomReturnFocus = zoomTrigger
+      ? zoomTrigger
+      : document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    Z.el.setAttribute('aria-modal', 'true');
+  }
+
   zoomPaint(idx);
+  syncPdpLayerMotion(Z.el);
   Z.el.classList.remove('hidden');
   Z.el.setAttribute('aria-hidden', 'false');
-  Z.el.classList.add('zoom-in');
+  Z.el.classList.toggle('zoom-in', !pdpReducedMotionQuery.matches);
   resetZoom();
+  focusPdpMobileLayer(Z.el, '#pdpZoomClose');
 }
 
 function zoomClose() {
+  const returnFocus = zoomReturnFocus;
+  setPdpDialogTriggerState(zoomTrigger, 'pdpZoom', false);
   Z.el.classList.add('hidden');
   Z.el.setAttribute('aria-hidden', 'true');
+  Z.el.removeAttribute('aria-modal');
   Z.el.classList.remove('zoom-in');
   Z.el.classList.remove('zoomed');
   resetZoom();
+  zoomReturnFocus = null;
+  zoomTrigger = null;
+  restorePdpMobileFocus(returnFocus);
 }
 
 let zScale = 1;
@@ -520,7 +731,7 @@ function zoomTo(nextScale, clientX, clientY) {
 heroEl.addEventListener('click', (e) => {
   const shot = e.target.closest('.pdp-shot[data-i]');
   if (!shot) return;
-  zoomOpen(+shot.dataset.i);
+  zoomOpen(+shot.dataset.i, shot);
 });
 
 thumbsEl.addEventListener('click', (e) => {
@@ -528,7 +739,10 @@ thumbsEl.addEventListener('click', (e) => {
   if (!b) return;
   const i = +b.dataset.i;
   const target = heroEl.querySelector(`.pdp-shot[data-i="${i}"]`);
-  target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  target?.scrollIntoView({
+    behavior: pdpReducedMotionQuery.matches ? 'auto' : 'smooth',
+    block: 'start'
+  });
   setActiveThumb(i);
 });
 
@@ -601,10 +815,18 @@ zoomFigure?.addEventListener('pointerdown', (e) => {
 }, true);
 
 window.addEventListener('keydown', (e) => {
-  if (e.key !== 'Escape') return;
-  if (!Z.el.classList.contains('hidden')) {
+  if (Z.el.classList.contains('hidden')) return;
+
+  if (e.key === 'Escape') {
     e.preventDefault();
+    if (pdpMobileQuery.matches) e.stopPropagation();
     zoomClose();
+    return;
+  }
+
+  if (e.key === 'Tab' && pdpMobileQuery.matches) {
+    trapPdpMobileFocus(e, Z.el);
+    e.stopPropagation();
   }
 }, true);
 
@@ -634,7 +856,31 @@ function saveSel(){
   } catch {}
 }
 
-function openDrawer(title, html){
+function activateDrawer(trigger = null) {
+  if (!drawer.classList.contains('open')) {
+    const active = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    drawerTrigger = trigger instanceof HTMLElement
+      ? trigger
+      : active && active !== document.body && active !== document.documentElement
+        ? active
+        : null;
+    setPdpDialogTriggerState(drawerTrigger, 'attrDrawer', true);
+
+    if (pdpMobileQuery.matches) {
+      drawerReturnFocus = drawerTrigger || active;
+    }
+  }
+
+  syncPdpLayerMotion(drawer);
+  drawer.classList.add('open', 'is-open');
+  drawer.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('drawer-open');
+  focusPdpMobileLayer(drawer, '.ad-close');
+}
+
+function openDrawer(title, html, trigger = null){
   drawer.classList.remove('ad--details', 'ad--fit-guide');
 if (adTabs){
   adTabs.hidden = true;
@@ -645,14 +891,13 @@ if (adTabs){
   adBody.innerHTML = html;
   drawer.classList.toggle('ad--fit-guide', String(html || '').includes('fit-guide--flow') || String(html || '').includes('fit-guide--v2'));
 
-  // 🔒 Compatible con CSS que use .open o .is-open
-  drawer.classList.add('open', 'is-open');
-
-  drawer.setAttribute('aria-hidden','false');
-  document.body.classList.add('drawer-open');
+  // Compatible con CSS que use .open o .is-open.
+  activateDrawer(trigger);
 }
 
-function closeDrawer(){
+function closeDrawer({ restoreFocus = true, deferFocus = true } = {}){
+  const returnFocus = drawerReturnFocus;
+  const closingTrigger = drawerTrigger;
   drawer.classList.remove('open', 'is-open', 'ad--details', 'ad--fit-guide');
   drawer.setAttribute('aria-hidden','true');
   document.body.classList.remove('drawer-open');
@@ -662,6 +907,58 @@ function closeDrawer(){
     adTabs.hidden = true;
     adTabs.innerHTML = '';
   }
+
+  setPdpDialogTriggerState(closingTrigger, 'attrDrawer', false);
+  if (closingTrigger && !PDP_DRAWER_TRIGGERS.includes(closingTrigger)) {
+    closingTrigger.removeAttribute('aria-haspopup');
+    closingTrigger.removeAttribute('aria-controls');
+    closingTrigger.removeAttribute('aria-expanded');
+  }
+  drawerTrigger = null;
+  drawerReturnFocus = null;
+  if (restoreFocus) restorePdpMobileFocus(returnFocus, { defer: deferFocus });
+  return returnFocus;
+}
+
+function closeDrawerBeforeNextLayer() {
+  const returnFocus = closeDrawer({ restoreFocus: false });
+  restorePdpMobileFocus(returnFocus, { defer: false });
+  return returnFocus;
+}
+
+function syncPdpOpenLayersForViewport(event) {
+  const drawerOpen = drawer.classList.contains('open');
+  const zoomOpenNow = !Z.el.classList.contains('hidden');
+
+  if (!event.matches) {
+    if (zoomOpenNow) Z.el.removeAttribute('aria-modal');
+    return;
+  }
+
+  const active = document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : null;
+
+  if (drawerOpen) {
+    drawerReturnFocus = drawerReturnFocus || drawerTrigger || (
+      active && !drawer.contains(active) ? active : null
+    );
+    focusPdpMobileLayer(drawer, '.ad-close');
+  }
+
+  if (zoomOpenNow) {
+    zoomReturnFocus = zoomReturnFocus || zoomTrigger || (
+      active && !Z.el.contains(active) ? active : null
+    );
+    Z.el.setAttribute('aria-modal', 'true');
+    focusPdpMobileLayer(Z.el, '#pdpZoomClose');
+  }
+}
+
+if (typeof pdpMobileQuery.addEventListener === 'function') {
+  pdpMobileQuery.addEventListener('change', syncPdpOpenLayersForViewport);
+} else {
+  pdpMobileQuery.addListener(syncPdpOpenLayersForViewport);
 }
 
 
@@ -672,7 +969,23 @@ drawer.querySelectorAll('[data-ad-close]').forEach(el=>{
 
 // Cerrar: ESC
 document.addEventListener('keydown', (e)=>{
-  if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  if (!drawer.classList.contains('open')) return;
+  if (
+    !Z.el.classList.contains('hidden') ||
+    document.body.classList.contains('pp-cart-open') ||
+    document.querySelector('.pdp-stock-modal:not([hidden])')
+  ) return;
+
+  if (e.key === 'Escape') {
+    if (pdpMobileQuery.matches) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    closeDrawer();
+    return;
+  }
+
+  trapPdpMobileFocus(e, drawer);
 });
 
 // Helpers variants (soporta productos con y sin prod.variants)
@@ -852,6 +1165,7 @@ function stockOf(color, size){
 let pdpStockModal = null;
 let pdpStockOptions = [];
 let pdpPreferredStockSku = '';
+let pdpStockReturnFocus = null;
 
 function normalizeText(value = '') {
   return String(value ?? '').trim();
@@ -1020,9 +1334,19 @@ function ensurePdpStockModal() {
     });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !pdpStockModal.hidden) {
+    if (pdpStockModal.hidden) return;
+
+    if (event.key === 'Escape') {
+      if (pdpMobileQuery.matches) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       closePdpStockModal();
+      return;
     }
+
+    const dialog = pdpStockModal.querySelector('.pdp-stock-modal__card');
+    trapPdpMobileFocus(event, dialog);
   });
 
   return pdpStockModal;
@@ -1044,6 +1368,12 @@ function openPdpStockModal(preferred = {}) {
   const emailInput = modal.querySelector('[data-pdp-stock-email]');
   const user = getPdpUser();
   const prelaunch = window.ppStorefront?.salesEnabled === false;
+
+  if (pdpMobileQuery.matches && modal.hidden) {
+    pdpStockReturnFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+  }
 
   pdpPreferredStockSku = normalizeText(preferred.sku);
   pdpStockOptions = getPdpStockOptions();
@@ -1089,10 +1419,14 @@ function openPdpStockModal(preferred = {}) {
 function closePdpStockModal() {
   if (!pdpStockModal) return;
 
+  const returnFocus = pdpStockReturnFocus;
+
   pdpStockModal.hidden = true;
   pdpStockOptions = [];
   pdpPreferredStockSku = '';
+  pdpStockReturnFocus = null;
   setPdpStockStatus('');
+  restorePdpMobileFocus(returnFocus);
 }
 
 function getSelectedPdpStockOption() {
@@ -1799,14 +2133,42 @@ function applyFitGuideSize(size, options = {}) {
 function addFitGuideSizeToCart(size) {
   if (!size) return;
 
-  if (isProductOutOfStock()) {
-    openPdpStockModal();
+  applyFitGuideSize(size, { close: false });
+  const product = getFitGuideCartProduct(size);
+
+  if (window.ppStorefront?.salesEnabled === false) {
+    if (!pdpMobileQuery.matches) {
+      addProductToCart(product);
+      closeDrawer();
+      return;
+    }
+
+    closeDrawerBeforeNextLayer();
+    openPdpStockModal({
+      sku: product.sku,
+      color: product.color,
+      size: product.size
+    });
     return;
   }
 
-  applyFitGuideSize(size, { close: false });
-  addProductToCart(getFitGuideCartProduct(size));
-  closeDrawer();
+  if (isProductOutOfStock()) {
+    if (pdpMobileQuery.matches) closeDrawerBeforeNextLayer();
+    openPdpStockModal({
+      sku: product.sku,
+      color: product.color,
+      size: product.size
+    });
+    return;
+  }
+
+  if (pdpMobileQuery.matches) {
+    closeDrawerBeforeNextLayer();
+    addProductToCart(product);
+  } else {
+    addProductToCart(product);
+    closeDrawer();
+  }
 }
 
 function renderFitGuideChoiceButton(name, value, label, active, extra = '') {
@@ -2064,6 +2426,10 @@ function renderFitGuidePanel(options = {}) {
 
 function renderFitGuideStep(step, profile = {}) {
   adBody.innerHTML = renderFitGuidePanel({ step, profile });
+  focusPdpMobileLayer(
+    adBody,
+    'input:not([type="hidden"]):not([disabled]), select:not([disabled]), button:not([disabled])'
+  );
 }
 
 function getFitPreviousStep(step) {
@@ -2172,7 +2538,8 @@ drawer.addEventListener('click', (e)=>{
       color: state.color || colors[0] || '',
       size: stockSizeBtn.dataset.notifyStockSize || ''
     };
-    closeDrawer();
+    if (pdpMobileQuery.matches) closeDrawerBeforeNextLayer();
+    else closeDrawer();
     openPdpStockModal(preferred);
     return;
   }
@@ -2297,14 +2664,16 @@ if (vbtn){
 if (sbtn){
   if (sbtn.disabled) return;
 
+  const shouldAddToCart = Boolean(state._intentAddToCart);
   state.size = sbtn.dataset.pickSize;
   syncAttrUI();
   saveSel();
-  closeDrawer();
+  if (shouldAddToCart && pdpMobileQuery.matches) closeDrawerBeforeNextLayer();
+  else closeDrawer();
   syncCTA();
 
   // Si el CTA fue el que inició la selección, entonces sí añadimos
-  if (state._intentAddToCart) {
+  if (shouldAddToCart) {
     state._intentAddToCart = false; // consumimos la intención
 
     // aseguramos color por defecto si no hay
@@ -2462,6 +2831,29 @@ function renderSizeGuide(sizeGuide){
   `;
 }
 
+function renderPackagingPanel() {
+  return `
+    <section class="pp-product-packaging" aria-labelledby="ppProductPackagingTitle">
+      <div class="pp-product-packaging-copy">
+        <h4 id="ppProductPackagingTitle" class="pp-product-packaging-title">Packaging PROPHETIA</h4>
+        <p>Cada pedido PROPHETIA se prepara cuidadosamente en el packaging oficial de la marca.</p>
+        <p>La prenda se presenta con papel de seda y elementos editoriales de PROPHETIA para protegerla durante el envío y completar la experiencia de apertura.</p>
+        <p class="pp-product-packaging-note">La presentación puede adaptarse al tamaño y al formato de cada pedido.</p>
+      </div>
+      <figure class="pp-product-packaging-media">
+        <img
+          class="pp-product-packaging-image"
+          data-pp-packaging-image
+          src="/assets/img/pack/packaging.png"
+          alt="Packaging oficial de PROPHETIA"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+    </section>
+  `;
+}
+
 function renderDetailsPanel(tabId){
   const d = getProdDetailsData();
 
@@ -2492,11 +2884,7 @@ function renderDetailsPanel(tabId){
 }
 
   if (tabId === 'pack'){
-    return `
-      <div class="ad-panel-content">
-        <p>${d.pack}</p>
-      </div>
-    `;
+    return renderPackagingPanel();
   }
 
   if (tabId === 'shipping'){
@@ -2539,6 +2927,11 @@ function renderDetailsTabs(activeId){
     </ol>
   `;
 }
+adBody.addEventListener('error', (e) => {
+  const image = e.target?.closest?.('[data-pp-packaging-image]');
+  if (image) image.hidden = true;
+}, true);
+
 // Tabs detalles: bind UNA sola vez
 adTabs?.addEventListener('click', (e) => {
   const b = e.target.closest('[data-details-tab]');
@@ -2557,7 +2950,7 @@ adTabs?.addEventListener('click', (e) => {
   adBody.innerHTML = (head ? head.outerHTML : '') + panel;
 });
 
-function openDetailsDrawer(initialTab = 'details'){
+function openDetailsDrawer(initialTab = 'details', trigger = null){
   drawer.classList.add('ad--details');
 
   const colorTxt = state.color || prod.color || (Array.isArray(prod.colors) ? prod.colors[0] : '') || '';
@@ -2587,9 +2980,7 @@ function openDetailsDrawer(initialTab = 'details'){
     ${renderDetailsPanel(initialTab)}
   `;
 
-  drawer.classList.add('open', 'is-open');
-  drawer.setAttribute('aria-hidden','false');
-  document.body.classList.add('drawer-open');
+  activateDrawer(trigger);
 }
 
 
@@ -2598,7 +2989,7 @@ function openDetailsDrawer(initialTab = 'details'){
 cutBtn?.addEventListener('click', (e)=>{
   e.preventDefault();
   e.stopPropagation();
-  openDrawer('Corte', renderCutPanel());
+  openDrawer('Corte', renderCutPanel(), e.currentTarget);
 });
 
 sizeBtn.addEventListener('click', (e)=>{
@@ -2606,34 +2997,34 @@ sizeBtn.addEventListener('click', (e)=>{
   e.stopPropagation();
 
   if (!state.color) {
-    openDrawer('Color', renderColorPanel());
+    openDrawer('Color', renderColorPanel(), e.currentTarget);
     return;
   }
 
-  openDrawer('Talla', renderSizePanel());
+  openDrawer('Talla', renderSizePanel(), e.currentTarget);
 });
 
 colorBtn.addEventListener('click', (e)=>{
   e.preventDefault();
   e.stopPropagation();
-  openDrawer('Color', renderColorPanel());
+  openDrawer('Color', renderColorPanel(), e.currentTarget);
 });
 
 versionBtn?.addEventListener('click', (e)=>{
   e.preventDefault();
   e.stopPropagation();
-  openDrawer('Versión', renderVersionPanel());
+  openDrawer('Versión', renderVersionPanel(), e.currentTarget);
 });
 
 // Details/Shipping siguen abriendo el drawer (con close funcionando)
-detailsBtn.addEventListener('click', ()=> openDetailsDrawer('details'));
-shippingBtn?.addEventListener('click', ()=> openDetailsDrawer('shipping'));
+detailsBtn.addEventListener('click', (e)=> openDetailsDrawer('details', e.currentTarget));
+shippingBtn?.addEventListener('click', (e)=> openDetailsDrawer('shipping', e.currentTarget));
 
 function openFitGuideDrawer(e) {
   e?.preventDefault();
   e?.stopPropagation();
 
-  openDrawer('Guía Inteligente de Talla', renderFitGuidePanel());
+  openDrawer('Guía Inteligente de Talla', renderFitGuidePanel(), e?.currentTarget || null);
 }
 
 fitGuideAttrBtn?.addEventListener('click', openFitGuideDrawer);
@@ -2678,28 +3069,28 @@ ctaBtn?.addEventListener('click', (e) => {
 
   if (availableCuts.length && !state.cut) {
     state._intentAddToCart = true;
-    openDrawer('Corte', renderCutPanel());
+    openDrawer('Corte', renderCutPanel(), ctaBtn);
     syncCTA();
     return;
   }
 
   if (getSelectableVersions().length && !state.version) {
     state._intentAddToCart = true;
-    openDrawer('Versión', renderVersionPanel());
+    openDrawer('Versión', renderVersionPanel(), ctaBtn);
     syncCTA();
     return;
   }
 
   if (!state.color) {
     state._intentAddToCart = true;
-    openDrawer('Color', renderColorPanel());
+    openDrawer('Color', renderColorPanel(), ctaBtn);
     syncCTA();
     return;
   }
 
   if (!state.size) {
     state._intentAddToCart = true;
-    openDrawer('Talla', renderSizePanel());
+    openDrawer('Talla', renderSizePanel(), ctaBtn);
     syncCTA();
     return;
   }
@@ -2816,25 +3207,25 @@ buyForm?.addEventListener('submit', (e) => {
   }
 
   if (availableCuts.length && !state.cut){
-    openDrawer('Corte', renderCutPanel());
+    openDrawer('Corte', renderCutPanel(), ctaBtn);
     syncCTA();
     return;
   }
 
   if (getSelectableVersions().length && !state.version){
-    openDrawer('Versión', renderVersionPanel());
+    openDrawer('Versión', renderVersionPanel(), ctaBtn);
     syncCTA();
     return;
   }
 
   if (!state.color){
-    openDrawer('Color', renderColorPanel());
+    openDrawer('Color', renderColorPanel(), ctaBtn);
     syncCTA();
     return;
   }
 
   if (!state.size){
-    openDrawer('Talla', renderSizePanel());
+    openDrawer('Talla', renderSizePanel(), ctaBtn);
     syncCTA();
     return;
   }
@@ -2858,7 +3249,7 @@ buyForm?.addEventListener('submit', (e) => {
     img: imgOfColor(state.color)
   };
 
-  window.ppAddToCart?.(product);
+  addProductToCart(product);
 });
 
 // Inicial

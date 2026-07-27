@@ -102,3 +102,4 @@ design-source/
 *.rar
 
 .vscode/
+.aider*

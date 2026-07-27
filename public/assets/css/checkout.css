@@ -1375,3 +1375,281 @@
 .checkout-page .ck-auth__choice.is-new-user-step .ck-auth__intro {
   display: none;
 }
+
+/* =========================================================
+   CHECKOUT · Mobile editorial pass
+   Solo móvil: no altera el layout aprobado de escritorio.
+   ========================================================= */
+@media (max-width: 820px) {
+  .checkout-page,
+  .checkout-page body,
+  .checkout-page .ck,
+  .checkout-page .ck-shell,
+  .checkout-page .ck-grid,
+  .checkout-page .checkoutnc-left-col,
+  .checkout-page .checkoutnc-right-col,
+  .checkout-page .checkoutnc-right-content,
+  .checkout-page .checkoutnc-items-tabs,
+  .checkout-page .checkoutnc-items-tabs > .col,
+  .checkout-page .capds-form--sigin,
+  .checkout-page .tab-content,
+  .checkout-page .tab-pane,
+  .checkout-page .ck-box,
+  .checkout-page form,
+  .checkout-page fieldset {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .checkout-page {
+    overflow-x: hidden;
+  }
+
+  .checkout-page .ck {
+    min-height: 100dvh;
+  }
+
+  .checkout-page .lw-header-checkoutnc {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .checkout-page .capds-checkoutnc-header-container {
+    height: auto;
+    min-height: 72px;
+    padding: max(12px, env(safe-area-inset-top)) 20px 12px;
+  }
+
+  .checkout-page .capds-checkoutnc-header-back {
+    left: 12px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .checkout-page .img-logo {
+    width: min(148px, 48vw);
+    height: auto;
+    max-height: 36px;
+  }
+
+  .checkout-page .ck-shell {
+    width: 100%;
+    padding: 18px 20px max(40px, env(safe-area-inset-bottom));
+  }
+
+  .checkout-page .ck-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .checkout-page .checkoutnc-left-col,
+  .checkout-page .checkoutnc-right-col {
+    width: 100%;
+  }
+
+  .checkout-page .checkoutnc-right-col {
+    position: static;
+    border: 0;
+    padding: 0;
+  }
+
+  .checkout-page .checkoutnc-right-content {
+    display: grid;
+    gap: 24px;
+  }
+
+  .checkout-page .capds-panel-nav {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .checkout-page .capds-panel-nav #nav-tab {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .checkout-page .capds-panel-nav .nav.nav-tabs {
+    display: flex;
+    width: 100%;
+    gap: 0;
+    padding: 4px 0 12px;
+    overflow: hidden;
+  }
+
+  .checkout-page .capds-panel-nav .nav.nav-tabs .nav-link {
+    flex: 1 1 25%;
+    min-width: 0;
+    padding: 9px 3px 10px;
+    overflow: hidden;
+    font-size: clamp(9px, 2.65vw, 11px);
+    line-height: 1.2;
+    letter-spacing: .025em;
+    text-align: center;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+
+  .checkout-page .tab-content {
+    padding-top: 24px;
+  }
+
+  .checkout-page .ck-h {
+    max-width: 100%;
+    margin-bottom: 18px;
+    font-size: clamp(20px, 5.5vw, 26px);
+    line-height: 1.2;
+  }
+
+  .checkout-page .ck-auth,
+  .checkout-page .ck-auth__intro,
+  .checkout-page .ck-auth__verify {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .checkout-page .ck-auth__verify {
+    padding: 22px 18px;
+  }
+
+  .checkout-page .ck-auth__intro h4,
+  .checkout-page .ck-auth__verify h4 {
+    font-size: clamp(21px, 6vw, 26px);
+  }
+
+  .checkout-page .ck-auth__name-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .checkout-page .ck-form {
+    width: 100%;
+    gap: 20px;
+  }
+
+  .checkout-page .ck-form input,
+  .checkout-page .ck-form select,
+  .checkout-page .ck-form textarea,
+  .checkout-page #js-shipToMe-checkoutnc .capds-form__input,
+  .checkout-page #ppBillingPanel .capds-form__input {
+    width: 100%;
+    max-width: 100%;
+    min-height: 54px;
+    font-size: 16px;
+  }
+
+  .checkout-page #js-shipToMe-checkoutnc .capds-form fieldset,
+  .checkout-page #ppBillingPanel .pp-billingGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .checkout-page #js-shipToMe-checkoutnc .capds-span2,
+  .checkout-page #ppBillingPanel .capds-span2 {
+    grid-column: auto;
+  }
+
+  .checkout-page .ck-radio {
+    min-height: 54px;
+    padding: 15px 4px;
+    gap: 12px;
+    font-size: 15px;
+  }
+
+  .checkout-page .ck-radio input[type="radio"],
+  .checkout-page .ck-payRadio {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+  }
+
+  .checkout-page .ck-primary,
+  .checkout-page .capds-checkout-button,
+  .checkout-page .ck-confirmPay,
+  .checkout-page .ck-auth__secondary {
+    width: 100%;
+    min-height: 54px;
+  }
+
+  .checkout-page .ck-legal--accept {
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 16px;
+  }
+
+  .checkout-page .ck-legal--accept input {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+  }
+
+  .checkout-page .capds-minicartnc__item {
+    grid-template-columns: minmax(88px, 31vw) minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .checkout-page .capds-minicartnc__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .checkout-page .capds-minicartnc__top {
+    gap: 10px;
+  }
+
+  .checkout-page .capds-minicartnc__price--active {
+    font-size: 13px;
+  }
+
+  .checkout-page .capds-minicartnc__bottom {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .checkout-page .custom-input-number.cartnc-qty {
+    max-width: 100%;
+  }
+
+  .checkout-page .checkoutnc-minibasket-bottom-content {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .checkout-page .pp-rightSection,
+  .checkout-page .ck-summaryCard,
+  .checkout-page .ck-shipCard,
+  .checkout-page .ck-guest-checkout,
+  .checkout-page .ck-guest-account {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .checkout-page .pp-payLogos {
+    gap: 6px;
+  }
+
+  .checkout-page .pp-payChip {
+    max-width: 100%;
+  }
+
+  /* El checkout no necesita el dock ni overlays comerciales globales. */
+  .checkout-page .pp-mobile-dock,
+  .checkout-page [data-pp-mobile-dock],
+  .checkout-page .mobile-dock,
+  .checkout-page [data-mobile-dock],
+  .checkout-page .pp-mobile-menu,
+  .checkout-page [data-pp-mobile-menu],
+  .checkout-page .pp-mobile-search,
+  .checkout-page [data-pp-mobile-search] {
+    display: none !important;
+  }
+}

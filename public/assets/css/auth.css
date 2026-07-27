@@ -1666,3 +1666,143 @@
     transition: none;
   }
 }
+
+/* =========================================================
+   AUTH MÓVIL · FONDO EDITORIAL PROPHETIA
+   Solo afecta al acceso/login/registro. El panel de cuenta
+   autenticada conserva su apariencia independiente.
+   ========================================================= */
+@media (max-width: 820px) {
+  #ppAuthModal {
+    isolation: isolate;
+    background-color: #f7f2ea;
+    background-image: none;
+    overflow: hidden;
+  }
+
+  #ppAuthModal::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(247, 242, 234, .74),
+        rgba(247, 242, 234, .66)
+      ),
+      url("/assets/img/backgrounds/fondoform.png") center / cover no-repeat;
+    background-position: center center;
+  }
+
+  #ppAuthModal .modal-card {
+    position: relative;
+    z-index: 1;
+    min-height: 100%;
+    background: transparent;
+  }
+
+  #ppAuthModal .modal-head,
+  #ppAuthModal .modal-body,
+  #ppAuthModal .modal-close,
+  #ppAuthModal .modal-back {
+    position: relative;
+    z-index: 1;
+  }
+
+  #ppAuthModal .modal-head {
+    padding-top: max(86px, calc(64px + env(safe-area-inset-top)));
+  }
+
+  #ppAuthModal .modal-body {
+    min-height: 0;
+    padding-bottom: max(54px, calc(42px + env(safe-area-inset-bottom)));
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+
+  #ppAuthModal .modal-body::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* =========================================================
+   CUENTA · ENLACES EDITORIALES SOLO EN ESCRITORIO
+   ========================================================= */
+@media (min-width: 821px) {
+  #ppAccountPanel .pp-accountpanel-links {
+    gap: 38px;
+  }
+
+  #ppAccountPanel .pp-accountpanel-link,
+  #ppAccountPanel .pp-accountpanel-logout {
+    display: inline-flex;
+    width: max-content;
+    max-width: 100%;
+    align-self: flex-start;
+    box-sizing: border-box;
+    position: relative;
+    padding: 3px 0 6px;
+    line-height: 1.25;
+    text-decoration: none !important;
+    border: 0 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  #ppAccountPanel .pp-accountpanel-link::before,
+  #ppAccountPanel .pp-accountpanel-logout::before {
+    content: none !important;
+  }
+
+  #ppAccountPanel .pp-accountpanel-link::after,
+  #ppAccountPanel .pp-accountpanel-logout::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 1px;
+    top: auto !important;
+    right: 0;
+    bottom: 1px !important;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    pointer-events: none;
+    opacity: .52;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition:
+      opacity 180ms ease,
+      transform 220ms cubic-bezier(.22, .61, .36, 1);
+  }
+
+  #ppAccountPanel .pp-accountpanel-link:hover::after,
+  #ppAccountPanel .pp-accountpanel-link:focus-visible::after,
+  #ppAccountPanel .pp-accountpanel-link[aria-current="page"]::after,
+  #ppAccountPanel .pp-accountpanel-link.is-active::after,
+  #ppAccountPanel .pp-accountpanel-logout:hover::after,
+  #ppAccountPanel .pp-accountpanel-logout:focus-visible::after,
+  #ppAccountPanel .pp-accountpanel-logout[aria-current="page"]::after,
+  #ppAccountPanel .pp-accountpanel-logout.is-active::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  #ppAccountPanel .pp-accountpanel-link:focus-visible,
+  #ppAccountPanel .pp-accountpanel-logout:focus-visible {
+    outline: 2px solid rgba(42, 33, 27, .42);
+    outline-offset: 5px;
+  }
+
+  #ppAccountPanel .pp-accountpanel-logout {
+    margin-top: 42px;
+  }
+}
+
+@media (max-width: 479px) {
+  #ppAuthModal::before {
+    background-position: 58% center;
+  }
+}

@@ -155,11 +155,20 @@ function toggleWishlist(item) {
 
   const matchesSection = (item) => norm(item.section) === norm(SECTION);
 
-  // Aplica filtros del drawer (colors, sizes, inStock)
+  const hasSellableVariant = (item) =>
+    Array.isArray(item?.variants) &&
+    item.variants.some((variant) => Number(variant?.stock) > 0);
+
+  // Aplica filtros del drawer usando disponibilidad real de variantes.
   const matchesFilters = (item, filters) => {
     if (!filters) return true;
 
-    if (filters.inStock && !item.inStock) return false;
+    if (filters.inStock && !hasSellableVariant(item)) return false;
+
+    if (filters.categories?.length &&
+        !filters.categories.includes(norm(item.section))) {
+      return false;
+    }
 
     if (filters.colors?.length) {
       const itemColors = getColors(item);
@@ -262,7 +271,13 @@ function toggleWishlist(item) {
 
   // Estado
   let CATALOG = [];
-  let ACTIVE_FILTERS = { colors: [], sizes: [], inStock: false, scope: 'women' };
+  let ACTIVE_FILTERS = {
+    colors: [],
+    sizes: [],
+    categories: [],
+    inStock: false,
+    scope: 'women'
+  };
   let ACTIVE_SORT = 'relevance';
 
   const normalizeSort = (mode = 'relevance') => {
