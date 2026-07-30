@@ -53,47 +53,8 @@ function readWishlist() {
   }
 }
 
-function writeWishlist(items) {
-  if (!hasAccountSession()) return false;
-
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(Array.isArray(items) ? items : []));
-
-  window.dispatchEvent(new CustomEvent('pp:wishlist-updated', {
-    detail: {
-      count: readWishlist().length
-    }
-  }));
-
-  return true;
-}
-
 function isWishlisted(id) {
   return readWishlist().some(item => String(item.id) === String(id));
-}
-
-function toggleWishlist(item) {
-  if (!item || !item.id) return;
-
-  const list = readWishlist();
-  const exists = list.some(entry => String(entry.id) === String(item.id));
-
-  if (exists) {
-    if (!writeWishlist(list.filter(entry => String(entry.id) !== String(item.id)))) return false;
-    return false;
-  }
-
-  const cover = pickCover(item);
-
-  list.push({
-    id: item.id,
-    title: item.title || 'Producto Prophetia',
-    price: item.price || '',
-    image: cover || '',
-    url: PRODUCT_URL(item.id, PAGE_GENDER)
-  });
-
-  if (!writeWishlist(list)) return false;
-  return true;
 }
 
   const norm = (v = '') => String(v ?? '').trim().toLowerCase();
@@ -230,6 +191,7 @@ function toggleWishlist(item) {
 
       <div class="card-body">
         <div class="card-title">${escapeHtml(item.title)}</div>
+        ${item.short ? `<p class="card-sub">${escapeHtml(item.short)}</p>` : ''}
         <div class="card-meta">
           <span class="card-price">${formatPrice(item.price)}</span>
         </div>

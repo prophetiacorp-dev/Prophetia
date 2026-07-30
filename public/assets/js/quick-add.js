@@ -436,8 +436,7 @@ const COLOR_META = {
     const gender = getPageGender();
     const genderMap =
       mediaByColor[gender] ||
-      mediaByColor.hombre ||
-      mediaByColor.mujer ||
+      mediaByColor.unisex ||
       null;
 
     const bucket =
@@ -808,8 +807,8 @@ if (focusFirstSize || isMobileQuickAdd()) {
         product,
         normalizedColor
       ) ||
-      matchingVariant?.img ||
       product?._media?.cover ||
+      matchingVariant?.img ||
       product?.cover ||
       "";
 
@@ -1922,8 +1921,8 @@ async function addVariantToCart(
     size: variant.size,
 
     img:
-      variant.img ||
-      currentImage,
+      currentImage ||
+      variant.img,
 
     qty: 1
   };

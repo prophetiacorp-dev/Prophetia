@@ -226,9 +226,11 @@ logoutBtn: $('#ckLogout'),
 
 // Forms
 detailsForm: $('#ckDetailsForm'),
+passwordForm: $('#ckPasswordForm'),
 registerForm: $('#ckRegisterForm'),
 shippingForm: $('#ckShippingForm'),
 emailInput: $('#ckEmail'),
+passwordInput: $('#ckPassword'),
 registerEmailInput: $('#ckRegisterEmail'),
 guestContinue: $('#ckGuestContinue'),
 guestStatus: $('#ckGuestStatus'),
@@ -246,6 +248,15 @@ newUserSummary: $('#ckNewUserSummary'),
 newUserEmail: $('#ckNewUserEmail'),
 useOtherEmail: $('#ckUseOtherEmail'),
 guestCheckout: $('#ckGuestCheckout'),
+accessEmail: $('#ckAccessEmail'),
+passwordEmail: $('#ckPasswordEmail'),
+currentAccountEmail: $('#ckCurrentAccountEmail'),
+chooseLogin: $('#ckChooseLogin'),
+chooseRegister: $('#ckChooseRegister'),
+passwordBack: $('#ckPasswordBack'),
+useCurrentAccount: $('#ckUseCurrentAccount'),
+conflictSignOut: $('#ckConflictSignOut'),
+resetButtons: $$('[data-ck-reset-password]'),
 
 authModeButtons: $$(
   '[data-ck-auth-mode]'
@@ -259,10 +270,13 @@ verifyPanel: $('#ckVerifyPanel'),
 verifyEmail: $('#ckVerifyEmail'),
 
 loginStatus: $('#ckLoginStatus'),
+choiceStatus: $('#ckChoiceStatus'),
+passwordStatus: $('#ckPasswordStatus'),
 registerStatus: $('#ckRegisterStatus'),
 verifyStatus: $('#ckVerifyStatus'),
 
 loginSubmit: $('#ckLoginSubmit'),
+passwordSubmit: $('#ckPasswordSubmit'),
 registerSubmit: $('#ckRegisterSubmit'),
 
 verifyNow: $('#ckVerifyNow'),
@@ -680,7 +694,7 @@ if (idToShow === 'nav-js-shipping-checkoutnc') {
 
     // último válido
     const lastValid =
-  hasShip  ? 'nav-js-payment-checkoutnc' :
+  hasShip  ? 'nav-js-shipping-checkoutnc' :
   hasEmail ? 'nav-js-shipping-checkoutnc' :
              'nav-js-basket-checkoutnc';
 
@@ -701,6 +715,107 @@ const candidate = hash || ((hasEmail || hasShip) ? saved : '') || lastValid;
     return candidate;
   }
 
+
+function shippingEstimateLabel(rate = {}) {
+  const estimate = rate.deliveryEstimate || {};
+  if (typeof estimate === 'string' && estimate.trim()) return estimate.trim();
+  if (estimate.label) return String(estimate.label).trim();
+  const min = Number.isInteger(estimate.minBusinessDays) ? estimate.minBusinessDays : null;
+  const max = Number.isInteger(estimate.maxBusinessDays) ? estimate.maxBusinessDays : null;
+  if (min !== null && max !== null) return `${min}–${max} días laborables`;
+  if (min !== null) return `Desde ${min} días laborables`;
+  if (max !== null) return `Hasta ${max} días laborables`;
+  return 'Plazo pendiente de confirmación';
+}
+
+function shippingAmountLabel(summary = {}) {
+  const shipping = summary.shipping;
+  if (summary.shippingStatus === 'selected') {
+    if (Number(shipping) > 0) return money(shipping);
+    if (Number(shipping) === 0 && summary.shippingRate?.freeShippingApplied === true) return 'Gratis';
+  }
+  if (summary.shippingStatus === 'not_required') return 'No requiere envío';
+  if (summary.shippingStatus === 'unavailable') return 'No disponible';
+  if (summary.shippingStatus === 'selection_required') return 'Selecciona una opción';
+  return 'Calculado en checkout';
+}
+
+function isShippingReady(summary = {}) {
+  return summary.shippingStatus === 'selected' || summary.shippingStatus === 'not_required';
+}
+
+function renderShippingOptions(summary = {}) {
+  const wrap = document.getElementById('ckShippingOptions');
+  const list = document.getElementById('ckShippingOptionsList');
+  const status = document.getElementById('ckShippingOptionsStatus');
+  if (!wrap || !list || !status) return;
+
+  const options = Array.isArray(summary.shippingOptions) ? summary.shippingOptions : [];
+  const selectedId = String(summary.shippingRate?.shippingRateId || '').trim();
+  status.classList.remove('is-error');
+  list.innerHTML = '';
+
+  const messages = {
+    address_required: 'Introduce tu dirección para ver las opciones de envío.',
+    invalid_address: 'Revisa el país y el código postal para calcular el envío.',
+    unavailable: 'Actualmente no disponemos de un servicio de envío para esta dirección.',
+    selection_required: 'Selecciona el nivel de servicio que prefieras.',
+    selected: 'Opción de envío validada por el servidor.',
+    not_required: 'Este pedido no requiere transporte.'
+  };
+  status.textContent = messages[summary.shippingStatus] || messages.address_required;
+  status.classList.toggle(
+    'is-error',
+    summary.shippingStatus === 'invalid_address' || summary.shippingStatus === 'unavailable'
+  );
+
+  if (!options.length) return;
+
+  list.innerHTML = `
+    <fieldset>
+      <legend>Nivel de servicio</legend>
+      ${options.map((option) => {
+        const id = String(option.id || '');
+        const inputId = `ckShippingRate-${id.replace(/[^a-z0-9_-]/gi, '-')}`;
+        const checked = id === selectedId ? ' checked' : '';
+        const price = Number(option.amountCents) === 0 && option.freeShippingApplied === true
+          ? 'Gratis'
+          : money(Number(option.amountCents || 0) / 100);
+        return `
+          <label class="ck-shipping-rate" for="${escapeHtml(inputId)}">
+            <input id="${escapeHtml(inputId)}" type="radio" name="shippingRateId" value="${escapeHtml(id)}"${checked}>
+            <span class="ck-shipping-rate__copy">
+              <span class="ck-shipping-rate__name">${escapeHtml(option.displayName || option.serviceLevel || 'Envío')}</span>
+              <span class="ck-shipping-rate__estimate">${escapeHtml(shippingEstimateLabel(option))}</span>
+            </span>
+            <span class="ck-shipping-rate__price">${escapeHtml(price)}</span>
+          </label>
+        `;
+      }).join('')}
+    </fieldset>
+  `;
+
+  list.querySelectorAll('input[name="shippingRateId"]').forEach((input) => {
+    input.addEventListener('change', async () => {
+      const option = options.find((candidate) => candidate.id === input.value);
+      const details = safeJsonParse(localStorage.getItem(LS_SHIP_DETAILS), null);
+      if (!option || !details) return;
+
+      localStorage.setItem(LS_SHIP_DETAILS, JSON.stringify({
+        ...details,
+        shippingRateId: option.id,
+        serviceLevel: option.serviceLevel
+      }));
+      ppSecureCartSummary = null;
+      wrap.setAttribute('aria-busy', 'true');
+      try {
+        await renderCart();
+      } finally {
+        wrap.setAttribute('aria-busy', 'false');
+      }
+    });
+  });
+}
 
   // Renderizar el carrito
  async function renderCart() {
@@ -735,6 +850,7 @@ const candidate = hash || ((hasEmail || hasShip) ? saved : '') || lastValid;
     if (E.sideTotal) E.sideTotal.textContent = t0;
 
     enablePayment(false);
+    renderShippingOptions({ shippingStatus: 'address_required', shippingOptions: [] });
     return;
   }
 
@@ -754,6 +870,7 @@ const candidate = hash || ((hasEmail || hasShip) ? saved : '') || lastValid;
     if (E.sideTotal) E.sideTotal.textContent = t0;
 
     enablePayment(false);
+    renderShippingOptions(summary);
     return;
   }
 
@@ -817,8 +934,7 @@ const candidate = hash || ((hasEmail || hasShip) ? saved : '') || lastValid;
   }
 
 const subtotal = Number(summary.subtotal || 0);
-const shipping = Number(summary.shipping || 0);
-const total = Number(summary.total ?? subtotal + shipping);
+const totalLabel = summary.total === null ? 'Pendiente' : money(summary.total);
 
 renderDiscountLine(summary);
 
@@ -838,20 +954,22 @@ if (summary.discount?.code) {
 }
 
   if (E.subtotal) E.subtotal.textContent = money(subtotal);
-  if (E.total) E.total.textContent = money(total);
+  if (E.total) E.total.textContent = totalLabel;
   if (E.sideSubtotal) E.sideSubtotal.textContent = money(subtotal);
-  if (E.sideTotal) E.sideTotal.textContent = money(total);
+  if (E.sideTotal) E.sideTotal.textContent = totalLabel;
 
 if (E.sideShipping) {
-  E.sideShipping.textContent = shipping > 0 ? money(shipping) : 'Gratis';
+  E.sideShipping.textContent = shippingAmountLabel(summary);
 }
 
 const shippingCost = document.getElementById('ckShippingCost');
 if (shippingCost) {
-  shippingCost.textContent = shipping > 0 ? money(shipping) : 'Gratis';
+  shippingCost.textContent = shippingAmountLabel(summary);
 }
 
 renderShippingPrivilegeLine(summary);
+renderShippingOptions(summary);
+if (!isShippingReady(summary)) enablePayment(false);
 }
 function renderDetailsSummary(email, options = {}) {
   const E = els();
@@ -939,11 +1057,12 @@ function syncUIFromStorage() {
   const hasVerifiedSession = Boolean(verifiedUser && savedEmail && firebaseEmail === savedEmail);
   const hasGuestSession = !hasVerifiedSession && isGuestCheckout();
   if (authResolved && !verifiedUser && !hasGuestSession) {
-    localStorage.removeItem(LS_EMAIL);
+    if (localStorage.getItem(LS_CHECKOUT_MODE) === 'account') {
+      localStorage.removeItem(LS_CHECKOUT_MODE);
+    }
     localStorage.removeItem(LS_SHIP_MODE);
     localStorage.removeItem(LS_SHIP_DETAILS);
     localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
-    savedEmail = '';
     savedShipDetails = '';
   }
   const hasCheckoutIdentity = Boolean(hasVerifiedSession || hasGuestSession);
@@ -991,9 +1110,14 @@ function syncUIFromStorage() {
   setHomeOnlyExtrasVisible(hasCheckoutIdentity && currentMode === 'home');
 }
 // ========================================================= // CHECKOUT · LOGIN, REGISTRO Y VERIFICACIÓN // =========================================================
-async function ppLoginWithEmailPass( email, pass ) { const fn = window.ppSignInWithEmailPass; if ( typeof fn !== 'function' ) { throw new Error( 'ppSignInWithEmailPass no disponible.' ); } return fn( email, pass ); } async function ppRegisterWithEmailPass( email, pass, displayName, profileData ) { const fn = window.ppCreateUserWithEmailPass; if ( typeof fn !== 'function' ) { throw new Error( 'ppCreateUserWithEmailPass no disponible.' ); } return fn( email, pass, displayName, profileData ); } function setCheckoutAuthStatus( element, message = '', type = '' ) { if (!element) { return; } element.textContent = message; element.classList.remove( 'is-ok', 'is-error', 'is-info' ); if (type) { element.classList.add( type ); } } function setCheckoutAuthButtonLoading( button, isLoading, loadingText = '' ) { if (!button) { return; } if ( !button.dataset.idleText ) { button.dataset.idleText = button.textContent.trim(); } button.disabled = Boolean(isLoading); button.setAttribute( 'aria-busy', isLoading ? 'true' : 'false' ); button.textContent = isLoading ? loadingText : button.dataset.idleText; } function setCheckoutAuthMode( mode = 'email', { focus = true } = {} ) {
+async function ppLoginWithEmailPass( email, pass ) { const fn = window.ppSignInWithEmailPass; if ( typeof fn !== 'function' ) { throw new Error( 'ppSignInWithEmailPass no disponible.' ); } return fn( email, pass ); }
+async function ppRegisterWithEmailPass( email, pass, displayName, profileData ) { const fn = window.ppCreateUserWithEmailPass; if ( typeof fn !== 'function' ) { throw new Error( 'ppCreateUserWithEmailPass no disponible.' ); } return fn( email, pass, displayName, profileData ); }
+function setCheckoutAuthStatus( element, message = '', type = '' ) { if (!element) { return; } element.textContent = message; element.classList.remove( 'is-ok', 'is-error', 'is-info' ); if (type) { element.classList.add( type ); } }
+function setCheckoutAuthButtonLoading( button, isLoading, loadingText = '' ) { if (!button) { return; } if ( !button.dataset.idleText ) { button.dataset.idleText = button.textContent.trim(); } button.disabled = Boolean(isLoading); button.setAttribute( 'aria-busy', isLoading ? 'true' : 'false' ); button.textContent = isLoading ? loadingText : button.dataset.idleText; }
+function setCheckoutAuthMode( mode = 'email', { focus = true } = {} ) {
   const E = els();
-  const safeMode = mode === 'register' ? 'register' : 'email';
+  const allowedModes = new Set([ 'email', 'choice', 'login', 'register', 'conflict' ]);
+  const safeMode = allowedModes.has(mode) ? mode : 'email';
   checkoutAuthMode = safeMode;
   checkoutAwaitingVerification = false;
 
@@ -1019,14 +1143,22 @@ async function ppLoginWithEmailPass( email, pass ) { const fn = window.ppSignInW
     panel.setAttribute( 'aria-hidden', active ? 'false' : 'true' );
   } );
 
-  if (E.authTitle) {
-    E.authTitle.textContent = safeMode === 'register' ? 'Nuevo usuario' : 'Introduce tu email';
-  }
-  if (E.authIntroText) {
-    E.authIntroText.textContent = safeMode === 'register'
-      ? 'Completa la cuenta o continúa como invitado sin perder las piezas de tu cesta.'
-      : 'Si tienes una cuenta, te solicitaremos el acceso. En caso contrario, puedes continuar como invitado y registrarte después de finalizar la compra.';
-  }
+  const headings = {
+    email: 'Introduce tu email',
+    choice: 'Accede o continúa',
+    login: 'Accede a tu cuenta',
+    register: 'Nuevo usuario',
+    conflict: 'Elige cómo continuar'
+  };
+  const descriptions = {
+    email: 'Usaremos este correo para conservar el progreso del checkout.',
+    choice: 'Elige una opción segura para continuar. No confirmamos públicamente si este correo ya está registrado.',
+    login: 'Introduce tu contraseña o solicita instrucciones de recuperación.',
+    register: 'Crea una cuenta solo si lo deseas, o continúa como invitado sin perder las piezas de tu cesta.',
+    conflict: 'La identidad del pedido debe coincidir con la sesión de Firebase.'
+  };
+  if (E.authTitle) E.authTitle.textContent = headings[safeMode];
+  if (E.authIntroText) E.authIntroText.textContent = descriptions[safeMode];
 
   const email = String( E.registerEmailInput?.value || E.emailInput?.value || '' ).trim().toLowerCase();
   if ( safeMode === 'register' && E.registerEmailInput ) {
@@ -1038,23 +1170,80 @@ async function ppLoginWithEmailPass( email, pass ) { const fn = window.ppSignInW
   if (E.newUserEmail) {
     E.newUserEmail.textContent = email;
   }
+  if (E.accessEmail) E.accessEmail.textContent = email;
+  if (E.passwordEmail) E.passwordEmail.textContent = email;
   if (E.newUserSummary) {
     E.newUserSummary.hidden = safeMode !== 'register';
   }
-  E.guestCheckout?.classList.toggle( 'd-none', safeMode !== 'register' );
-  E.guestCheckout?.setAttribute( 'aria-hidden', safeMode === 'register' ? 'false' : 'true' );
+  const showGuest = safeMode === 'choice' || safeMode === 'register';
+  E.guestCheckout?.classList.toggle( 'd-none', !showGuest );
+  E.guestCheckout?.setAttribute( 'aria-hidden', showGuest ? 'false' : 'true' );
 
   setCheckoutAuthStatus( E.loginStatus );
+  setCheckoutAuthStatus( E.choiceStatus );
+  setCheckoutAuthStatus( E.passwordStatus );
   setCheckoutAuthStatus( E.registerStatus );
 
   if (!focus) { return; }
   requestAnimationFrame(() => {
-    const target = safeMode === 'register' ? document.getElementById( 'ckRegisterFirstName' ) : E.emailInput;
+    const targets = {
+      email: E.emailInput,
+      choice: E.chooseLogin,
+      login: E.passwordInput,
+      register: document.getElementById( 'ckRegisterFirstName' ),
+      conflict: E.useCurrentAccount
+    };
+    const target = targets[safeMode];
     target?.focus({ preventScroll: true });
   });
 }
 
-function showCheckoutVerification( email ) { const E = els(); const cleanEmail = String(email || '') .trim() .toLowerCase(); checkoutAwaitingVerification = true; E.authGuest?.classList.remove( 'd-none' ); E.authGuest?.setAttribute( 'aria-hidden', 'false' ); E.authChoice?.classList.add( 'd-none' ); E.authChoice?.setAttribute( 'aria-hidden', 'true' ); E.verifyPanel?.classList.remove( 'd-none' ); E.verifyPanel?.setAttribute( 'aria-hidden', 'false' ); if (E.verifyEmail) { E.verifyEmail.textContent = cleanEmail; } setCheckoutAuthStatus( E.verifyStatus, 'Tu cesta sigue guardada mientras verificas la cuenta.', 'is-info' ); requestAnimationFrame(() => { E.verifyNow?.focus({ preventScroll: true }); }); } function checkoutAuthErrorMessage( error, context = 'login' ) { const code = String( error?.code || '' ); switch (code) { case 'auth/email-already-in-use': return 'Este correo ya tiene una cuenta. Inicia sesión para continuar.'; case 'auth/invalid-email': return 'Introduce un correo electrónico válido.'; case 'auth/weak-password': return 'La contraseña debe tener al menos 8 caracteres.'; case 'auth/email-not-verified': return 'La cuenta todavía no está verificada. Revisa tu correo.'; case 'auth/invalid-credential': case 'auth/user-not-found': case 'auth/wrong-password': return 'Correo o contraseña incorrectos.'; case 'auth/too-many-requests': return 'Demasiados intentos. Espera unos minutos y vuelve a probar.'; default: return context === 'register' ? 'No se ha podido crear la cuenta. Inténtalo de nuevo.' : 'No se ha podido iniciar sesión. Revisa tus datos.'; } } function waitForCheckoutCartOwner( expectedOwner, timeoutMs = 3000 ) { const matches = () => { return ( window.ppCart ?.getOwner?.() === expectedOwner ); }; if (matches()) { return Promise.resolve( true ); } return new Promise(resolve => { let settled = false; const finish = result => { if (settled) { return; } settled = true; window.removeEventListener( 'pp:cart-scope-changed', onScopeChanged ); clearTimeout( timeoutId ); resolve( result ); }; const onScopeChanged = () => { if (matches()) { finish(true); } }; window.addEventListener( 'pp:cart-scope-changed', onScopeChanged ); const timeoutId = setTimeout( () => { finish( matches() ); }, timeoutMs ); }); } async function finishCheckoutAuthentication( credential, email ) { const uid = String( credential?.user?.uid || '' ).trim(); if (uid) { await waitForCheckoutCartOwner( `user:${uid}` ); } pendingVerificationEmail = ''; pendingVerificationPassword = ''; checkoutAwaitingVerification = false; localStorage.setItem( LS_EMAIL, String(email || '') .trim() .toLowerCase() ); localStorage.setItem( LS_CHECKOUT_MODE, 'account' ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; await syncCheckoutAuthFromFirebase({ moveToShipping: true }); syncUIFromStorage(); await renderCart(); } async function attemptPendingVerification({ resendOnly = false } = {}) { const E = els(); const email = pendingVerificationEmail; const password = pendingVerificationPassword; if ( !email || !password ) { setCheckoutAuthStatus( E.verifyStatus, 'Vuelve al registro e introduce de nuevo tus datos.', 'is-error' ); return; } const activeButton = resendOnly ? E.verifyResend : E.verifyNow; setCheckoutAuthButtonLoading( activeButton, true, resendOnly ? 'REENVIANDO…' : 'COMPROBANDO…' ); try { const credential = await ppLoginWithEmailPass( email, password ); setCheckoutAuthStatus( E.verifyStatus, 'Cuenta verificada. Estamos preparando el envío.', 'is-ok' ); await finishCheckoutAuthentication( credential, email ); } catch (error) { if ( error?.code === 'auth/email-not-verified' ) { setCheckoutAuthStatus( E.verifyStatus, resendOnly ? 'Te hemos enviado un nuevo correo de verificación.' : 'Todavía no aparece como verificado. Revisa el enlace de tu correo.', 'is-info' ); return; } setCheckoutAuthStatus( E.verifyStatus, checkoutAuthErrorMessage( error, 'login' ), 'is-error' ); } finally { setCheckoutAuthButtonLoading( activeButton, false ); } } function initCheckoutAuth() {
+function showCheckoutVerification( email ) { const E = els(); const cleanEmail = String(email || '') .trim() .toLowerCase(); checkoutAwaitingVerification = true; E.authGuest?.classList.remove( 'd-none' ); E.authGuest?.setAttribute( 'aria-hidden', 'false' ); E.authChoice?.classList.add( 'd-none' ); E.authChoice?.setAttribute( 'aria-hidden', 'true' ); E.verifyPanel?.classList.remove( 'd-none' ); E.verifyPanel?.setAttribute( 'aria-hidden', 'false' ); if (E.verifyEmail) { E.verifyEmail.textContent = cleanEmail; } setCheckoutAuthStatus( E.verifyStatus, 'Tu cesta sigue guardada mientras verificas la cuenta.', 'is-info' ); requestAnimationFrame(() => { E.verifyNow?.focus({ preventScroll: true }); }); }
+function checkoutAuthErrorMessage( error, context = 'login' ) {
+  const code = String( error?.code || '' );
+  if (code === 'auth/invalid-email') return 'Introduce un correo electrónico válido.';
+  if (code === 'auth/weak-password') return 'La contraseña debe tener al menos 8 caracteres.';
+  return context === 'register'
+    ? 'No se ha podido crear la cuenta. Puedes probar a acceder o continuar como invitado.'
+    : 'No hemos podido iniciar sesión con esos datos.';
+}
+function waitForCheckoutCartOwner( expectedOwner, timeoutMs = 3000 ) { const matches = () => { return ( window.ppCart ?.getOwner?.() === expectedOwner ); }; if (matches()) { return Promise.resolve( true ); } return new Promise(resolve => { let settled = false; const finish = result => { if (settled) { return; } settled = true; window.removeEventListener( 'pp:cart-scope-changed', onScopeChanged ); clearTimeout( timeoutId ); resolve( result ); }; const onScopeChanged = () => { if (matches()) { finish(true); } }; window.addEventListener( 'pp:cart-scope-changed', onScopeChanged ); const timeoutId = setTimeout( () => { finish( matches() ); }, timeoutMs ); }); }
+async function finishCheckoutAuthentication( credential, email ) { const uid = String( credential?.user?.uid || '' ).trim(); if (uid) { await waitForCheckoutCartOwner( `user:${uid}` ); } pendingVerificationEmail = ''; pendingVerificationPassword = ''; checkoutAwaitingVerification = false; localStorage.setItem( LS_EMAIL, String(email || '') .trim() .toLowerCase() ); localStorage.setItem( LS_CHECKOUT_MODE, 'account' ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; await syncCheckoutAuthFromFirebase({ moveToShipping: true }); syncUIFromStorage(); await renderCart(); }
+async function attemptPendingVerification({ resendOnly = false } = {}) { const E = els(); const email = pendingVerificationEmail; const password = pendingVerificationPassword; if ( !email || !password ) { setCheckoutAuthStatus( E.verifyStatus, 'Vuelve al registro e introduce de nuevo tus datos.', 'is-error' ); return; } const activeButton = resendOnly ? E.verifyResend : E.verifyNow; setCheckoutAuthButtonLoading( activeButton, true, resendOnly ? 'REENVIANDO…' : 'COMPROBANDO…' ); try { const credential = await ppLoginWithEmailPass( email, password ); setCheckoutAuthStatus( E.verifyStatus, 'Cuenta verificada. Estamos preparando el envío.', 'is-ok' ); await finishCheckoutAuthentication( credential, email ); } catch (error) { if ( error?.code === 'auth/email-not-verified' ) { setCheckoutAuthStatus( E.verifyStatus, resendOnly ? 'Te hemos enviado un nuevo correo de verificación.' : 'Todavía no aparece como verificado. Revisa el enlace de tu correo.', 'is-info' ); return; } setCheckoutAuthStatus( E.verifyStatus, checkoutAuthErrorMessage( error, 'login' ), 'is-error' ); } finally { setCheckoutAuthButtonLoading( activeButton, false ); } }
+
+async function requestCheckoutPasswordReset(button) {
+  const E = els();
+  const email = String(E.registerEmailInput?.value || E.emailInput?.value || '').trim().toLowerCase();
+  const status = checkoutAuthMode === 'login' ? E.passwordStatus : E.choiceStatus;
+
+  if (!isEmailValid(email)) {
+    setCheckoutAuthStatus(status, 'Introduce un correo electrónico válido.', 'is-error');
+    setCheckoutAuthMode('email');
+    return;
+  }
+
+  setCheckoutAuthButtonLoading(button, true, 'ENVIANDO…');
+  try {
+    const reset = window.ppSendPasswordReset;
+    if (typeof reset !== 'function') throw new Error('Recuperación no disponible.');
+    await reset(email);
+  } catch {
+    /* Respuesta deliberadamente neutral para no enumerar cuentas. */
+  } finally {
+    setCheckoutAuthButtonLoading(button, false);
+    setCheckoutAuthStatus(status, 'Si existe una cuenta asociada, recibirás las instrucciones por correo.', 'is-info');
+  }
+}
+
+function updateCheckoutRegisterButton() {
+  const E = els();
+  if (!E.registerForm || !E.registerSubmit || E.registerSubmit.getAttribute('aria-busy') === 'true') return;
+  const password = String(document.getElementById('ckRegisterPass')?.value || '');
+  const confirmation = String(document.getElementById('ckRegisterPassConfirm')?.value || '');
+  E.registerSubmit.disabled = !E.registerForm.checkValidity() || password !== confirmation;
+}
+
+function initCheckoutAuth() {
   const E = els();
   if ( !E.authGuest || E.authGuest.__ppCheckoutAuthBound ) { return; }
   E.authGuest.__ppCheckoutAuthBound = true;
@@ -1063,7 +1252,7 @@ function showCheckoutVerification( email ) { const E = els(); const cleanEmail =
     button.addEventListener( 'click', () => { setCheckoutAuthMode( button.dataset.ckAuthMode ); } );
   } );
 
-  E.detailsForm?.addEventListener( 'submit', event => {
+  E.detailsForm?.addEventListener( 'submit', async event => {
     event.preventDefault();
     const email = E.emailInput?.value?.trim().toLowerCase() || '';
     setCheckoutAuthStatus( E.loginStatus );
@@ -1073,10 +1262,79 @@ function showCheckoutVerification( email ) { const E = els(); const cleanEmail =
       return;
     }
     clearFieldError( E.emailInput );
+    const currentUser = await waitForCheckoutFirebaseUser();
+    const currentEmail = String(currentUser?.email || '').trim().toLowerCase();
+    if (currentUser?.uid && currentUser.emailVerified !== false && currentEmail) {
+      if (email !== currentEmail) {
+        if (E.currentAccountEmail) E.currentAccountEmail.textContent = currentEmail;
+        localStorage.setItem(LS_EMAIL, email);
+        setCheckoutAuthMode('conflict');
+        return;
+      }
+      await syncCheckoutAuthFromFirebase({ moveToShipping: true });
+      return;
+    }
+    localStorage.setItem(LS_EMAIL, email);
     if (E.registerEmailInput) { E.registerEmailInput.value = email; }
     if (E.newUserEmail) { E.newUserEmail.textContent = email; }
-    setCheckoutAuthMode( 'register' );
+    setCheckoutAuthMode( 'choice' );
   } );
+
+  E.chooseLogin?.addEventListener('click', () => { setCheckoutAuthMode('login'); });
+  E.chooseRegister?.addEventListener('click', () => { setCheckoutAuthMode('register'); });
+  E.passwordBack?.addEventListener('click', () => { setCheckoutAuthMode('choice'); });
+
+  E.passwordForm?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const email = String(E.registerEmailInput?.value || E.emailInput?.value || '').trim().toLowerCase();
+    const password = String(E.passwordInput?.value || '');
+    setCheckoutAuthStatus(E.passwordStatus);
+    if (!isEmailValid(email) || !password) {
+      setCheckoutAuthStatus(E.passwordStatus, 'Introduce el correo y la contraseña.', 'is-error');
+      E.passwordInput?.focus();
+      return;
+    }
+
+    setCheckoutAuthButtonLoading(E.passwordSubmit, true, 'ACCEDIENDO…');
+    let authenticated = false;
+    try {
+      const credential = await ppLoginWithEmailPass(email, password);
+      await finishCheckoutAuthentication(credential, email);
+      authenticated = true;
+    } catch (error) {
+      setCheckoutAuthStatus(E.passwordStatus, checkoutAuthErrorMessage(error, 'login'), 'is-error');
+    } finally {
+      setCheckoutAuthButtonLoading(E.passwordSubmit, false);
+      if (!authenticated) E.passwordInput?.focus({ preventScroll: true });
+    }
+  });
+
+  E.resetButtons.forEach(button => {
+    button.addEventListener('click', () => { requestCheckoutPasswordReset(button); });
+  });
+
+  E.useCurrentAccount?.addEventListener('click', async () => {
+    await syncCheckoutAuthFromFirebase({ moveToShipping: true });
+  });
+
+  E.conflictSignOut?.addEventListener('click', async () => {
+    const cartSnapshot = loadCart().map(item => ({ ...item }));
+    const candidateEmail = String(E.emailInput?.value || '').trim().toLowerCase();
+    setCheckoutAuthButtonLoading(E.conflictSignOut, true, 'CERRANDO SESIÓN…');
+    try {
+      if (typeof window.ppSignOut === 'function') await window.ppSignOut();
+      await waitForCheckoutCartOwner('guest');
+      if (cartSnapshot.length) saveCart(cartSnapshot);
+      localStorage.setItem(LS_EMAIL, candidateEmail);
+      localStorage.removeItem(LS_CHECKOUT_MODE);
+      syncUIFromStorage();
+      setCheckoutAuthMode('choice');
+    } catch (error) {
+      setCheckoutAuthStatus(E.loginStatus, 'No se ha podido cerrar la sesión. Inténtalo de nuevo.', 'is-error');
+    } finally {
+      setCheckoutAuthButtonLoading(E.conflictSignOut, false);
+    }
+  });
 
   E.useOtherEmail?.addEventListener( 'click', () => {
     localStorage.removeItem( LS_EMAIL );
@@ -1135,19 +1393,38 @@ function showCheckoutVerification( email ) { const E = els(); const cleanEmail =
     } catch (error) {
       setCheckoutAuthStatus( E.registerStatus, checkoutAuthErrorMessage( error, 'register' ), 'is-error' );
       if ( error?.code === 'auth/email-already-in-use' ) {
-        setCheckoutAuthStatus( E.registerStatus, 'Este correo ya tiene cuenta. Accede desde el icono de cuenta o usa otro correo.', 'is-error' );
+        setCheckoutAuthMode('login');
+        setCheckoutAuthStatus(E.passwordStatus, 'No se ha podido crear la cuenta con ese correo. Puedes intentar acceder, recuperar la contraseña o continuar como invitado.', 'is-info');
       }
     } finally {
       setCheckoutAuthButtonLoading( E.registerSubmit, false );
+      updateCheckoutRegisterButton();
     }
   } );
+
+  E.registerForm?.addEventListener('input', updateCheckoutRegisterButton);
+  E.registerForm?.addEventListener('change', updateCheckoutRegisterButton);
 
   E.verifyNow?.addEventListener( 'click', () => { attemptPendingVerification(); } );
   E.verifyResend?.addEventListener( 'click', () => { attemptPendingVerification({ resendOnly: true }); } );
   E.verifyBack?.addEventListener( 'click', () => { setCheckoutAuthMode( 'register' ); } );
   E.guestContinue?.addEventListener( 'click', () => { continueCheckoutAsGuest(); } );
 
-  setCheckoutAuthMode( checkoutAuthMode, { focus: false } );
+  E.emailInput && (E.emailInput.disabled = true);
+  E.loginSubmit && (E.loginSubmit.disabled = true);
+  E.authGuest.setAttribute('aria-busy', 'true');
+  waitForCheckoutFirebaseUser().then(user => {
+    if (user?.uid && user.emailVerified !== false) {
+      return syncCheckoutAuthFromFirebase();
+    }
+    E.emailInput && (E.emailInput.disabled = false);
+    E.loginSubmit && (E.loginSubmit.disabled = false);
+    setCheckoutAuthMode(checkoutAuthMode, { focus: false });
+    return false;
+  }).finally(() => {
+    E.authGuest?.setAttribute('aria-busy', 'false');
+  });
+  updateCheckoutRegisterButton();
 }
 
 // ========================================================= // CHECKOUT · CERRAR SESIÓN // ========================================================= const logoutEl = document.getElementById( 'ckLogout' ); logoutEl?.addEventListener( 'click', async event => { event.preventDefault(); const E = els(); try { if ( typeof window.ppSignOut === 'function' ) { await window.ppSignOut(); } } catch (error) { console.warn( '[checkout] No se pudo cerrar la sesión Firebase:', error ); } localStorage.removeItem( LS_EMAIL ); localStorage.removeItem( LS_SHIP_MODE ); localStorage.removeItem( LS_SHIP_DETAILS ); localStorage.removeItem( LS_TRIBE_CODE ); localStorage.removeItem( LS_CHECKOUT_MODE ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; pendingVerificationEmail = ''; pendingVerificationPassword = ''; checkoutAwaitingVerification = false; setCheckoutAuthMode( 'email', { focus: false } ); if (E.emailInput) { E.emailInput.disabled = false; E.emailInput.value = ''; E.emailInput.classList.remove( 'is-invalid' ); } if (E.logoutBtn) { E.logoutBtn.hidden = true; } applyShippingMode(''); enableShipping(false); enablePayment(false); setTab( 'nav-js-details-checkoutnc' ); syncUIFromStorage(); } );
@@ -1280,24 +1557,31 @@ async function continueCheckoutAsGuest() {
   setTab('nav-js-shipping-checkoutnc');
   try { await renderCart(); } catch (error) { console.error('[checkout] renderCart invitado falló:', error); }
 }
-async function waitForCheckoutFirebaseUser(timeoutMs = 2200) {
-  const directUser =
+async function waitForCheckoutFirebaseUser(timeoutMs = 4000) {
+  try {
+    await window.__ppFirebaseAuthReady;
+  } catch {}
+
+  const current = () => (
     window.__ppAuthCurrentUser ||
     window.__ppLastUser ||
     window.__ppFirebaseAuth?.currentUser ||
-    null;
+    null
+  );
 
-  if (directUser?.getIdToken) {
-    return directUser;
+  if (window.__ppAuthStateResolved === true) {
+    const user = current();
+    return user?.getIdToken ? user : null;
   }
 
   return new Promise((resolve) => {
     let settled = false;
+    let timeoutId;
 
     const finish = (user = null) => {
       if (settled) return;
       settled = true;
-
+      clearTimeout(timeoutId);
       window.removeEventListener('pp:auth-changed', onAuthChanged);
       resolve(user?.getIdToken ? user : null);
     };
@@ -1307,14 +1591,10 @@ async function waitForCheckoutFirebaseUser(timeoutMs = 2200) {
     };
 
     window.addEventListener('pp:auth-changed', onAuthChanged, { once: true });
+    window.__ppAuthInitialState?.then?.(finish, () => finish(null));
 
-    window.setTimeout(() => {
-      finish(
-        window.__ppAuthCurrentUser ||
-        window.__ppLastUser ||
-        window.__ppFirebaseAuth?.currentUser ||
-        null
-      );
+    timeoutId = window.setTimeout(() => {
+      finish(current());
     }, timeoutMs);
   });
 }
@@ -1373,13 +1653,8 @@ function syncTribeInputFromStorage() {
 function getShippingPrivilegeLabel(summary = {}) {
   const rate = summary?.shippingRate || {};
 
-  if (!rate.isFree) return '';
-
-  return (
-    rate.tribeFreeShippingReason ||
-    rate.freeShippingReason ||
-    ''
-  );
+  if (rate.freeShippingApplied !== true) return '';
+  return 'Envío gratuito aplicado por una regla validada por el servidor.';
 }
 
 function renderShippingPrivilegeLine(summary = {}) {
@@ -1683,6 +1958,14 @@ function validateCheckoutPayload(payload) {
     return 'Selecciona un método de envío válido.';
   }
 
+  if (payload.shippingDetails.shippingMethod !== 'home') {
+    return 'El método de entrega seleccionado no está disponible.';
+  }
+
+  if (!String(payload.shippingDetails.shippingRateId || '').trim()) {
+    return 'Selecciona una opción de envío válida antes de continuar.';
+  }
+
   const acceptTerms = document.getElementById('ckAcceptTerms');
 
   if (acceptTerms && !acceptTerms.checked) {
@@ -1767,15 +2050,29 @@ function markShippingFormTouched() {
     return false;
   };
 
+  const invalidateSelectedRate = (target) => {
+    if (!/^ship_(?:address1|address2|postal|state|city|country)$/.test(String(target?.name || ''))) return;
+    const details = safeJsonParse(localStorage.getItem(LS_SHIP_DETAILS), null);
+    if (!details?.shippingRateId) return;
+
+    const { shippingRateId, serviceLevel, ...addressOnly } = details;
+    localStorage.setItem(LS_SHIP_DETAILS, JSON.stringify(addressOnly));
+    ppSecureCartSummary = null;
+    enablePayment(false);
+    renderShippingOptions({ shippingStatus: 'address_required', shippingOptions: [] });
+  };
+
   form.addEventListener('input', (event) => {
     if (!shouldIgnoreTouch(event.target)) {
       __ppShippingFormTouched = true;
+      invalidateSelectedRate(event.target);
     }
   });
 
   form.addEventListener('change', (event) => {
     if (!shouldIgnoreTouch(event.target)) {
       __ppShippingFormTouched = true;
+      invalidateSelectedRate(event.target);
     }
   });
 }
@@ -2604,6 +2901,7 @@ E.sideCTA?.addEventListener('click', goDetails);
 const test = validateRequired(panel);
 if (!test.ok) return;
 
+    const savedShippingSelection = safeJsonParse(localStorage.getItem(LS_SHIP_DETAILS), null);
 
     const details = {
       firstName: val(E2.shippingForm, 'ship_firstName'),
@@ -2615,7 +2913,9 @@ if (!test.ok) return;
       state:     val(E2.shippingForm, 'ship_state'),
       country:   val(E2.shippingForm, 'ship_country'),
       phone:     val(E2.shippingForm, 'ship_phone'),
-      shippingMethod: 'home'
+      shippingMethod: 'home',
+      shippingRateId: savedShippingSelection?.shippingRateId || null,
+      serviceLevel: savedShippingSelection?.serviceLevel || null
     };
 
 ppClearCheckoutAddressNotice();
@@ -2655,6 +2955,13 @@ try {
 } catch (error) {
   console.error('[checkout] renderCart tras guardar envío fallo:', error);
   showPaymentError(error.message || 'No se ha podido calcular el envío.');
+  return;
+}
+if (!isShippingReady(ppSecureCartSummary)) {
+  enablePayment(false);
+  renderShippingOptions(ppSecureCartSummary || {});
+  document.getElementById('ckShippingOptions')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.querySelector('input[name="shippingRateId"]')?.focus({ preventScroll: true });
   return;
 }
 enablePayment(true);
@@ -2873,6 +3180,13 @@ function fillSelectedAddressFromSelect() {
 
   applyShippingMode('home');
   ppClearCheckoutAddressNotice();
+  const previousDetails = safeJsonParse(localStorage.getItem(LS_SHIP_DETAILS), null);
+  if (previousDetails?.shippingRateId) {
+    const { shippingRateId, serviceLevel, ...addressOnly } = previousDetails;
+    localStorage.setItem(LS_SHIP_DETAILS, JSON.stringify(addressOnly));
+    ppSecureCartSummary = null;
+    enablePayment(false);
+  }
   ppFillShippingFormFromAddress(details);
   ppShowDefaultAddressNotice();
 }
@@ -2993,17 +3307,15 @@ function renderShippingSummary(email, details) {
     `;
 
 const shippingRate = ppSecureCartSummary?.shippingRate || {};
-const shippingPrice = Number(ppSecureCartSummary?.shipping || 0);
-
 const shippingTitle = isStore
   ? 'Recogida en tienda'
-  : (shippingRate.carrierLabel || shippingRate.label || 'Envío estándar');
+  : (shippingRate.displayName || shippingRate.label || 'Servicio de envío');
 
-const shippingDelivery = shippingRate.estimatedDelivery || (isStore
-  ? 'Te avisaremos cuando esté preparado'
-  : '2–7 días laborables');
+const shippingDelivery = isStore
+  ? 'Recogida no disponible actualmente'
+  : shippingEstimateLabel(shippingRate);
 
-const shippingPriceLabel = shippingPrice > 0 ? money(shippingPrice) : 'Gratis';
+const shippingPriceLabel = shippingAmountLabel(ppSecureCartSummary || {});
 const shippingPrivilegeLabel = getShippingPrivilegeLabel(ppSecureCartSummary);
  E.shipSummaryContainer.innerHTML = `
   <div class="ck-box">
@@ -3118,15 +3430,14 @@ function renderPaymentShippingDetails() {
     `;
 
   const shippingRate = ppSecureCartSummary?.shippingRate || {};
-const shippingPrice = Number(ppSecureCartSummary?.shipping || 0);
-const shippingPriceLabel = shippingPrice > 0 ? money(shippingPrice) : 'Gratis';
+const shippingPriceLabel = shippingAmountLabel(ppSecureCartSummary || {});
 const shippingPrivilegeLabel = getShippingPrivilegeLabel(ppSecureCartSummary);
 
 const shippingInfo = `
   <div style="margin-top:10px"><strong>Método de envío</strong></div>
   <div>
-    ${escapeHtml(shippingRate.carrierLabel || shippingRate.label || (details.shippingMethod === 'store' ? 'Recogida en tienda' : 'Envío estándar'))}
-    · ${escapeHtml(shippingRate.estimatedDelivery || '2–7 días laborables')}
+    ${escapeHtml(shippingRate.displayName || shippingRate.label || (details.shippingMethod === 'store' ? 'Recogida en tienda' : 'Servicio de envío'))}
+    · ${escapeHtml(shippingEstimateLabel(shippingRate))}
     · ${escapeHtml(shippingPriceLabel)}
   </div>
   ${

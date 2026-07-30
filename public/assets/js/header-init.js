@@ -9,10 +9,12 @@
   let resolveReady;
   const state = {
     salesEnabled: false,
+    checkoutEnabled: false,
     loaded: false,
     mode: 'prelaunch',
     label: 'Próximamente',
     message: 'Estamos preparando el primer drop Atlas. Explora la colección y activa el aviso para tu talla.',
+    checkoutMessage: 'Estamos configurando los métodos y tarifas de envío. La compra se habilitará próximamente.',
     ready: new Promise((resolve) => {
       resolveReady = resolve;
     })
@@ -55,7 +57,7 @@
     const shell = document.querySelector('.ck-shell');
     const existing = document.getElementById('ppPrelaunchGate');
 
-    if (state.salesEnabled) {
+    if (state.salesEnabled && state.checkoutEnabled) {
       if (shell) shell.hidden = false;
       existing?.remove();
       return;
@@ -71,7 +73,7 @@
     gate.innerHTML = `
       <p class="pp-prelaunch-gate__kicker">PRIMER DROP · ATLAS</p>
       <h1 id="ppPrelaunchGateTitle">Próximamente</h1>
-      <p>${state.message}</p>
+      <p>${state.checkoutMessage}</p>
       <a href="/hombre">Explorar la colección</a>
     `;
 
@@ -82,8 +84,18 @@
     const button = document.querySelector('.cart-checkout, [data-cart-checkout]');
     if (!button) return;
 
-    if (state.salesEnabled) {
-      button.removeAttribute('aria-disabled');
+    const checkoutNote = document.querySelector('[data-cart-checkout-note]');
+    const hasItems = button.dataset.cartHasItems === 'true';
+    const canCheckout = state.salesEnabled && state.checkoutEnabled && hasItems;
+    button.disabled = !canCheckout;
+    button.setAttribute('aria-disabled', String(!canCheckout));
+
+    if (checkoutNote) {
+      checkoutNote.hidden = canCheckout;
+      checkoutNote.textContent = state.checkoutMessage;
+    }
+
+    if (canCheckout) {
       if (button.dataset.prelaunchLabel === 'true') {
         button.textContent = 'Finalizar compra';
         delete button.dataset.prelaunchLabel;
@@ -91,13 +103,18 @@
       return;
     }
 
-    button.textContent = 'Ventas próximamente';
-    button.dataset.prelaunchLabel = 'true';
-    button.setAttribute('aria-disabled', 'true');
+    if (!state.salesEnabled) {
+      button.textContent = 'Ventas próximamente';
+      button.dataset.prelaunchLabel = 'true';
+    } else {
+      button.textContent = 'Finalizar compra';
+      delete button.dataset.prelaunchLabel;
+    }
   }
 
   function applyStorefrontMode() {
     document.documentElement.dataset.storefrontMode = state.mode;
+    document.documentElement.dataset.checkoutEnabled = String(state.checkoutEnabled);
     document.body.classList.toggle('pp-prelaunch-mode', !state.salesEnabled);
     ensurePrelaunchBanner();
     renderCheckoutGate();
@@ -115,6 +132,14 @@
     }
 
     renderCheckoutGate();
+  };
+
+  window.ppShowCheckoutDisabledNotice = () => {
+    const note = document.querySelector('[data-cart-checkout-note]');
+    if (!note) return;
+    note.hidden = false;
+    note.setAttribute('tabindex', '-1');
+    note.focus({ preventScroll: true });
   };
 
   window.addEventListener('partials:ready', syncPrelaunchCart);
@@ -135,13 +160,19 @@
     })
     .then((config) => {
       state.salesEnabled = config?.salesEnabled === true;
+      state.checkoutEnabled = config?.checkoutEnabled === true;
       state.mode = state.salesEnabled ? 'sales' : 'prelaunch';
       state.label = String(config?.label || state.label);
       state.message = String(config?.message || state.message);
+      state.checkoutMessage = String(
+        config?.checkoutMessage ||
+        'Estamos configurando los métodos y tarifas de envío. La compra se habilitará próximamente.'
+      );
     })
     .catch((error) => {
       console.warn('[storefront] configuración no disponible; ventas bloqueadas:', error.message);
       state.salesEnabled = false;
+      state.checkoutEnabled = false;
       state.mode = 'prelaunch';
     })
     .finally(() => {
@@ -151,6 +182,7 @@
       window.dispatchEvent(new CustomEvent('pp:storefront-config', {
         detail: {
           salesEnabled: state.salesEnabled,
+          checkoutEnabled: state.checkoutEnabled,
           mode: state.mode
         }
       }));
@@ -318,7 +350,6 @@ function initMobileDock() {
   const mobileCount = dock.querySelector('[data-pp-mobile-cart-count]');
   const tabs = Array.from(panel.querySelectorAll('[data-pp-mobile-tab]'));
   const sections = Array.from(panel.querySelectorAll('[data-pp-mobile-section]'));
-  const menuTracks = Array.from(panel.querySelectorAll('.pp-mobile-menu__views-track'));
   let returnFocus = null;
   let catalogPromise = null;
   let searchTimer = 0;
@@ -326,10 +357,9 @@ function initMobileDock() {
   let searchResults = null;
   let activeSublevel = null;
 
-  function setExpanded(value) {
-    const expanded = value ? 'true' : 'false';
-    menuButton?.setAttribute('aria-expanded', expanded);
-    searchButton?.setAttribute('aria-expanded', expanded);
+  function setExpanded(source = null) {
+    menuButton?.setAttribute('aria-expanded', source === 'menu' ? 'true' : 'false');
+    searchButton?.setAttribute('aria-expanded', source === 'search' ? 'true' : 'false');
   }
 
   function sectionForPath(pathname) {
@@ -418,7 +448,7 @@ function initMobileDock() {
         item.hidden = false;
         item.classList.toggle('is-active', isCurrentLevel);
         item.setAttribute('aria-hidden', isExposed ? 'false' : 'true');
-        item.inert = !isExposed;
+        item.toggleAttribute('inert', !isExposed);
       });
     });
 
@@ -449,6 +479,9 @@ function initMobileDock() {
   function closeSublevel({ focus = true } = {}) {
     if (!activeSublevel) return false;
 
+    const closingSublevel = activeSublevel;
+    const activeSection = sections.find((section) => !section.hidden);
+    const track = activeSection?.querySelector('.pp-mobile-menu__views-track');
     activeSublevel = null;
     syncSublevelState({ keepSublevelInteractive: true });
 
@@ -460,13 +493,13 @@ function initMobileDock() {
 
       if (focus) {
         window.requestAnimationFrame(() => {
-          panel.querySelector('[data-pp-mobile-level-trigger][aria-expanded="false"]')
+          sections.find((section) => !section.hidden)
+            ?.querySelector(`[data-pp-mobile-level-trigger="${closingSublevel}"]`)
             ?.focus({ preventScroll: true });
         });
       }
     };
 
-    const track = menuTracks.find((item) => item.closest('.is-submenu-open'));
     if (track) {
       track.addEventListener('transitionend', (event) => {
         if (event.propertyName === 'transform') finalize();
@@ -486,7 +519,7 @@ function initMobileDock() {
     panel.hidden = true;
     panel.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('pp-mobile-panel-open');
-    setExpanded(false);
+    setExpanded();
 
     if (wasOpen && restoreFocus && returnFocus instanceof HTMLElement) {
       returnFocus.focus({ preventScroll: true });
@@ -804,7 +837,7 @@ function initMobileDock() {
     panel.hidden = false;
     panel.setAttribute('aria-hidden', 'false');
     document.body.classList.add('pp-mobile-panel-open');
-    setExpanded(true);
+    setExpanded(focusSearch ? 'search' : 'menu');
     syncSearchClearButton();
 
     window.requestAnimationFrame(() => {
@@ -1025,9 +1058,11 @@ function initMobileDock() {
 }
 
 function initMobileHeroVideoFallbacks() {
-  const mobileQuery = window.matchMedia('(max-width: 820px)');
+  const responsiveQuery = window.matchMedia('(max-width: 1024px)');
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   const videos = document.querySelectorAll(
-    'body:is(.men-page, .women-page) .hero-frame .hero-video__media'
+    'body:is(.men-page, .women-page) .hero-frame .hero-video__media, ' +
+    'body.home-page #home_hero .hero-frame .hero-video__media'
   );
 
   videos.forEach((video) => {
@@ -1035,28 +1070,90 @@ function initMobileHeroVideoFallbacks() {
     if (!frame || video.dataset.ppMobileFallbackBound === 'true') return;
 
     video.dataset.ppMobileFallbackBound = 'true';
+    const lifecycle = new AbortController();
+    const { signal } = lifecycle;
+    const originalPoster = video.getAttribute('poster') || '';
+    const originalAutoplay = video.hasAttribute('autoplay');
     let fallbackTimer = 0;
 
     const revealFallback = () => {
-      if (!mobileQuery.matches || video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return;
+      if (!responsiveQuery.matches) return;
+      window.clearTimeout(fallbackTimer);
+      frame.classList.remove('pp-mobile-video-pending', 'pp-mobile-video-ready');
       frame.classList.add('pp-mobile-video-fallback');
     };
 
     const revealVideo = () => {
+      if (!responsiveQuery.matches || reducedMotionQuery.matches) {
+        revealFallback();
+        return;
+      }
       window.clearTimeout(fallbackTimer);
-      frame.classList.remove('pp-mobile-video-fallback');
+      frame.classList.remove('pp-mobile-video-pending', 'pp-mobile-video-fallback');
+      frame.classList.add('pp-mobile-video-ready');
     };
 
-    video.addEventListener('loadeddata', revealVideo);
-    video.addEventListener('canplay', revealVideo);
-    video.addEventListener('error', revealFallback);
-    video.addEventListener('stalled', revealFallback);
-    video.querySelectorAll('source').forEach((source) => {
-      source.addEventListener('error', revealFallback);
-    });
+    const requestPlayback = () => {
+      if (!responsiveQuery.matches || reducedMotionQuery.matches) return;
+      const playback = video.play?.();
+      playback?.catch?.(() => {
+        if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) revealFallback();
+      });
+    };
 
-    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) revealVideo();
-    else fallbackTimer = window.setTimeout(revealFallback, 900);
+    const syncMotionPreference = () => {
+      window.clearTimeout(fallbackTimer);
+
+      if (!responsiveQuery.matches) {
+        frame.classList.remove('pp-mobile-video-pending', 'pp-mobile-video-ready', 'pp-mobile-video-fallback');
+        if (originalPoster) video.setAttribute('poster', originalPoster);
+        if (originalAutoplay) video.setAttribute('autoplay', '');
+        return;
+      }
+
+      if (reducedMotionQuery.matches) {
+        if (originalPoster) video.setAttribute('poster', originalPoster);
+        video.removeAttribute('autoplay');
+        video.autoplay = false;
+        video.pause?.();
+        revealFallback();
+        return;
+      }
+
+      video.removeAttribute('poster');
+      if (originalAutoplay) {
+        video.setAttribute('autoplay', '');
+        video.autoplay = true;
+      }
+      frame.classList.remove('pp-mobile-video-ready', 'pp-mobile-video-fallback');
+      frame.classList.add('pp-mobile-video-pending');
+
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        revealVideo();
+        requestPlayback();
+      } else {
+        fallbackTimer = window.setTimeout(revealFallback, 5000);
+      }
+    };
+
+    video.addEventListener('loadeddata', () => {
+      revealVideo();
+      requestPlayback();
+    }, { signal });
+    video.addEventListener('canplay', revealVideo, { signal });
+    video.addEventListener('error', revealFallback, { signal });
+    video.addEventListener('abort', revealFallback, { signal });
+    video.querySelectorAll('source').forEach((source) => {
+      source.addEventListener('error', revealFallback, { signal });
+    });
+    responsiveQuery.addEventListener?.('change', syncMotionPreference, { signal });
+    reducedMotionQuery.addEventListener?.('change', syncMotionPreference, { signal });
+    window.addEventListener('pagehide', () => {
+      window.clearTimeout(fallbackTimer);
+      lifecycle.abort();
+    }, { once: true, signal });
+
+    syncMotionPreference();
   });
 }
 
@@ -1235,6 +1332,7 @@ async function injectHeaderFooter() {
   const state = { step: 'email', email: '', loginMode: 'password' }; // password | google
   const q = (sel, root=document) => root.querySelector(sel);
   let authReturnFocus = null;
+  let accountReturnFocus = null;
 
   /* =========================================================
      PROPHETIA · FECHA HÍBRIDA
@@ -1489,10 +1587,24 @@ async function decideFlowByEmail(email){
 
 
   function isVisibleFocusTarget(element) {
+    const focusableSelector = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[contenteditable="true"]',
+      '[tabindex]:not([tabindex="-1"])'
+    ].join(',');
+
     return element instanceof HTMLElement &&
+      element !== document.body &&
+      element !== document.documentElement &&
       element.isConnected &&
       !element.hidden &&
+      !element.closest('[inert]') &&
       element.getAttribute('aria-hidden') !== 'true' &&
+      element.matches(focusableSelector) &&
       element.getClientRects().length > 0;
   }
 
@@ -1506,16 +1618,50 @@ async function decideFlowByEmail(email){
     authReturnFocus = null;
     if (restoreFocus) {
       window.requestAnimationFrame(() => {
-        const fallbackSelectors = window.matchMedia('(max-width: 820px)').matches
-          ? ['[data-pp-mobile-account]', '#ppProfileChip', '#ppAuthLogoBtn']
-          : ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]'];
-        const fallback = fallbackSelectors
-          .map((selector) => document.querySelector(selector))
-          .find(isVisibleFocusTarget);
-        const target = isVisibleFocusTarget(focusTarget) ? focusTarget : fallback;
-        target?.focus({ preventScroll: true });
+        window.requestAnimationFrame(() => {
+          const fallbackSelectors = window.matchMedia('(max-width: 820px)').matches
+            ? ['[data-pp-mobile-account]', '#ppProfileChip', '#ppAuthLogoBtn']
+            : ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]'];
+          const fallback = fallbackSelectors
+            .map((selector) => document.querySelector(selector))
+            .find(isVisibleFocusTarget);
+          const target = isVisibleFocusTarget(focusTarget) ? focusTarget : fallback;
+          target?.focus({ preventScroll: true });
+        });
       });
     }
+  }
+
+  function bindAuthDialogCancel(modal) {
+    if (!modal || modal.dataset.ppCancelBound === 'true') return;
+    modal.dataset.ppCancelBound = 'true';
+    modal.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeAuth();
+    });
+  }
+
+  function bindAccountPanelPresentation(panel) {
+    if (!panel || panel.dataset.ppPresentationBound === 'true') return;
+    panel.dataset.ppPresentationBound = 'true';
+
+    panel.addEventListener('close', () => {
+      if (!document.querySelector('#ppAuthModal[open], #ppAccountPanel[open]')) {
+        document.body.classList.remove('no-scroll');
+      }
+
+      const focusTarget = accountReturnFocus;
+      accountReturnFocus = null;
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          const fallback = ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]']
+            .map((selector) => document.querySelector(selector))
+            .find(isVisibleFocusTarget);
+          const target = isVisibleFocusTarget(focusTarget) ? focusTarget : fallback;
+          target?.focus({ preventScroll: true });
+        });
+      });
+    });
   }
 
   function closeAuthWhenLoggedIn() {
@@ -1774,11 +1920,14 @@ setTimeout(() => {
     const modal = getAuthModal();
     if (!modal) return;
 
+    bindAuthDialogCancel(modal);
     if (window.matchMedia('(max-width: 820px)').matches) portalNodeToBody(modal);
-    if (!modal.open && document.activeElement instanceof HTMLElement) {
-      authReturnFocus = document.activeElement.closest('#ppMobileMenuPanel')
+    if (!modal.open) {
+      const focusCandidate = document.activeElement instanceof HTMLElement &&
+        document.activeElement.closest('#ppMobileMenuPanel')
         ? document.querySelector('[data-pp-mobile-account]')
         : document.activeElement;
+      authReturnFocus = isVisibleFocusTarget(focusCandidate) ? focusCandidate : null;
     }
 
     const targetStep = step === 'login' || step === 'register' ? step : 'email';
@@ -1847,7 +1996,11 @@ document.addEventListener('click', (e) => {
 
     // ✅ si está logado -> abrir panel cuenta
     if (document.body.classList.contains('pp-auth-logged')) {
+      const accountPanel = q('#ppAccountPanel');
+      bindAccountPanelPresentation(accountPanel);
+      accountReturnFocus = isVisibleFocusTarget(profileBtn) ? profileBtn : null;
       window.ppOpenAccount?.();
+      if (accountPanel?.open) document.body.classList.add('no-scroll');
       return;
     }
 

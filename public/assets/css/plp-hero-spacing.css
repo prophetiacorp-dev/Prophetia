@@ -79,6 +79,213 @@ body:is(.sud-men-page, .women-page.sud-women-page) .sud-intro {
   overflow: hidden !important;
 }
 
+/* Entre tablet y el escritorio aprobado, el hero conserva dos carriles
+   editoriales reales. El rango termina antes de 1366px para que la
+   geometría de escritorio existente quede completamente fuera de alcance. */
+@media (min-width: 1025px) and (max-width: 1365px) {
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) {
+    --pp-plp-hero-h: clamp(337px, calc(53.82vw - 214.7px), 520px);
+    --pp-plp-hero-pad-bottom: clamp(20px, calc(18.24vw - 167px), 82px);
+    --pp-plp-intermediate-end: clamp(28px, calc(3.53vw - 8.2px), 40px);
+    --pp-plp-intermediate-gap: clamp(24px, 3vw, 40px);
+
+    /* La geometría base continúa intacta. Solo una ruta que ya exponga el
+       dial editorial --hero-side-y-sw participa en la convergencia final. */
+    --pp-plp-boundary-base-pad-top: clamp(16px, calc(2.65vw - 11.1px), 25px);
+    --pp-plp-boundary-base-start: clamp(10px, calc(82.3px - 5.3vw), 28px);
+    --pp-plp-boundary-base-side: clamp(180px, calc(421px - 17.65vw), 240px);
+    --pp-plp-boundary-base-breadcrumb: clamp(240px, 18.3vw, 250px);
+    --pp-plp-boundary-base-separation: clamp(28px, 2.42vw, 33px);
+    --pp-plp-boundary-progress: clamp(0, calc((100vw - 1180px) / 185px), 1);
+    --pp-plp-boundary-route-factor: clamp(0, calc(var(--hero-side-y-sw, 0px) / 170px), 1);
+    --pp-plp-boundary-mix: calc(var(--pp-plp-boundary-progress) * var(--pp-plp-boundary-route-factor));
+    --pp-plp-boundary-rest: calc(1 - var(--pp-plp-boundary-mix));
+
+    --pp-plp-hero-pad-top: calc(
+      var(--pp-plp-boundary-base-pad-top) * var(--pp-plp-boundary-rest) +
+      18px * var(--pp-plp-boundary-mix)
+    );
+    --pp-plp-intermediate-start: calc(
+      var(--pp-plp-boundary-base-start) * var(--pp-plp-boundary-rest) +
+      2px * var(--pp-plp-boundary-mix)
+    );
+    --pp-plp-intermediate-side: calc(
+      var(--pp-plp-boundary-base-side) * var(--pp-plp-boundary-rest) +
+      133.53px * var(--pp-plp-boundary-mix)
+    );
+    --pp-plp-intermediate-breadcrumb: calc(
+      var(--pp-plp-boundary-base-breadcrumb) * var(--pp-plp-boundary-rest) +
+      189.44px * var(--pp-plp-boundary-mix)
+    );
+    --pp-plp-boundary-breadcrumb-lead: calc(20px * var(--pp-plp-boundary-mix));
+    --pp-plp-boundary-track-gutter: calc(18px * var(--pp-plp-boundary-mix));
+    --pp-plp-boundary-side-separation: calc(
+      var(--pp-plp-boundary-base-separation) * var(--pp-plp-boundary-rest) +
+      190.38px * var(--pp-plp-boundary-mix)
+    );
+  }
+
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) .pp-hero.hero--two-cols {
+    display: grid !important;
+    grid-template-columns:
+      minmax(0, 1fr)
+      calc(
+        max(var(--pp-plp-intermediate-side), var(--pp-plp-intermediate-breadcrumb)) +
+        var(--pp-plp-boundary-track-gutter)
+      ) !important;
+    grid-template-rows:
+      var(--pp-plp-boundary-breadcrumb-lead)
+      max-content
+      var(--pp-plp-boundary-side-separation)
+      minmax(0, 1fr) !important;
+    column-gap: var(--pp-plp-intermediate-gap) !important;
+    row-gap: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: var(--pp-plp-hero-h) !important;
+    margin: 0 !important;
+    padding-block: var(--pp-plp-hero-pad-top) var(--pp-plp-hero-pad-bottom) !important;
+    padding-inline: var(--pp-plp-intermediate-start) var(--pp-plp-intermediate-end) !important;
+    overflow: visible !important;
+    align-items: start !important;
+  }
+
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) .pp-hero__media {
+    grid-column: 1 !important;
+    grid-row: 1 / -1 !important;
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) .pp-hero__media .floating-logo,
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) .pp-hero__media .floating-logo img {
+    position: static !important;
+    display: block !important;
+    width: min(100%, 920px) !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    transform: none !important;
+    object-fit: contain !important;
+  }
+
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) .pp-hero .pp-breadcrumb--hero {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    position: static !important;
+    justify-self: start !important;
+    align-self: start !important;
+    width: var(--pp-plp-intermediate-breadcrumb) !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+    transform: none !important;
+  }
+
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) .pp-hero__side {
+    grid-column: 2 !important;
+    grid-row: 4 !important;
+    position: static !important;
+    justify-self: end !important;
+    align-self: start !important;
+    width: var(--pp-plp-intermediate-side) !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+    transform: none !important;
+  }
+
+  body:is(
+    .men-page.streetwear-page,
+    .women-page.streetwear-page,
+    .men-page.hoodies-page,
+    .women-page.hoodies-page,
+    .men-page.camisetas-page,
+    .women-page.camisetas-page,
+    .sud-men-page,
+    .women-page.sud-women-page
+  ) :is(.pp-hero__nav, .pp-hero__list) {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+    transform: none !important;
+  }
+}
+
 @media (max-width: 900px) {
   body:is(
     .men-page.streetwear-page,

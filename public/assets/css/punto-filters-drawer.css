@@ -22,7 +22,7 @@ body:is(.camisetas-page, .sud-men-page, .sud-women-page)
   border-left: 1px solid rgba(0, 0, 0, .12) !important;
   box-shadow: -18px 0 54px rgba(0, 0, 0, .18) !important;
   transform: translate3d(100%, 0, 0) !important;
-  opacity: 1 !important;
+  opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
   overflow: hidden !important;
@@ -33,6 +33,7 @@ body:is(.camisetas-page, .sud-men-page, .sud-women-page)
 body:is(.camisetas-page, .sud-men-page, .sud-women-page)
   :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer):is(.men-filters-drawer, .women-filters-drawer).is-open {
   transform: translate3d(0, 0, 0) !important;
+  opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
   transition: transform .32s cubic-bezier(.22, .61, .36, 1) !important;
@@ -167,18 +168,21 @@ body:is(.camisetas-page, .sud-men-page, .sud-women-page)
   :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
   :is(.men-filters-panel, .women-filters-panel) {
   display: none !important;
-  opacity: 1 !important;
+  opacity: 0 !important;
   transform: none !important;
   filter: none !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
   animation: none !important;
 }
 
 body:is(.camisetas-page, .sud-men-page, .sud-women-page)
-  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer).is-open
   :is(.men-filters-panel, .women-filters-panel).is-active {
   display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 body:is(.camisetas-page, .sud-men-page, .sud-women-page)
@@ -243,7 +247,7 @@ body:is(.camisetas-page, .sud-men-page, .sud-women-page)
 }
 
 body:is(.camisetas-page, .sud-men-page, .sud-women-page)
-  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer)
+  :is(#menFiltersDrawer#menFiltersDrawer, #womenFiltersDrawer#womenFiltersDrawer).is-open
   :is(.men-filters-panel, .women-filters-panel)[data-panel="talla"].is-active {
   display: block !important;
 }

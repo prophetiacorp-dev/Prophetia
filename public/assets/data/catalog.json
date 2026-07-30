@@ -19,7 +19,7 @@
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "oversized",
-    "price": 59,
+    "price": 39.99,
     "inStock": true,
     "defaultCut": "oversize",
     "cuts": [
@@ -62,7 +62,7 @@
         "id": "normal",
         "label": "Prophetia",
         "cut": "classic",
-        "price": 59,
+        "price": 39.99,
         "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png",
         "images": [
           "/assets/img/streetwear/Hombre/atlas/atlasfrontbeigr.png",
@@ -135,7 +135,7 @@
         "id": "logo",
         "label": "Logo",
         "cut": "classic",
-        "price": 59,
+        "price": 39.99,
         "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogobeige.png",
         "images": [
           "/assets/img/streetwear/Hombre/atlas/atlasfrontversionlogobeige.png",
@@ -208,7 +208,7 @@
         "id": "oversize-normal",
         "label": "Logo",
         "cut": "oversize",
-        "price": 59,
+        "price": 39.99,
         "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
         "images": [
           "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizebeige.png",
@@ -253,7 +253,7 @@
         "id": "oversize-word",
         "label": "Prophetia",
         "cut": "oversize",
-        "price": 59,
+        "price": 39.99,
         "cover": "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabrabeige.png",
         "images": [
           "/assets/img/streetwear/Hombre/atlas/atlasfrontoversizeversionpalabrabeige.png",
@@ -811,7 +811,7 @@
     "collectionLabel": "Prophetia Originals",
     "gender": "unisex",
     "fit": "relaxed",
-    "price": 39,
+    "price": 29.99,
     "inStock": false,
     "isNew": true,
     "sortOrder": -22,
@@ -1863,7 +1863,7 @@
     "collection": "myth-series",
     "gender": "unisex",
     "fit": "regular",
-    "price": 88,
+    "price": 44.99,
     "inStock": false,
     "color": "white",
     "sizes": [
@@ -1995,7 +1995,7 @@
     "collection": "letters-from-the-soul",
     "gender": "unisex",
     "fit": "regular",
-    "price": 88,
+    "price": 44.99,
     "inStock": false,
     "color": "white",
     "sizes": [
@@ -2121,7 +2121,7 @@
     "collection": "letters-from-the-soul",
     "gender": "unisex",
     "fit": "regular",
-    "price": 88,
+    "price": 44.99,
     "inStock": false,
     "color": "navy",
     "sizes": [

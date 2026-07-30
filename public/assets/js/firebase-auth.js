@@ -169,6 +169,21 @@ window.__ppFetchSignInMethodsForEmail = async (email) => {
   return fetchSignInMethodsForEmail(auth, e);
 };
 
+window.ppSendPasswordReset = async (email) => {
+  if (!auth) throw new Error("Firebase auth no inicializado");
+
+  const cleanEmail = String(email || "").trim().toLowerCase();
+
+  if (!cleanEmail) {
+    const error = new Error("Email vacío");
+    error.code = "auth/invalid-email";
+    throw error;
+  }
+
+  await sendPasswordResetEmail(auth, cleanEmail);
+  return true;
+};
+
 if (PP_DEV) {
   window.ppDebugSignInMethods = async (email) => {
     const e = String(email || "").trim();
@@ -1123,6 +1138,11 @@ let __ppLastUser = null;
 */
 window.__ppAuthStateResolved = false;
 
+let resolveInitialAuthState;
+window.__ppAuthInitialState = new Promise((resolve) => {
+  resolveInitialAuthState = resolve;
+});
+
 function syncAuthUI(user) {
   const guestBtn = document.querySelector("#ppAuthLogoBtn");
   const profileChip = document.querySelector("#ppProfileChip, [data-pp-profile]");
@@ -1185,6 +1205,8 @@ onAuthStateChanged(auth, (user) => {
     una sesión Firebase restaurada o si es un visitante.
   */
   window.__ppAuthStateResolved = true;
+  resolveInitialAuthState?.(user || null);
+  resolveInitialAuthState = null;
 
   if (user) {
     sessionStorage.removeItem(

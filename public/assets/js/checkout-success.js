@@ -151,6 +151,25 @@ function renderGuestAccountInvite(order = {}, options = {}) {
       message.dataset.type = type;
     };
 
+const successShippingLabel = (order, currency = 'EUR') => {
+  const amount = order?.shippingRate?.shippingAmount ?? order?.shipping;
+  if (Number(amount) > 0) return money(amount, currency);
+  if (Number(amount) === 0 && order?.shippingRate?.freeShippingApplied === true) return 'Gratis';
+  if (Number(amount) === 0 && order?.shippingStatus === 'not_required') return 'No requiere envío';
+  return 'Pendiente de confirmación';
+};
+
+const successDeliveryLabel = (order) => {
+  if (order?.estimatedDelivery) return String(order.estimatedDelivery);
+  const estimate = order?.shippingRate?.deliveryEstimate || {};
+  if (typeof estimate === 'string' && estimate.trim()) return estimate.trim();
+  if (estimate.label) return String(estimate.label);
+  if (Number.isInteger(estimate.minBusinessDays) && Number.isInteger(estimate.maxBusinessDays)) {
+    return `${estimate.minBusinessDays}–${estimate.maxBusinessDays} días laborables`;
+  }
+  return 'Pendiente de confirmación';
+};
+
     if (!email) {
       setMessage('No se ha podido recuperar el email del pedido.', 'error');
       return;
@@ -1258,11 +1277,11 @@ const res = await fetch(`/api/order-by-session?session_id=${encodeURIComponent(s
 
           <div class="success-row">
             <div class="success-label">Envío</div>
-            <div class="success-value">${Number(order.shipping || 0) > 0 ? money(order.shipping, currency) : 'Gratis'}</div>
+            <div class="success-value">${escapeHtml(successShippingLabel(order, currency))}</div>
           </div>
           <div class="success-row">
   <div class="success-label">Entrega estimada</div>
-  <div class="success-value">${escapeHtml(order.estimatedDelivery || order.shippingRate?.estimatedDelivery || '2–7 días laborables')}</div>
+  <div class="success-value">${escapeHtml(successDeliveryLabel(order))}</div>
 </div>
 
           <div class="success-row">

@@ -70,7 +70,9 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
     document.getElementById(`${prefix}InStockToggle`),
     document.getElementById('ppInStockToggle'),
     ...drawer.querySelectorAll('input[name="inStock"], input[data-filter="in-stock"]'),
-    ...document.querySelectorAll('.pp-filters input[type="checkbox"][data-filter="in-stock"]')
+    ...document.querySelectorAll(
+      '.pp-filters .pp-check input[type="checkbox"], .pp-filters input[type="checkbox"][data-filter="in-stock"]'
+    )
   ].filter(Boolean)));
 
   const syncInStockControls = (checked) => {
@@ -80,20 +82,36 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
   };
 
   let returnFocus = null;
-  const mobileFiltersQuery = window.matchMedia('(max-width: 820px)');
+  const mobileFiltersQuery = window.matchMedia('(max-width: 1024px)');
 
   const isDrawerOpen = () => drawer.classList.contains('is-open');
 
   openBtn.setAttribute('aria-expanded', isDrawerOpen() ? 'true' : 'false');
   if (drawer.id) openBtn.setAttribute('aria-controls', drawer.id);
+  drawer.toggleAttribute('inert', !isDrawerOpen());
 
   function getFocusable() {
     return Array.from(drawer.querySelectorAll(
       'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )).filter((node) => !node.closest('[hidden]') && node.getAttribute('aria-hidden') !== 'true');
+    )).filter((node) => (
+      !node.closest('[hidden], [inert], [aria-hidden="true"]') &&
+      node.getClientRects().length > 0
+    ));
   }
 
   function syncTabAccessibility() {
+    if (!isDrawerOpen()) {
+      tabs.forEach((tab) => {
+        tab.setAttribute('aria-selected', tab.classList.contains('is-active') ? 'true' : 'false');
+        tab.tabIndex = -1;
+      });
+      panels.forEach((panel) => {
+        panel.hidden = true;
+        panel.setAttribute('aria-hidden', 'true');
+      });
+      return;
+    }
+
     if (!mobileFiltersQuery.matches) {
       tabs.forEach((tab) => tab.removeAttribute('tabindex'));
       panels.forEach((panel) => {
@@ -118,11 +136,10 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
   }
 
   function openDrawer() {
-    if (mobileFiltersQuery.matches) {
-      returnFocus = document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : openBtn;
-    }
+    returnFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : openBtn;
+    drawer.removeAttribute('inert');
     overlay.classList.add('is-open');
     drawer.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
@@ -134,30 +151,37 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
     }
     openBtn.setAttribute('aria-expanded', 'true');
     document.body.classList.add('no-scroll', 'pp-filters-open');
+    syncTabAccessibility();
 
-    if (mobileFiltersQuery.matches) {
+    const focusTarget = closeBtn || getFocusable()[0];
+    window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        (closeBtn || getFocusable()[0])?.focus?.({ preventScroll: true });
+        if (isDrawerOpen()) {
+          focusTarget?.focus?.({ preventScroll: true });
+        }
       });
-    }
+    });
   }
 
   function closeDrawer({ restoreFocus = true } = {}) {
     const wasOpen = isDrawerOpen();
+    const focusTarget = wasOpen && restoreFocus && returnFocus?.isConnected
+      ? returnFocus
+      : null;
     overlay.classList.remove('is-open');
     drawer.classList.remove('is-open');
+    focusTarget?.focus?.({ preventScroll: true });
     overlay.setAttribute('aria-hidden', 'true');
     drawer.setAttribute('aria-hidden', 'true');
+    drawer.setAttribute('inert', '');
     openBtn.setAttribute('aria-expanded', 'false');
     document.body.classList.remove('pp-filters-open');
     if (!document.body.classList.contains('pp-cart-open') &&
         !document.body.classList.contains('pp-mobile-panel-open')) {
       document.body.classList.remove('no-scroll');
     }
+    syncTabAccessibility();
 
-    if (wasOpen && restoreFocus && returnFocus?.isConnected) {
-      returnFocus.focus?.({ preventScroll: true });
-    }
     returnFocus = null;
   }
 
@@ -233,12 +257,12 @@ function getState() {
     if (!isDrawerOpen()) return;
 
     if (e.key === 'Escape') {
-      if (mobileFiltersQuery.matches) e.preventDefault();
+      e.preventDefault();
       closeDrawer();
       return;
     }
 
-    if (e.key !== 'Tab' || !mobileFiltersQuery.matches) return;
+    if (e.key !== 'Tab') return;
     const focusable = getFocusable();
     if (!focusable.length) return;
     const first = focusable[0];

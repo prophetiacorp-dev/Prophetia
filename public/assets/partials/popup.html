@@ -361,7 +361,7 @@ Consulte nuestra <a href="/privacy" class="cc-link">política de privacidad</a>.
  <!-- ===== Prophetia · Cart Drawer (global, estilo Prophetia) ===== -->
  <div id="ppCartDrawer" class="pp-cart-drawer" aria-hidden="true">
   <div class="pp-cart-header">
-     <h4>Cesta · <span id="ppCartCount">0</span></h4>
+     <h4>Cesta · <span data-cart-count>0</span></h4>
      <button class="pp-cart-close" data-close="cart" aria-label="Cerrar">
        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.876 5.815 12 10.94l5.125-5.125 1.06 1.061L13.061 12l5.125 5.124-1.061 1.06L12 13.062l-5.124 5.125-1.061-1.06L10.94 12 5.815 6.877z"></path></svg>
      </button>
@@ -375,17 +375,15 @@ Consulte nuestra <a href="/privacy" class="cc-link">política de privacidad</a>.
   <!-- ✅ LISTA SUBE ARRIBA (donde debe ir el contenido real) -->
   <div id="ppCartList" class="cart-list" hidden></div>
 
-
-     <div class="pp-cart-actions">
-       <button class="pp-cart-btn">Plazo de entrega estimado <span>›</span></button>
-       <button class="pp-cart-btn">Envío y devolución gratuitos <span>›</span></button>
-       <button class="pp-cart-btn">Contáctanos <span>›</span></button>
-    </div>
     <!-- Si tu script pinta líneas de productos, aquí dentro irá #ppCartList -->
  
      <div class="cart-foot">
        <div class="cart-total"><span>Total</span> <strong id="ppCartTotal">€0,00</strong></div>
-       <button class="cart-checkout" data-cart-checkout type="button">
+       <p class="pp-cart-shipping-note">Envío: pendiente de configuración</p>
+       <p class="pp-cart-checkout-note" data-cart-checkout-note role="status">
+         Estamos configurando los métodos y tarifas de envío. La compra se habilitará próximamente.
+       </p>
+       <button class="cart-checkout" data-cart-checkout data-cart-has-items="false" type="button" disabled aria-disabled="true">
   Finalizar compra
 </button>
      </div>

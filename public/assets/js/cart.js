@@ -743,7 +743,53 @@ function renderCart() {
     return;
   }
 
-  const items = readCart();
+  let items = readCart();
+  const checkoutButton = drawer?.querySelector('[data-cart-checkout]');
+
+  if (items.length && !canonicalCatalog) {
+    list.hidden = false;
+    list.setAttribute('aria-busy', 'true');
+    list.innerHTML = canonicalCatalogError
+      ? '<p class="pp-cart-validation" role="alert">No se han podido validar los precios de la cesta. Recarga la página antes de continuar.</p>'
+      : '<p class="pp-cart-validation" role="status">Actualizando precios desde el catálogo…</p>';
+    total.textContent = '—';
+    if (checkoutButton) {
+      checkoutButton.dataset.cartHasItems = 'true';
+      checkoutButton.disabled = true;
+      checkoutButton.setAttribute('aria-disabled', 'true');
+    }
+
+    if (!canonicalCatalogError) {
+      loadCanonicalCatalog().then(renderCart).catch(renderCart);
+    }
+    return;
+  }
+
+  if (items.length && canonicalCatalog) {
+    const normalized = normalizeStoredCart(items);
+    items = normalized.items;
+    if (normalized.changed) {
+      localStorage.setItem(getCartStorageKey(), JSON.stringify(items));
+    }
+    if (normalized.rejected > 0) {
+      cartNormalizationNotice = normalized.rejected === 1
+        ? 'Se ha retirado un artículo porque no pudo validarse de forma inequívoca con el catálogo.'
+        : `Se han retirado ${normalized.rejected} artículos porque no pudieron validarse de forma inequívoca con el catálogo.`;
+    }
+  }
+
+  list.removeAttribute('aria-busy');
+  if (checkoutButton) {
+    const canCheckout = Boolean(
+      items.length &&
+      window.ppStorefront?.loaded === true &&
+      window.ppStorefront?.salesEnabled === true &&
+      window.ppStorefront?.checkoutEnabled === true
+    );
+    checkoutButton.dataset.cartHasItems = String(items.length > 0);
+    checkoutButton.disabled = !canCheckout;
+    checkoutButton.setAttribute('aria-disabled', String(!canCheckout));
+  }
 
   if (!items.length) {
     drawer?.querySelectorAll('.pp-cart-empty').forEach((node) => {
@@ -754,6 +800,7 @@ function renderCart() {
 
     list.hidden = false;
     list.innerHTML = `
+      ${cartNormalizationNotice ? `<p class="pp-cart-validation" role="status">${escapeHtml(cartNormalizationNotice)}</p>` : ''}
       <div class="cart-empty pp-cart-empty">
         <p class="cart-empty__text">Tu cesta está vacía</p>
         <p class="cart-empty__copy">Descubre las piezas disponibles de PROPHETIA.</p>
@@ -784,7 +831,11 @@ function renderCart() {
 
   list.hidden = false;
 
-list.innerHTML = items.map((item) => {
+const normalizationNotice = cartNormalizationNotice
+  ? `<p class="pp-cart-validation" role="status">${escapeHtml(cartNormalizationNotice)}</p>`
+  : '';
+
+list.innerHTML = normalizationNotice + items.map((item) => {
   const qty = Math.max(1, Number(item.qty) || 1);
   const price = Number(item.price) || 0;
   const key = itemKey(item);
@@ -1192,8 +1243,7 @@ function openCart(returnFocusTarget = null) {
 
   renderCart();
 
-  if (mobileCartQuery.matches &&
-      !drawer.classList.contains('open') && !drawer.classList.contains('is-open')) {
+  if (!drawer.classList.contains('open') && !drawer.classList.contains('is-open')) {
     cartReturnFocus = returnFocusTarget instanceof HTMLElement
       ? returnFocusTarget
       : (document.activeElement instanceof HTMLElement ? document.activeElement : null);
@@ -1218,24 +1268,144 @@ function openCart(returnFocusTarget = null) {
 
   body.classList.add('no-scroll', 'pp-cart-open');
 
-  if (mobileCartQuery.matches) {
-    const focusDrawer = () => {
-      if (!drawer.classList.contains('open') && !drawer.classList.contains('is-open')) return;
-      const focusTarget = drawer.querySelector(
-        '[data-close="cart"], .cart-close, .pp-cart-close, button, a[href]'
-      );
-      focusTarget?.focus?.({ preventScroll: true });
-    };
-    focusDrawer();
-    window.requestAnimationFrame(() => {
-      if (!drawer.contains(document.activeElement)) focusDrawer();
-    });
-    window.setTimeout(() => {
-      if (!drawer.contains(document.activeElement)) focusDrawer();
-    }, 80);
-  }
+  const focusDrawer = () => {
+    if (!drawer.classList.contains('open') && !drawer.classList.contains('is-open')) return;
+    const focusTarget = drawer.querySelector(
+      '[data-close="cart"], .cart-close, .pp-cart-close, button, a[href]'
+    );
+    focusTarget?.focus?.({ preventScroll: true });
+  };
+
+  focusDrawer();
+  window.requestAnimationFrame(() => {
+    if (!drawer.contains(document.activeElement)) focusDrawer();
+  });
+  window.setTimeout(() => {
+    if (!drawer.contains(document.activeElement)) focusDrawer();
+  }, 80);
 }
 
+let canonicalCatalog = null;
+let canonicalCatalogError = null;
+let canonicalCatalogPromise = null;
+let cartNormalizationNotice = '';
+
+function loadCanonicalCatalog() {
+  if (canonicalCatalogPromise) return canonicalCatalogPromise;
+
+  canonicalCatalogPromise = fetch('/assets/data/catalog.json', { cache: 'no-store' })
+    .then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then((catalog) => {
+      if (!Array.isArray(catalog)) throw new Error('El catálogo no es válido.');
+      canonicalCatalog = catalog;
+      canonicalCatalogError = null;
+      return catalog;
+    })
+    .catch((error) => {
+      canonicalCatalogError = error;
+      throw error;
+    });
+
+  return canonicalCatalogPromise;
+}
+
+function normalizeCartValue(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function findCanonicalCartProduct(item) {
+  const wantedId = String(item?.id || '').trim();
+  const wantedSlug = String(item?.slug || '').trim();
+  const matches = (canonicalCatalog || []).filter((product) => {
+    return String(product.id || '') === wantedId || (wantedSlug && String(product.slug || '') === wantedSlug);
+  });
+  return matches.length === 1 ? matches[0] : null;
+}
+
+function findCanonicalCartVariant(product, item) {
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  if (!variants.length) return {};
+
+  const wantedSku = String(item?.sku || '').trim();
+  if (wantedSku) {
+    const exact = variants.filter((variant) => String(variant.sku || '').trim() === wantedSku);
+    if (exact.length === 1) return exact[0];
+  }
+
+  const wantedColor = normalizeCartValue(item?.color);
+  const wantedSize = normalizeCartValue(item?.size);
+  const wantedCut = normalizeCartValue(item?.cut);
+  const matches = variants.filter((variant) => {
+    if (normalizeCartValue(variant.color) !== wantedColor) return false;
+    if (normalizeCartValue(variant.size) !== wantedSize) return false;
+    return !wantedCut || normalizeCartValue(variant.cut) === wantedCut;
+  });
+  return matches.length === 1 ? matches[0] : null;
+}
+
+function findCanonicalCartVersion(product, item) {
+  const versions = Array.isArray(product?.versions) ? product.versions : [];
+  if (!versions.length) return null;
+
+  const wantedVersion = String(item?.version || '').trim();
+  if (wantedVersion) {
+    const exact = versions.filter((version) => String(version.id || '').trim() === wantedVersion);
+    return exact.length === 1 ? exact[0] : undefined;
+  }
+
+  const prices = [...new Set(versions.map((version) => Number(version.price ?? product.price)))];
+  return prices.length === 1 ? null : undefined;
+}
+
+function canonicalizeCartItem(item) {
+  const product = findCanonicalCartProduct(item);
+  if (!product || product.active === false) return null;
+
+  const variant = findCanonicalCartVariant(product, item);
+  if (!variant) return null;
+
+  const version = findCanonicalCartVersion(product, item);
+  if (version === undefined) return null;
+
+  const price = Number(version?.price ?? product.price);
+  if (!Number.isFinite(price) || price <= 0) return null;
+
+  return {
+    ...item,
+    id: product.id,
+    slug: product.slug || product.id,
+    sku: variant.sku || item.sku || '',
+    title: product.title || item.title || 'Producto Prophetia',
+    version: version?.id || item.version || null,
+    versionLabel: version?.label || item.versionLabel || '',
+    color: variant.color || item.color || '',
+    size: variant.size || item.size || '',
+    cut: variant.cut || item.cut || null,
+    price
+  };
+}
+
+function normalizeStoredCart(items) {
+  const normalized = [];
+  let rejected = 0;
+  let changed = false;
+
+  for (const item of items) {
+    const canonical = canonicalizeCartItem(item);
+    if (!canonical) {
+      rejected += 1;
+      changed = true;
+      continue;
+    }
+    if (Number(item.price) !== canonical.price || item.sku !== canonical.sku) changed = true;
+    normalized.push(canonical);
+  }
+
+  return { items: normalized, rejected, changed };
+}
 function closeCart() {
   const { drawer, overlay } = getCartNodes();
   if (!drawer || !overlay) return;
@@ -1256,8 +1426,14 @@ function closeCart() {
 
   body.classList.remove('no-scroll', 'pp-cart-open');
 
-  if (wasOpen && cartReturnFocus?.isConnected) {
-    cartReturnFocus.focus?.({ preventScroll: true });
+  if (wasOpen) {
+    const visibleTrigger = Array.from(document.querySelectorAll(
+      '#ppCartBtn, [data-pp-mobile-cart], [data-cart-open]'
+    )).find((trigger) => trigger.getClientRects().length && !trigger.hidden);
+    const focusTarget = cartReturnFocus?.isConnected && cartReturnFocus.getClientRects().length
+      ? cartReturnFocus
+      : visibleTrigger;
+    focusTarget?.focus?.({ preventScroll: true });
   }
   cartReturnFocus = null;
 }
@@ -1311,6 +1487,10 @@ function closeCart() {
         e.preventDefault();
         if (window.ppStorefront?.salesEnabled !== true) {
           window.ppShowPrelaunchNotice?.();
+          return;
+        }
+        if (window.ppStorefront?.checkoutEnabled !== true) {
+          window.ppShowCheckoutDisabledNotice?.();
           return;
         }
         window.location.assign('/checkout#nav-js-basket-checkoutnc');

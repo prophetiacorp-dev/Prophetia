@@ -1672,7 +1672,116 @@
    Solo afecta al acceso/login/registro. El panel de cuenta
    autenticada conserva su apariencia independiente.
    ========================================================= */
-@media (max-width: 820px) {
+@media (max-width: 1024px) {
+  #ppAuthModal,
+  #ppAccountPanel {
+    position: fixed;
+    inset: 0;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background-color: #f7f2ea;
+    box-shadow: none;
+    overflow: hidden;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+  }
+
+  #ppAuthModal .modal-card,
+  #ppAccountPanel .pp-accountpanel-card {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #ppAuthModal .modal-head {
+    padding-inline-end: max(var(--pp-pad), calc(18px + env(safe-area-inset-right)));
+    padding-inline-start: max(var(--pp-pad), calc(18px + env(safe-area-inset-left)));
+  }
+
+  #ppAuthModal .modal-body,
+  #ppAccountPanel .pp-accountpanel-body {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  #ppAuthModal .modal-body {
+    padding-inline-end: max(var(--pp-pad), calc(18px + env(safe-area-inset-right)));
+    padding-inline-start: max(var(--pp-pad), calc(18px + env(safe-area-inset-left)));
+  }
+
+  #ppAuthModal .modal-close,
+  #ppAuthModal .modal-back {
+    position: absolute;
+    top: max(14px, calc(8px + env(safe-area-inset-top)));
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #ppAuthModal .modal-close {
+    right: max(16px, calc(12px + env(safe-area-inset-right)));
+  }
+
+  #ppAuthModal .modal-back {
+    left: max(16px, calc(12px + env(safe-area-inset-left)));
+  }
+
+  #ppAccountPanel .pp-accountpanel-head {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: calc(68px + env(safe-area-inset-top));
+    height: auto;
+    padding-block-start: env(safe-area-inset-top);
+    padding-inline-end: max(var(--pp-pad), calc(16px + env(safe-area-inset-right)));
+    padding-inline-start: max(var(--pp-pad), calc(16px + env(safe-area-inset-left)));
+  }
+
+  #ppAccountPanel .pp-accountpanel-close {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+  }
+
+  #ppAccountPanel .pp-accountpanel-body {
+    padding-inline-end: max(var(--pp-pad), calc(18px + env(safe-area-inset-right)));
+    padding-block-end: max(34px, calc(24px + env(safe-area-inset-bottom)));
+    padding-inline-start: max(var(--pp-pad), calc(18px + env(safe-area-inset-left)));
+  }
+
+  @supports selector(body:has(*)) {
+    body:has(:is(#ppAuthModal[open], #ppAccountPanel[open])) {
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+  }
+
   #ppAuthModal {
     isolation: isolate;
     background-color: #f7f2ea;
@@ -1704,11 +1813,14 @@
   }
 
   #ppAuthModal .modal-head,
-  #ppAuthModal .modal-body,
-  #ppAuthModal .modal-close,
-  #ppAuthModal .modal-back {
+  #ppAuthModal .modal-body {
     position: relative;
     z-index: 1;
+  }
+
+  #ppAuthModal .modal-close,
+  #ppAuthModal .modal-back {
+    z-index: 2;
   }
 
   #ppAuthModal .modal-head {
@@ -1732,72 +1844,87 @@
 /* =========================================================
    CUENTA · ENLACES EDITORIALES SOLO EN ESCRITORIO
    ========================================================= */
-@media (min-width: 821px) {
+@media (min-width: 1025px) {
   #ppAccountPanel .pp-accountpanel-links {
-    gap: 38px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 44px;
   }
 
-  #ppAccountPanel .pp-accountpanel-link,
-  #ppAccountPanel .pp-accountpanel-logout {
-    display: inline-flex;
-    width: max-content;
-    max-width: 100%;
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout {
+    position: relative;
+    display: inline-block !important;
+    width: fit-content !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
     align-self: flex-start;
     box-sizing: border-box;
-    position: relative;
-    padding: 3px 0 6px;
-    line-height: 1.25;
+    padding: 0 0 4px !important;
+    margin-inline: 0 !important;
+    font: inherit !important;
+    line-height: 1.35 !important;
+    color: inherit !important;
     text-decoration: none !important;
     border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
     background-image: none !important;
     box-shadow: none !important;
+    cursor: pointer !important;
+    align-items: initial !important;
+    justify-content: initial !important;
   }
 
-  #ppAccountPanel .pp-accountpanel-link::before,
-  #ppAccountPanel .pp-accountpanel-logout::before {
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link::before,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout::before {
     content: none !important;
   }
 
-  #ppAccountPanel .pp-accountpanel-link::after,
-  #ppAccountPanel .pp-accountpanel-logout::after {
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link::after,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout::after {
     content: "";
     position: absolute;
-    inset: auto 0 1px;
     top: auto !important;
-    right: 0;
-    bottom: 1px !important;
+    right: auto !important;
+    bottom: 0 !important;
     left: 0;
-    height: 1px;
+    width: 100% !important;
+    height: 1px !important;
     background: currentColor;
     pointer-events: none;
-    opacity: .52;
+    opacity: 1;
     transform: scaleX(0);
     transform-origin: left center;
-    transition:
-      opacity 180ms ease,
-      transform 220ms cubic-bezier(.22, .61, .36, 1);
+    transition: transform 180ms ease;
   }
 
-  #ppAccountPanel .pp-accountpanel-link:hover::after,
-  #ppAccountPanel .pp-accountpanel-link:focus-visible::after,
-  #ppAccountPanel .pp-accountpanel-link[aria-current="page"]::after,
-  #ppAccountPanel .pp-accountpanel-link.is-active::after,
-  #ppAccountPanel .pp-accountpanel-logout:hover::after,
-  #ppAccountPanel .pp-accountpanel-logout:focus-visible::after,
-  #ppAccountPanel .pp-accountpanel-logout[aria-current="page"]::after,
-  #ppAccountPanel .pp-accountpanel-logout.is-active::after {
-    opacity: 1;
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link:hover::after,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link:focus-visible::after,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout:hover::after,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout:focus-visible::after {
     transform: scaleX(1);
   }
 
-  #ppAccountPanel .pp-accountpanel-link:focus-visible,
-  #ppAccountPanel .pp-accountpanel-logout:focus-visible {
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link:focus-visible,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout:focus-visible {
     outline: 2px solid rgba(42, 33, 27, .42);
     outline-offset: 5px;
   }
 
-  #ppAccountPanel .pp-accountpanel-logout {
-    margin-top: 42px;
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout {
+    margin-top: 28px;
+  }
+}
+
+@media (min-width: 1025px) and (prefers-reduced-motion: reduce) {
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-link::after,
+  html body #ppAccountPanel .pp-accountpanel-links .pp-accountpanel-logout::after {
+    transition-duration: .01ms;
   }
 }
 

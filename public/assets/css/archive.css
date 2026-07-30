@@ -109,6 +109,12 @@ body.archive-page.archive-page--summer .archive-grid--intro{
   align-items: start;
 }
 
+@media (max-width: 700px){
+  body.archive-page.archive-page--summer .archive-grid--intro{
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 
 
 /* =========================================================
@@ -643,8 +649,8 @@ body.archive-page.archive-page--summer .archive-carousel__btn{
   top: 50%;
   transform: translateY(-50%);
   z-index: 3;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: 1px solid rgba(255,255,255,.22);
   border-radius: 999px;
   background: rgba(255,255,255,.70);
@@ -716,20 +722,21 @@ body.archive-page.archive-page--summer .archive-return .floating-logo img{
    PROPHETIA CENTER LOGO
    ========================================================= */
 
-body.archive-page.archive-page--summer{
-  --archive-center-logo-y: -795%;
-}
-
-.archive-center-logo{
-  position: absolute;
-  top: 50vh;
-  left: 50%;
-  transform: translate(-50%, var(--archive-center-logo-y));
+body.archive-page.archive-page--summer .archive-center-logo{
+  position: static;
+  display: flex;
+  width: min(100%, var(--archive-max));
+  margin: 0 auto clamp(18px, 2.6vw, 30px);
+  padding-inline: var(--archive-edge);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  transform: none;
   z-index: 20;
 }
 
 body.archive-page.archive-page--summer .archive-center-logo a{
-  display: inline-block;
+  display: inline-flex;
   text-decoration: none;
 }
 
@@ -744,6 +751,34 @@ body.archive-page.archive-page--summer .archive-center-logo img{
 body.archive-page.archive-page--summer .archive-center-logo img:hover{
   transform: scale(1.03);
   opacity: 1;
+}
+
+body.archive-page.archive-page--summer .archive-breadcrumb{
+  display: flex;
+  width: min(100%, var(--archive-max));
+  min-width: 0;
+  margin: 0 auto clamp(22px, 3vw, 36px);
+  padding-inline: var(--archive-edge);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  color: var(--archive-soft);
+  font: 500 clamp(11px, 1.2vw, 13px)/1.35 var(--font-ui, "Inter", system-ui, sans-serif);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+body.archive-page.archive-page--summer .archive-breadcrumb a{
+  color: inherit;
+  text-decoration: none;
+}
+
+body.archive-page.archive-page--summer .archive-breadcrumb a:hover,
+body.archive-page.archive-page--summer .archive-breadcrumb a:focus-visible{
+  color: var(--archive-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 body.archive-page.archive-page--summer .archive-gallery-item{
@@ -780,9 +815,15 @@ body.archive-page.archive-page--summer .archive-piece-link{
 body.archive-page.archive-page--summer .archive-version-modal{
   position: fixed;
   inset: 0;
-  z-index: 1200;
+  z-index: 4800;
   display: grid;
   place-items: center;
+  box-sizing: border-box;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
   opacity: 0;
   visibility: hidden;
   transition: opacity .24s ease, visibility .24s ease;
@@ -804,7 +845,10 @@ body.archive-page.archive-page--summer .archive-version-modal__backdrop{
 body.archive-page.archive-page--summer .archive-version-modal__dialog{
   position: relative;
   z-index: 1;
-  width: min(92vw, 620px);
+  width: min(100%, 620px);
+  max-height: calc(100dvh - max(32px, env(safe-area-inset-top) + env(safe-area-inset-bottom) + 32px));
+  box-sizing: border-box;
+  overflow-y: auto;
   border-radius: 24px;
   padding: 30px 26px 26px;
   background: rgba(255,255,255,.92);
@@ -816,8 +860,8 @@ body.archive-page.archive-page--summer .archive-version-modal__close{
   position: absolute;
   top: 14px;
   right: 14px;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 999px;
   background: rgba(17,18,20,.06);

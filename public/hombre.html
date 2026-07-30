@@ -69,7 +69,7 @@
          ======================= -->
       <section class="hero hero--men layout-men">
   <div class="hero-left">
-    <div class="hero-frame">
+    <div class="hero-frame pp-mobile-video-pending">
       <!-- Logo flotante EXACTAMENTE como en index -->
       <a class="floating-logo" href="/home" aria-label="Inicio Prophetia">
         <img src="assets/img/logo/propblancovf.svg" alt="PROPHETIA">
@@ -83,6 +83,12 @@
       </div>
     </div>
   </div>
+
+  <nav class="pp-breadcrumb pp-breadcrumb--gender" aria-label="Breadcrumbs" style="display:none">
+    <a class="pp-bc__link" href="/home">Home</a>
+    <span class="pp-bc__sep" aria-hidden="true">·</span>
+    <span aria-current="page">Hombre</span>
+  </nav>
 
   <aside class="hero-right men-band__side">
     <h1 class="men-band__title">Hombre</h1>
@@ -359,21 +365,6 @@
   <div id="footer" role="contentinfo" aria-label="Pie de página"></div>
 
   <div id="popup-area"></div>
-<div id="ppTopNotice"
-     class="pp-top-notice"
-     role="status"
-     aria-live="polite"
-     aria-hidden="true"
-     hidden>
-  <span id="ppTopNoticeMsg">Añadido a artículos guardados</span>
-
-  <button id="ppTopNoticeClose"
-          class="pp-top-notice__close"
-          type="button"
-          aria-label="Cerrar aviso">
-    ×
-  </button>
-</div>
   <!-- Scripts globales -->
   <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/firebase-auth.js"></script>
@@ -386,149 +377,6 @@
 
   
   <script src="assets/js/breadcrumbs.js" defer></script>
-
-
-  <!-- === LÓGICA FILTROS HOODIES (drawer + tabs + contadores) === -->
-  <script>
-  (function () {
-    const overlay  = document.getElementById('menFiltersOverlay');
-    const drawer   = document.getElementById('menFiltersDrawer');
-    const openBtn  = document.getElementById('menOpenFilters');
-    const closeBtn = document.getElementById('menCloseFilters');
-
-    if (!overlay || !drawer || !openBtn) return;
-
-    const tabs   = Array.from(drawer.querySelectorAll('.men-filters-tab'));
-    const panels = Array.from(drawer.querySelectorAll('.men-filters-panel'));
-
-    const colorInputs = Array.from(drawer.querySelectorAll('[data-panel="color"] .men-swatch-input'));
-    const sizeInputs  = Array.from(drawer.querySelectorAll('[data-panel="talla"] input[name="size"]'));
-
-    const tabColorCount   = document.getElementById('menTabColorCount');
-    const tabSizeCount    = document.getElementById('menTabSizeCount');
-    const activeCountSpan = document.getElementById('menActiveCount');
-    const resultsSpan     = document.getElementById('menResultsCount');
-    const clearBtn        = document.getElementById('menClearFilters');
-    const applyBtn        = document.getElementById('menApplyFilters');
-
-    function openDrawer() {
-      overlay.classList.add('is-open');
-      drawer.classList.add('is-open');
-      overlay.setAttribute('aria-hidden', 'false');
-      drawer.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('no-scroll');
-    }
-
-    function closeDrawer() {
-      overlay.classList.remove('is-open');
-      drawer.classList.remove('is-open');
-      overlay.setAttribute('aria-hidden', 'true');
-      drawer.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('no-scroll');
-    }
-
-    function updateCounts() {
-      const cColors = colorInputs.filter(i => i.checked).length;
-      const cSizes  = sizeInputs.filter(i => i.checked).length;
-      const total   = cColors + cSizes;
-
-      if (tabColorCount) tabColorCount.textContent = cColors ? `(${cColors})` : '';
-      if (tabSizeCount)  tabSizeCount.textContent  = cSizes  ? `(${cSizes})`  : '';
-      if (activeCountSpan) activeCountSpan.textContent = total ? `(${total})` : '';
-
-      // Placeholder: cuando conectes productos reales, reemplazas esto
-      if (resultsSpan) resultsSpan.textContent = total ? '·' : '0';
-    }
-
-    openBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      openDrawer();
-    });
-
-    if (closeBtn) {
-      closeBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        closeDrawer();
-      });
-    }
-
-    overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) closeDrawer();
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeDrawer();
-    });
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', function () {
-        const target = tab.dataset.tab;
-        tabs.forEach(t => {
-          const active = (t === tab);
-          t.classList.toggle('is-active', active);
-          t.setAttribute('aria-selected', active ? 'true' : 'false');
-        });
-        panels.forEach(p => p.classList.toggle('is-active', p.dataset.panel === target));
-      });
-    });
-
-    [...colorInputs, ...sizeInputs].forEach(input => {
-      input.addEventListener('change', updateCounts);
-    });
-
-    if (clearBtn) {
-      clearBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        [...colorInputs, ...sizeInputs].forEach(i => i.checked = false);
-        updateCounts();
-      });
-    }
-
-    if (applyBtn) {
-      applyBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        closeDrawer();
-      });
-    }
-
-    updateCounts();
-  })();
-  </script>
-
-
-
-  <!-- ===== Cookies (GDPR) ===== -->
-  <div id="cc-banner" class="cc-banner" role="region" aria-label="Aviso de cookies" hidden>
-    <div class="cc-inner">
-      <div class="cc-text">
-        Utilizamos cookies propias y de terceros, y otras tecnologías similares para mejorar su experiencia y analizar el uso.
-        Puede aceptar todas, rechazarlas o configurar sus preferencias.
-Consulte nuestra <a href="/privacy" class="cc-link">política de privacidad</a>.
-      </div>
-
-      <div class="cc-actions">
-        <button id="onetrust-accept-btn-handler" class="cc-btn cc-primary">
-          Aceptar todo
-        </button>
-        <button id="onetrust-reject-all-handler" class="cc-btn cc-secondary">
-          Rechazar todo
-        </button>
-
-        <div class="cc-privacy">
-          <button id="onetrust-pc-btn-handler"
-                  aria-label="Centro de privacidad, Abre el cuadro de diálogo del centro de preferencias."
-                  class="cookie-setting-link cc-btn cc-outline">
-            Centro de privacidad
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="cc-modal" class="cc-modal" aria-hidden="true" role="dialog" aria-labelledby="ccTitle" hidden>
-    <!-- mismo contenido que en home.html -->
-  </div>
-
   <script src="assets/js/quick-add.js" defer></script>
   <script type="module" src="/assets/js/plp-reservations.js"></script>
 </body>

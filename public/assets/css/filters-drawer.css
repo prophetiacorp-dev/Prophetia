@@ -84,7 +84,11 @@
   border-left: var(--pp-fd-border);
 
   transform: translateX(100%);
-  transition: transform .24s ease-out;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform .24s ease-out, opacity .18s ease-out,
+              visibility 0s linear .24s;
 
   z-index: var(--pp-fd-drawer-z);
 
@@ -93,6 +97,10 @@
 }
 :is(.men-filters-drawer, .women-filters-drawer).is-open{
   transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 
@@ -150,6 +158,7 @@
   pointer-events:none; visibility:hidden;
   transition: opacity .18s ease-out, transform .18s ease-out;
 }
+:is(.men-filters-drawer, .women-filters-drawer).is-open
 :is(.men-filters-panel, .women-filters-panel).is-active{
   display:block; opacity:1; transform:translateY(0);
   pointer-events:auto; visibility:visible;
@@ -263,7 +272,7 @@
   transition: opacity .18s ease-out, transform .18s ease-out;
 }
 
-.men-filters-panel.is-active{
+.men-filters-drawer.is-open .men-filters-panel.is-active{
   display: block;
   opacity: 1;
   transform: translateY(0);
@@ -454,6 +463,7 @@
 }
 
 /* Tallas siempre en columna dentro del drawer */
+:is(.men-filters-drawer, .women-filters-drawer).is-open
 :is(.men-filters-panel, .women-filters-panel)[data-panel="talla"].is-active{
   display:block;
 }

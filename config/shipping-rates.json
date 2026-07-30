@@ -1,74 +1,79 @@
 {
-  "freeShippingFrom": 40,
-  "countries": {
-    "ES": {
-      "name": "España",
-      "enabled": true,
-      "currency": "EUR",
-      "methods": {
-        "home": {
-          "enabled": true,
-          "label": "Entrega a domicilio",
-          "defaultCarrier": "ctt_express",
-          "freeShippingFrom": 40,
-          "carriers": {
-            "ctt_express": {
-              "label": "CTT Express",
-              "price": 4.95,
-              "estimatedDelivery": "2–5 días laborables"
-            },
-            "correos": {
-              "label": "Correos",
-              "price": 4.5,
-              "estimatedDelivery": "3–7 días laborables"
-            },
-            "seur": {
-              "label": "SEUR",
-              "price": 5.95,
-              "estimatedDelivery": "24–72 h laborables"
-            }
-          },
-          "regions": {
-            "Baleares": {
-              "carrier": "correos",
-              "price": 6.95,
-              "freeShippingFrom": 60,
-              "estimatedDelivery": "3–7 días laborables"
-            },
-            "Las Palmas": {
-              "enabled": false,
-              "message": "Envío a Canarias disponible próximamente."
-            },
-            "Santa Cruz de Tenerife": {
-              "enabled": false,
-              "message": "Envío a Canarias disponible próximamente."
-            },
-            "Ceuta": {
-              "enabled": false,
-              "message": "Envío a Ceuta disponible próximamente."
-            },
-            "Melilla": {
-              "enabled": false,
-              "message": "Envío a Melilla disponible próximamente."
-            }
-          }
-        },
-        "store": {
-          "enabled": false,
-          "label": "Recogida en tienda",
-          "message": "Recogida en tienda disponible próximamente."
-        }
-      }
+  "version": 2,
+  "currency": "EUR",
+  "freeShippingThresholdCents": null,
+  "pickupPointEnabled": false,
+  "serviceLevels": [
+    {
+      "id": "standard",
+      "displayName": "Envío estándar",
+      "active": true,
+      "pickupPoint": false
     },
-    "PT": {
-      "name": "Portugal",
-      "enabled": false,
-      "message": "Envío a Portugal disponible próximamente."
+    {
+      "id": "express",
+      "displayName": "Envío urgente",
+      "active": true,
+      "pickupPoint": false
     },
-    "FR": {
-      "name": "Francia",
-      "enabled": false,
-      "message": "Envío a Francia disponible próximamente."
+    {
+      "id": "pickup-point",
+      "displayName": "Recogida en punto",
+      "active": false,
+      "pickupPoint": true
     }
-  }
+  ],
+  "zones": [
+    {
+      "id": "es-peninsula",
+      "displayName": "España peninsular",
+      "active": false
+    },
+    {
+      "id": "es-balearic",
+      "displayName": "Baleares",
+      "active": false
+    },
+    {
+      "id": "es-canary",
+      "displayName": "Canarias",
+      "active": false
+    },
+    {
+      "id": "es-ceuta-melilla",
+      "displayName": "Ceuta y Melilla",
+      "active": false
+    },
+    {
+      "id": "eu",
+      "displayName": "Unión Europea",
+      "active": false
+    },
+    {
+      "id": "international",
+      "displayName": "Internacional",
+      "active": false
+    }
+  ],
+  "rateFields": [
+    "id",
+    "displayName",
+    "serviceLevel",
+    "carrier",
+    "countries",
+    "destinationZones",
+    "postalCodeGroups",
+    "priceCents",
+    "currency",
+    "freeShippingThresholdCents",
+    "deliveryEstimate.minBusinessDays",
+    "deliveryEstimate.maxBusinessDays",
+    "deliveryEstimate.label",
+    "weightMinGrams",
+    "weightMaxGrams",
+    "active",
+    "priority",
+    "pickupPointEnabled"
+  ],
+  "rates": []
 }

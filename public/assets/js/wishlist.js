@@ -262,7 +262,7 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
     renderRecommended();
   }
 
-  function setWishlistTab(target) {
+  function setWishlistTab(target, { updateUrl = true } = {}) {
     const safeTarget = target === 'recommended' ? 'recommended' : 'selection';
     const tabs = $$('[data-wl-tab]');
 
@@ -286,9 +286,11 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
       recommendedPanel.hidden = safeTarget !== 'recommended';
     }
 
-    try {
-      history.replaceState(null, '', `#${safeTarget}`);
-    } catch {}
+    if (updateUrl) {
+      try {
+        history.replaceState(null, '', `#${safeTarget}`);
+      } catch {}
+    }
   }
 
   function bindWishlistTabs() {
@@ -340,7 +342,9 @@ notifyWishlistUpdated();
     render();
 
     const initialHash = (window.location.hash || '').replace('#', '');
-    setWishlistTab(initialHash === 'recommended' ? 'recommended' : 'selection');
+    setWishlistTab(initialHash === 'recommended' ? 'recommended' : 'selection', {
+      updateUrl: initialHash === 'recommended'
+    });
   }
 
   if (document.readyState !== 'loading') {

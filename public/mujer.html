@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mujer · PROPHETIA — Silent Luxury</title>
   <meta name="description" content="Colección Mujer de PROPHETIA: camisetas, hoodies y sudaderas de punto. Silent Luxury editorial con inspiración mediterránea." />
 <link rel="manifest" href="/manifest.json">
@@ -74,7 +74,7 @@
          ======================= -->
     <section class="hero hero--women layout-women">
       <div class="hero-left">
-        <div class="hero-frame">
+        <div class="hero-frame pp-mobile-video-pending">
           <!-- Logo flotante EXACTAMENTE como en index -->
           <a class="floating-logo" href="/home" aria-label="Inicio Prophetia">
             <img src="assets/img/logo/propblancovf.svg" alt="PROPHETIA">
@@ -93,6 +93,12 @@
           </div>
         </div>
       </div>
+
+      <nav class="pp-breadcrumb pp-breadcrumb--gender" aria-label="Breadcrumbs" style="display:none">
+        <a class="pp-bc__link" href="/home">Home</a>
+        <span class="pp-bc__sep" aria-hidden="true">·</span>
+        <span aria-current="page">Mujer</span>
+      </nav>
 
       <div class="women-band__side">
         <h1 class="women-band__title">Mujer</h1>
@@ -382,40 +388,6 @@
   <script src="assets/js/filters-drawer.js" defer></script>
 
 
-
-  <!-- JS local Mujer: vista, filtros, sort, hook PLP -->
-  <script>
-    (function () {
-      const $  = (s, r = document) => r.querySelector(s);
-
-      const grid         = $('#plp-grid');
-      const sortSelect   = $('#womenSortSelect');
-      const stockCheck   = $('#womenFilterStock');
-      const overlay      = $('#womenFiltersOverlay');
-      const drawer       = $('#womenFiltersDrawer');
-      const openFilters  = $('#womenOpenFilters');
-      const closeFilters = $('#womenCloseFilters');
-      const applyFilters = $('#womenApplyFilters');
-
-      const colorInputs    = [...document.querySelectorAll('.women-swatch-input')];
-      const categoryInputs = [...document.querySelectorAll('input[name="cat"]')];
-
-      const tabColorCount   = document.getElementById('womenTabColorCount');
-      const tabCatCount     = document.getElementById('womenTabCatCount');
-      const activeCountSpan = document.getElementById('womenActiveCount');
-
-      const tabs   = [...document.querySelectorAll('.women-filters-tab')];
-      const panels = [...document.querySelectorAll('.women-filters-panel')];
-      const clearFiltersBtn = document.getElementById('womenClearFilters');
-
-      const formatter = new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'EUR',
-        minimumFractionDigits: 2
-      });
-
-   })();
-  </script>
 
   <script src="assets/js/quick-add.js" defer></script>
   <script type="module" src="/assets/js/plp-reservations.js"></script>

@@ -70,12 +70,13 @@
 <!-- ===== Sub-nav wishlist (Mi selección / Puede que te guste) ===== -->
 <nav class="wl-nav" aria-label="Wishlist secciones">
   <div class="container">
-    <ul class="wl-nav__list" role="tablist">
+    <ul class="wl-nav__list">
       <li>
         <a
           class="active"
           href="#selection"
           aria-current="page"
+          aria-controls="selection"
           data-wl-tab="selection"
         >
           Mi selección
@@ -85,6 +86,7 @@
       <li>
         <a
           href="#recommended"
+          aria-controls="recommended"
           data-wl-tab="recommended"
         >
           Puede que te guste
@@ -104,20 +106,6 @@
       </p>
     </section>
 
-    <!-- Estado vacío tipo Prophetia (panel blanco grande) -->
-    <section class="wl-empty" hidden>
-      <div class="wl-empty__wrap">
-        <div class="wl-empty__icon" aria-hidden="true">
-          <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="5" width="14" height="10" rx="1.5" stroke="currentColor"/>
-            <rect x="9" y="16" width="12" height="3" rx="0.8" stroke="currentColor"/>
-          </svg>
-        </div>
-        <h3>No pierdas tu selección</h3>
-        <p>Inicia sesión o crea una cuenta para guardar tus artículos favoritos y verlos en cualquier dispositivo.</p>
-        <a class="btn btn-dark" href="/account" data-wishlist-login data-pp-open-login>Guardar mi selección</a>
-      </div>
-    </section>
     <!-- RECOMENDACIONES -->
 <section
   class="wl-recommended"

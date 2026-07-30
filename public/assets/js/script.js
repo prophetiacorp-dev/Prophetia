@@ -40,18 +40,39 @@
 
     window.ppHasAccountSession = window.ppHasAccountSession || (() => !!window.ppGetCurrentUser?.());
 
-    window.ppPromptAccountAccess = window.ppPromptAccountAccess || ((message = "Inicia sesion para continuar", href = "/account") => {
-      if (typeof window.ppToast === "function" && document.getElementById("ppToast")) {
-        window.ppToast(message, href);
-      } else {
-        window.ppTopNotice?.(message);
-      }
+    const ACCOUNT_ACCESS_MESSAGE = 'Inicia sesión o crea una cuenta para guardar productos en tu lista de deseos.';
+    const AUTH_OPEN_DELAY = 700;
+    let authOpenTimer = 0;
+    let waitingForNotice = false;
 
-      if (typeof window.ppOpenAuth === "function") {
+    const openExistingAuth = () => {
+      if (document.querySelector('#ppAuthModal[open], #ppAccountPanel[open]')) return;
+      if (typeof window.ppOpenAuth === 'function') {
         window.ppOpenAuth();
       } else {
-        document.getElementById("ppAuthLogoBtn")?.click();
+        document.getElementById('ppAuthLogoBtn')?.click();
       }
+    };
+
+    const announceThenOpen = (message) => {
+      if (typeof window.ppTopNotice !== 'function' || !document.getElementById('ppTopNotice')) {
+        return false;
+      }
+
+      window.ppTopNotice(message);
+      window.clearTimeout(authOpenTimer);
+      authOpenTimer = window.setTimeout(openExistingAuth, AUTH_OPEN_DELAY);
+      return true;
+    };
+
+    window.ppPromptAccountAccess = window.ppPromptAccountAccess || ((message = ACCOUNT_ACCESS_MESSAGE) => {
+      if (announceThenOpen(message) || waitingForNotice) return;
+
+      waitingForNotice = true;
+      window.addEventListener('partials:ready', () => {
+        waitingForNotice = false;
+        announceThenOpen(message);
+      }, { once: true });
     });
   })();
 
@@ -165,7 +186,7 @@
   (() => {
     const KEY = 'pp_wishlist_v1';
     const unlocked = () => !!window.ppHasAccountSession?.();
-    const promptLogin = () => window.ppPromptAccountAccess?.('Inicia sesion para guardar tu seleccion', '/wishlist');
+    const promptLogin = () => window.ppPromptAccountAccess?.();
     const load = () => {
       if (!unlocked()) return [];
       try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; }
@@ -184,7 +205,9 @@
         const on = !!find(id, list);
         btn.classList.toggle('is-saved', on);
         btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        const label = on ? 'Quitar de favoritos' : 'Guardar en favoritos';
         btn.title = on ? 'En Mi selección' : 'Guardar en Mi selección';
+        btn.setAttribute('aria-label', label);
       });
     }
 
@@ -251,7 +274,7 @@ if (!item.id) {
   (() => {
     const KEY='pp_wishlist_v1';
     const unlocked = () => !!window.ppHasAccountSession?.();
-    const promptLogin = () => window.ppPromptAccountAccess?.('Inicia sesion para guardar tu seleccion', '/wishlist');
+    const promptLogin = () => window.ppPromptAccountAccess?.();
     const load = () => {
       if (!unlocked()) return [];
       try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; }
@@ -266,7 +289,10 @@ if (!item.id) {
     function makeBtn(data){
       const btn = document.createElement('button');
       btn.className = 'icon-btn save';
+      btn.type = 'button';
       btn.setAttribute('data-save','');
+      btn.setAttribute('aria-label', 'Guardar en favoritos');
+      btn.setAttribute('aria-pressed', 'false');
       for (const [k,v] of Object.entries(data)) btn.setAttribute('data-'+k, v||'');
       btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c0-2.6 2-4.5 4.5-4.5 1.6 0 3 .9 4 2 1-1.1 2.4-2 4-2 2.5 0 4.5 1.9 4.5 4.5 0 4.4-8.5 9.5-8.5 9.5S3 14.9 3 10.5Z"/></svg>`;
       return btn;
@@ -278,7 +304,9 @@ if (!item.id) {
         const on = exists(btn.getAttribute('data-id'), list);
         btn.classList.toggle('is-saved', on);
         btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        const label = on ? 'Quitar de favoritos' : 'Guardar en favoritos';
         btn.title = on ? 'En Mi selección' : 'Guardar en Mi selección';
+        btn.setAttribute('aria-label', label);
       });
     }
 
@@ -298,7 +326,7 @@ if (!item.id) {
           const url   = card.querySelector('a')?.getAttribute('href') || 'producto';
 
           if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-          const host  = card.querySelector('.card-media, .img-wrap') || card;
+          const host  = card.querySelector('.plp-media, .card-media, .img-wrap') || card;
           host.appendChild(makeBtn({ id, title, image, url }));
         });
       });
@@ -367,7 +395,7 @@ if (!item.id) {
       const box = document.getElementById('ppTopNotice');
       const txt = document.getElementById('ppTopNoticeMsg');
       const btn = document.getElementById('ppTopNoticeClose');
-      if (!box || !txt) return;
+      if (!box || !txt) return false;
       if (box.parentElement !== document.body) {
         document.body.appendChild(box);
       }
@@ -390,6 +418,7 @@ if (!item.id) {
         box.setAttribute('aria-hidden', 'true');
         box.hidden = true;
       }, TIME);
+      return true;
     };
   })();
 
@@ -434,39 +463,23 @@ if (!item.id) {
 
   /* ========== Wishlist badge en header ========== */
   (() => {
-    const KEY='pp_wishlist_v1'; const a=document.getElementById('ppSavedBtn'); if(!a) return;
+    const KEY='pp_wishlist_v1';
     const load=()=>{
       if (!window.ppHasAccountSession?.()) return [];
       try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}
     };
-    const update=()=>{ a.dataset.count = String(load().length); };
-    document.addEventListener('storage', update);
+    const update=()=>{
+      const savedButton = document.getElementById('ppSavedBtn');
+      if (savedButton) savedButton.dataset.count = String(load().length);
+    };
+    window.addEventListener('storage', update);
+    window.addEventListener('partials:ready', update);
     document.addEventListener('DOMContentLoaded', update);
     document.addEventListener('pp:wishlist:changed', update);
+    window.addEventListener('pp:wishlist-updated', update);
     window.addEventListener('pp:auth-changed', update);
     window.addEventListener('pp:auth-ready', update);
     update();
-  })();
-
-  /* ========== Página Wishlist (conteo + estado vacío) ========== */
-  (() => {
-    if (!document.body.classList.contains('wishlist-page')) return;
-    const $count = document.getElementById('wlCount');
-    const $empty = document.querySelector('.wl-empty');
-    const $grid  = document.querySelector('.wishlist-grid') || document.querySelector('.wl-results');
-    const getCountDOM = () => document.querySelectorAll('.wishlist-grid .product-card, .wishlist-grid .card').length;
-    const getCountLS  = () => {
-      if (!window.ppHasAccountSession?.()) return 0;
-      try{ const ls=JSON.parse(localStorage.getItem('pp_wishlist_v1')||'[]'); return Array.isArray(ls)?ls.length:0; }catch{ return 0; }
-    };
-    const render = () => {
-      const n = Math.max(getCountDOM(), getCountLS());
-      if ($count) $count.textContent = n;
-      if ($empty && $grid){ if(n===0){ $empty.hidden=false; $grid.style.display='none'; } else { $empty.hidden=true; $grid.style.display=''; } }
-    };
-    document.addEventListener('pp:wishlist:changed', render);
-    document.addEventListener('DOMContentLoaded', render);
-    render();
   })();
 
   /* ========== Toggle mostrar/ocultar contraseña (delegaciones) ========== */
@@ -533,7 +546,7 @@ if (!item.id) {
 
       if (typeof v !== 'number') return '';
       try {
-        return new Intl.NumberFormat('es-ES', { style:'currency', currency:'EUR', maximumFractionDigits:0 }).format(v);
+        return new Intl.NumberFormat('es-ES', { style:'currency', currency:'EUR' }).format(v);
       } catch {
         return `${Math.round(v)} €`;
       }
@@ -807,12 +820,6 @@ window.ppPLP.getProduct = (productId) => {
 
     document.addEventListener('pp:plp:filter', (ev) => window.ppPLP.apply(ev.detail || {}));
 
-    const sortSel = document.querySelector('#sortSelect');
-    if (sortSel) {
-      state.sort = sortSel.value || 'relevance';
-      sortSel.addEventListener('change', (ev) => { state.sort = ev.target.value || 'relevance'; state.page = 1; render(); });
-    }
-
     const moreBtn = document.querySelector('#loadMoreBtn');
     moreBtn?.addEventListener('click', () => { state.page++; render(); });
 
@@ -1072,6 +1079,7 @@ document.querySelectorAll('.mega').forEach(mega => {
   window.__PP_SHARED_PLP_TOOLBAR__ = true;
 
   const body = document.body;
+  let activeSort = 'relevance';
 
   const normalizeSort = (mode = 'relevance') => {
     const value = String(mode || 'relevance').trim();
@@ -1081,7 +1089,22 @@ document.querySelectorAll('.mega').forEach(mega => {
     return value || 'relevance';
   };
 
-  const getCards = () => Array.from(document.querySelectorAll('#plp-grid .card, #plp-grid .product-card'));
+  const getGrid = () => document.querySelector('#plp-grid, #gridCamisetas');
+
+  const getCards = (grid = getGrid()) => grid
+    ? Array.from(grid.querySelectorAll(':scope > .card, :scope > .product-card, :scope > article'))
+    : [];
+
+  const getProduct = (card) => {
+    const productId = String(card?.dataset?.id || '').trim();
+    if (!productId || typeof window.ppPLP?.getProduct !== 'function') return null;
+
+    try {
+      return window.ppPLP.getProduct(productId) || null;
+    } catch (_) {
+      return null;
+    }
+  };
 
   const getTitle = (card) => (
     card.querySelector('.card-title, .product-card__title, [data-title]')?.dataset?.title ||
@@ -1101,8 +1124,9 @@ document.querySelectorAll('.mega').forEach(mega => {
   };
 
   const getCardNumber = (card, keys) => {
+    const product = getProduct(card);
     for (const key of keys) {
-      const value = Number.parseFloat(card.dataset[key] || '');
+      const value = Number.parseFloat(card.dataset[key] || product?.[key] || '');
       if (Number.isFinite(value)) return value;
     }
     return 0;
@@ -1110,17 +1134,27 @@ document.querySelectorAll('.mega').forEach(mega => {
 
   const getSortOrder = (card) => getCardNumber(card, ['sortOrder']);
   const getSales = (card) => getCardNumber(card, ['sales', 'sold', 'orderCount', 'sortSales']);
-  const getDate = (card) => getCardNumber(card, ['date', 'createdAt', 'publishedAt']);
+  const getDate = (card) => {
+    const product = getProduct(card);
+    const raw = card.dataset.date || card.dataset.createdAt || card.dataset.publishedAt ||
+      product?.createdAt || product?.date || product?.publishedAt || 0;
+    const seconds = raw?.seconds;
+    const numeric = Number(raw);
+    const value = seconds
+      ? Number(seconds) * 1000
+      : (Number.isFinite(numeric) && numeric > 0 ? numeric : Date.parse(raw));
+    return Number.isFinite(value) ? value : 0;
+  };
 
   const sortDomGrid = (mode) => {
-    const grid = document.getElementById('plp-grid');
+    const grid = getGrid();
     if (!grid) return;
 
-    const cards = getCards();
+    const cards = getCards(grid);
     if (!cards.length) return;
 
     cards.forEach((card, index) => {
-      if (!card.dataset.originalIndex) card.dataset.originalIndex = String(index);
+      if (card.dataset.originalIndex == null) card.dataset.originalIndex = String(index);
     });
 
     cards.sort((a, b) => {
@@ -1142,13 +1176,21 @@ document.querySelectorAll('.mega').forEach(mega => {
   };
 
   const applySort = (mode) => {
-    const normalized = normalizeSort(mode);
-    if (window.ppPLP && typeof window.ppPLP.sort === 'function') {
-      window.ppPLP.sort(normalized);
-    } else {
-      sortDomGrid(normalized);
-    }
+    activeSort = normalizeSort(mode);
+    sortDomGrid(activeSort);
   };
+
+  document.addEventListener('change', (event) => {
+    const select = event.target.closest?.(
+      '#sortSelect, #womenSortSelect, #menSortSelect, select[data-plp-sort]'
+    );
+    if (!select) return;
+    applySort(select.value || 'relevance');
+  });
+
+  document.addEventListener('pp:plp:rendered', () => {
+    window.requestAnimationFrame(() => sortDomGrid(activeSort));
+  });
 
   const setSortLabel = (root, option) => {
     const label = option.textContent.trim();
@@ -1167,7 +1209,31 @@ document.querySelectorAll('.mega').forEach(mega => {
     });
   };
 
-  const closeSort = (root) => {
+  const positionSortMenu = (root) => {
+    const trigger = root.querySelector('.pp-sort-trigger');
+    const menu = root.querySelector('.pp-sort-menu');
+    if (!trigger || !menu || menu.hidden) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const viewportPadding = 12;
+    const width = Math.min(280, Math.max(180, window.innerWidth - (viewportPadding * 2)));
+    const left = Math.min(
+      Math.max(viewportPadding, triggerRect.left),
+      Math.max(viewportPadding, window.innerWidth - width - viewportPadding)
+    );
+
+    menu.style.setProperty('--pp-sort-popover-width', `${width}px`);
+    menu.style.setProperty('--pp-sort-popover-left', `${Math.round(left)}px`);
+
+    const menuHeight = Math.min(menu.scrollHeight || 0, window.innerHeight * .6, 420);
+    const spaceBelow = window.innerHeight - triggerRect.bottom - viewportPadding;
+    const top = spaceBelow >= menuHeight
+      ? triggerRect.bottom + 6
+      : Math.max(viewportPadding, triggerRect.top - menuHeight - 6);
+    menu.style.setProperty('--pp-sort-popover-top', `${Math.round(top)}px`);
+  };
+
+  const closeSort = (root, { restoreFocus = false } = {}) => {
     root.classList.remove('is-open');
     if (root.tagName.toLowerCase() === 'details') root.open = false;
 
@@ -1176,15 +1242,39 @@ document.querySelectorAll('.mega').forEach(mega => {
 
     const menu = root.querySelector('.pp-sort-menu');
     if (menu && root.tagName.toLowerCase() !== 'details') menu.hidden = true;
+    if (restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+  };
+
+  const openCustomSort = (root, { focusOption = false } = {}) => {
+    document.querySelectorAll('.pp-sort.is-open').forEach((item) => {
+      if (item !== root) closeSort(item);
+    });
+
+    const trigger = root.querySelector('.pp-sort-trigger[aria-expanded]');
+    const menu = root.querySelector('.pp-sort-menu');
+    if (!trigger || !menu) return;
+
+    root.classList.add('is-open');
+    trigger.setAttribute('aria-expanded', 'true');
+    menu.hidden = false;
+    positionSortMenu(root);
+    window.requestAnimationFrame(() => {
+      if (root.classList.contains('is-open') && !menu.hidden) positionSortMenu(root);
+    });
+
+    if (focusOption) {
+      const selected = menu.querySelector('.pp-sort-option[aria-selected="true"], .pp-sort-option.is-active');
+      const fallback = menu.querySelector('.pp-sort-option');
+      (selected || fallback)?.focus({ preventScroll: true });
+    }
   };
 
   const toggleCustomSort = (root) => {
-    const isOpen = root.classList.toggle('is-open');
-    const trigger = root.querySelector('.pp-sort-trigger[aria-expanded]');
-    const menu = root.querySelector('.pp-sort-menu');
-
-    if (trigger) trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    if (menu) menu.hidden = !isOpen;
+    if (root.classList.contains('is-open')) {
+      closeSort(root);
+      return;
+    }
+    openCustomSort(root);
   };
 
   document.addEventListener('click', (event) => {
@@ -1206,16 +1296,12 @@ document.querySelectorAll('.mega').forEach(mega => {
       setSortActive(sortRoot, option);
       setSortLabel(sortRoot, option);
       applySort(option.dataset.sort || 'relevance');
-      closeSort(sortRoot);
+      closeSort(sortRoot, { restoreFocus: true });
       return;
     }
 
     const viewButton = event.target.closest('.pp-view-toggle, .pp-filter-right .pp-btn[aria-pressed]');
     if (!viewButton || !viewButton.closest('.pp-filters')) return;
-
-    if (viewButton.id === 'menViewToggle' && body.classList.contains('men-page') && body.classList.contains('camisetas-page')) {
-      return;
-    }
 
     event.preventDefault();
     viewButton.classList.add('pp-view-toggle');
@@ -1233,7 +1319,43 @@ document.querySelectorAll('.mega').forEach(mega => {
   });
 
   document.addEventListener('keydown', (event) => {
+    const trigger = event.target.closest?.('.pp-sort-trigger');
+    const triggerRoot = trigger?.closest('.pp-sort');
+    if (triggerRoot && ['ArrowDown', 'ArrowUp'].includes(event.key)) {
+      event.preventDefault();
+      openCustomSort(triggerRoot, { focusOption: true });
+      return;
+    }
+
+    const option = event.target.closest?.('.pp-sort-option');
+    const optionRoot = option?.closest('.pp-sort');
+    if (option && optionRoot && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+      const options = Array.from(optionRoot.querySelectorAll('.pp-sort-option:not([disabled])'));
+      const current = options.indexOf(option);
+      if (current < 0 || !options.length) return;
+      event.preventDefault();
+      let next = current;
+      if (event.key === 'ArrowDown') next = (current + 1) % options.length;
+      if (event.key === 'ArrowUp') next = (current - 1 + options.length) % options.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = options.length - 1;
+      options[next]?.focus({ preventScroll: true });
+      return;
+    }
+
     if (event.key !== 'Escape') return;
-    document.querySelectorAll('.pp-sort.is-open, details.pp-sort[open]').forEach(closeSort);
+    const openRoots = Array.from(document.querySelectorAll('.pp-sort.is-open, details.pp-sort[open]'));
+    if (!openRoots.length) return;
+    event.preventDefault();
+    openRoots.forEach((root) => closeSort(root, { restoreFocus: true }));
   });
+
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.pp-sort.is-open').forEach(positionSortMenu);
+  });
+
+  window.addEventListener('scroll', (event) => {
+    if (event.target instanceof Element && event.target.closest('.pp-sort-menu')) return;
+    document.querySelectorAll('.pp-sort.is-open').forEach((root) => closeSort(root));
+  }, { capture: true, passive: true });
 })();

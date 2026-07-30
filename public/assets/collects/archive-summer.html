@@ -60,6 +60,12 @@
   </a>
 </div>
 
+      <nav class="archive-breadcrumb" aria-label="Breadcrumbs">
+        <a href="/home">Inicio</a>
+        <span aria-hidden="true">·</span>
+        <span aria-current="page">Archive</span>
+      </nav>
+
       <div class="archive-shell">
         <p class="archive-kicker">PROPHETIA ARCHIVE</p>
         <h1 class="archive-title">SUMMER STUDIES</h1>
@@ -126,7 +132,7 @@
           data-piece="somewhere"
           aria-label="Elegir versión de Somewhere in Summer"
         >
-          <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png" alt="Somewhere in Summer · Full Color frontal" />
+          <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png" alt="Somewhere in Summer · Full Color frontal" loading="lazy" decoding="async" width="9960" height="9960" />
         </button>
       </figure>
 
@@ -137,7 +143,7 @@
           data-piece="somewhere"
           aria-label="Elegir versión de Somewhere in Summer"
         >
-          <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png" alt="Somewhere in Summer · Full Color trasera" />
+          <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png" alt="Somewhere in Summer · Full Color trasera" loading="lazy" decoding="async" width="9960" height="9960" />
         </button>
       </figure>
 
@@ -174,7 +180,7 @@
     <a class="archive-card__media-link" href="./archive-piece?id=seabreeze" aria-label="Ver pieza Sea Breeze">
       <div class="archive-carousel__track" data-track>
         <figure class="archive-carousel__slide is-active">
-          <img src="../img/portadas/archive/seabreeze.jpg" alt="Sea Breeze · Study 01" />
+          <img src="../img/portadas/archive/seabreeze.jpg" alt="Sea Breeze · Study 01" loading="lazy" decoding="async" />
         </figure>
       </div>
     </a>
@@ -205,7 +211,7 @@
     <a class="archive-card__media-link" href="./archive-piece?id=dripseason" aria-label="Ver pieza Drip Season">
       <div class="archive-carousel__track" data-track>
         <figure class="archive-carousel__slide is-active">
-          <img src="../img/portadas/archive/dripseason.jpg" alt="Drip Season · Study 01" />
+          <img src="../img/portadas/archive/dripseason.jpg" alt="Drip Season · Study 01" loading="lazy" decoding="async" />
         </figure>
       </div>
     </a>
@@ -233,7 +239,7 @@
   <div class="archive-card__media archive-carousel" data-carousel>
     <div class="archive-carousel__track" data-track>
       <figure class="archive-carousel__slide is-active">
-        <img src="../img/portadas/archive/urbanfury.png" alt="Urban Fury · Study 01" />
+        <img src="../img/portadas/archive/urbanfury.png" alt="Urban Fury · Study 01" loading="lazy" decoding="async" />
       </figure>
     </div>
 
@@ -283,13 +289,13 @@
   data-piece="somewhere"
   aria-label="Elegir versión de Somewhere in Summer"
 >
-  <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png" alt="Somewhere in Summer · Full Color frontal" />
+  <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png" alt="Somewhere in Summer · Full Color frontal" loading="lazy" decoding="async" width="9960" height="9960" />
 </button>
 
   <a class="archive-gallery-item"
    href="./archive-piece?id=seabreeze"
    aria-label="Ver Sea Breeze">
-    <img src="../img/portadas/archive/seabreeze.jpg" alt="Sea Breeze Study" />
+    <img src="../img/portadas/archive/seabreeze.jpg" alt="Sea Breeze Study" loading="lazy" decoding="async" />
   </a>
 
 <button
@@ -298,19 +304,19 @@
   data-piece="somewhere"
   aria-label="Elegir versión de Somewhere in Summer"
 >
-  <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png" alt="Somewhere in Summer · Full Color trasera" />
+  <img src="../img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png" alt="Somewhere in Summer · Full Color trasera" loading="lazy" decoding="async" width="9960" height="9960" />
 </button>
 
   <a class="archive-gallery-item"
      href="./archive-piece?id=dripseason"
      aria-label="Ver Drip Season">
-    <img src="../img/portadas/archive/dripseason.jpg" alt="Drip Season Study" />
+    <img src="../img/portadas/archive/dripseason.jpg" alt="Drip Season Study" loading="lazy" decoding="async" />
   </a>
 
   <a class="archive-gallery-item"
      href="./archive-piece?id=urbanfury"
      aria-label="Ver Urban Fury">
-    <img src="../img/portadas/archive/urbanfury.png" alt="Urban Fury Study" />
+    <img src="../img/portadas/archive/urbanfury.png" alt="Urban Fury Study" loading="lazy" decoding="async" />
   </a>
   
 </div>
@@ -320,7 +326,7 @@
 <div class="archive-version-modal" id="archiveVersionModal" aria-hidden="true">
   <div class="archive-version-modal__backdrop" data-close-version-modal></div>
 
-  <div class="archive-version-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="archiveVersionTitle">
+  <div class="archive-version-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="archiveVersionTitle" aria-describedby="archiveVersionText">
     <button
       class="archive-version-modal__close"
       type="button"
@@ -334,7 +340,7 @@
     <h3 class="archive-version-modal__title" id="archiveVersionTitle">
       Selecciona la versión
     </h3>
-    <p class="archive-version-modal__text">
+    <p class="archive-version-modal__text" id="archiveVersionText">
       Somewhere in Summer se presenta en dos interpretaciones editoriales.
     </p>
 
@@ -381,23 +387,47 @@
 
     const triggers = document.querySelectorAll('.archive-version-trigger');
     const closers = modal.querySelectorAll('[data-close-version-modal]');
+    const dialog = modal.querySelector('.archive-version-modal__dialog');
+    const closeButton = modal.querySelector('.archive-version-modal__close');
+    let lastFocused = null;
+    let previousBodyOverflow = '';
+    let bodyHadModalOpen = false;
 
-    function openModal() {
+    modal.setAttribute('inert', '');
+
+    function openModal(trigger) {
+      if (modal.classList.contains('is-open')) return;
+      lastFocused = trigger || document.activeElement;
+      previousBodyOverflow = document.body.style.overflow;
+      bodyHadModalOpen = document.body.classList.contains('modal-open');
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
+      modal.removeAttribute('inert');
+      document.body.classList.add('modal-open');
       document.body.style.overflow = 'hidden';
+      const focusClose = () => {
+        if (modal.classList.contains('is-open')) {
+          closeButton?.focus({ preventScroll: true });
+        }
+      };
+      requestAnimationFrame(focusClose);
+      setTimeout(focusClose, 80);
     }
 
     function closeModal() {
+      if (!modal.classList.contains('is-open')) return;
       modal.classList.remove('is-open');
       modal.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
+      modal.setAttribute('inert', '');
+      document.body.style.overflow = previousBodyOverflow;
+      if (!bodyHadModalOpen) document.body.classList.remove('modal-open');
+      setTimeout(() => lastFocused?.focus?.({ preventScroll: true }), 0);
     }
 
     triggers.forEach(trigger => {
       trigger.addEventListener('click', function (e) {
         e.preventDefault();
-        openModal();
+        openModal(trigger);
       });
     });
 
@@ -406,8 +436,28 @@
     });
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+      if (!modal.classList.contains('is-open')) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
         closeModal();
+        return;
+      }
+
+      if (e.key === 'Tab' && dialog) {
+        const focusable = Array.from(dialog.querySelectorAll(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )).filter((element) => !element.hasAttribute('inert') && element.getClientRects().length);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     });
   })();

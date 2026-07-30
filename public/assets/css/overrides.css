@@ -1236,6 +1236,7 @@ body:is(
   box-shadow: none !important;
 }
 
+@media (min-width: 1025px) {
 body:is(
   .men-page.camisetas-page,
   .women-page.camisetas-page,
@@ -1307,6 +1308,7 @@ body:is(
   object-fit: cover !important;
   transform: none !important;
   transition: opacity 180ms ease !important;
+}
 }
 
 body:is(

@@ -115,13 +115,13 @@
                               </div>
                               <div>
                                 <span>Envío</span>
-                                <span class="float-right" id="ckShippingCost">Gratis</span>
+                                <span class="float-right" id="ckShippingCost" aria-live="polite" aria-atomic="true">Calculado en checkout</span>
                               </div>
 
                               <div class="capds-minicartnc__totalprice">
                                 <span>Total</span>
                                 <div class="capds-minicartnc__totalprice--price">
-                                  <p class="float-right capds-body-medium capds-minicartnc__totalprice--adjustedPrice" id="ckTotal">—</p>
+<p class="float-right capds-body-medium capds-minicartnc__totalprice--adjustedPrice" id="ckTotal" aria-live="polite" aria-atomic="true">—</p>
                                 </div>
                               </div>
                             </div>
@@ -170,6 +170,41 @@
           </form>
         </div>
 
+        <!-- DECISIÓN NEUTRAL: no revela si el correo pertenece a una cuenta -->
+        <div id="ckAccessChoicePanel" class="ck-auth__panel d-none" role="tabpanel" aria-hidden="true" data-ck-auth-panel="choice">
+          <p class="ck-auth__email-summary">Continuar con <strong id="ckAccessEmail"></strong></p>
+          <div class="ck-auth__choice-actions">
+            <button id="ckChooseLogin" class="ck-primary" type="button">ACCEDER CON CONTRASEÑA</button>
+            <button id="ckChooseReset" class="ck-auth__secondary" type="button" data-ck-reset-password>RECUPERAR CONTRASEÑA</button>
+            <button id="ckChooseRegister" class="ck-auth__secondary" type="button">CREAR CUENTA</button>
+          </div>
+          <p id="ckChoiceStatus" class="ck-auth__status" role="status" aria-live="polite"></p>
+        </div>
+
+        <!-- ACCESO CON CONTRASEÑA -->
+        <div id="ckPasswordPanel" class="ck-auth__panel d-none" role="tabpanel" aria-hidden="true" data-ck-auth-panel="login">
+          <p class="ck-auth__email-summary">Acceder con <strong id="ckPasswordEmail"></strong></p>
+          <form id="ckPasswordForm" class="ck-form" novalidate>
+            <label class="ck-label" for="ckPassword">Contraseña</label>
+            <input id="ckPassword" name="password" type="password" required autocomplete="current-password">
+            <p id="ckPasswordStatus" class="ck-auth__status" role="status" aria-live="polite"></p>
+            <button id="ckPasswordSubmit" class="ck-primary" type="submit">ACCEDER Y CONTINUAR</button>
+            <div class="ck-auth__panel-actions">
+              <button class="ck-auth__text-btn" type="button" data-ck-reset-password>He olvidado mi contraseña</button>
+              <button id="ckPasswordBack" class="ck-auth__text-btn" type="button">Volver a las opciones</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- CONFLICTO ENTRE EL EMAIL ESCRITO Y LA SESIÓN ACTUAL -->
+        <div id="ckIdentityConflict" class="ck-auth__panel ck-auth__conflict d-none" role="tabpanel" aria-hidden="true" data-ck-auth-panel="conflict">
+          <p>Ya hay una sesión iniciada como <strong id="ckCurrentAccountEmail"></strong>. Puedes continuar con esa cuenta o cerrarla antes de usar otro email.</p>
+          <div class="ck-auth__choice-actions">
+            <button id="ckUseCurrentAccount" class="ck-primary" type="button">CONTINUAR CON ESTA CUENTA</button>
+            <button id="ckConflictSignOut" class="ck-auth__secondary" type="button">CERRAR SESIÓN</button>
+          </div>
+        </div>
+
         <!-- CREAR CUENTA -->
         <div id="ckRegisterPanel" class="ck-auth__panel d-none" role="tabpanel" aria-hidden="true" data-ck-auth-panel="register">
           <div id="ckNewUserSummary" class="ck-new-user-summary" hidden>
@@ -194,11 +229,11 @@
             <input id="ckRegisterPass" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
             <label class="ck-label" for="ckRegisterPassConfirm">Repite la contraseña</label>
             <input id="ckRegisterPassConfirm" name="passwordConfirm" type="password" required minlength="8" autocomplete="new-password" placeholder="Repite la contraseña">
-            <label class="ck-auth__check" for="ckRegisterTerms">
+            <label class="ck-auth__check checkout-consent" for="ckRegisterTerms">
               <input id="ckRegisterTerms" name="termsAccepted" type="checkbox" required>
               <span>Acepto los <a href="/terms" target="_blank" rel="noopener">términos</a> y la <a href="/privacy" target="_blank" rel="noopener">política de privacidad</a>.</span>
             </label>
-            <label class="ck-auth__check" for="ckRegisterNewsletter">
+            <label class="ck-auth__check checkout-consent" for="ckRegisterNewsletter">
               <input id="ckRegisterNewsletter" name="newsletter" type="checkbox">
               <span>Quiero recibir novedades editoriales y acceso anticipado de Prophetia.</span>
             </label>
@@ -253,7 +288,7 @@
 
   <label class="ck-radio">
     <input type="radio" name="shipping" value="store" disabled>
-    <span>Recogida en tienda (próximamente)</span>
+    <span>Recogida en punto (próximamente)</span>
   </label>
 
   <!-- PANEL DOMICILIO (cerrado por defecto) -->
@@ -557,6 +592,13 @@
     </div>
   </div>
 
+  <section class="ck-shipping-options capds-span2" id="ckShippingOptions" aria-live="polite" aria-busy="false">
+    <p class="ck-shipping-options__status" id="ckShippingOptionsStatus">
+      Introduce tu dirección para ver las opciones de envío.
+    </p>
+    <div id="ckShippingOptionsList"></div>
+  </section>
+
   <button class="ck-primary" type="submit" id="ckShippingSubmit">CONTINUAR</button>
 </form>
 
@@ -672,12 +714,12 @@
                   </div>
                   <div>
                     <span>Envío</span>
-                    <span class="float-right" id="ckSidebarShipping">Gratis</span>
+                    <span class="float-right" id="ckSidebarShipping" aria-live="polite" aria-atomic="true">Calculado en checkout</span>
                   </div>
                   <div class="capds-minicartnc__totalprice">
                     <span>Total</span>
                     <div class="capds-minicartnc__totalprice--price">
-                      <p class="float-right capds-body-medium capds-minicartnc__totalprice--adjustedPrice" id="ckSidebarTotal">—</p>
+<p class="float-right capds-body-medium capds-minicartnc__totalprice--adjustedPrice" id="ckSidebarTotal" aria-live="polite" aria-atomic="true">—</p>
                     </div>
                   </div>
                 </div>
@@ -692,7 +734,7 @@
     <div class="checkoutnc-minibasket-bottom-content">
 
       <section class="pp-rightSection">
-<h4 class="pp-rightTitle">Envío gratis desde 40 €</h4>
+<h4 class="pp-rightTitle">Opciones de envío tras introducir tu dirección</h4>
 <p class="pp-rightText">
   Entrega según transportista disponible · Devoluciones online en 14 días naturales · Cambio en tienda gratuito 30 días
 </p>

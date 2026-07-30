@@ -210,7 +210,7 @@ body.wishlist-page .wl-sub span {
 body.wishlist-page .wl-results {
   max-width: var(--wl-max-width);
   margin-inline: auto;
-  padding-inline: var(--wl-gutter);
+  padding-inline: 0;
 }
 
 /* Panel tipo Prophetia */
@@ -658,34 +658,36 @@ body.wishlist-page .wishlist-card-actions {
    WISHLIST · LOGO PROPHETIA CONTROLADO
    ============================================ */
 
-/* Diales para mover el logo SOLO en wishlist */
-body.wishlist-page {
-  --wl-logo-x: -280px;   /* - = hacia la izquierda, + = hacia la derecha */
-  --wl-logo-y: 0px;   /* por si quieres tocar Y algún día */
-}
-
 /* Contenedor del logo en la franja */
 body.wishlist-page .brand-band .page-logo {
-  display: inline-block;
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
   line-height: 0;
-  transform: translate(var(--wl-logo-x), var(--wl-logo-y)) !important;
+  transform: none !important;
 }
 
-/* Tamaño del logo (más pequeño) */
+/* Tamaño fluido, sin desplazar ni recortar la marca. */
 body.wishlist-page .brand-band .page-logo__img,
 body.wishlist-page .brand-band .page-logo img {
-  height: 90px;   /* prueba 90 / 100 / 120 según lo veas */
-  width: auto;
+  width: clamp(220px, 48vw, 520px);
+  max-width: 100%;
+  height: auto;
 }
 
 /* =========================================================
    PROPHETIA WISHLIST HEART LUXURY MINIMAL
    ========================================================= */
 body.wishlist-page .wishlist-grid .product-card .save-btn {
-  top: 14px !important;
-  right: 14px !important;
-  width: 42px !important;
-  height: 42px !important;
+  top: auto !important;
+  right: 8px !important;
+  bottom: 8px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
   border-radius: 999px !important;
   border: 1px solid rgba(18, 15, 10, .18) !important;
   background:
@@ -786,10 +788,10 @@ body.wishlist-page .wishlist-grid .product-card .save-btn:active {
 
 @media (max-width: 640px) {
   body.wishlist-page .wishlist-grid .product-card .save-btn {
-    width: 40px !important;
-    height: 40px !important;
-    top: 12px !important;
-    right: 12px !important;
+    width: 44px !important;
+    height: 44px !important;
+    right: 8px !important;
+    bottom: 8px !important;
   }
 }
 
@@ -813,6 +815,14 @@ body.wishlist-page .wl-nav__list a:hover,
 body.wishlist-page .wl-nav__list a.active,
 body.wishlist-page .wl-nav__list a[aria-current="page"] {
   color: rgba(0, 0, 0, .92);
+}
+
+/* Superficie legible al permanecer sticky sobre el mural. */
+body.wishlist-page .wl-nav {
+  border-bottom: 1px solid rgba(17, 17, 17, .1) !important;
+  background: rgba(255, 255, 255, .92) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
 }
 
 body.wishlist-page .wl-sub {

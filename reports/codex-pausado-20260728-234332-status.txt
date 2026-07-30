@@ -1,0 +1,38 @@
+﻿ D .env.example
+ M config/shipping-rates.json
+ M public/assets/css/auth.css
+ M public/assets/css/cart.css
+ M public/assets/css/checkout.css
+ M public/assets/css/mobile-shell.css
+ M public/assets/data/catalog.json
+ M public/assets/data/originals-drops.json
+ M public/assets/js/cart.js
+ M public/assets/js/checkout-success.js
+ M public/assets/js/checkout.js
+ M public/assets/js/filters-drawer.js
+ M public/assets/js/firebase-auth.js
+ M public/assets/js/header-init.js
+ M public/assets/js/pedidos-page.js
+ M public/assets/js/plp-json.js
+ M public/assets/js/prophetia-originals.js
+ M public/assets/js/script.js
+ M public/assets/partials/header.html
+ M public/assets/partials/popup.html
+ M public/camisetas-punto-hombre.html
+ M public/camisetas-punto-mujer.html
+ M public/checkout.html
+ M public/hombre.html
+ M public/hoodies-mujer.html
+ M public/mujer.html
+ M public/prophet-private.html
+ M public/streetwear-hombre.html
+ M public/sudaderas-punto-hombre.html
+ M scripts/validate-mobile-parity.js
+ M server.js
+?? AGENTS.override.md
+?? CODEX_FINAL_TASKS.md
+?? lib/
+?? public/checkout-disabled.html
+?? reports/
+?? scripts/validate-checkout-gate.js
+?? scripts/validate-commerce.js

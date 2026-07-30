@@ -36,6 +36,17 @@ function money(value = 0, currency = "EUR") {
   }
 }
 
+function orderDeliveryLabel(order = {}) {
+  if (order.estimatedDelivery) return String(order.estimatedDelivery);
+  const estimate = order.shippingRate?.deliveryEstimate || {};
+  if (typeof estimate === "string" && estimate.trim()) return estimate.trim();
+  if (estimate.label) return String(estimate.label);
+  if (Number.isInteger(estimate.minBusinessDays) && Number.isInteger(estimate.maxBusinessDays)) {
+    return `${estimate.minBusinessDays}–${estimate.maxBusinessDays} días laborables`;
+  }
+  return "Pendiente de confirmación";
+}
+
 function formatDate(value) {
   if (!value) return "Fecha no disponible";
 
@@ -174,7 +185,7 @@ if (ordersLoading) {
     const orderNumber = escapeHtml(order.orderNumber || `Pedido ${order.id}`);
     const statusLabel = escapeHtml(order.statusLabel || "Pedido confirmado");
     const createdAt = formatDate(order.paidAt || order.createdAt);
-    const estimatedDelivery = escapeHtml(order.estimatedDelivery || "3–7 días laborables");
+    const estimatedDelivery = escapeHtml(orderDeliveryLabel(order));
     const currency = order.currency || "EUR";
     const total = money(order.total || order.amountTotal || 0, currency);
     const trackingUrl = order.trackingUrl ? escapeHtml(order.trackingUrl) : "";

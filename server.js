@@ -10,6 +10,10 @@ const { Resend } = require('resend');
 const { getApps, initializeApp, cert } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
+const {
+  loadShippingConfig,
+  calculateShipping: calculateCanonicalShipping
+} = require('./lib/shipping');
 
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -69,6 +73,23 @@ const SALES_ENABLED = /^(1|true|yes|on)$/i.test(
     (process.env.NODE_ENV === 'production' ? 'false' : 'true')
   ).trim()
 );
+const CHECKOUT_ENABLED = process.env.CHECKOUT_ENABLED === 'true';
+const CHECKOUT_DISABLED_PAYLOAD = Object.freeze({
+  ok: false,
+  code: 'CHECKOUT_DISABLED',
+  message: 'La compra todavía no está disponible.'
+});
+
+function rejectCheckoutDisabled(res) {
+  res.set('Cache-Control', 'no-store');
+  res.set('Retry-After', '3600');
+  return res.status(503).json(CHECKOUT_DISABLED_PAYLOAD);
+}
+
+function requireCheckoutEnabled(req, res, next) {
+  if (!CHECKOUT_ENABLED) return rejectCheckoutDisabled(res);
+  return next();
+}
 /*
   PRODUCCIÓN:
   Validación de variables críticas.
@@ -202,13 +223,13 @@ const TRIBE_RANKS = [
     objective: 'Acceso superior a beneficios y recompensas privadas.',
     earlyAccessHours: 12,
     freeShipping: {
-      enabled: true,
-      minSubtotal: 60
+      enabled: false,
+      minSubtotal: null
     },
     priority: 'priority',
     benefits: [
       'Mayor acceso anticipado.',
-      'Envío gratuito desde 60 €.',
+      'Prioridad superior en futuros servicios de envío.',
       'Recompensa privada al desbloquear el rango.',
       'Prioridad superior en soporte y futuras cápsulas.'
     ],
@@ -229,13 +250,13 @@ const TRIBE_RANKS = [
     objective: 'Acceso privado avanzado a recompensas y prioridad.',
     earlyAccessHours: 24,
     freeShipping: {
-      enabled: true,
-      minSubtotal: 40
+      enabled: false,
+      minSubtotal: null
     },
     priority: 'high',
     benefits: [
       'Acceso anticipado 24 h.',
-      'Envío gratuito desde 40 €.',
+      'Prioridad alta en futuros servicios de envío.',
       'Recompensa privada al desbloquear el rango.',
       'Prioridad alta en soporte y futuras experiencias.'
     ],
@@ -256,13 +277,13 @@ const TRIBE_RANKS = [
     objective: 'Rango máximo antes del sistema de prestigio.',
     earlyAccessHours: 48,
     freeShipping: {
-      enabled: true,
-      minSubtotal: 0
+      enabled: false,
+      minSubtotal: null
     },
     priority: 'highest',
     benefits: [
       'Acceso anticipado 48 h.',
-      'Envío gratuito permanente.',
+      'Prioridad máxima en futuros servicios de envío.',
       'Prioridad máxima en soporte.',
       'Acceso preferente a futuras experiencias privadas.'
     ],
@@ -2528,7 +2549,9 @@ discount: discount
       minSubtotal: discount.minSubtotal || null
     }
   : null,
-    total: roundMoney(Number(summary.total || 0) - discountAmount)
+    total: summary.total === null
+      ? null
+      : roundMoney(Number(summary.total || 0) - discountAmount)
   };
 }
 
@@ -2835,7 +2858,7 @@ function buildCustomerOrderEmail(order) {
             </tr>
             <tr>
               <td style="padding:12px 0;color:#777;">Entrega estimada</td>
-              <td style="padding:12px 0;text-align:right;font-weight:bold;">${escapeHtml(order.estimatedDelivery || order.shippingRate?.estimatedDelivery || '2–7 días laborables')}</td>
+              <td style="padding:12px 0;text-align:right;font-weight:bold;">${escapeHtml(order.estimatedDelivery || formatDeliveryEstimate(order.shippingRate))}</td>
             </tr>
           </table>
 
@@ -2854,7 +2877,7 @@ function buildCustomerOrderEmail(order) {
             </tr>
             <tr>
               <td style="padding:8px 0;color:#777;">Envío</td>
-              <td style="padding:8px 0;text-align:right;">${Number(order.shipping || 0) > 0 ? formatMoney(order.shipping, currency) : 'Gratis'}</td>
+              <td style="padding:8px 0;text-align:right;">${formatOrderShippingAmount(order, currency)}</td>
             </tr>
             <tr>
               <td style="padding:14px 0;border-top:1px solid #111;font-weight:bold;">Total</td>
@@ -2970,6 +2993,17 @@ function buildInternalOrderEmail(order) {
         ${escapeHtml(shipping.postalCode || '')} ${escapeHtml(shipping.city || '')}<br>
         ${escapeHtml(shipping.state || '')}, ${escapeHtml(shipping.country || '')}<br>
         Tel: ${escapeHtml(shipping.phone || '')}
+      </p>
+
+      <h2>Servicio de envío</h2>
+      <p>
+        ${escapeHtml(order.shippingRate?.displayName || 'Pendiente de confirmación')}<br>
+        Nivel: ${escapeHtml(order.shippingRate?.serviceLevel || '')}<br>
+        Tarifa: ${escapeHtml(order.shippingRate?.shippingRateId || '')}<br>
+        Zona: ${escapeHtml(order.shippingRate?.destinationZone || '')}<br>
+        Transportista interno: ${escapeHtml(order.shippingRate?.carrier || 'Sin asignar')}<br>
+        Plazo: ${escapeHtml(formatDeliveryEstimate(order.shippingRate))}<br>
+        Importe: ${formatOrderShippingAmount(order, currency)}
       </p>
 
       ${buildGiftEmailBlock(order, { internal: true })}
@@ -3839,7 +3873,7 @@ const CATALOG_PATH = path.join(PUBLIC_DIR, 'assets', 'data', 'catalog.json');
    - Este bloque debe ir SIEMPRE antes de express.json().
    - En local puede probarse con Stripe CLI.
    ========================================================= */
-app.post('/api/stripe-webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+app.post('/api/stripe-webhook', requireCheckoutEnabled, express.raw({ type: 'application/json' }), async (req, res) => {
 const signature = req.headers['stripe-signature'];
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const isLocal =
@@ -4054,6 +4088,7 @@ const tribeSubscribeLimiter = rateLimit({
 });
 
 app.use('/api/cart-summary', apiLimiter);
+app.use('/api/shipping-options', apiLimiter);
 app.use('/api/discount/validate', authSensitiveLimiter);
 
 app.use(
@@ -4086,6 +4121,14 @@ const isLocalDev =
   SITE_URL.includes('127.0.0.1') ||
   SITE_URL.includes('localhost') ||
   process.env.NODE_ENV !== 'production';
+
+app.get(['/checkout', '/checkout.html'], (req, res, next) => {
+  if (CHECKOUT_ENABLED) return next();
+
+  res.set('Cache-Control', 'no-store');
+  return res.status(503).sendFile(path.join(PUBLIC_DIR, 'checkout-disabled.html'));
+});
+
 /*
   PRODUCCIÓN:
   - En local: Cache-Control no-store para evitar caché durante desarrollo.
@@ -4363,162 +4406,58 @@ function toCents(euros) {
 function normalize(value) {
   return String(value || '').trim().toLowerCase();
 }
-function loadShippingRates() {
-  if (!fs.existsSync(SHIPPING_RATES_FILE)) {
-    throw new Error('No existe config/shipping-rates.json.');
-  }
-
-  const raw = fs.readFileSync(SHIPPING_RATES_FILE, 'utf8');
-  const data = JSON.parse(raw || '{}');
-
-  if (!data || typeof data !== 'object') {
-    throw new Error('shipping-rates.json no tiene un formato válido.');
-  }
-
-  return data;
-}
-
-function normalizeCountryCode(value = '') {
-  const clean = String(value || '').trim().toLowerCase();
-
-  if (['es', 'espana', 'españa', 'spain'].includes(clean)) return 'ES';
-  if (['pt', 'portugal'].includes(clean)) return 'PT';
-  if (['fr', 'france', 'francia'].includes(clean)) return 'FR';
-
-  return clean.toUpperCase();
-}
-
-function normalizeProvince(value = '') {
-  return String(value || '')
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
-}
-
-function findRegionRule(regions = {}, state = '') {
-  const wanted = normalizeProvince(state);
-
-  if (!wanted) return null;
-
-  return Object.entries(regions).find(([name]) => {
-    return normalizeProvince(name) === wanted;
-  })?.[1] || null;
-}
-
 function calculateShipping({
   subtotal = 0,
   shippingDetails = null,
-  tribeBenefits = null
+  items = [],
+  requireSelection = false
 } = {}) {
-  const rates = loadShippingRates();
+  const config = loadShippingConfig(SHIPPING_RATES_FILE);
+  const shippingItems = items.filter((item) => item.requiresShipping !== false);
+  const requiresShipping = shippingItems.length > 0;
+  const hasCompleteWeight = requiresShipping && shippingItems.every((item) => Number.isFinite(item.weightGrams));
+  const weightGrams = hasCompleteWeight
+    ? shippingItems.reduce((sum, item) => sum + (item.weightGrams * item.qty), 0)
+    : null;
+  const result = calculateCanonicalShipping({
+    config,
+    shippingDetails,
+    subtotalCents: Math.round(Number(subtotal || 0) * 100),
+    weightGrams,
+    requiresShipping,
+    requireSelection
+  });
 
-  const method = String(shippingDetails?.shippingMethod || 'home').trim();
-  const countryCode = normalizeCountryCode(shippingDetails?.country || 'ES');
-  const state = shippingDetails?.state || '';
-
-  const country = rates.countries?.[countryCode];
-
-  if (!country || country.enabled === false) {
-    throw new Error(country?.message || 'Envío no disponible para este país.');
-  }
-
-  const methodConfig = country.methods?.[method];
-
-  if (!methodConfig || methodConfig.enabled === false) {
-    throw new Error('Método de envío no disponible.');
-  }
-
-  if (method === 'store') {
-    return {
-      shipping: 0,
-      shippingRate: {
-        country: countryCode,
-        method,
-        label: methodConfig.label || 'Recogida en tienda',
-        carrier: methodConfig.carrier || 'Prophetia Studio',
-        carrierLabel: methodConfig.carrier || 'Prophetia Studio',
-        estimatedDelivery: methodConfig.estimatedDelivery || 'Te avisaremos cuando esté preparado',
-        freeShippingFrom: 0,
-        isFree: true
-      }
-    };
-  }
-
-  const carriers = methodConfig.carriers || {};
-  const defaultCarrierId = methodConfig.defaultCarrier || Object.keys(carriers)[0] || '';
-  const defaultCarrier = carriers[defaultCarrierId] || {};
-
-  const regionRule = findRegionRule(methodConfig.regions || {}, state);
-
-  if (regionRule?.enabled === false) {
-    throw new Error(regionRule.message || 'Envío no disponible para esta zona.');
-  }
-
-  const carrierId = regionRule?.carrier || defaultCarrierId;
-  const carrier = carriers[carrierId] || defaultCarrier;
-
-  const basePrice = Number(
-    regionRule?.price ??
-    carrier.price ??
-    methodConfig.price ??
-    0
-  );
-
-  const freeFrom = Number(
-    regionRule?.freeShippingFrom ??
-    methodConfig.freeShippingFrom ??
-    rates.freeShippingFrom ??
-    40
-  );
-
-const cleanSubtotal = Number(subtotal || 0);
-
-let tribeFreeShipping = false;
-let tribeFreeShippingReason = '';
-
-if (tribeBenefits?.freeShipping?.enabled) {
-  const tribeMinSubtotal = Number(tribeBenefits.freeShipping.minSubtotal || 0);
-
-  if (cleanSubtotal >= tribeMinSubtotal) {
-    tribeFreeShipping = true;
-   tribeFreeShippingReason =
-  tribeMinSubtotal > 0
-    ? `${tribeBenefits.rank} Priority Access — envío gratis desde ${tribeMinSubtotal} €`
-    : `${tribeBenefits.rank} Circle Access — envío gratuito permanente`;
-  }
+  return {
+    shipping: result.amountCents === null ? null : result.amountCents / 100,
+    shippingRate: result.shippingRate,
+    shippingOptions: result.shippingOptions.map((option) => ({
+      ...option,
+      amount: option.amountCents / 100
+    })),
+    shippingStatus: result.status,
+    destinationZone: result.destinationZone,
+    cartWeightGrams: weightGrams
+  };
 }
+function formatDeliveryEstimate(shippingRate, fallback = 'Pendiente de confirmación') {
+  const estimate = shippingRate?.deliveryEstimate;
+  if (typeof estimate === 'string' && estimate.trim()) return estimate.trim();
+  if (estimate?.label) return String(estimate.label).trim();
 
-const baseFreeShipping = cleanSubtotal >= freeFrom;
-const isFree = tribeFreeShipping || baseFreeShipping;
-const shipping = isFree ? 0 : Math.max(0, basePrice);
-
-const freeShippingReason = tribeFreeShipping
-  ? tribeFreeShippingReason
-  : baseFreeShipping
-    ? `Envío gratis desde ${freeFrom} €`
-    : '';
-
-return {
-  shipping,
-shippingRate: {
-  country: countryCode,
-  method,
-  label: methodConfig.label || 'Entrega a domicilio',
-  carrier: carrierId,
-  carrierLabel: carrier.label || carrierId || 'Transportista',
-  estimatedDelivery:
-    regionRule?.estimatedDelivery ||
-    carrier.estimatedDelivery ||
-    methodConfig.estimatedDelivery ||
-    '2–7 días laborables',
-  freeShippingFrom: freeFrom,
-  isFree,
-  freeShippingReason,
-  tribeFreeShipping,
-  tribeFreeShippingReason
+  const min = Number.isInteger(estimate?.minBusinessDays) ? estimate.minBusinessDays : null;
+  const max = Number.isInteger(estimate?.maxBusinessDays) ? estimate.maxBusinessDays : null;
+  if (min !== null && max !== null) return `${min}–${max} días laborables`;
+  if (min !== null) return `Desde ${min} días laborables`;
+  if (max !== null) return `Hasta ${max} días laborables`;
+  return fallback;
 }
-};
+function formatOrderShippingAmount(order, currency = 'EUR') {
+  const amount = order.shippingRate?.shippingAmount ?? order.shipping;
+  if (Number(amount) > 0) return formatMoney(amount, currency);
+  if (Number(amount) === 0 && order.shippingRate?.freeShippingApplied === true) return 'Gratis';
+  if (Number(amount) === 0 && order.shippingStatus === 'not_required') return 'No requiere envío';
+  return 'Pendiente de confirmación';
 }
 
 function findProduct(catalog, item) {
@@ -4541,7 +4480,8 @@ function findVariant(product, item) {
   const wantedSize = normalize(item.size);
   const wantedCut = normalize(item.cut);
 
-  const findByOptions = (cutOverride = wantedCut) => variants.find((variant) => {
+  const findByOptions = (cutOverride = wantedCut) => {
+    const matches = variants.filter((variant) => {
     const sameOptions =
       normalize(variant.color) === wantedColor &&
       normalize(variant.size) === wantedSize;
@@ -4549,7 +4489,9 @@ function findVariant(product, item) {
     const sameCut = !normalizedCut || normalize(variant.cut) === normalizedCut;
 
     return sameOptions && sameCut;
-  }) || null;
+    });
+    return matches.length === 1 ? matches[0] : null;
+  };
 
   if (!variants.length) {
     return {
@@ -4610,6 +4552,11 @@ function findVersion(product, item) {
 
   if (!versions.length) return null;
 
+  if (!wantedVersion) {
+    const canonicalPrices = [...new Set(versions.map((version) => Number(version.price ?? product.price)))];
+    return canonicalPrices.length === 1 ? null : undefined;
+  }
+
   return versions.find((version) => {
     return String(version.id || '').trim() === wantedVersion;
   }) || null;
@@ -4620,6 +4567,10 @@ function assertVariantSelection(product, variant, version, item) {
   const requestedCut = normalize(item.cut);
   const variantCut = normalize(variant?.cut);
   const versionCut = normalize(version?.cut);
+
+  if (version === undefined) {
+    throw new Error(`Falta una versión inequívoca para: ${product.id}`);
+  }
 
   if (requestedVersion && !version) {
     throw new Error(`Versión no encontrada para: ${product.id}`);
@@ -4747,6 +4698,10 @@ if (product.active === false) {
 
     const unitPrice = unitAmount / 100;
     const lineTotal = unitPrice * qty;
+    const rawWeightGrams = variant.weightGrams ?? product.weightGrams;
+    const weightGrams = Number.isFinite(Number(rawWeightGrams)) && Number(rawWeightGrams) > 0
+      ? Number(rawWeightGrams)
+      : null;
 
     return {
       id: product.id,
@@ -4760,6 +4715,9 @@ if (product.active === false) {
       qty,
       unitPrice,
       lineTotal,
+      requiresShipping: product.requiresShipping !== false,
+      shippingProfile: product.shippingProfile || null,
+      weightGrams,
       img:
         variant.img ||
         version?.cover ||
@@ -4776,7 +4734,8 @@ const subtotal = items.reduce((acc, item) => acc + item.lineTotal, 0);
 const shippingResult = calculateShipping({
   subtotal,
   shippingDetails,
-  tribeBenefits
+  items,
+  requireSelection: options.requireShippingSelection === true
 });
 
 return {
@@ -4785,6 +4744,10 @@ return {
   subtotal,
   shipping: shippingResult.shipping,
   shippingRate: shippingResult.shippingRate,
+  shippingOptions: shippingResult.shippingOptions,
+  shippingStatus: shippingResult.shippingStatus,
+  destinationZone: shippingResult.destinationZone,
+  cartWeightGrams: shippingResult.cartWeightGrams,
   tribeBenefits: tribeBenefits
     ? {
         rank: tribeBenefits.rank,
@@ -4794,7 +4757,9 @@ return {
         priority: tribeBenefits.priority
       }
     : null,
-  total: subtotal + shippingResult.shipping
+  total: shippingResult.shipping === null
+    ? null
+    : roundMoney(subtotal + shippingResult.shipping)
 };
 }
 
@@ -4811,6 +4776,7 @@ app.get('/api/health', (req, res) => {
     },
     storefront: {
       salesEnabled: SALES_ENABLED,
+      checkoutEnabled: CHECKOUT_ENABLED,
       mode: SALES_ENABLED ? 'sales' : 'prelaunch'
     }
   });
@@ -4820,11 +4786,15 @@ app.get('/api/storefront-config', (req, res) => {
   res.set('Cache-Control', 'no-store');
   res.json({
     salesEnabled: SALES_ENABLED,
+    checkoutEnabled: CHECKOUT_ENABLED,
     mode: SALES_ENABLED ? 'sales' : 'prelaunch',
     label: SALES_ENABLED ? 'Ventas abiertas' : 'Próximamente',
     message: SALES_ENABLED
       ? 'El drop de Prophetia está disponible.'
-      : 'Estamos preparando el primer drop Atlas. Explora la colección y activa el aviso para tu talla.'
+      : 'Estamos preparando el primer drop Atlas. Explora la colección y activa el aviso para tu talla.',
+    checkoutMessage: CHECKOUT_ENABLED
+      ? ''
+      : 'Estamos configurando los métodos y tarifas de envío. La compra se habilitará próximamente.'
   });
 });
 
@@ -5253,6 +5223,32 @@ const summary = buildSecureCartSummary(cart, shippingDetails, {
     });
   }
 });
+app.post('/api/shipping-options', async (req, res) => {
+  try {
+    const { cart, shippingDetails } = req.body || {};
+    if (!Array.isArray(cart) || cart.length === 0) {
+      return res.status(400).json({ error: 'La cesta está vacía.' });
+    }
+
+    const summary = buildSecureCartSummary(cart, shippingDetails);
+    return res.json({
+      currency: summary.currency,
+      subtotal: summary.subtotal,
+      shipping: summary.shipping,
+      total: summary.total,
+      shippingOptions: summary.shippingOptions,
+      shippingStatus: summary.shippingStatus,
+      destinationZone: summary.destinationZone,
+      shippingRate: summary.shippingRate
+    });
+  } catch (err) {
+    console.error('[shipping-options] error:', err);
+    return res.status(400).json({
+      error: err.message || 'No se han podido calcular las opciones de envío.'
+    });
+  }
+});
+
 app.post('/api/cart-summary', async (req, res) => {
   try {
     const { cart, shippingDetails, email, discountCode } = req.body || {};    const firebaseUser = await getOptionalFirebaseUser(req);
@@ -5278,6 +5274,9 @@ app.post('/api/cart-summary', async (req, res) => {
   subtotal: 0,
   shipping: 0,
   shippingRate: null,
+  shippingOptions: [],
+  shippingStatus: 'not_required',
+  destinationZone: null,
   total: 0
 });
     }
@@ -5324,7 +5323,7 @@ return res.json(summary);
     });
   }
 });
-app.get('/api/order-by-session', async (req, res) => {
+app.get('/api/order-by-session', requireCheckoutEnabled, async (req, res) => {
   try {
     const sessionId = String(req.query.session_id || '').trim();
 
@@ -5419,7 +5418,9 @@ app.get('/api/order-by-session', async (req, res) => {
         subtotal: order.subtotal,
         shipping: order.shipping,
         shippingRate: order.shippingRate || null,
-        estimatedDelivery: order.estimatedDelivery || order.shippingRate?.estimatedDelivery || '2–7 días laborables',
+        shippingStatus: order.shippingStatus || null,
+        destinationZone: order.destinationZone || order.shippingRate?.destinationZone || null,
+        estimatedDelivery: order.estimatedDelivery || formatDeliveryEstimate(order.shippingRate),
         total: order.total,
         amountTotal: order.amountTotal,
         paidAt: order.paidAt || null,
@@ -5435,7 +5436,7 @@ app.get('/api/order-by-session', async (req, res) => {
     });
   }
 });
-app.post('/api/guest-order-account-intent', async (req, res) => {
+app.post('/api/guest-order-account-intent', requireCheckoutEnabled, async (req, res) => {
   try {
     const sessionId = String(req.body?.sessionId || '').trim();
     const orderDraftId = String(req.body?.orderDraftId || '').trim();
@@ -6095,10 +6096,12 @@ app.post('/api/my-orders', requireFirebaseUser, async (req, res) => {
         currency: order.currency || 'EUR',
         items: order.items || [],
         subtotal: order.subtotal || 0,
-        shipping: order.shipping || 0,
+        shipping: order.shipping ?? null,
+        shippingStatus: order.shippingStatus || null,
+        destinationZone: order.destinationZone || order.shippingRate?.destinationZone || null,
         total: order.total || order.amountTotal || 0,
         amountTotal: order.amountTotal || order.total || 0,
-        estimatedDelivery: order.estimatedDelivery || order.shippingRate?.estimatedDelivery || '2–7 días laborables',
+        estimatedDelivery: order.estimatedDelivery || formatDeliveryEstimate(order.shippingRate),
 shippingRate: order.shippingRate || null,
         trackingUrl: order.trackingUrl || '',
         createdAt: order.createdAt || order.paidAt || order.updatedAt || null,
@@ -6116,7 +6119,7 @@ shippingRate: order.shippingRate || null,
     });
   }
 });
-app.post('/api/create-checkout-session', async (req, res) => {
+app.post('/api/create-checkout-session', requireCheckoutEnabled, async (req, res) => {
   try {
     if (!SALES_ENABLED) {
       res.set('Retry-After', '3600');
@@ -6166,10 +6169,30 @@ app.post('/api/create-checkout-session', async (req, res) => {
       return res.status(400).json({ error: 'Faltan datos de envío.' });
     }
 
+    if (shippingDetails.shippingMethod !== 'home') {
+      return res.status(400).json({ error: 'El método de entrega seleccionado no está disponible.' });
+    }
+
+    const requiredShippingFields = [
+      'firstName', 'lastName', 'address1', 'postalCode', 'city', 'state', 'country', 'phone'
+    ];
+    const missingShippingField = requiredShippingFields.find((field) => {
+      return !String(shippingDetails[field] || '').trim();
+    });
+
+    if (missingShippingField) {
+      return res.status(400).json({ error: 'La dirección de envío está incompleta.' });
+    }
+
+    if (!String(shippingDetails.shippingRateId || '').trim()) {
+      return res.status(400).json({ error: 'Selecciona una opción de envío válida.' });
+    }
+
     const cleanGift = normalizeGiftPayload(gift);
 
    let secureSummary = buildSecureCartSummary(cart, shippingDetails, {
-  tribeBenefits
+  tribeBenefits,
+  requireShippingSelection: true
 });
 
 if (discountCode && !isAuthenticatedCheckout) {
@@ -6225,15 +6248,20 @@ const line_items = secureSummary.items.map((item) => {
     }
   };
 });
-if (Number(secureSummary.shipping || 0) > 0) {
+if (Number(secureSummary.shipping) > 0) {
   line_items.push({
     quantity: 1,
     price_data: {
       currency: 'eur',
-      unit_amount: Math.round(Number(secureSummary.shipping || 0) * 100),
+      unit_amount: Math.round(Number(secureSummary.shipping) * 100),
       product_data: {
-        name: `Envío — ${secureSummary.shippingRate?.carrierLabel || 'Transportista'}`,
-        description: secureSummary.shippingRate?.estimatedDelivery || 'Envío estándar'
+        name: `Envío — ${secureSummary.shippingRate?.displayName || 'Servicio seleccionado'}`,
+        description: formatDeliveryEstimate(secureSummary.shippingRate),
+        metadata: {
+          shippingRateId: secureSummary.shippingRate?.shippingRateId || '',
+          serviceLevel: secureSummary.shippingRate?.serviceLevel || '',
+          destinationZone: secureSummary.shippingRate?.destinationZone || ''
+        }
       }
     }
   });
@@ -6253,7 +6281,9 @@ upsertOrder({
   } : null,
   shippingDetails,
   shippingRate: secureSummary.shippingRate || null,
-  estimatedDelivery: secureSummary.shippingRate?.estimatedDelivery || '2–7 días laborables',
+  shippingStatus: secureSummary.shippingStatus,
+  destinationZone: secureSummary.destinationZone,
+  estimatedDelivery: formatDeliveryEstimate(secureSummary.shippingRate),
   gift: cleanGift.isGift ? cleanGift : null,
   invoice: invoice || null,
   currency: secureSummary.currency || 'EUR',
@@ -6290,9 +6320,14 @@ success_url: `${SITE_URL}/checkout-success.html?session_id={CHECKOUT_SESSION_ID}
   guestWantsAccount: wantsGuestAccount ? 'yes' : 'no',
   guestPasswordProvided: guestPasswordProvided ? 'yes' : 'no',
   shippingMethod: shippingDetails.shippingMethod,
+  shippingRateId: secureSummary.shippingRate?.shippingRateId || '',
+  serviceLevel: secureSummary.shippingRate?.serviceLevel || '',
+  shippingAmountCents: String(secureSummary.shippingRate?.shippingAmountCents ?? ''),
+  shippingCurrency: secureSummary.shippingRate?.currency || 'EUR',
+  destinationZone: secureSummary.shippingRate?.destinationZone || '',
   carrier: secureSummary.shippingRate?.carrier || '',
-  carrierLabel: secureSummary.shippingRate?.carrierLabel || '',
-  estimatedDelivery: secureSummary.shippingRate?.estimatedDelivery || '',
+  estimatedDelivery: formatDeliveryEstimate(secureSummary.shippingRate, ''),
+  shippingCalculatedAt: secureSummary.shippingRate?.calculatedAt || '',
 discountCode: secureSummary.discount?.code || '',
 discountType: secureSummary.discount?.type || '',
 discountRewardId: secureSummary.discount?.rewardId || '',
@@ -6302,7 +6337,6 @@ discountPercent: secureSummary.discount?.percent ? String(secureSummary.discount
 discountAmount: secureSummary.discount?.amount ? String(secureSummary.discount.amount) : '',
 tribeRank: secureSummary.tribeBenefits?.rank || '',
 tribeRankId: secureSummary.tribeBenefits?.rankId || '',
-tribeFreeShipping: secureSummary.shippingRate?.tribeFreeShipping ? 'yes' : 'no',
 gift: cleanGift.isGift ? 'yes' : 'no',
 giftMessage: cleanGift.message ? 'yes' : 'no',
 invoiceWanted: invoice?.invoiceWanted ? 'yes' : 'no'
@@ -6393,16 +6427,28 @@ app.get(/^\/(.+)$/, (req, res, next) => {
 app.use((req, res) => {
   res.status(404).sendFile(path.join(PUBLIC_DIR, '404.html'));
 });
-app.listen(PORT, () => {
-  ensureStockFile();
+function startServer(port = PORT) {
+  return app.listen(port, () => {
+    ensureStockFile();
 
-  /*
-    PRODUCCIÓN:
-    - Estos logs no imprimen claves.
-    - Sirven para confirmar URL activa y rutas de datos.
-    - Nunca imprimir STRIPE_SECRET_KEY, RESEND_API_KEY ni Firebase credentials.
-  */
-  console.log(`PROPHETIA server running: ${SITE_URL}`);
-  console.log(`[orders] file: ${ORDERS_FILE}`);
-  console.log(`[stock] file: ${STOCK_FILE}`);
-});
+    /*
+      PRODUCCIÓN:
+      - Estos logs no imprimen claves.
+      - Sirven para confirmar URL activa y rutas de datos.
+      - Nunca imprimir STRIPE_SECRET_KEY, RESEND_API_KEY ni Firebase credentials.
+    */
+    console.log(`PROPHETIA server running: ${SITE_URL}`);
+    console.log(`[orders] file: ${ORDERS_FILE}`);
+    console.log(`[stock] file: ${STOCK_FILE}`);
+  });
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = {
+  app,
+  startServer,
+  CHECKOUT_ENABLED
+};

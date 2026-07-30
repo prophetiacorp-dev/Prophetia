@@ -11,6 +11,9 @@
 
       if (slides.length === 1) {
         carousel.classList.add("is-single");
+        slides[0].classList.add("is-active");
+        slides[0].setAttribute("aria-hidden", "false");
+        slides[0].removeAttribute("inert");
         return;
       }
 
@@ -19,9 +22,14 @@
 
       function render(index) {
         slides.forEach((slide, i) => {
-          slide.classList.toggle("is-active", i === index);
+          const isActive = i === index;
+          slide.classList.toggle("is-active", isActive);
+          slide.setAttribute("aria-hidden", isActive ? "false" : "true");
+          slide.toggleAttribute("inert", !isActive);
         });
       }
+
+      render(current);
 
       prevBtn?.addEventListener("click", () => {
         current = (current - 1 + slides.length) % slides.length;

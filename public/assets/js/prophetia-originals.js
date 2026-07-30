@@ -4,6 +4,7 @@
   if (!grid) return;
 
   const DATA_URL = "/assets/data/originals-drops.json";
+  const CATALOG_URL = "/assets/data/catalog.json";
 
   const escapeHtml = (value = "") =>
     String(value)
@@ -18,8 +19,7 @@
 
     return new Intl.NumberFormat("es-ES", {
       style: "currency",
-      currency: "EUR",
-      maximumFractionDigits: 0
+      currency: "EUR"
     }).format(number);
   };
 
@@ -52,14 +52,23 @@
 
   const loadDrop = async () => {
     try {
-      const response = await fetch(DATA_URL, { cache: "no-store" });
+      const [response, catalogResponse] = await Promise.all([
+        fetch(DATA_URL, { cache: "no-store" }),
+        fetch(CATALOG_URL, { cache: "no-store" })
+      ]);
 
-      if (!response.ok) {
-        throw new Error(`No se pudo cargar ${DATA_URL}`);
+      if (!response.ok || !catalogResponse.ok) {
+        throw new Error('No se pudo cargar la selección o el catálogo canónico.');
       }
 
       const data = await response.json();
-      const pieces = data?.currentDrop?.pieces || [];
+      const catalog = await catalogResponse.json();
+      const productsById = new Map(catalog.map((product) => [String(product.id), product]));
+      const pieces = (data?.currentDrop?.pieces || []).map((piece) => {
+        const product = productsById.get(String(piece.id));
+        const price = Number(product?.price);
+        return Number.isFinite(price) && price > 0 ? { ...piece, price } : null;
+      }).filter(Boolean);
 
       if (!pieces.length) {
         grid.innerHTML = `

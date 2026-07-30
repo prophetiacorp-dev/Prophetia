@@ -9,24 +9,41 @@ const VERSION = '20260724-mobile-parity1';
 const VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">';
 const MOBILE_LINK = `/assets/css/mobile-shell.css?v=${VERSION}`;
 const MOBILE_BREAKPOINT = 820;
-const COMPACT_GRID_BREAKPOINT = 679;
+const PLP_BREAKPOINT = 1024;
 const STYLE_EXCLUDES = new Set(['admin.html']);
 const DOCK_EXCLUDES = new Set(['checkout.html']);
-const EXPECTED_DOCUMENTS = 46;
+const EXPECTED_DOCUMENTS = 47;
 const VIEWPORT_MATRIX = [
   [320, 568, 'mobile', 2],
   [360, 800, 'mobile', 2],
   [375, 667, 'mobile', 2],
   [390, 844, 'mobile', 2],
-  [393, 873, 'mobile', 2],
   [412, 915, 'mobile', 2],
   [430, 932, 'mobile', 2],
-  [768, 1024, 'mobile', 3],
-  [820, 1180, 'mobile', 3],
-  [1024, 768, 'desktop', null],
+  [600, 960, 'tablet', 2],
+  [679, 900, 'tablet', 2],
+  [768, 1024, 'tablet', 2],
+  [820, 1180, 'tablet', 2],
+  [912, 1368, 'tablet', 2],
+  [960, 1280, 'tablet', 2],
+  [1024, 1366, 'tablet', 2],
   [1366, 768, 'desktop', null],
-  [1440, 900, 'desktop', null],
   [1920, 1080, 'desktop', null]
+];
+const REQUIRED_VIEWPORT_SIGNATURE = '320x568,360x800,375x667,390x844,412x915,430x932,600x960,679x900,768x1024,820x1180,912x1368,960x1280,1024x1366,1366x768,1920x1080';
+
+const INTERMEDIATE_WIDTHS = [344, 384, 414, 480, 540, 640, 720, 834, 900, 1000, 1040, 1180, 1280, 1440, 1600];
+const REQUIRED_INTERMEDIATE_SIGNATURE = '344,384,414,480,540,640,720,834,900,1000,1040,1180,1280,1440,1600';
+
+const PLP_ROUTES = [
+  'camisetas-punto-mujer.html',
+  'camisetas-punto-hombre.html',
+  'sudaderas-punto-mujer.html',
+  'sudaderas-punto-hombre.html',
+  'streetwear-mujer.html',
+  'streetwear-hombre.html',
+  'hoodies-mujer.html',
+  'hoodies.html'
 ];
 
 const failures = [];
@@ -88,6 +105,36 @@ for (const filePath of listHtmlFiles(PUBLIC_DIR)) {
 
 pass(documents.length === EXPECTED_DOCUMENTS,
   `se esperaban ${EXPECTED_DOCUMENTS} documentos con viewport y hay ${documents.length}`);
+
+for (const relativePath of PLP_ROUTES) {
+  const source = read(`public/${relativePath}`);
+  const media = source.indexOf('pp-hero__media');
+  const breadcrumb = source.indexOf('pp-breadcrumb--hero');
+  const side = source.indexOf('pp-hero__side');
+  const filters = source.indexOf('pp-filters container');
+  const grid = source.search(/class=["'][^"']*plp-grid/);
+  pass(media >= 0 && media < breadcrumb,
+    `${relativePath}: el logo/media debe preceder al breadcrumb en el DOM`);
+  pass(breadcrumb >= 0 && breadcrumb < side,
+    `${relativePath}: el breadcrumb debe preceder al título/lista en el DOM`);
+  pass(side >= 0 && side < filters,
+    `${relativePath}: el hero debe preceder a la barra de filtros`);
+  pass(filters >= 0 && filters < grid,
+    `${relativePath}: la barra de filtros debe preceder al grid`);
+}
+
+for (const relativePath of ['mujer.html', 'hombre.html']) {
+  const source = read(`public/${relativePath}`);
+  const media = source.indexOf('hero-left');
+  const breadcrumb = source.indexOf('pp-breadcrumb--gender');
+  const side = source.search(/(?:women|men)-band__side/);
+  const toolbar = source.search(/(?:women|men)-toolbar/);
+  const grid = source.search(/class=["'][^"']*plp-grid/);
+  pass(media >= 0 && media < breadcrumb && breadcrumb < side,
+    `${relativePath}: orden DOM responsive logo → breadcrumb → título/lista incorrecto`);
+  pass(side >= 0 && side < toolbar && toolbar < grid,
+    `${relativePath}: orden DOM responsive hero → filtros → grid incorrecto`);
+}
 
 const header = read('public/assets/partials/header.html');
 const dockMatch = header.match(/<nav class="pp-mobile-dock"[\s\S]*?<\/nav>/i);
@@ -196,7 +243,8 @@ for (const marker of [
   'if (!active) closePanel({ restoreFocus: false })',
   "panel.setAttribute('aria-hidden', 'true')",
   "panel.setAttribute('aria-hidden', 'false')",
-  "menuButton?.setAttribute('aria-expanded', expanded)",
+  "source === 'menu' ? 'true' : 'false'",
+  "source === 'search' ? 'true' : 'false'",
   'returnFocus.focus({ preventScroll: true })',
   "event.key === 'Escape'",
   "event.key !== 'Tab'",
@@ -208,17 +256,12 @@ for (const marker of [
 
 const css = read('public/assets/css/mobile-shell.css');
 const mobileMedia = `@media (max-width: ${MOBILE_BREAKPOINT}px)`;
-const tabletMedia = `@media (min-width: ${COMPACT_GRID_BREAKPOINT + 1}px) and (max-width: ${MOBILE_BREAKPOINT}px)`;
 const firstMobileMedia = css.indexOf(mobileMedia);
 pass(firstMobileMedia > 0, 'mobile-shell.css: falta el límite principal de 820px');
 const desktopPrefix = css.slice(0, firstMobileMedia).replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim();
 pass(desktopPrefix === '.pp-mobile-dock, .pp-mobile-panel { display: none; }',
   'mobile-shell.css: hay estilos visuales de escritorio fuera del bloque móvil');
 for (const marker of [
-  `@media (max-width: ${COMPACT_GRID_BREAKPOINT}px)`,
-  tabletMedia,
-  'grid-template-columns: repeat(2, minmax(0, 1fr)) !important',
-  'grid-template-columns: repeat(3, minmax(0, 1fr)) !important',
   'env(safe-area-inset-top)',
   'env(safe-area-inset-bottom)',
   '100dvh',
@@ -231,25 +274,84 @@ for (const marker of [
 ]) {
   pass(css.includes(marker), `mobile-shell.css: falta la regla ${marker}`);
 }
+for (const marker of [
+  `@media (max-width: ${PLP_BREAKPOINT}px)`,
+  '--pp-sort-popover-top',
+  'position: fixed !important',
+  'transform: translateX(100%) !important',
+  'grid-template-columns: repeat(2, minmax(0, 1fr)) !important',
+  'min-width: 44px !important',
+  '.pp-breadcrumb--gender',
+  'width: max-content',
+  'margin-inline: auto',
+  'inset: auto 8px 8px auto !important',
+  '.pp-btn:not(.pp-sort-trigger)::after'
+]) {
+  pass(css.includes(marker), `mobile-shell.css: falta el contrato PLP/tablet ${marker}`);
+}
+pass((css.match(/grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)\s*!important/g) || []).length === 1,
+  'mobile-shell.css: la cuadrícula PLP debe tener una única fuente responsive de dos columnas');
+for (const marker of [
+  'body:is(.men-page, .women-page):is(',
+  '.pp-collection-page,',
+  '.camisetas-page,',
+  '.sud-men-page,',
+  '.sud-women-page,',
+  '.hoodies-page,',
+  '.streetwear-page'
+]) {
+  pass(css.includes(marker), `mobile-shell.css: falta cobertura común PLP ${marker}`);
+}
+
+const authCss = read('public/assets/css/auth.css');
+for (const marker of [
+  '@media (max-width: 1024px)',
+  '#ppAccountPanel',
+  'max-width: none',
+  'max-height: 100dvh',
+  'env(safe-area-inset-right)',
+  'body:has(:is(#ppAuthModal[open], #ppAccountPanel[open]))'
+]) {
+  pass(authCss.includes(marker), `auth.css: falta el contrato fullscreen ${marker}`);
+}
+pass(init.includes('element !== document.body'),
+  'header-init.js: el retorno de foco Auth no debe aceptar body');
 pass((css.match(/{/g) || []).length === (css.match(/}/g) || []).length,
   'mobile-shell.css: llaves CSS descompensadas');
 
 const viewportKeys = new Set();
+pass(VIEWPORT_MATRIX.map(([width, height]) => `${width}x${height}`).join(',') === REQUIRED_VIEWPORT_SIGNATURE,
+  'la matriz principal no coincide exactamente con las quince resoluciones requeridas');
 for (const [width, height, expectedMode, expectedColumns] of VIEWPORT_MATRIX) {
   const key = `${width}x${height}`;
   pass(!viewportKeys.has(key), `${key}: viewport duplicado en la matriz`);
   viewportKeys.add(key);
 
-  const actualMode = width <= MOBILE_BREAKPOINT ? 'mobile' : 'desktop';
-  const actualColumns = width <= COMPACT_GRID_BREAKPOINT
-    ? 2
-    : width <= MOBILE_BREAKPOINT
-      ? 3
-      : null;
+  const actualMode = width < 600
+    ? 'mobile'
+    : width <= PLP_BREAKPOINT
+      ? 'tablet'
+      : 'desktop';
+  const actualColumns = width <= PLP_BREAKPOINT ? 2 : null;
   pass(actualMode === expectedMode, `${key}: modo esperado ${expectedMode}, obtenido ${actualMode}`);
   pass(actualColumns === expectedColumns,
     `${key}: columnas esperadas ${expectedColumns ?? 'desktop'}, obtenidas ${actualColumns ?? 'desktop'}`);
 }
+
+pass(INTERMEDIATE_WIDTHS.join(',') === REQUIRED_INTERMEDIATE_SIGNATURE,
+  'el barrido intermedio no coincide con las quince anchuras de cruce configuradas');
+const intermediateKeys = new Set();
+for (const width of INTERMEDIATE_WIDTHS) {
+  pass(!intermediateKeys.has(width), `${width}px: anchura intermedia duplicada`);
+  intermediateKeys.add(width);
+  pass(width >= 320 && width <= 1600,
+    `${width}px: anchura intermedia fuera del rango responsive`);
+  const expectedColumns = width <= PLP_BREAKPOINT ? 2 : null;
+  pass(width <= PLP_BREAKPOINT ? expectedColumns === 2 : expectedColumns === null,
+    `${width}px: contrato de columnas incorrecto en el barrido intermedio`);
+}
+pass(VIEWPORT_MATRIX.length + INTERMEDIATE_WIDTHS.length === 30,
+  'la validación responsive debe cubrir 30 tamaños por ruta PLP');
 
 const server = read('server.js');
 pass(server.includes("'no-cache, must-revalidate'"), 'server.js: HTML/partials deben revalidarse');
@@ -262,6 +364,7 @@ if (failures.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Paridad móvil verificada: ${documents.length} documentos, ${new Set(mobileRoutes).size} rutas y ${VIEWPORT_MATRIX.length} viewports.`
+    `Paridad móvil verificada: ${documents.length} documentos, ${new Set(mobileRoutes).size} rutas, ` +
+    `${VIEWPORT_MATRIX.length} resoluciones obligatorias y ${INTERMEDIATE_WIDTHS.length} anchuras intermedias.`
   );
 }

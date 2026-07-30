@@ -125,29 +125,14 @@
             "Aire, composición flotante y jerarquía contenida.",
           images: {
             main: {
-              src: "../img/archive/summer/sea-breeze/main.jpg",
-              alt: "Mockup principal de la pieza Sea Breeze"
+              src: "../img/portadas/archive/seabreeze.jpg",
+              alt: "Estudio visual de la pieza Sea Breeze"
             },
             gallery: [
               {
-                type: "Mockup",
-                src: "../img/archive/summer/sea-breeze/mockup-01.jpg",
-                alt: "Vista mockup de Sea Breeze"
-              },
-              {
-                type: "Design",
-                src: "../img/archive/summer/sea-breeze/design-only.jpg",
-                alt: "Diseño aislado de Sea Breeze"
-              },
-              {
-                type: "Detail",
-                src: "../img/archive/summer/sea-breeze/detail-01.jpg",
-                alt: "Detalle gráfico de Sea Breeze"
-              },
-              {
-                type: "Mockup",
-                src: "../img/archive/summer/sea-breeze/mockup-02.jpg",
-                alt: "Segunda vista mockup de Sea Breeze"
+                type: "Archive Study",
+                src: "../img/portadas/archive/seabreeze.jpg",
+                alt: "Estudio visual de Sea Breeze"
               }
             ]
           }
@@ -180,29 +165,14 @@
             "Ritmo, tensión, bloques de aire y contraste bien calibrado.",
           images: {
             main: {
-              src: "../img/archive/summer/drip-season/main.jpg",
-              alt: "Mockup principal de la pieza Drip Season"
+              src: "../img/portadas/archive/dripseason.jpg",
+              alt: "Estudio visual de la pieza Drip Season"
             },
             gallery: [
               {
-                type: "Mockup",
-                src: "../img/archive/summer/drip-season/mockup-01.jpg",
-                alt: "Vista mockup de Drip Season"
-              },
-              {
-                type: "Design",
-                src: "../img/archive/summer/drip-season/design-only.jpg",
-                alt: "Diseño aislado de Drip Season"
-              },
-              {
-                type: "Detail",
-                src: "../img/archive/summer/drip-season/detail-01.jpg",
-                alt: "Detalle gráfico de Drip Season"
-              },
-              {
-                type: "Mockup",
-                src: "../img/archive/summer/drip-season/mockup-02.jpg",
-                alt: "Segunda vista mockup de Drip Season"
+                type: "Archive Study",
+                src: "../img/portadas/archive/dripseason.jpg",
+                alt: "Estudio visual de Drip Season"
               }
             ]
           }
@@ -235,29 +205,14 @@
             "Tensión visual, contraste nítido y composición con autoridad.",
           images: {
             main: {
-              src: "../img/archive/summer/urban-fury/main.jpg",
-              alt: "Mockup principal de la pieza Urban Fury"
+              src: "../img/portadas/archive/urbanfury.png",
+              alt: "Estudio visual de la pieza Urban Fury"
             },
             gallery: [
               {
-                type: "Mockup",
-                src: "../img/archive/summer/urban-fury/mockup-01.jpg",
-                alt: "Vista mockup de Urban Fury"
-              },
-              {
-                type: "Design",
-                src: "../img/archive/summer/urban-fury/design-only.jpg",
-                alt: "Diseño aislado de Urban Fury"
-              },
-              {
-                type: "Detail",
-                src: "../img/archive/summer/urban-fury/detail-01.jpg",
-                alt: "Detalle gráfico de Urban Fury"
-              },
-              {
-                type: "Mockup",
-                src: "../img/archive/summer/urban-fury/mockup-02.jpg",
-                alt: "Segunda vista mockup de Urban Fury"
+                type: "Archive Study",
+                src: "../img/portadas/archive/urbanfury.png",
+                alt: "Estudio visual de Urban Fury"
               }
             ]
           }
