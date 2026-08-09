@@ -22,11 +22,16 @@
 const selectedColors = new Map();
 const selectedCuts = new Map();
 const closeTimers = new WeakMap();
+const openFrames = new WeakMap();
+const focusFrames = new WeakMap();
+const panelHideTimers = new WeakMap();
 const portalRestoreTimers = new WeakMap();
 const skipFocusOpen = new WeakSet();
 
 let activeCard = null;
 let observedGrid = null;
+let backdropOpenFrame = 0;
+let backdropHideTimer = 0;
 
 function resolveOwnerCard(target) {
   const directCard = target?.closest?.(".card.has-quick-add");
@@ -44,12 +49,34 @@ function canSellVariant() {
 let gridObserver = null;
 
 const MOBILE_QUICK_ADD_QUERY =
-  "(hover: none), (pointer: coarse), (max-width: 760px)";
+  "(hover: none), (pointer: coarse), (max-width: 820px)";
+const MOBILE_QUICK_ADD_MEDIA = window.matchMedia(
+  MOBILE_QUICK_ADD_QUERY
+);
+const QUICK_ADD_REDUCED_MOTION_QUERY = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+);
 
 function isMobileQuickAdd() {
-  return window.matchMedia(
-    MOBILE_QUICK_ADD_QUERY
-  ).matches;
+  return MOBILE_QUICK_ADD_MEDIA.matches;
+}
+
+function cancelBackdropOpenFrame() {
+  if (!backdropOpenFrame) return;
+
+  window.cancelAnimationFrame(
+    backdropOpenFrame
+  );
+  backdropOpenFrame = 0;
+}
+
+function clearBackdropHideTimer() {
+  if (!backdropHideTimer) return;
+
+  window.clearTimeout(
+    backdropHideTimer
+  );
+  backdropHideTimer = 0;
 }
 
 function ensureQuickAddBackdrop() {
@@ -86,6 +113,9 @@ function openMobileBackdrop() {
   const backdrop =
     ensureQuickAddBackdrop();
 
+  cancelBackdropOpenFrame();
+  clearBackdropHideTimer();
+
   backdrop.hidden = false;
 
   backdrop.setAttribute(
@@ -97,15 +127,46 @@ function openMobileBackdrop() {
     "pp-quick-add-mobile-open"
   );
 
-  window.requestAnimationFrame(() => {
+  const revealBackdrop = () => {
+    backdropOpenFrame = 0;
+
+    if (
+      !activeCard ||
+      !isMobileQuickAdd() ||
+      backdrop.hidden ||
+      backdrop.getAttribute("aria-hidden") !== "false" ||
+      !document.body.classList.contains(
+        "pp-quick-add-mobile-open"
+      )
+    ) {
+      return;
+    }
+
     backdrop.classList.add("is-open");
-  });
+  };
+
+  if (QUICK_ADD_REDUCED_MOTION_QUERY.matches) {
+    revealBackdrop();
+    return;
+  }
+
+  backdropOpenFrame =
+    window.requestAnimationFrame(
+      revealBackdrop
+    );
 }
 
-function closeMobileBackdrop() {
+function closeMobileBackdrop(
+  {
+    immediate = false
+  } = {}
+) {
   const backdrop = document.querySelector(
     "[data-quick-add-backdrop]"
   );
+
+  cancelBackdropOpenFrame();
+  clearBackdropHideTimer();
 
   document.body.classList.remove(
     "pp-quick-add-mobile-open"
@@ -120,15 +181,32 @@ function closeMobileBackdrop() {
     "true"
   );
 
-  window.setTimeout(() => {
+  const hideBackdrop = () => {
+    backdropHideTimer = 0;
+
     if (
-      !backdrop.classList.contains(
-        "is-open"
+      (!activeCard || !isMobileQuickAdd()) &&
+      !backdrop.classList.contains("is-open") &&
+      !document.body.classList.contains(
+        "pp-quick-add-mobile-open"
       )
     ) {
       backdrop.hidden = true;
     }
-  }, 220);
+  };
+
+  if (
+    immediate ||
+    QUICK_ADD_REDUCED_MOTION_QUERY.matches
+  ) {
+    hideBackdrop();
+    return;
+  }
+
+  backdropHideTimer = window.setTimeout(
+    hideBackdrop,
+    220
+  );
 }
 
 const COLOR_META = {
@@ -497,6 +575,27 @@ const COLOR_META = {
     );
   }
 
+  function cancelCardFrame(
+    frames,
+    card
+  ) {
+    const frame = frames.get(card);
+
+    if (!frame) return;
+
+    window.cancelAnimationFrame(frame);
+    frames.delete(card);
+  }
+
+  function clearPanelHideTimer(panel) {
+    const timer = panelHideTimers.get(panel);
+
+    if (!timer) return;
+
+    window.clearTimeout(timer);
+    panelHideTimers.delete(panel);
+  }
+
   function clearPortalRestoreTimer(panel) {
     const timer = portalRestoreTimers.get(panel);
 
@@ -509,6 +608,7 @@ const COLOR_META = {
   function restoreMobilePanel(panel) {
     if (!panel?.__ppQuickAddPortalParent) return;
 
+    clearPanelHideTimer(panel);
     clearPortalRestoreTimer(panel);
 
     const parent = panel.__ppQuickAddPortalParent;
@@ -518,6 +618,8 @@ const COLOR_META = {
       "is-mobile-portal",
       "is-mobile-portal-open"
     );
+    panel.removeAttribute("role");
+    panel.removeAttribute("aria-modal");
 
     if (
       nextSibling &&
@@ -550,6 +652,8 @@ const COLOR_META = {
 
     document.body.appendChild(panel);
     panel.classList.add("is-mobile-portal");
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
   }
 
   function schedulePanelRestore(panel) {
@@ -565,7 +669,7 @@ const COLOR_META = {
       ) {
         restoreMobilePanel(panel);
       }
-    }, 300);
+    }, QUICK_ADD_REDUCED_MOTION_QUERY.matches ? 0 : 360);
 
     portalRestoreTimers.set(panel, timer);
   }
@@ -606,17 +710,26 @@ const COLOR_META = {
   function closeQuickAdd(
     card,
     {
-      restoreFocus = false
+      restoreFocus = false,
+      immediate = false
     } = {}
   ) {
     if (!card) return;
 
     clearCloseTimer(card);
+    cancelCardFrame(openFrames, card);
+    cancelCardFrame(focusFrames, card);
 
     const panel = getPanel(card);
     const toggle = getToggle(card);
+    const originToggle =
+      panel?.__ppQuickAddOriginToggle || toggle;
 
     if (panel) {
+      clearPanelHideTimer(panel);
+      if (panel.contains(document.activeElement)) {
+        document.activeElement?.blur?.();
+      }
       panel.classList.remove(
         "is-mobile-portal-open"
       );
@@ -641,52 +754,88 @@ const COLOR_META = {
       );
     }
 
+    if (activeCard === card) {
+      activeCard = null;
+    }
+
     if (panel) {
-      window.setTimeout(() => {
+      const finishPanelClose = () => {
+        panelHideTimers.delete(panel);
+
         const stillClosed =
+          activeCard !== card &&
           !card.classList.contains(
             "is-quick-add-open"
-          );
+          ) &&
+          panel.getAttribute(
+            "aria-hidden"
+          ) === "true";
 
         if (stillClosed) {
           panel.hidden = true;
-          schedulePanelRestore(panel);
+
+          if (
+            immediate ||
+            QUICK_ADD_REDUCED_MOTION_QUERY.matches
+          ) {
+            restoreMobilePanel(panel);
+          } else {
+            schedulePanelRestore(panel);
+          }
+
+          if (
+            restoreFocus &&
+            originToggle?.isConnected
+          ) {
+            skipFocusOpen.add(originToggle);
+            originToggle.focus({ preventScroll: true });
+            window.requestAnimationFrame(() => {
+              skipFocusOpen.delete(originToggle);
+            });
+          }
         }
-      }, 180);
+      };
+
+      if (
+        immediate ||
+        QUICK_ADD_REDUCED_MOTION_QUERY.matches
+      ) {
+        finishPanelClose();
+      } else {
+        const timer = window.setTimeout(
+          finishPanelClose,
+          280
+        );
+
+        panelHideTimers.set(panel, timer);
+      }
     }
 
-    const originToggle =
-      panel?.__ppQuickAddOriginToggle || toggle;
+    if (!activeCard) {
+      closeMobileBackdrop({ immediate });
+    }
 
-    if (activeCard === card) {
-  activeCard = null;
-}
-
-closeMobileBackdrop();
-
-if (restoreFocus && originToggle) {
-  skipFocusOpen.add(originToggle);
-
-  originToggle.focus({
-    preventScroll: true
-  });
-
-  window.requestAnimationFrame(() => {
-    skipFocusOpen.delete(originToggle);
-  });
-}
+    if (!panel && restoreFocus && originToggle?.isConnected) {
+      originToggle.focus({ preventScroll: true });
+    }
   }
 
   function closeOtherCards(exceptCard) {
-    document
-      .querySelectorAll(
+    const openCards = new Set(
+      document.querySelectorAll(
         "#plp-grid .card.is-quick-add-open"
       )
-      .forEach((card) => {
-        if (card !== exceptCard) {
-          closeQuickAdd(card);
-        }
-      });
+    );
+
+    if (activeCard) {
+      openCards.add(activeCard);
+    }
+
+    openCards.forEach((card) => {
+      if (card !== exceptCard) {
+        closeQuickAdd(card);
+      }
+    });
   }
 
   function openQuickAdd(
@@ -704,8 +853,18 @@ if (restoreFocus && originToggle) {
     if (!panel || !toggle) return;
 
     clearCloseTimer(card);
+    cancelCardFrame(openFrames, card);
+    cancelCardFrame(focusFrames, card);
     closeOtherCards(card);
+    clearPanelHideTimer(panel);
     clearPortalRestoreTimer(panel);
+
+    if (
+      !isMobileQuickAdd() &&
+      panel.__ppQuickAddPortalParent
+    ) {
+      restoreMobilePanel(panel);
+    }
 
     panel.__ppQuickAddOwnerCard = card;
     panel.__ppQuickAddOwnerProduct = getProduct(card);
@@ -720,15 +879,6 @@ if (restoreFocus && originToggle) {
       "false"
     );
 
-    window.requestAnimationFrame(() => {
-      card.classList.add(
-        "is-quick-add-open"
-      );
-      panel.classList.add(
-        "is-mobile-portal-open"
-      );
-    });
-
     card.dataset.quickAddPinned =
       pinned ? "true" : "false";
 
@@ -737,12 +887,66 @@ if (restoreFocus && originToggle) {
       "true"
     );
 
-activeCard = card;
+    activeCard = card;
 
-openMobileBackdrop();
+    const revealPanel = () => {
+      openFrames.delete(card);
 
-if (focusFirstSize || isMobileQuickAdd()) {
-      window.requestAnimationFrame(() => {
+      if (
+        activeCard !== card ||
+        panel.hidden ||
+        panel.inert ||
+        panel.getAttribute(
+          "aria-hidden"
+        ) !== "false" ||
+        toggle.getAttribute(
+          "aria-expanded"
+        ) !== "true"
+      ) {
+        return;
+      }
+
+      card.classList.add(
+        "is-quick-add-open"
+      );
+      panel.classList.add(
+        "is-mobile-portal-open"
+      );
+    };
+
+    if (QUICK_ADD_REDUCED_MOTION_QUERY.matches) {
+      revealPanel();
+    } else {
+      const frame = window.requestAnimationFrame(
+        revealPanel
+      );
+
+      openFrames.set(card, frame);
+    }
+
+    if (isMobileQuickAdd()) {
+      openMobileBackdrop();
+    } else {
+      closeMobileBackdrop({
+        immediate: true
+      });
+    }
+
+    if (focusFirstSize || isMobileQuickAdd()) {
+      const focusPanel = () => {
+        focusFrames.delete(card);
+
+        if (
+          activeCard !== card ||
+          panel.hidden ||
+          panel.inert ||
+          panel.getAttribute(
+            "aria-hidden"
+          ) !== "false"
+        ) {
+          return;
+        }
+
         const focusTarget =
           panel.querySelector(
             "[data-quick-add-size]:not(:disabled)"
@@ -754,7 +958,17 @@ if (focusFirstSize || isMobileQuickAdd()) {
         focusTarget?.focus({
           preventScroll: true
         });
-      });
+      };
+
+      if (QUICK_ADD_REDUCED_MOTION_QUERY.matches) {
+        focusPanel();
+      } else {
+        const frame = window.requestAnimationFrame(
+          focusPanel
+        );
+
+        focusFrames.set(card, frame);
+      }
     }
   }
 
@@ -775,6 +989,80 @@ if (focusFirstSize || isMobileQuickAdd()) {
     }, 180);
 
     closeTimers.set(card, timer);
+  }
+
+  function resetQuickAddForViewportChange(
+    {
+      restoreFocus = true
+    } = {}
+  ) {
+    const cardToRefocus = activeCard;
+    const cards = new Set(
+      document.querySelectorAll(
+        "#plp-grid .card.is-quick-add-open"
+      )
+    );
+
+    if (cardToRefocus) {
+      cards.add(cardToRefocus);
+    }
+
+    cards.forEach((card) => {
+      closeQuickAdd(card, {
+        immediate: true,
+        restoreFocus:
+          restoreFocus &&
+          card === cardToRefocus
+      });
+    });
+
+    document
+      .querySelectorAll(
+        "[data-quick-add-panel].is-mobile-portal"
+      )
+      .forEach((panel) => {
+        const ownerCard =
+          panel.__ppQuickAddOwnerCard;
+        const ownerToggle =
+          panel.__ppQuickAddOriginToggle ||
+          getToggle(ownerCard);
+
+        if (ownerCard) {
+          cancelCardFrame(
+            openFrames,
+            ownerCard
+          );
+          cancelCardFrame(
+            focusFrames,
+            ownerCard
+          );
+          ownerCard.classList.remove(
+            "is-quick-add-open"
+          );
+          ownerCard.dataset.quickAddPinned =
+            "false";
+        }
+
+        ownerToggle?.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+        panel.classList.remove(
+          "is-mobile-portal-open"
+        );
+        panel.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+        panel.inert = true;
+        panel.hidden = true;
+        restoreMobilePanel(panel);
+      });
+
+    activeCard = null;
+    closeMobileBackdrop({
+      immediate: true
+    });
   }
 
   function updateCardImage(
@@ -1665,10 +1953,13 @@ function animateToCart(card) {
       return;
     }
 
-    const reducedMotion =
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
+    if (QUICK_ADD_REDUCED_MOTION_QUERY.matches) {
+      target.classList.remove(
+        "is-quick-add-pulse"
+      );
+      resolve();
+      return;
+    }
 
     /*
      * Reinicia el pulso si se añaden
@@ -1679,22 +1970,6 @@ function animateToCart(card) {
     );
 
     void target.offsetWidth;
-
-    if (reducedMotion) {
-      target.classList.add(
-        "is-quick-add-pulse"
-      );
-
-      window.setTimeout(() => {
-        target.classList.remove(
-          "is-quick-add-pulse"
-        );
-
-        resolve();
-      }, 260);
-
-      return;
-    }
 
     const sourceRect =
       source.getBoundingClientRect();
@@ -1976,7 +2251,7 @@ async function addVariantToCart(
       "success"
     );
 
-    closeQuickAdd(card);
+    closeQuickAdd(card, { restoreFocus: true });
 
 await animationPromise;
 
@@ -2080,7 +2355,11 @@ window.ppTopNotice?.(
 document.addEventListener(
   "pp:plp:rendered",
   () => {
-    activeCard = null;
+    if (activeCard) {
+      closeQuickAdd(activeCard, {
+        immediate: true
+      });
+    }
     startQuickAdd();
   }
 );
@@ -2103,6 +2382,21 @@ window.addEventListener(
   "partials:ready",
   startQuickAdd
 );
+
+const handleQuickAddViewportChange = () => {
+  resetQuickAddForViewportChange();
+};
+
+if (typeof MOBILE_QUICK_ADD_MEDIA.addEventListener === "function") {
+  MOBILE_QUICK_ADD_MEDIA.addEventListener(
+    "change",
+    handleQuickAddViewportChange
+  );
+} else {
+  MOBILE_QUICK_ADD_MEDIA.addListener(
+    handleQuickAddViewportChange
+  );
+}
 
   /*
    * Escritorio:
@@ -2205,7 +2499,7 @@ if (backdrop) {
   event.stopPropagation();
 
   if (activeCard) {
-    closeQuickAdd(activeCard);
+    closeQuickAdd(activeCard, { restoreFocus: true });
   }
 
   return;
@@ -2449,6 +2743,41 @@ if (backdrop) {
   document.addEventListener(
     "keydown",
     (event) => {
+      if (event.key === "Tab" && activeCard && isMobileQuickAdd()) {
+        const panel = getPanel(activeCard);
+        if (panel?.classList.contains("is-mobile-portal-open")) {
+          const focusable = Array.from(panel.querySelectorAll(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )).filter((element) => (
+            !element.hidden &&
+            !element.closest('[hidden], [inert]') &&
+            element.getClientRects().length > 0
+          ));
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (first && last) {
+            if (!panel.contains(document.activeElement)) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              (event.shiftKey ? last : first).focus({ preventScroll: true });
+              return;
+            }
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              last.focus({ preventScroll: true });
+              return;
+            }
+            if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              first.focus({ preventScroll: true });
+              return;
+            }
+          }
+        }
+      }
+
       if (
         event.key !== "Escape" ||
         !activeCard
@@ -2457,6 +2786,7 @@ if (backdrop) {
       }
 
       event.preventDefault();
+      event.stopImmediatePropagation();
 
       closeQuickAdd(activeCard, {
         restoreFocus: true

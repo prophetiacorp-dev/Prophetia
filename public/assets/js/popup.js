@@ -122,8 +122,9 @@ if (modal.dataset.tribeBound === 'true') {
 }
 
 modal.dataset.tribeBound = 'true';
-    const backdrop   = modal.querySelector('.tribe-backdrop');
     const closeEls   = modal.querySelectorAll('[data-close]');
+    const closeButton = modal.querySelector('.tribe-close');
+    const tribePanel = modal.querySelector('.tribe-panel');
     const form       = $('#tribeForm', modal);
     const leftCol    = modal.querySelector('.tribe-left');
     const rightCol   = modal.querySelector('.tribe-right');
@@ -159,6 +160,30 @@ modal.dataset.tribeBound = 'true';
 let tribeAutoOpenTimer = 0;
 let tribeCoachmarkTimer = 0;
 let tribeAttentionTimer = 0;
+let tribeCloseTimer = 0;
+let tribeFocusFrame = 0;
+let tribeTransitionRevision = 0;
+let tribeReturnFocus = null;
+const tribeReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const TRIBE_EXIT_DURATION = 250;
+
+function isVisibleTribeFocusTarget(element) {
+  return element instanceof HTMLElement &&
+    element.isConnected &&
+    !element.hidden &&
+    !element.closest('[inert]') &&
+    element.getClientRects().length > 0;
+}
+
+function cancelPendingTribePresentation() {
+  window.clearTimeout(tribeCloseTimer);
+  tribeCloseTimer = 0;
+  if (tribeFocusFrame) {
+    window.cancelAnimationFrame(tribeFocusFrame);
+    tribeFocusFrame = 0;
+  }
+}
+
 function initTribeDobPickers() {
   const currentYear = new Date().getFullYear();
   const monthLabels = [
@@ -1164,9 +1189,13 @@ clearFieldErrors();
 
     // -------- abrir / cerrar modal --------
 function revealModal() {
+  const revision = ++tribeTransitionRevision;
+  cancelPendingTribePresentation();
   hideReopenButton();
 
+  modal.classList.remove('closing');
   modal.hidden = false;
+  modal.removeAttribute('inert');
 
   modal.setAttribute(
     'aria-hidden',
@@ -1180,11 +1209,35 @@ function revealModal() {
   document.body.classList.add(
     'tribe-open'
   );
+
+  tribeFocusFrame = window.requestAnimationFrame(() => {
+    tribeFocusFrame = 0;
+    if (revision !== tribeTransitionRevision || !modal.classList.contains('is-open')) return;
+    const target = closeButton || nameEl || emailEl;
+    target?.focus({ preventScroll: true });
+  });
 }
 
 async function openModal({
   source = 'manual'
 } = {}) {
+  if (modal.classList.contains('closing')) {
+    tribeTransitionRevision += 1;
+    cancelPendingTribePresentation();
+    modal.classList.remove('closing', 'is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.setAttribute('inert', '');
+    modal.hidden = true;
+    modal.dataset.openSource = '';
+    document.body.classList.remove('tribe-open');
+  }
+
+  if (!modal.classList.contains('is-open')) {
+    const active = document.activeElement;
+    tribeReturnFocus = isVisibleTribeFocusTarget(active) && !modal.contains(active)
+      ? active
+      : null;
+  }
   clearReopenCoachmark();
   resetUI();
   hideReopenButton();
@@ -1322,6 +1375,9 @@ async function restoreReopenAfterClose({
 }
 
 function closeModal() {
+  if (!modal.classList.contains('is-open')) return;
+  const revision = ++tribeTransitionRevision;
+  cancelPendingTribePresentation();
   const wasAutomaticallyOpened =
     modal.dataset.openSource === 'auto';
 
@@ -1337,34 +1393,49 @@ function closeModal() {
     'is-success'
   );
 
+  if (modal.contains(document.activeElement)) {
+    document.activeElement?.blur?.();
+  }
+  modal.setAttribute('inert', '');
+  modal.classList.add('closing');
   modal.classList.remove(
     'is-open'
   );
 
-  modal.setAttribute(
-    'aria-hidden',
-    'true'
-  );
+  const focusTarget = tribeReturnFocus;
+  tribeReturnFocus = null;
+  const finalizeClose = () => {
+    tribeCloseTimer = 0;
+    if (revision !== tribeTransitionRevision || modal.classList.contains('is-open')) return;
 
-  modal.hidden = true;
+    modal.classList.remove('closing');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.setAttribute('inert', '');
+    modal.hidden = true;
+    document.body.classList.remove('tribe-open');
+    modal.dataset.openSource = '';
 
-  document.body.classList.remove(
-    'tribe-open'
-  );
+    /*
+      Primero ocultamos. Después el servidor decide
+      si debe volver a aparecer.
+    */
+    hideReopenButton();
 
-  modal.dataset.openSource = '';
+    void restoreReopenAfterClose({
+      showCoachmark:
+        wasAutomaticallyOpened &&
+        wasShowingRegistrationForm
+    }).finally(() => {
+      if (revision !== tribeTransitionRevision || modal.classList.contains('is-open')) return;
+      const target = isVisibleTribeFocusTarget(focusTarget)
+        ? focusTarget
+        : (isVisibleTribeFocusTarget(reopenBtn) ? reopenBtn : null);
+      target?.focus({ preventScroll: true });
+    });
+  };
 
-  /*
-    Primero ocultamos. Después el servidor decide
-    si debe volver a aparecer.
-  */
-  hideReopenButton();
-
-  void restoreReopenAfterClose({
-    showCoachmark:
-      wasAutomaticallyOpened &&
-      wasShowingRegistrationForm
-  });
+  if (tribeReducedMotionQuery.matches) finalizeClose();
+  else tribeCloseTimer = window.setTimeout(finalizeClose, TRIBE_EXIT_DURATION);
 }
     // Exponer por si otras piezas (cookies, etc.) necesitan abrirlo
     window.ppTribeOpen = openModal;
@@ -1382,17 +1453,41 @@ reopenBtn.addEventListener(
   }
 );
 
-    // Cerrar con backdrop y botones data-close
-    backdrop?.addEventListener('click', (ev) => {
-      if (ev.target === backdrop) closeModal();
-    });
-    modal.querySelectorAll('[data-close]').forEach(btn => {
+    // Cerrar con backdrop y botones data-close (un único listener por control)
+    closeEls.forEach(btn => {
       btn.addEventListener('click', closeModal);
     });
 
     // ESC
     document.addEventListener('keydown', (ev) => {
-      if (ev.key === 'Escape' && !modal.hidden) closeModal();
+      if (!modal.classList.contains('is-open')) return;
+
+      if (ev.key === 'Escape') {
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+        closeModal();
+        return;
+      }
+
+      if (ev.key === 'Tab' && tribePanel) {
+        const focusable = Array.from(tribePanel.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )).filter(isVisibleTribeFocusTarget);
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!tribePanel.contains(document.activeElement)) {
+          ev.preventDefault();
+          (ev.shiftKey ? last : first).focus({ preventScroll: true });
+        } else if (ev.shiftKey && document.activeElement === first) {
+          ev.preventDefault();
+          last.focus({ preventScroll: true });
+        } else if (!ev.shiftKey && document.activeElement === last) {
+          ev.preventDefault();
+          first.focus({ preventScroll: true });
+        }
+      }
     });
 
     // -------- validación + submit --------

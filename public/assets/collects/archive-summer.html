@@ -392,36 +392,99 @@
     let lastFocused = null;
     let previousBodyOverflow = '';
     let bodyHadModalOpen = false;
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const MODAL_EXIT_DURATION = 260;
+    let modalTransitionRevision = 0;
+    let modalCloseTimer = 0;
+    let modalFocusTimer = 0;
+    let modalFocusFrame = 0;
 
     modal.setAttribute('inert', '');
 
+    function cancelPendingClose() {
+      if (!modalCloseTimer) return;
+      window.clearTimeout(modalCloseTimer);
+      modalCloseTimer = 0;
+    }
+
+    function cancelPendingFocus() {
+      if (modalFocusFrame) {
+        cancelAnimationFrame(modalFocusFrame);
+        modalFocusFrame = 0;
+      }
+      if (modalFocusTimer) {
+        clearTimeout(modalFocusTimer);
+        modalFocusTimer = 0;
+      }
+    }
+
     function openModal(trigger) {
       if (modal.classList.contains('is-open')) return;
-      lastFocused = trigger || document.activeElement;
-      previousBodyOverflow = document.body.style.overflow;
-      bodyHadModalOpen = document.body.classList.contains('modal-open');
+      const wasClosing = modal.classList.contains('is-closing');
+      const revision = ++modalTransitionRevision;
+      cancelPendingClose();
+      cancelPendingFocus();
+      if (trigger && !modal.contains(trigger)) lastFocused = trigger;
+      else if (!wasClosing) lastFocused = document.activeElement;
+      if (!wasClosing) {
+        previousBodyOverflow = document.body.style.overflow;
+        bodyHadModalOpen = document.body.classList.contains('modal-open');
+      }
+      modal.classList.remove('is-closing');
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
       modal.removeAttribute('inert');
       document.body.classList.add('modal-open');
       document.body.style.overflow = 'hidden';
       const focusClose = () => {
-        if (modal.classList.contains('is-open')) {
+        if (revision === modalTransitionRevision && modal.classList.contains('is-open')) {
           closeButton?.focus({ preventScroll: true });
         }
       };
-      requestAnimationFrame(focusClose);
-      setTimeout(focusClose, 80);
+      modalFocusFrame = requestAnimationFrame(() => {
+        modalFocusFrame = requestAnimationFrame(() => {
+          modalFocusFrame = 0;
+          focusClose();
+        });
+      });
+      modalFocusTimer = setTimeout(() => {
+        modalFocusTimer = 0;
+        focusClose();
+      }, reducedMotionQuery.matches ? 40 : 80);
     }
 
     function closeModal() {
       if (!modal.classList.contains('is-open')) return;
-      modal.classList.remove('is-open');
-      modal.setAttribute('aria-hidden', 'true');
+      const revision = ++modalTransitionRevision;
+      cancelPendingClose();
+      cancelPendingFocus();
+      const focusTarget = lastFocused?.isConnected ? lastFocused : null;
+      if (modal.contains(document.activeElement)) document.activeElement?.blur?.();
       modal.setAttribute('inert', '');
-      document.body.style.overflow = previousBodyOverflow;
-      if (!bodyHadModalOpen) document.body.classList.remove('modal-open');
-      setTimeout(() => lastFocused?.focus?.({ preventScroll: true }), 0);
+      modal.classList.add('is-closing');
+      modal.classList.remove('is-open');
+
+      const finalizeClose = () => {
+        modalCloseTimer = 0;
+        if (revision !== modalTransitionRevision || modal.classList.contains('is-open')) return;
+
+        if (modal.contains(document.activeElement)) {
+          if (focusTarget) focusTarget.focus({ preventScroll: true });
+          else document.activeElement?.blur?.();
+        } else if (focusTarget) {
+          focusTarget.focus({ preventScroll: true });
+        }
+
+        modal.classList.remove('is-closing');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.setAttribute('inert', '');
+        document.body.style.overflow = previousBodyOverflow;
+        if (!bodyHadModalOpen) document.body.classList.remove('modal-open');
+        lastFocused = null;
+      };
+
+      if (reducedMotionQuery.matches) finalizeClose();
+      else modalCloseTimer = setTimeout(finalizeClose, MODAL_EXIT_DURATION);
     }
 
     triggers.forEach(trigger => {
@@ -440,6 +503,7 @@
 
       if (e.key === 'Escape') {
         e.preventDefault();
+        e.stopPropagation();
         closeModal();
         return;
       }
@@ -451,12 +515,15 @@
         if (!focusable.length) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
+        if (!dialog.contains(document.activeElement)) {
           e.preventDefault();
-          last.focus();
+          (e.shiftKey ? last : first).focus({ preventScroll: true });
+        } else if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus({ preventScroll: true });
         } else if (!e.shiftKey && document.activeElement === last) {
           e.preventDefault();
-          first.focus();
+          first.focus({ preventScroll: true });
         }
       }
     });

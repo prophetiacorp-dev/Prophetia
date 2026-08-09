@@ -558,16 +558,6 @@ body.streetwear-page .footer-inner {
 }
 
 @media (max-width: 640px) {
-  .streetwear-page .pp-filters.container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .streetwear-page .pp-filter-right {
-    align-self: flex-end;
-  }
-
   .streetwear-page .plp-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 16px;

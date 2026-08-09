@@ -422,7 +422,6 @@ html:has(#ppTopNotice[aria-hidden="false"]) body:is(
     display: flex !important;
     align-items: center !important;
     gap: 14px !important;
-    flex-wrap: wrap !important;
   }
 
   body:is(

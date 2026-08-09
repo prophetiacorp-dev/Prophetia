@@ -83,8 +83,20 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
 
   let returnFocus = null;
   const mobileFiltersQuery = window.matchMedia('(max-width: 1024px)');
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const FILTERS_EXIT_DURATION = 260;
+  let drawerTransitionRevision = 0;
+  let drawerCloseTimer = 0;
 
   const isDrawerOpen = () => drawer.classList.contains('is-open');
+  const isDrawerClosing = () => drawer.classList.contains('is-closing');
+
+  function cancelPendingDrawerClose() {
+    if (drawerCloseTimer) {
+      window.clearTimeout(drawerCloseTimer);
+      drawerCloseTimer = 0;
+    }
+  }
 
   openBtn.setAttribute('aria-expanded', isDrawerOpen() ? 'true' : 'false');
   if (drawer.id) openBtn.setAttribute('aria-controls', drawer.id);
@@ -136,9 +148,16 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
   }
 
   function openDrawer() {
-    returnFocus = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : openBtn;
+    const revision = ++drawerTransitionRevision;
+    cancelPendingDrawerClose();
+    const activeElement = document.activeElement;
+    if (activeElement instanceof HTMLElement && !drawer.contains(activeElement)) {
+      returnFocus = activeElement;
+    } else if (!(returnFocus instanceof HTMLElement) || !returnFocus.isConnected) {
+      returnFocus = openBtn;
+    }
+    overlay.classList.remove('is-closing');
+    drawer.classList.remove('is-closing');
     drawer.removeAttribute('inert');
     overlay.classList.add('is-open');
     drawer.classList.add('is-open');
@@ -156,7 +175,7 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
     const focusTarget = closeBtn || getFocusable()[0];
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        if (isDrawerOpen()) {
+        if (revision === drawerTransitionRevision && isDrawerOpen()) {
           focusTarget?.focus?.({ preventScroll: true });
         }
       });
@@ -164,25 +183,48 @@ const norm = (v='') => String(v ?? '').trim().toLowerCase();
   }
 
   function closeDrawer({ restoreFocus = true } = {}) {
-    const wasOpen = isDrawerOpen();
-    const focusTarget = wasOpen && restoreFocus && returnFocus?.isConnected
+    if (!isDrawerOpen() || isDrawerClosing()) return;
+    const revision = ++drawerTransitionRevision;
+    cancelPendingDrawerClose();
+    const focusTarget = restoreFocus && returnFocus?.isConnected
       ? returnFocus
       : null;
+
+    overlay.classList.add('is-closing');
+    drawer.classList.add('is-closing');
     overlay.classList.remove('is-open');
     drawer.classList.remove('is-open');
-    focusTarget?.focus?.({ preventScroll: true });
-    overlay.setAttribute('aria-hidden', 'true');
-    drawer.setAttribute('aria-hidden', 'true');
+    if (drawer.contains(document.activeElement)) document.activeElement?.blur?.();
     drawer.setAttribute('inert', '');
     openBtn.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('pp-filters-open');
-    if (!document.body.classList.contains('pp-cart-open') &&
-        !document.body.classList.contains('pp-mobile-panel-open')) {
-      document.body.classList.remove('no-scroll');
-    }
-    syncTabAccessibility();
 
-    returnFocus = null;
+    const finalizeClose = () => {
+      drawerCloseTimer = 0;
+      if (revision !== drawerTransitionRevision || isDrawerOpen()) return;
+
+      if (drawer.contains(document.activeElement)) {
+        if (focusTarget) focusTarget.focus({ preventScroll: true });
+        else document.activeElement?.blur?.();
+      } else if (focusTarget) {
+        focusTarget.focus({ preventScroll: true });
+      }
+
+      overlay.classList.remove('is-closing');
+      drawer.classList.remove('is-closing');
+      overlay.setAttribute('aria-hidden', 'true');
+      drawer.setAttribute('aria-hidden', 'true');
+      drawer.setAttribute('inert', '');
+      document.body.classList.remove('pp-filters-open');
+      if (!document.body.classList.contains('pp-cart-open') &&
+          !document.body.classList.contains('pp-mobile-panel-open')) {
+        document.body.classList.remove('no-scroll');
+      }
+      syncTabAccessibility();
+      returnFocus = null;
+    };
+
+    if (reducedMotionQuery.matches) finalizeClose();
+    else drawerCloseTimer = window.setTimeout(finalizeClose, FILTERS_EXIT_DURATION);
   }
 
 function getState() {
@@ -258,6 +300,7 @@ function getState() {
 
     if (e.key === 'Escape') {
       e.preventDefault();
+      e.stopPropagation();
       closeDrawer();
       return;
     }

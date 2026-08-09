@@ -22,6 +22,7 @@ function getPdpFocusable(container) {
       element instanceof HTMLElement &&
       !element.hidden &&
       !element.closest('[hidden]') &&
+      !element.closest('[inert]') &&
       element.getAttribute('aria-hidden') !== 'true' &&
       element.getClientRects().length > 0
     );
@@ -29,9 +30,17 @@ function getPdpFocusable(container) {
 }
 
 function focusPdpMobileLayer(container, preferredSelector = '') {
-  if (!pdpMobileQuery.matches || !(container instanceof HTMLElement)) return;
+  if (!(container instanceof HTMLElement)) return;
 
   window.requestAnimationFrame(() => {
+    if (
+      !container.isConnected ||
+      container.hidden ||
+      container.classList.contains('hidden') ||
+      container.inert ||
+      container.getAttribute('aria-hidden') === 'true'
+    ) return;
+
     const preferred = preferredSelector
       ? container.querySelector(preferredSelector)
       : null;
@@ -44,7 +53,7 @@ function focusPdpMobileLayer(container, preferredSelector = '') {
 }
 
 function trapPdpMobileFocus(event, container) {
-  if (!pdpMobileQuery.matches || event.key !== 'Tab') return false;
+  if (event.key !== 'Tab') return false;
 
   const focusable = getPdpFocusable(container);
   if (!focusable.length) return false;
@@ -551,6 +560,8 @@ const adBody  = document.getElementById('adBody');
 const adTitle = document.getElementById('adTitle');
 let drawerReturnFocus = null;
 let drawerTrigger = null;
+let drawerCloseTimer = 0;
+let drawerTransitionRevision = 0;
 
 const PDP_DRAWER_TRIGGERS = [
   cutBtn,
@@ -637,7 +648,9 @@ const Z = {
 };
 let zoomReturnFocus = null;
 let zoomTrigger = null;
+let zoomBodyHadModalOpen = false;
 Z.el.setAttribute('aria-label', `Vista ampliada de ${prod.title || 'producto'}`);
+Z.el.inert = true;
 
 function zoomPaint(idx) {
   Z.i = idx;
@@ -653,19 +666,22 @@ function zoomOpen(idx, trigger = null) {
   zoomTrigger = trigger instanceof HTMLElement ? trigger : null;
   setPdpDialogTriggerState(zoomTrigger, 'pdpZoom', true);
 
-  if (pdpMobileQuery.matches) {
+  if (Z.el.classList.contains('hidden')) {
     zoomReturnFocus = zoomTrigger
       ? zoomTrigger
       : document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
-    Z.el.setAttribute('aria-modal', 'true');
+    zoomBodyHadModalOpen = document.body.classList.contains('modal-open');
   }
+  Z.el.setAttribute('aria-modal', 'true');
 
   zoomPaint(idx);
   syncPdpLayerMotion(Z.el);
   Z.el.classList.remove('hidden');
+  Z.el.inert = false;
   Z.el.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
   Z.el.classList.toggle('zoom-in', !pdpReducedMotionQuery.matches);
   resetZoom();
   focusPdpMobileLayer(Z.el, '#pdpZoomClose');
@@ -675,6 +691,7 @@ function zoomClose() {
   const returnFocus = zoomReturnFocus;
   setPdpDialogTriggerState(zoomTrigger, 'pdpZoom', false);
   Z.el.classList.add('hidden');
+  Z.el.inert = true;
   Z.el.setAttribute('aria-hidden', 'true');
   Z.el.removeAttribute('aria-modal');
   Z.el.classList.remove('zoom-in');
@@ -682,6 +699,14 @@ function zoomClose() {
   resetZoom();
   zoomReturnFocus = null;
   zoomTrigger = null;
+  if (
+    !zoomBodyHadModalOpen &&
+    (!pdpStockModal || pdpStockModal.hidden) &&
+    !document.querySelector('#ppAuthModal[open], #ppAccountPanel[open], .archive-version-modal.is-open')
+  ) {
+    document.body.classList.remove('modal-open');
+  }
+  zoomBodyHadModalOpen = false;
   restorePdpMobileFocus(returnFocus);
 }
 
@@ -819,12 +844,12 @@ window.addEventListener('keydown', (e) => {
 
   if (e.key === 'Escape') {
     e.preventDefault();
-    if (pdpMobileQuery.matches) e.stopPropagation();
+    e.stopPropagation();
     zoomClose();
     return;
   }
 
-  if (e.key === 'Tab' && pdpMobileQuery.matches) {
+  if (e.key === 'Tab') {
     trapPdpMobileFocus(e, Z.el);
     e.stopPropagation();
   }
@@ -857,7 +882,12 @@ function saveSel(){
 }
 
 function activateDrawer(trigger = null) {
-  if (!drawer.classList.contains('open')) {
+  const wasClosing = drawer.classList.contains('closing');
+  const wasOpen = drawer.classList.contains('open') && !wasClosing;
+  drawerTransitionRevision += 1;
+  window.clearTimeout(drawerCloseTimer);
+  drawerCloseTimer = 0;
+  if (!wasOpen && !wasClosing) {
     const active = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
@@ -866,14 +896,16 @@ function activateDrawer(trigger = null) {
       : active && active !== document.body && active !== document.documentElement
         ? active
         : null;
-    setPdpDialogTriggerState(drawerTrigger, 'attrDrawer', true);
-
-    if (pdpMobileQuery.matches) {
-      drawerReturnFocus = drawerTrigger || active;
-    }
+    drawerReturnFocus = drawerTrigger || active;
+  } else if (wasClosing && trigger instanceof HTMLElement) {
+    drawerTrigger = trigger;
+    drawerReturnFocus = trigger;
   }
+  setPdpDialogTriggerState(drawerTrigger, 'attrDrawer', true);
 
   syncPdpLayerMotion(drawer);
+  drawer.classList.remove('closing');
+  drawer.inert = false;
   drawer.classList.add('open', 'is-open');
   drawer.setAttribute('aria-hidden', 'false');
   document.body.classList.add('drawer-open');
@@ -898,15 +930,19 @@ if (adTabs){
 function closeDrawer({ restoreFocus = true, deferFocus = true } = {}){
   const returnFocus = drawerReturnFocus;
   const closingTrigger = drawerTrigger;
-  drawer.classList.remove('open', 'is-open', 'ad--details', 'ad--fit-guide');
-  drawer.setAttribute('aria-hidden','true');
-  document.body.classList.remove('drawer-open');
+  const wasOpen = drawer.classList.contains('open') || drawer.classList.contains('is-open');
+  if (drawer.classList.contains('closing')) return returnFocus;
 
-  // Limpieza tabs
-  if (adTabs){
-    adTabs.hidden = true;
-    adTabs.innerHTML = '';
+  const revision = ++drawerTransitionRevision;
+  window.clearTimeout(drawerCloseTimer);
+  drawerCloseTimer = 0;
+  if (wasOpen && drawer.contains(document.activeElement)) {
+    document.activeElement?.blur?.();
   }
+  drawer.classList.remove('is-open');
+  drawer.classList.add('closing');
+  drawer.setAttribute('aria-hidden','true');
+  drawer.inert = true;
 
   setPdpDialogTriggerState(closingTrigger, 'attrDrawer', false);
   if (closingTrigger && !PDP_DRAWER_TRIGGERS.includes(closingTrigger)) {
@@ -914,9 +950,25 @@ function closeDrawer({ restoreFocus = true, deferFocus = true } = {}){
     closingTrigger.removeAttribute('aria-controls');
     closingTrigger.removeAttribute('aria-expanded');
   }
-  drawerTrigger = null;
-  drawerReturnFocus = null;
-  if (restoreFocus) restorePdpMobileFocus(returnFocus, { defer: deferFocus });
+  const finalize = () => {
+    if (revision !== drawerTransitionRevision) return;
+    drawerCloseTimer = 0;
+    if (!drawer.classList.contains('closing')) return;
+    drawer.classList.remove('open', 'closing', 'ad--details', 'ad--fit-guide');
+    if (adTabs){
+      adTabs.hidden = true;
+      adTabs.innerHTML = '';
+    }
+    document.body.classList.remove('drawer-open');
+    if (restoreFocus) restorePdpMobileFocus(returnFocus, { defer: deferFocus });
+    drawerTrigger = null;
+    drawerReturnFocus = null;
+  };
+  if (wasOpen && !pdpReducedMotionQuery.matches) {
+    drawerCloseTimer = window.setTimeout(finalize, 200);
+  } else {
+    finalize();
+  }
   return returnFocus;
 }
 
@@ -930,10 +982,7 @@ function syncPdpOpenLayersForViewport(event) {
   const drawerOpen = drawer.classList.contains('open');
   const zoomOpenNow = !Z.el.classList.contains('hidden');
 
-  if (!event.matches) {
-    if (zoomOpenNow) Z.el.removeAttribute('aria-modal');
-    return;
-  }
+  if (!event.matches) return;
 
   const active = document.activeElement instanceof HTMLElement
     ? document.activeElement
@@ -969,7 +1018,7 @@ drawer.querySelectorAll('[data-ad-close]').forEach(el=>{
 
 // Cerrar: ESC
 document.addEventListener('keydown', (e)=>{
-  if (!drawer.classList.contains('open')) return;
+  if (!drawer.classList.contains('open') || drawer.classList.contains('closing')) return;
   if (
     !Z.el.classList.contains('hidden') ||
     document.body.classList.contains('pp-cart-open') ||
@@ -977,15 +1026,13 @@ document.addEventListener('keydown', (e)=>{
   ) return;
 
   if (e.key === 'Escape') {
-    if (pdpMobileQuery.matches) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    e.preventDefault();
+    e.stopPropagation();
     closeDrawer();
     return;
   }
 
-  trapPdpMobileFocus(e, drawer);
+  if (trapPdpMobileFocus(e, drawer)) e.stopPropagation();
 });
 
 // Helpers variants (soporta productos con y sin prod.variants)
@@ -1166,6 +1213,7 @@ let pdpStockModal = null;
 let pdpStockOptions = [];
 let pdpPreferredStockSku = '';
 let pdpStockReturnFocus = null;
+let pdpStockBodyHadModalOpen = false;
 
 function normalizeText(value = '') {
   return String(value ?? '').trim();
@@ -1290,6 +1338,8 @@ function ensurePdpStockModal() {
   pdpStockModal = document.createElement('div');
   pdpStockModal.className = 'pdp-stock-modal';
   pdpStockModal.hidden = true;
+  pdpStockModal.inert = true;
+  pdpStockModal.setAttribute('aria-hidden', 'true');
   pdpStockModal.innerHTML = `
     <div class="pdp-stock-modal__card" role="dialog" aria-modal="true" aria-labelledby="pdpStockModalTitle">
       <button class="pdp-stock-modal__close" type="button" data-pdp-stock-close aria-label="Cerrar">×</button>
@@ -1337,16 +1387,14 @@ function ensurePdpStockModal() {
     if (pdpStockModal.hidden) return;
 
     if (event.key === 'Escape') {
-      if (pdpMobileQuery.matches) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+      event.preventDefault();
+      event.stopPropagation();
       closePdpStockModal();
       return;
     }
 
     const dialog = pdpStockModal.querySelector('.pdp-stock-modal__card');
-    trapPdpMobileFocus(event, dialog);
+    if (trapPdpMobileFocus(event, dialog)) event.stopPropagation();
   });
 
   return pdpStockModal;
@@ -1369,10 +1417,11 @@ function openPdpStockModal(preferred = {}) {
   const user = getPdpUser();
   const prelaunch = window.ppStorefront?.salesEnabled === false;
 
-  if (pdpMobileQuery.matches && modal.hidden) {
+  if (modal.hidden) {
     pdpStockReturnFocus = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
+    pdpStockBodyHadModalOpen = document.body.classList.contains('modal-open');
   }
 
   pdpPreferredStockSku = normalizeText(preferred.sku);
@@ -1410,8 +1459,12 @@ function openPdpStockModal(preferred = {}) {
 
   setPdpStockStatus('');
   modal.hidden = false;
+  modal.inert = false;
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
 
   window.requestAnimationFrame(() => {
+    if (modal.hidden) return;
     emailInput?.focus({ preventScroll: true });
   });
 }
@@ -1422,10 +1475,20 @@ function closePdpStockModal() {
   const returnFocus = pdpStockReturnFocus;
 
   pdpStockModal.hidden = true;
+  pdpStockModal.inert = true;
+  pdpStockModal.setAttribute('aria-hidden', 'true');
   pdpStockOptions = [];
   pdpPreferredStockSku = '';
   pdpStockReturnFocus = null;
   setPdpStockStatus('');
+  if (
+    !pdpStockBodyHadModalOpen &&
+    Z.el.classList.contains('hidden') &&
+    !document.querySelector('#ppAuthModal[open], #ppAccountPanel[open], .archive-version-modal.is-open')
+  ) {
+    document.body.classList.remove('modal-open');
+  }
+  pdpStockBodyHadModalOpen = false;
   restorePdpMobileFocus(returnFocus);
 }
 

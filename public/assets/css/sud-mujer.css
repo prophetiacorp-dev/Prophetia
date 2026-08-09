@@ -238,16 +238,6 @@ body.women-page.sud-women-page .pp-plp.container{
   }
 }
 
-@media (max-width: 640px){
-  body.women-page.sud-women-page .pp-filters.container{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  body.women-page.sud-women-page .pp-filter-right{
-    align-self: flex-end;
-  }
-}
 /* Opcional: evita que el drawer tape el header visualmente en móvil */
 @media (max-width: 768px){
   body.women-page.sud-women-page .women-filters-drawer{

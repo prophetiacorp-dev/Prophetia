@@ -653,14 +653,6 @@ body.sud-men-page .site-footer a:hover{
 }
 
 @media (max-width: 640px){
-  body.sud-men-page .pp-filters.container{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  body.sud-men-page .pp-filter-right{ align-self: flex-end; }
-
   body.sud-men-page .plp-grid{
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 16px;

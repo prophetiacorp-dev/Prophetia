@@ -350,16 +350,92 @@ function initMobileDock() {
   const mobileCount = dock.querySelector('[data-pp-mobile-cart-count]');
   const tabs = Array.from(panel.querySelectorAll('[data-pp-mobile-tab]'));
   const sections = Array.from(panel.querySelectorAll('[data-pp-mobile-section]'));
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let returnFocus = null;
   let catalogPromise = null;
   let searchTimer = 0;
   let searchRevision = 0;
   let searchResults = null;
   let activeSublevel = null;
+  let panelTransitionRevision = 0;
+  let sectionTransitionRevision = 0;
+  let levelTransitionRevision = 0;
+  let suspendedPanelFocus = [];
 
   function setExpanded(source = null) {
     menuButton?.setAttribute('aria-expanded', source === 'menu' ? 'true' : 'false');
     searchButton?.setAttribute('aria-expanded', source === 'search' ? 'true' : 'false');
+  }
+
+  function motionDuration(duration) {
+    return reducedMotionQuery.matches ? 0 : duration;
+  }
+
+  function afterNextPaint(callback) {
+    window.requestAnimationFrame(() => window.requestAnimationFrame(callback));
+  }
+
+  function restorePanelFocusability() {
+    suspendedPanelFocus.forEach(({ element, tabIndex }) => {
+      if (!element.isConnected) return;
+      if (tabIndex === null) element.removeAttribute('tabindex');
+      else element.setAttribute('tabindex', tabIndex);
+    });
+    suspendedPanelFocus = [];
+  }
+
+  function suspendPanelFocusability() {
+    restorePanelFocusability();
+    suspendedPanelFocus = Array.from(panel.querySelectorAll(
+      'a[href], button, input, select, textarea, [tabindex]'
+    )).map((element) => ({
+      element,
+      tabIndex: element.getAttribute('tabindex')
+    }));
+    suspendedPanelFocus.forEach(({ element }) => element.setAttribute('tabindex', '-1'));
+  }
+
+  function waitForMotion(element, duration, propertyNames = []) {
+    const wait = motionDuration(duration);
+    if (!(element instanceof Element) || wait === 0 || destroyed) return Promise.resolve();
+
+    return new Promise((resolve) => {
+      let timer = 0;
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timer);
+        element.removeEventListener('transitionend', onTransitionEnd);
+        signal.removeEventListener('abort', finish);
+        resolve();
+      };
+      const onTransitionEnd = (event) => {
+        if (event.target !== element) return;
+        if (propertyNames.length && !propertyNames.includes(event.propertyName)) return;
+        finish();
+      };
+
+      element.addEventListener('transitionend', onTransitionEnd);
+      signal.addEventListener('abort', finish, { once: true });
+      timer = window.setTimeout(finish, wait + 80);
+    });
+  }
+
+  function syncMobileHouseNavigation() {
+    const source = headerHost.querySelector('#panel-house [data-pp-house-source]');
+    const target = panel.querySelector('#ppMobileSectionHouse [data-pp-house-target]');
+    if (!source || !target) return false;
+
+    const links = Array.from(source.querySelectorAll(':scope > li > a[href]'));
+    const fragment = document.createDocumentFragment();
+    links.forEach((sourceLink) => {
+      const item = sourceLink.closest('li')?.cloneNode(true);
+      if (item) fragment.appendChild(item);
+    });
+    target.replaceChildren(fragment);
+    target.dataset.ppHouseSynced = String(links.length);
+    return links.length > 0;
   }
 
   function sectionForPath(pathname) {
@@ -377,20 +453,6 @@ function initMobileDock() {
 
     if (['/about', '/studio', '/musica', '/events'].includes(pathname)) return 'house';
     if (pathname === '/prophetia-originals') return 'originals';
-    if ([
-      '/account',
-      '/my-services',
-      '/my-content',
-      '/pedidos',
-      '/addresses',
-      '/reservas',
-      '/drop-calendar',
-      '/vault',
-      '/prophet-private',
-      '/wishlist'
-    ].includes(pathname)) {
-      return 'house';
-    }
 
     return 'women';
   }
@@ -400,61 +462,123 @@ function initMobileDock() {
     if (!selectedTab) return;
 
     const selectedName = selectedTab.dataset.ppMobileTab;
+    const currentTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+    const outgoing = sections.find(
+      (section) => section.dataset.ppMobileSection === currentTab?.dataset.ppMobileTab
+    ) || sections.find((section) => !section.hidden);
+    const incoming = sections.find((section) => section.dataset.ppMobileSection === selectedName);
+    if (!incoming) return;
+
+    const shouldMeasureTab = !panel.hidden && panel.classList.contains('is-open');
+    const tabList = selectedTab.parentElement;
+    const selectedTabRect = shouldMeasureTab ? selectedTab.getBoundingClientRect() : null;
+    const tabListRect = shouldMeasureTab ? tabList?.getBoundingClientRect() : null;
+
+    const revision = ++sectionTransitionRevision;
+    levelTransitionRevision += 1;
+    sections.forEach((section) => {
+      const wasCurrent = section === outgoing;
+      section.hidden = !wasCurrent;
+      section.classList.remove('is-tab-entering', 'is-tab-leaving', 'is-submenu-open');
+      section.classList.toggle('is-active', wasCurrent);
+      section.querySelectorAll('.pp-mobile-menu__views-track').forEach((track) => {
+        track.classList.remove('is-level-transitioning');
+      });
+      section.querySelectorAll('[data-pp-mobile-level]').forEach((level) => {
+        level.hidden = false;
+      });
+    });
+
     tabs.forEach((tab) => {
       const active = tab === selectedTab;
       tab.setAttribute('aria-selected', active ? 'true' : 'false');
       tab.tabIndex = active ? 0 : -1;
     });
 
+    activeSublevel = null;
+    const shouldAnimate = !panel.hidden &&
+      panel.classList.contains('is-open') &&
+      outgoing &&
+      outgoing !== incoming &&
+      !reducedMotionQuery.matches;
+
     sections.forEach((section) => {
-      const isSelected = section.dataset.ppMobileSection === selectedName;
-      section.hidden = !isSelected;
-      section.classList.remove('is-submenu-open');
-      section.querySelectorAll('[data-pp-mobile-level]').forEach((level) => {
-        level.hidden = false;
-        level.classList.remove('is-active');
-      });
+      const isSelected = section === incoming;
+      section.setAttribute('aria-hidden', isSelected ? 'false' : 'true');
+      section.toggleAttribute('inert', !isSelected);
     });
 
-    activeSublevel = null;
-    syncSublevelState();
+    if (!shouldAnimate) {
+      sections.forEach((section) => {
+        const isSelected = section === incoming;
+        section.hidden = !isSelected;
+        section.classList.toggle('is-active', isSelected);
+      });
+      syncSublevelState();
+    } else {
+      outgoing.hidden = false;
+      incoming.hidden = false;
+      outgoing.classList.add('is-active');
+      incoming.classList.add('is-tab-entering');
+      syncSublevelState();
 
-    if (!panel.hidden) {
-      selectedTab.scrollIntoView({ block: 'nearest', inline: 'center' });
+      afterNextPaint(async () => {
+        if (revision !== sectionTransitionRevision || destroyed) return;
+        outgoing.classList.remove('is-active');
+        outgoing.classList.add('is-tab-leaving');
+        incoming.classList.remove('is-tab-entering');
+        incoming.classList.add('is-active');
+        await waitForMotion(incoming, 180, ['opacity', 'transform']);
+        if (revision !== sectionTransitionRevision || destroyed) return;
+        outgoing.hidden = true;
+        outgoing.classList.remove('is-tab-leaving');
+      });
+    }
+
+    if (selectedTabRect && tabListRect && tabList) {
+      if (
+        selectedTabRect.left < tabListRect.left ||
+        selectedTabRect.right > tabListRect.right
+      ) {
+        const delta = selectedTabRect.left < tabListRect.left
+          ? selectedTabRect.left - tabListRect.left - 1
+          : selectedTabRect.right - tabListRect.right + 1;
+        tabList.scrollBy({
+          behavior: reducedMotionQuery.matches ? 'auto' : 'smooth',
+          left: delta
+        });
+      }
     }
     if (focus) selectedTab.focus({ preventScroll: true });
   }
 
-  function syncSublevelState({ keepSublevelInteractive = false } = {}) {
-    const activeSection = sections.find((section) => !section.hidden);
+  function syncSublevelState() {
+    const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+    const activeSection = sections.find(
+      (section) => section.dataset.ppMobileSection === activeTab?.dataset.ppMobileTab
+    );
     const level = activeSection?.querySelector(
       `[data-pp-mobile-level="${activeSublevel || 'root'}"]`
     );
-    const triggers = activeSection
-      ? Array.from(activeSection.querySelectorAll('[data-pp-mobile-level-trigger]'))
-      : [];
 
     sections.forEach((section) => {
       const isActiveSection = section === activeSection;
       section.classList.toggle('is-submenu-open', isActiveSection && Boolean(activeSublevel));
 
       section.querySelectorAll('[data-pp-mobile-level]').forEach((item) => {
-        const isCurrentLevel = item === level;
-        const keepInteractive = keepSublevelInteractive &&
-          item !== level &&
-          item.dataset.ppMobileLevel !== 'root';
-        const isExposed = isCurrentLevel || keepInteractive;
+        const isCurrentLevel = isActiveSection && item === level;
 
         item.hidden = false;
         item.classList.toggle('is-active', isCurrentLevel);
-        item.setAttribute('aria-hidden', isExposed ? 'false' : 'true');
-        item.toggleAttribute('inert', !isExposed);
+        item.setAttribute('aria-hidden', isCurrentLevel ? 'false' : 'true');
+        item.toggleAttribute('inert', !isCurrentLevel);
       });
-    });
 
-    triggers.forEach((trigger) => {
-      const isActive = trigger.dataset.ppMobileLevelTrigger === activeSublevel;
-      trigger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+      section.querySelectorAll('[data-pp-mobile-level-trigger]').forEach((trigger) => {
+        const isActive = isActiveSection &&
+          trigger.dataset.ppMobileLevelTrigger === activeSublevel;
+        trigger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+      });
     });
 
     backButton.hidden = !activeSublevel;
@@ -462,67 +586,100 @@ function initMobileDock() {
   }
 
   function openSublevel(name, { focus = true } = {}) {
-    const activeSection = sections.find((section) => !section.hidden);
+    const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+    const activeSection = sections.find(
+      (section) => section.dataset.ppMobileSection === activeTab?.dataset.ppMobileTab
+    );
     const target = activeSection?.querySelector(`[data-pp-mobile-level="${name}"]`);
     if (!target) return;
 
+    const revision = ++levelTransitionRevision;
+    const track = activeSection.querySelector('.pp-mobile-menu__views-track');
+    track?.classList.add('is-level-transitioning');
     activeSublevel = name;
     syncSublevelState();
+    if (focus) target.querySelector('a, button')?.focus({ preventScroll: true });
 
-    if (focus) {
-      window.requestAnimationFrame(() => {
-        target.querySelector('a, button')?.focus({ preventScroll: true });
-      });
-    }
+    void (async () => {
+      await waitForMotion(track, 280, ['transform']);
+      if (revision !== levelTransitionRevision || destroyed) return;
+      track?.classList.remove('is-level-transitioning');
+    })();
   }
 
   function closeSublevel({ focus = true } = {}) {
     if (!activeSublevel) return false;
 
     const closingSublevel = activeSublevel;
-    const activeSection = sections.find((section) => !section.hidden);
+    const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+    const activeSection = sections.find(
+      (section) => section.dataset.ppMobileSection === activeTab?.dataset.ppMobileTab
+    );
     const track = activeSection?.querySelector('.pp-mobile-menu__views-track');
+    const revision = ++levelTransitionRevision;
+    track?.classList.add('is-level-transitioning');
     activeSublevel = null;
-    syncSublevelState({ keepSublevelInteractive: true });
-
-    let finalized = false;
-    const finalize = () => {
-      if (finalized) return;
-      finalized = true;
-      syncSublevelState();
-
-      if (focus) {
-        window.requestAnimationFrame(() => {
-          sections.find((section) => !section.hidden)
-            ?.querySelector(`[data-pp-mobile-level-trigger="${closingSublevel}"]`)
-            ?.focus({ preventScroll: true });
-        });
-      }
-    };
-
-    if (track) {
-      track.addEventListener('transitionend', (event) => {
-        if (event.propertyName === 'transform') finalize();
-      }, { once: true });
-      window.setTimeout(finalize, 320);
-    } else {
-      finalize();
+    syncSublevelState();
+    if (focus) {
+      activeSection
+        ?.querySelector(`[data-pp-mobile-level-trigger="${closingSublevel}"]`)
+        ?.focus({ preventScroll: true });
     }
+
+    void (async () => {
+      await waitForMotion(track, 280, ['transform']);
+      if (revision !== levelTransitionRevision || destroyed) return;
+      track?.classList.remove('is-level-transitioning');
+    })();
 
     return true;
   }
 
-  function closePanel({ restoreFocus = true } = {}) {
+  async function closePanel({ restoreFocus = true, immediate = false } = {}) {
     const wasOpen = !panel.hidden;
+    const revision = ++panelTransitionRevision;
+    levelTransitionRevision += 1;
     activeSublevel = null;
+    sections.forEach((section) => {
+      section.querySelectorAll('.pp-mobile-menu__views-track').forEach((track) => {
+        track.classList.remove('is-level-transitioning');
+      });
+    });
     syncSublevelState();
-    panel.hidden = true;
-    panel.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('pp-mobile-panel-open');
     setExpanded();
 
-    if (wasOpen && restoreFocus && returnFocus instanceof HTMLElement) {
-      returnFocus.focus({ preventScroll: true });
+    if (!wasOpen) {
+      restorePanelFocusability();
+      panel.hidden = true;
+      panel.setAttribute('aria-hidden', 'true');
+      panel.setAttribute('inert', '');
+      panel.classList.remove('is-opening', 'is-open', 'is-closing');
+      document.body.classList.remove('pp-mobile-panel-open');
+      returnFocus = null;
+      return;
+    }
+
+    const focusTarget = returnFocus;
+    if (panel.contains(document.activeElement)) {
+      document.activeElement?.blur?.();
+    }
+    suspendPanelFocusability();
+    panel.classList.remove('is-opening', 'is-open');
+    panel.classList.add('is-closing');
+    panel.setAttribute('aria-hidden', 'true');
+
+    if (!immediate) {
+      await waitForMotion(panel.querySelector('.pp-mobile-panel__content'), 260, ['opacity', 'transform']);
+    }
+    if (revision !== panelTransitionRevision && !immediate) return;
+
+    panel.hidden = true;
+    panel.setAttribute('inert', '');
+    restorePanelFocusability();
+    panel.classList.remove('is-closing');
+    document.body.classList.remove('pp-mobile-panel-open');
+    if (restoreFocus && focusTarget instanceof HTMLElement && focusTarget.isConnected) {
+      focusTarget.focus({ preventScroll: true });
     }
     returnFocus = null;
   }
@@ -587,7 +744,7 @@ function initMobileDock() {
 
     window.clearTimeout(searchTimer);
     searchRevision += 1;
-    closePanel({ restoreFocus: false });
+    void closePanel({ restoreFocus: false, immediate: true });
     lifecycle.abort();
     listenerCleanups.splice(0).forEach((cleanup) => cleanup());
     cartCountObserver?.disconnect();
@@ -811,7 +968,7 @@ function initMobileDock() {
     }
 
     const active = mobileQuery.matches && mobileStylesAreReady();
-    if (!active) closePanel({ restoreFocus: false });
+    if (!active) void closePanel({ restoreFocus: false, immediate: true });
 
     if (active) {
       const dockReady = portalNodeToBody(dock);
@@ -831,16 +988,36 @@ function initMobileDock() {
   function openPanel({ focusSearch = false } = {}) {
     if (!mobileQuery.matches || !mobileStylesAreReady()) return;
 
-    returnFocus = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : menuButton;
+    const revision = ++panelTransitionRevision;
+
+    const currentFocus = document.activeElement;
+    if (currentFocus instanceof HTMLElement && !panel.contains(currentFocus)) {
+      returnFocus = currentFocus;
+    } else if (!(returnFocus instanceof HTMLElement)) {
+      returnFocus = menuButton;
+    }
+    restorePanelFocusability();
+    panel.classList.remove('is-open', 'is-closing');
+    panel.classList.add('is-opening');
     panel.hidden = false;
-    panel.setAttribute('aria-hidden', 'false');
+    panel.setAttribute('aria-hidden', 'true');
+    panel.removeAttribute('inert');
+    suspendPanelFocusability();
     document.body.classList.add('pp-mobile-panel-open');
     setExpanded(focusSearch ? 'search' : 'menu');
     syncSearchClearButton();
 
-    window.requestAnimationFrame(() => {
+    afterNextPaint(() => {
+      if (
+        revision !== panelTransitionRevision ||
+        panel.hidden ||
+        !panel.classList.contains('is-opening')
+      ) return;
+      restorePanelFocusability();
+      panel.classList.remove('is-opening');
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      panel.removeAttribute('inert');
       if (focusSearch) searchInput?.focus({ preventScroll: true });
       else closeButton?.focus({ preventScroll: true });
     });
@@ -849,6 +1026,33 @@ function initMobileDock() {
   function clickHeaderControl(selector) {
     const control = document.querySelector(selector);
     if (control instanceof HTMLElement) control.click();
+  }
+
+  async function hasResolvedAccountSession() {
+    const readSession = () => Boolean(
+      window.__ppAuthCurrentUser ||
+      window.__ppLastUser ||
+      document.body.classList.contains('pp-auth-logged')
+    );
+    if (readSession() || window.__ppAuthStateResolved === true) return readSession();
+
+    await new Promise((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timer);
+        window.removeEventListener('pp:auth-changed', finish);
+        resolve();
+      };
+      const timer = window.setTimeout(finish, 1800);
+      window.addEventListener('pp:auth-changed', finish, { once: true });
+      if (window.__ppAuthInitialState?.then) {
+        Promise.resolve(window.__ppAuthInitialState).then(finish, finish);
+      }
+    });
+
+    return readSession();
   }
 
   function syncMobileCartCount() {
@@ -884,7 +1088,7 @@ function initMobileDock() {
 
   listen(menuButton, 'click', () => openPanel());
   listen(searchButton, 'click', () => openPanel({ focusSearch: true }));
-  listen(closeButton, 'click', () => closePanel());
+  listen(closeButton, 'click', () => { void closePanel(); });
 
   listen(backButton, 'click', () => {
     closeSublevel();
@@ -898,22 +1102,28 @@ function initMobileDock() {
     openSublevel(trigger.dataset.ppMobileLevelTrigger);
   });
 
-  listen(accountButton, 'click', () => {
-    closePanel({ restoreFocus: false });
-    if (document.body.classList.contains('pp-auth-logged')) {
-      window.location.assign('/my-content');
-      return;
+  listen(accountButton, 'click', async () => {
+    accountButton.setAttribute('aria-busy', 'true');
+    try {
+      const hasSession = await hasResolvedAccountSession();
+      await closePanel({ restoreFocus: false });
+      if (hasSession) {
+        window.location.assign('/my-content');
+        return;
+      }
+
+      const modal = getAuthModal();
+      if (modal) portalNodeToBody(modal);
+
+      if (typeof window.ppOpenAuth === 'function') window.ppOpenAuth();
+      else clickHeaderControl('#ppAuthLogoBtn');
+    } finally {
+      accountButton.removeAttribute('aria-busy');
     }
-
-    const modal = getAuthModal();
-    if (modal) portalNodeToBody(modal);
-
-    if (typeof window.ppOpenAuth === 'function') window.ppOpenAuth();
-    else clickHeaderControl('#ppAuthLogoBtn');
   });
 
-  listen(cartButton, 'click', () => {
-    closePanel({ restoreFocus: false });
+  listen(cartButton, 'click', async () => {
+    await closePanel({ restoreFocus: false });
     if (typeof window.ppOpenCart === 'function') {
       window.ppOpenCart(cartButton);
       return;
@@ -922,7 +1132,7 @@ function initMobileDock() {
   });
 
   listen(panel, 'click', (event) => {
-    if (event.target.closest('a')) closePanel({ restoreFocus: false });
+    if (event.target.closest('a')) void closePanel({ restoreFocus: false });
   });
 
   listen(searchInput, 'input', () => {
@@ -977,18 +1187,18 @@ function initMobileDock() {
   });
 
   listen(document, 'keydown', (event) => {
-    if (panel.hidden) return;
+    if (panel.hidden || panel.classList.contains('is-closing')) return;
 
     if (event.key === 'Escape') {
       event.preventDefault();
-      if (!closeSublevel()) closePanel();
+      if (!closeSublevel()) void closePanel();
       return;
     }
 
     if (event.key !== 'Tab') return;
     const focusable = Array.from(panel.querySelectorAll(
       'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )).filter((element) => !element.closest('[hidden]'));
+    )).filter((element) => !element.closest('[hidden], [inert]'));
     if (!focusable.length) return;
 
     const first = focusable[0];
@@ -1047,11 +1257,15 @@ function initMobileDock() {
   }
 
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/home';
+  syncMobileHouseNavigation();
   activateSection(sectionForPath(currentPath));
   panel.querySelectorAll('a[href]').forEach((link) => {
+    link.removeAttribute('aria-current');
     const href = new URL(link.href, window.location.origin).pathname.replace(/\/$/, '') || '/home';
     if (href === currentPath) link.setAttribute('aria-current', 'page');
   });
+
+  panel.toggleAttribute('inert', panel.hidden);
 
   syncMobileCartCount();
   syncDockVisibility();
@@ -1333,6 +1547,11 @@ async function injectHeaderFooter() {
   const q = (sel, root=document) => root.querySelector(sel);
   let authReturnFocus = null;
   let accountReturnFocus = null;
+  let authPresentationRevision = 0;
+  let accountPresentationRevision = 0;
+  let authCloseTimer = 0;
+  let accountCloseTimer = 0;
+  const authReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   /* =========================================================
      PROPHETIA · FECHA HÍBRIDA
@@ -1608,27 +1827,93 @@ async function decideFlowByEmail(email){
       element.getClientRects().length > 0;
   }
 
+  function restorePresentationFocusAfterClose({
+    container,
+    focusTarget,
+    fallbackSelectors,
+    revision,
+    currentRevision
+  }) {
+    let remainingFocusFrames = 6;
+    const restore = () => {
+      if (revision !== currentRevision() || container.open) return;
+
+      const current = document.activeElement;
+      if (
+        current instanceof HTMLElement &&
+        current !== document.body &&
+        current !== document.documentElement &&
+        current !== focusTarget &&
+        !container.contains(current)
+      ) return;
+
+      let remainsInTopLayer = false;
+      try {
+        remainsInTopLayer = container.matches(':modal');
+      } catch {}
+
+      if (remainsInTopLayer) {
+        if (remainingFocusFrames > 0) {
+          remainingFocusFrames -= 1;
+          window.requestAnimationFrame(restore);
+        }
+        return;
+      }
+
+      const fallback = fallbackSelectors
+        .map((selector) => document.querySelector(selector))
+        .find(isVisibleFocusTarget);
+      const target = isVisibleFocusTarget(focusTarget) ? focusTarget : fallback;
+      target?.focus({ preventScroll: true });
+
+      if (target && document.activeElement !== target && remainingFocusFrames > 0) {
+        remainingFocusFrames -= 1;
+        window.requestAnimationFrame(restore);
+      }
+    };
+
+    restore();
+  }
+
   function closeAuth({ restoreFocus = true } = {}){
     const modal = getAuthModal();
     if (!modal?.open) return;
-    try { if (modal.open) modal.close(); } catch {}
-    document.body.classList.remove('no-scroll');
-
+    const revision = ++authPresentationRevision;
+    window.clearTimeout(authCloseTimer);
     const focusTarget = authReturnFocus;
     authReturnFocus = null;
-    if (restoreFocus) {
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          const fallbackSelectors = window.matchMedia('(max-width: 820px)').matches
-            ? ['[data-pp-mobile-account]', '#ppProfileChip', '#ppAuthLogoBtn']
-            : ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]'];
-          const fallback = fallbackSelectors
-            .map((selector) => document.querySelector(selector))
-            .find(isVisibleFocusTarget);
-          const target = isVisibleFocusTarget(focusTarget) ? focusTarget : fallback;
-          target?.focus({ preventScroll: true });
+    const finalize = () => {
+      if (revision !== authPresentationRevision || modal.open) return;
+      if (!document.querySelector('#ppAuthModal[open], #ppAccountPanel[open]')) {
+        document.body.classList.remove('no-scroll');
+      }
+      if (restoreFocus) {
+        const fallbackSelectors = window.matchMedia('(max-width: 820px)').matches
+          ? ['[data-pp-mobile-account]', '#ppProfileChip', '#ppAuthLogoBtn']
+          : ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]'];
+        restorePresentationFocusAfterClose({
+          container: modal,
+          focusTarget,
+          fallbackSelectors,
+          revision,
+          currentRevision: () => authPresentationRevision
         });
-      });
+      }
+    };
+    const scheduleFinalize = () => {
+      if (revision !== authPresentationRevision || modal.open) return;
+      authCloseTimer = window.setTimeout(
+        finalize,
+        authReducedMotionQuery.matches ? 0 : 260
+      );
+    };
+
+    modal.addEventListener('close', scheduleFinalize, { once: true });
+    try {
+      modal.close();
+    } catch {
+      modal.removeEventListener('close', scheduleFinalize);
+      scheduleFinalize();
     }
   }
 
@@ -1645,22 +1930,36 @@ async function decideFlowByEmail(email){
     if (!panel || panel.dataset.ppPresentationBound === 'true') return;
     panel.dataset.ppPresentationBound = 'true';
 
-    panel.addEventListener('close', () => {
-      if (!document.querySelector('#ppAuthModal[open], #ppAccountPanel[open]')) {
-        document.body.classList.remove('no-scroll');
-      }
+    const observer = new MutationObserver(() => {
+      if (!panel.open) return;
+      accountPresentationRevision += 1;
+      window.clearTimeout(accountCloseTimer);
+      document.body.classList.add('no-scroll');
+    });
+    observer.observe(panel, { attributes: true, attributeFilter: ['open'] });
 
+    panel.addEventListener('close', () => {
+      const revision = ++accountPresentationRevision;
+      window.clearTimeout(accountCloseTimer);
       const focusTarget = accountReturnFocus;
       accountReturnFocus = null;
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          const fallback = ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]']
-            .map((selector) => document.querySelector(selector))
-            .find(isVisibleFocusTarget);
-          const target = isVisibleFocusTarget(focusTarget) ? focusTarget : fallback;
-          target?.focus({ preventScroll: true });
+      const finalize = () => {
+        if (revision !== accountPresentationRevision || panel.open) return;
+        if (!document.querySelector('#ppAuthModal[open], #ppAccountPanel[open]')) {
+          document.body.classList.remove('no-scroll');
+        }
+        restorePresentationFocusAfterClose({
+          container: panel,
+          focusTarget,
+          fallbackSelectors: ['#ppProfileChip', '#ppAuthLogoBtn', '[data-pp-mobile-account]'],
+          revision,
+          currentRevision: () => accountPresentationRevision
         });
-      });
+      };
+      accountCloseTimer = window.setTimeout(
+        finalize,
+        authReducedMotionQuery.matches ? 0 : 260
+      );
     });
   }
 
@@ -1920,6 +2219,9 @@ setTimeout(() => {
     const modal = getAuthModal();
     if (!modal) return;
 
+    authPresentationRevision += 1;
+    window.clearTimeout(authCloseTimer);
+
     bindAuthDialogCancel(modal);
     if (window.matchMedia('(max-width: 820px)').matches) portalNodeToBody(modal);
     if (!modal.open) {
@@ -1940,6 +2242,13 @@ setTimeout(() => {
 
     document.body.classList.add('no-scroll');
     bindAuthSteps(modal);
+    const revision = authPresentationRevision;
+    window.requestAnimationFrame(() => {
+      if (revision !== authPresentationRevision || !modal.open) return;
+      const activeStep = modal.querySelector(`[data-step="${targetStep}"]:not(.hidden)`);
+      activeStep?.querySelector('input:not([disabled]), button:not([disabled])')
+        ?.focus({ preventScroll: true });
+    });
   }
 // ✅ Toggle password · login + registro
 document.addEventListener('click', (ev) => {
@@ -1998,6 +2307,8 @@ document.addEventListener('click', (e) => {
     if (document.body.classList.contains('pp-auth-logged')) {
       const accountPanel = q('#ppAccountPanel');
       bindAccountPanelPresentation(accountPanel);
+      accountPresentationRevision += 1;
+      window.clearTimeout(accountCloseTimer);
       accountReturnFocus = isVisibleFocusTarget(profileBtn) ? profileBtn : null;
       window.ppOpenAccount?.();
       if (accountPanel?.open) document.body.classList.add('no-scroll');
@@ -2028,7 +2339,11 @@ document.addEventListener('click', (e) => {
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     const modal = getAuthModal();
-    if (modal?.open) closeAuth();
+    if (modal?.open) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      closeAuth();
+    }
   });
 
   // Expose globals

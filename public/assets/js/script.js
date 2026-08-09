@@ -201,6 +201,7 @@
     function syncSavedState() {
       const list = load();
       document.querySelectorAll('[data-save]').forEach(btn=>{
+        if (btn.closest('#plp-grid, #gridCamisetas')) return;
         const id = btn.getAttribute('data-id');
         const on = !!find(id, list);
         btn.classList.toggle('is-saved', on);
@@ -300,7 +301,7 @@ if (!item.id) {
 
     function syncState(){
       const list = load();
-      document.querySelectorAll('[data-save]').forEach(btn=>{
+      document.querySelectorAll('#plp-grid [data-save], #gridCamisetas [data-save]').forEach(btn=>{
         const on = exists(btn.getAttribute('data-id'), list);
         btn.classList.toggle('is-saved', on);
         btn.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -1079,6 +1080,8 @@ document.querySelectorAll('.mega').forEach(mega => {
   window.__PP_SHARED_PLP_TOOLBAR__ = true;
 
   const body = document.body;
+  const sortReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const sortCloseStates = new WeakMap();
   let activeSort = 'relevance';
 
   const normalizeSort = (mode = 'relevance') => {
@@ -1233,20 +1236,67 @@ document.querySelectorAll('.mega').forEach(mega => {
     menu.style.setProperty('--pp-sort-popover-top', `${Math.round(top)}px`);
   };
 
+  const cancelPendingSortClose = (root) => {
+    const state = sortCloseStates.get(root);
+    if (!state) return;
+    window.clearTimeout(state.timer);
+    state.menu?.removeEventListener('transitionend', state.onTransitionEnd);
+    sortCloseStates.delete(root);
+  };
+
   const closeSort = (root, { restoreFocus = false } = {}) => {
-    root.classList.remove('is-open');
-    if (root.tagName.toLowerCase() === 'details') root.open = false;
-
     const trigger = root.querySelector('.pp-sort-trigger[aria-expanded]');
-    if (trigger) trigger.setAttribute('aria-expanded', 'false');
-
     const menu = root.querySelector('.pp-sort-menu');
-    if (menu && root.tagName.toLowerCase() !== 'details') menu.hidden = true;
-    if (restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+    const isDetails = root.tagName.toLowerCase() === 'details';
+    cancelPendingSortClose(root);
+    root.classList.remove('is-open', 'is-opening');
+    trigger?.setAttribute('aria-expanded', 'false');
+
+    if (isDetails) {
+      root.open = false;
+      if (restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+      return;
+    }
+
+    if (!menu || menu.hidden) {
+      root.classList.remove('is-closing');
+      if (restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+      return;
+    }
+
+    root.classList.add('is-closing');
+    menu.setAttribute('inert', '');
+    let settled = false;
+    const finalize = () => {
+      if (settled) return;
+      settled = true;
+      const state = sortCloseStates.get(root);
+      if (state) {
+        window.clearTimeout(state.timer);
+        menu.removeEventListener('transitionend', state.onTransitionEnd);
+        sortCloseStates.delete(root);
+      }
+      if (!root.classList.contains('is-closing')) return;
+      root.classList.remove('is-closing');
+      menu.hidden = true;
+      if (restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+    };
+    const onTransitionEnd = (event) => {
+      if (event.target === menu && ['opacity', 'transform'].includes(event.propertyName)) finalize();
+    };
+
+    if (sortReducedMotionQuery.matches) {
+      finalize();
+      return;
+    }
+
+    menu.addEventListener('transitionend', onTransitionEnd);
+    const timer = window.setTimeout(finalize, 260);
+    sortCloseStates.set(root, { menu, onTransitionEnd, timer });
   };
 
   const openCustomSort = (root, { focusOption = false } = {}) => {
-    document.querySelectorAll('.pp-sort.is-open').forEach((item) => {
+    document.querySelectorAll('.pp-sort.is-open, .pp-sort.is-opening').forEach((item) => {
       if (item !== root) closeSort(item);
     });
 
@@ -1254,23 +1304,30 @@ document.querySelectorAll('.mega').forEach(mega => {
     const menu = root.querySelector('.pp-sort-menu');
     if (!trigger || !menu) return;
 
-    root.classList.add('is-open');
+    cancelPendingSortClose(root);
+    root.classList.remove('is-open', 'is-closing');
+    root.classList.add('is-opening');
     trigger.setAttribute('aria-expanded', 'true');
     menu.hidden = false;
+    menu.setAttribute('inert', '');
     positionSortMenu(root);
     window.requestAnimationFrame(() => {
-      if (root.classList.contains('is-open') && !menu.hidden) positionSortMenu(root);
-    });
+      if (!root.classList.contains('is-opening') || menu.hidden) return;
+      root.classList.remove('is-opening');
+      root.classList.add('is-open');
+      menu.removeAttribute('inert');
+      positionSortMenu(root);
 
-    if (focusOption) {
-      const selected = menu.querySelector('.pp-sort-option[aria-selected="true"], .pp-sort-option.is-active');
-      const fallback = menu.querySelector('.pp-sort-option');
-      (selected || fallback)?.focus({ preventScroll: true });
-    }
+      if (focusOption) {
+        const selected = menu.querySelector('.pp-sort-option[aria-selected="true"], .pp-sort-option.is-active');
+        const fallback = menu.querySelector('.pp-sort-option');
+        (selected || fallback)?.focus({ preventScroll: true });
+      }
+    });
   };
 
   const toggleCustomSort = (root) => {
-    if (root.classList.contains('is-open')) {
+    if (root.classList.contains('is-open') || root.classList.contains('is-opening')) {
       closeSort(root);
       return;
     }
@@ -1313,12 +1370,19 @@ document.querySelectorAll('.mega').forEach(mega => {
   });
 
   document.addEventListener('pointerdown', (event) => {
-    document.querySelectorAll('.pp-sort.is-open').forEach((root) => {
+    document.querySelectorAll('.pp-sort.is-open, .pp-sort.is-opening').forEach((root) => {
+      if (!root.contains(event.target)) closeSort(root);
+    });
+  });
+
+  document.addEventListener('focusin', (event) => {
+    document.querySelectorAll('.pp-sort.is-open, .pp-sort.is-opening').forEach((root) => {
       if (!root.contains(event.target)) closeSort(root);
     });
   });
 
   document.addEventListener('keydown', (event) => {
+    if (event.defaultPrevented) return;
     const trigger = event.target.closest?.('.pp-sort-trigger');
     const triggerRoot = trigger?.closest('.pp-sort');
     if (triggerRoot && ['ArrowDown', 'ArrowUp'].includes(event.key)) {
@@ -1344,7 +1408,9 @@ document.querySelectorAll('.mega').forEach(mega => {
     }
 
     if (event.key !== 'Escape') return;
-    const openRoots = Array.from(document.querySelectorAll('.pp-sort.is-open, details.pp-sort[open]'));
+    const openRoots = Array.from(document.querySelectorAll(
+      '.pp-sort.is-open, .pp-sort.is-opening, details.pp-sort[open]'
+    ));
     if (!openRoots.length) return;
     event.preventDefault();
     openRoots.forEach((root) => closeSort(root, { restoreFocus: true }));
@@ -1356,6 +1422,6 @@ document.querySelectorAll('.mega').forEach(mega => {
 
   window.addEventListener('scroll', (event) => {
     if (event.target instanceof Element && event.target.closest('.pp-sort-menu')) return;
-    document.querySelectorAll('.pp-sort.is-open').forEach((root) => closeSort(root));
+    document.querySelectorAll('.pp-sort.is-open').forEach(positionSortMenu);
   }, { capture: true, passive: true });
 })();

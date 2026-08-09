@@ -733,12 +733,6 @@ body.hoodies-page .pp-plp .card:hover .card-media img{
 }
 
 @media (max-width: 640px){
-  body.hoodies-page .pp-filters.container{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  body.hoodies-page .pp-filter-right{ align-self: flex-end; }
   body.hoodies-page .plp-grid{
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 16px;

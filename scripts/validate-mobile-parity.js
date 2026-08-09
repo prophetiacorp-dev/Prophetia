@@ -10,16 +10,21 @@ const VIEWPORT = '<meta name="viewport" content="width=device-width, initial-sca
 const MOBILE_LINK = `/assets/css/mobile-shell.css?v=${VERSION}`;
 const MOBILE_BREAKPOINT = 820;
 const PLP_BREAKPOINT = 1024;
+const TOOLBAR_BREAKPOINT = 1365;
 const STYLE_EXCLUDES = new Set(['admin.html']);
 const DOCK_EXCLUDES = new Set(['checkout.html']);
 const EXPECTED_DOCUMENTS = 47;
 const VIEWPORT_MATRIX = [
   [320, 568, 'mobile', 2],
+  [344, 700, 'mobile', 2],
   [360, 800, 'mobile', 2],
   [375, 667, 'mobile', 2],
+  [384, 854, 'mobile', 2],
   [390, 844, 'mobile', 2],
+  [393, 873, 'mobile', 2],
   [412, 915, 'mobile', 2],
   [430, 932, 'mobile', 2],
+  [480, 900, 'mobile', 2],
   [600, 960, 'tablet', 2],
   [679, 900, 'tablet', 2],
   [768, 1024, 'tablet', 2],
@@ -27,13 +32,17 @@ const VIEWPORT_MATRIX = [
   [912, 1368, 'tablet', 2],
   [960, 1280, 'tablet', 2],
   [1024, 1366, 'tablet', 2],
+  [1025, 1366, 'intermediate', null],
+  [1040, 1200, 'intermediate', null],
+  [1280, 800, 'intermediate', null],
+  [1365, 768, 'intermediate', null],
   [1366, 768, 'desktop', null],
   [1920, 1080, 'desktop', null]
 ];
-const REQUIRED_VIEWPORT_SIGNATURE = '320x568,360x800,375x667,390x844,412x915,430x932,600x960,679x900,768x1024,820x1180,912x1368,960x1280,1024x1366,1366x768,1920x1080';
+const REQUIRED_VIEWPORT_SIGNATURE = '320x568,344x700,360x800,375x667,384x854,390x844,393x873,412x915,430x932,480x900,600x960,679x900,768x1024,820x1180,912x1368,960x1280,1024x1366,1025x1366,1040x1200,1280x800,1365x768,1366x768,1920x1080';
 
-const INTERMEDIATE_WIDTHS = [344, 384, 414, 480, 540, 640, 720, 834, 900, 1000, 1040, 1180, 1280, 1440, 1600];
-const REQUIRED_INTERMEDIATE_SIGNATURE = '344,384,414,480,540,640,720,834,900,1000,1040,1180,1280,1440,1600';
+const INTERMEDIATE_WIDTHS = [336, 352, 368, 376, 388, 400, 421, 456, 512, 560, 640, 720, 834, 900, 1000, 1016, 1023, 1026, 1060, 1120, 1180, 1240, 1320, 1360, 1364, 1367, 1440, 1600];
+const REQUIRED_INTERMEDIATE_SIGNATURE = '336,352,368,376,388,400,421,456,512,560,640,720,834,900,1000,1016,1023,1026,1060,1120,1180,1240,1320,1360,1364,1367,1440,1600';
 
 const PLP_ROUTES = [
   'camisetas-punto-mujer.html',
@@ -45,6 +54,7 @@ const PLP_ROUTES = [
   'hoodies-mujer.html',
   'hoodies.html'
 ];
+const TOOLBAR_ROUTES = [...PLP_ROUTES, 'mujer.html', 'hombre.html'];
 
 const failures = [];
 const pass = (condition, message) => {
@@ -134,6 +144,19 @@ for (const relativePath of ['mujer.html', 'hombre.html']) {
     `${relativePath}: orden DOM responsive logo → breadcrumb → título/lista incorrecto`);
   pass(side >= 0 && side < toolbar && toolbar < grid,
     `${relativePath}: orden DOM responsive hero → filtros → grid incorrecto`);
+}
+
+for (const relativePath of TOOLBAR_ROUTES) {
+  const source = read(`public/${relativePath}`);
+  const isLanding = relativePath === 'mujer.html' || relativePath === 'hombre.html';
+  pass(source.includes('Filtros'), `${relativePath}: falta el control Filtros`);
+  pass(source.includes('Ordenar por'), `${relativePath}: falta el control Ordenar por`);
+  pass(source.includes('En stock'), `${relativePath}: falta el control En stock`);
+  if (!isLanding) {
+    pass(source.includes('Vista'), `${relativePath}: falta el control Vista`);
+    pass(source.includes('pp-filter-left') && source.includes('pp-filter-right'),
+      `${relativePath}: faltan los dos grupos canónicos de pp-filters`);
+  }
 }
 
 const header = read('public/assets/partials/header.html');
@@ -240,12 +263,12 @@ for (const marker of [
   "dock.dataset.ppMobileBound = 'true'",
   'dock.hidden = !active',
   "document.body.classList.toggle('pp-mobile-dock-active', active)",
-  'if (!active) closePanel({ restoreFocus: false })',
+  'if (!active) void closePanel({ restoreFocus: false, immediate: true })',
   "panel.setAttribute('aria-hidden', 'true')",
   "panel.setAttribute('aria-hidden', 'false')",
   "source === 'menu' ? 'true' : 'false'",
   "source === 'search' ? 'true' : 'false'",
-  'returnFocus.focus({ preventScroll: true })',
+  'focusTarget.focus({ preventScroll: true })',
   "event.key === 'Escape'",
   "event.key !== 'Tab'",
   'mobileQuery.addEventListener',
@@ -259,7 +282,8 @@ const mobileMedia = `@media (max-width: ${MOBILE_BREAKPOINT}px)`;
 const firstMobileMedia = css.indexOf(mobileMedia);
 pass(firstMobileMedia > 0, 'mobile-shell.css: falta el límite principal de 820px');
 const desktopPrefix = css.slice(0, firstMobileMedia).replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim();
-pass(desktopPrefix === '.pp-mobile-dock, .pp-mobile-panel { display: none; }',
+const desktopPrefixWithoutTokens = desktopPrefix.replace(/:root\s*\{[^}]*\}/, '').trim();
+pass(desktopPrefixWithoutTokens === '.pp-mobile-dock, .pp-mobile-panel { display: none; }',
   'mobile-shell.css: hay estilos visuales de escritorio fuera del bloque móvil');
 for (const marker of [
   'env(safe-area-inset-top)',
@@ -276,6 +300,11 @@ for (const marker of [
 }
 for (const marker of [
   `@media (max-width: ${PLP_BREAKPOINT}px)`,
+  `@media (max-width: ${TOOLBAR_BREAKPOINT}px)`,
+  'PLP TOOLBAR RESPONSIVE · autoridad estructural compartida',
+  'display: flex !important',
+  'flex-direction: row !important',
+  'flex-wrap: nowrap !important',
   '--pp-sort-popover-top',
   'position: fixed !important',
   'transform: translateX(100%) !important',
@@ -289,6 +318,36 @@ for (const marker of [
 ]) {
   pass(css.includes(marker), `mobile-shell.css: falta el contrato PLP/tablet ${marker}`);
 }
+const toolbarAuthority = css.slice(css.indexOf('PLP TOOLBAR RESPONSIVE · autoridad estructural compartida'));
+for (const marker of [
+  '@media (max-width: 1365px)',
+  '.pp-filters.container',
+  '.men-toolbar.container',
+  '.women-toolbar.container',
+  'justify-content: space-between !important',
+  'min-width: 0 !important',
+  'width: max-content !important',
+  'margin-inline-start: auto !important',
+  'gap: clamp('
+]) {
+  pass(toolbarAuthority.includes(marker), `mobile-shell.css: falta el contrato canónico de toolbar ${marker}`);
+}
+pass(!/display:\s*grid\s*!important/.test(toolbarAuthority),
+  'mobile-shell.css: la autoridad canónica de toolbar no puede usar Grid');
+for (const relativePath of [
+  'public/assets/css/camisetas.css',
+  'public/assets/css/hoodies.css',
+  'public/assets/css/streetwear.css',
+  'public/assets/css/sud-hombre.css',
+  'public/assets/css/sud-mujer.css'
+]) {
+  const routeCss = read(relativePath);
+  pass(!/pp-filters[^{}]*\{[^{}]*flex-direction:\s*column/s.test(routeCss),
+    `${relativePath}: conserva un apilado legacy de pp-filters`);
+}
+pass(!/pp-filter-(?:left|right)[^{}]*\{[^{}]*flex-wrap:\s*wrap\s*!important/s
+  .test(read('public/assets/css/plp-ui-universal.css')),
+  'plp-ui-universal.css: conserva wrap!important contradictorio en los grupos de toolbar');
 pass((css.match(/grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)\s*!important/g) || []).length === 1,
   'mobile-shell.css: la cuadrícula PLP debe tener una única fuente responsive de dos columnas');
 for (const marker of [
@@ -331,7 +390,9 @@ for (const [width, height, expectedMode, expectedColumns] of VIEWPORT_MATRIX) {
     ? 'mobile'
     : width <= PLP_BREAKPOINT
       ? 'tablet'
-      : 'desktop';
+      : width <= TOOLBAR_BREAKPOINT
+        ? 'intermediate'
+        : 'desktop';
   const actualColumns = width <= PLP_BREAKPOINT ? 2 : null;
   pass(actualMode === expectedMode, `${key}: modo esperado ${expectedMode}, obtenido ${actualMode}`);
   pass(actualColumns === expectedColumns,
@@ -350,8 +411,8 @@ for (const width of INTERMEDIATE_WIDTHS) {
   pass(width <= PLP_BREAKPOINT ? expectedColumns === 2 : expectedColumns === null,
     `${width}px: contrato de columnas incorrecto en el barrido intermedio`);
 }
-pass(VIEWPORT_MATRIX.length + INTERMEDIATE_WIDTHS.length === 30,
-  'la validación responsive debe cubrir 30 tamaños por ruta PLP');
+pass(VIEWPORT_MATRIX.length + INTERMEDIATE_WIDTHS.length === 51,
+  'la validación responsive debe cubrir 51 tamaños declarados');
 
 const server = read('server.js');
 pass(server.includes("'no-cache, must-revalidate'"), 'server.js: HTML/partials deben revalidarse');

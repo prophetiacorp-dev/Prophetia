@@ -16,6 +16,10 @@
   let badgeAnimationTimer = null;
   let cartReturnFocus = null;
   const mobileCartQuery = window.matchMedia('(max-width: 820px)');
+  const cartReducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let cartCloseTimer = 0;
+  let cartTransitionRevision = 0;
+  let activeCartConfirmCleanup = null;
 
 function escapeHtml(value = '') {
   return String(value ?? '')
@@ -1104,6 +1108,7 @@ function addToCart(product, options = {}) {
     onAccept,
     onCancel
   } = {}) {
+    activeCartConfirmCleanup?.({ immediate: true, restoreFocus: false });
     const existing = document.getElementById('ppCartConfirm');
     if (existing) existing.remove();
 
@@ -1132,16 +1137,22 @@ function addToCart(product, options = {}) {
     const acceptBtn = wrap.querySelector('.pp-cart-confirm__accept');
     const cancelNodes = wrap.querySelectorAll('[data-cart-confirm-cancel]');
     const previousActive = document.activeElement;
+    let settled = false;
 
-    const cleanup = () => {
+    const cleanup = ({ immediate = false, restoreFocus = true } = {}) => {
+      if (settled) return;
+      settled = true;
       document.removeEventListener('keydown', onKey, true);
       wrap.classList.remove('is-visible');
+      if (activeCartConfirmCleanup === cleanup) activeCartConfirmCleanup = null;
 
       window.setTimeout(() => {
         wrap.remove();
-        previousActive?.focus?.({ preventScroll: true });
-      }, 180);
+        if (restoreFocus) previousActive?.focus?.({ preventScroll: true });
+      }, immediate || cartReducedMotionQuery.matches ? 0 : 180);
     };
+
+    activeCartConfirmCleanup = cleanup;
 
     const cancel = () => {
       try { onCancel?.(); }
@@ -1156,11 +1167,13 @@ function addToCart(product, options = {}) {
     const onKey = (event) => {
       if (event.key === 'Escape' || event.key === 'Esc') {
         event.preventDefault();
+        event.stopImmediatePropagation();
         cancel();
         return;
       }
 
-      if (event.key !== 'Tab' || !mobileCartQuery.matches) return;
+      if (event.key !== 'Tab') return;
+      event.stopImmediatePropagation();
       const focusable = Array.from(dialog?.querySelectorAll(
         'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
       ) || []).filter((node) => !node.closest('[hidden]'));
@@ -1185,6 +1198,7 @@ function addToCart(product, options = {}) {
     document.addEventListener('keydown', onKey, true);
 
     requestAnimationFrame(() => {
+      if (settled || !wrap.isConnected) return;
       wrap.classList.add('is-visible');
       dialog?.focus?.({ preventScroll: true });
       acceptBtn?.focus?.({ preventScroll: true });
@@ -1243,12 +1257,22 @@ function openCart(returnFocusTarget = null) {
 
   renderCart();
 
-  if (!drawer.classList.contains('open') && !drawer.classList.contains('is-open')) {
+  const revision = ++cartTransitionRevision;
+  window.clearTimeout(cartCloseTimer);
+  cartCloseTimer = 0;
+
+  if (
+    !drawer.classList.contains('open') &&
+    !drawer.classList.contains('is-open') &&
+    !drawer.classList.contains('is-closing')
+  ) {
     cartReturnFocus = returnFocusTarget instanceof HTMLElement
       ? returnFocusTarget
       : (document.activeElement instanceof HTMLElement ? document.activeElement : null);
   }
 
+  drawer.classList.remove('is-closing');
+  drawer.inert = false;
   drawer.classList.add('open', 'is-open');
   drawer.setAttribute('role', 'dialog');
   drawer.setAttribute('aria-modal', 'true');
@@ -1257,6 +1281,7 @@ function openCart(returnFocusTarget = null) {
   }
   drawer.setAttribute('aria-hidden', 'false');
 
+  overlay.classList.remove('is-closing');
   overlay.classList.add('active', 'open', 'is-open');
   overlay.setAttribute('aria-hidden', 'false');
 
@@ -1269,7 +1294,9 @@ function openCart(returnFocusTarget = null) {
   body.classList.add('no-scroll', 'pp-cart-open');
 
   const focusDrawer = () => {
+    if (revision !== cartTransitionRevision) return;
     if (!drawer.classList.contains('open') && !drawer.classList.contains('is-open')) return;
+    if (drawer.classList.contains('is-closing')) return;
     const focusTarget = drawer.querySelector(
       '[data-close="cart"], .cart-close, .pp-cart-close, button, a[href]'
     );
@@ -1411,11 +1438,23 @@ function closeCart() {
   if (!drawer || !overlay) return;
 
   const wasOpen = drawer.classList.contains('open') || drawer.classList.contains('is-open');
+  if (drawer.classList.contains('is-closing')) return;
+
+  const revision = ++cartTransitionRevision;
+  window.clearTimeout(cartCloseTimer);
+  cartCloseTimer = 0;
+
+  if (wasOpen && drawer.contains(document.activeElement)) {
+    document.activeElement?.blur?.();
+  }
 
   drawer.classList.remove('open', 'is-open');
+  drawer.classList.toggle('is-closing', wasOpen);
   drawer.setAttribute('aria-hidden', 'true');
+  drawer.inert = true;
 
   overlay.classList.remove('active', 'open', 'is-open');
+  overlay.classList.toggle('is-closing', wasOpen);
   overlay.setAttribute('aria-hidden', 'true');
 
   document
@@ -1424,9 +1463,18 @@ function closeCart() {
       trigger.setAttribute('aria-expanded', 'false');
     });
 
-  body.classList.remove('no-scroll', 'pp-cart-open');
+  const finalize = () => {
+    if (revision !== cartTransitionRevision) return;
+    cartCloseTimer = 0;
+    drawer.classList.remove('open', 'is-closing');
+    overlay.classList.remove('is-closing');
+    body.classList.remove('no-scroll', 'pp-cart-open');
 
-  if (wasOpen) {
+    if (!wasOpen) {
+      cartReturnFocus = null;
+      return;
+    }
+
     const visibleTrigger = Array.from(document.querySelectorAll(
       '#ppCartBtn, [data-pp-mobile-cart], [data-cart-open]'
     )).find((trigger) => trigger.getClientRects().length && !trigger.hidden);
@@ -1434,8 +1482,14 @@ function closeCart() {
       ? cartReturnFocus
       : visibleTrigger;
     focusTarget?.focus?.({ preventScroll: true });
+    cartReturnFocus = null;
+  };
+
+  if (wasOpen && !cartReducedMotionQuery.matches) {
+    cartCloseTimer = window.setTimeout(finalize, 260);
+  } else {
+    finalize();
   }
-  cartReturnFocus = null;
 }
 
   function bindCart() {
@@ -1505,19 +1559,23 @@ function closeCart() {
     }, true);
 
     document.addEventListener('keydown', (e) => {
+      if (document.getElementById('ppCartConfirm')) return;
+
       const { drawer } = getCartNodes();
       const isOpen = Boolean(
         drawer?.classList.contains('open') || drawer?.classList.contains('is-open')
       );
-      if (!isOpen) return;
+      if (!isOpen || drawer.classList.contains('is-closing')) return;
 
       if (e.key === 'Escape' || e.key === 'Esc') {
-        if (mobileCartQuery.matches) e.preventDefault();
+        e.preventDefault();
+        e.stopPropagation();
         closeCart();
         return;
       }
 
-      if (e.key !== 'Tab' || !mobileCartQuery.matches) return;
+      if (e.key !== 'Tab') return;
+      e.stopPropagation();
       const focusable = Array.from(drawer.querySelectorAll(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
       )).filter((node) => !node.closest('[hidden]') && node.getAttribute('aria-hidden') !== 'true');

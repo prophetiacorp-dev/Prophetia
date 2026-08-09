@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -14,18 +15,57 @@ const {
   loadShippingConfig,
   calculateShipping: calculateCanonicalShipping
 } = require('./lib/shipping');
+const {
+  createSecurityLogger,
+  resolveClientAddress,
+  createSourceId,
+  classifyPath
+} = require('./lib/security-logger');
 
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const resend = new Resend(process.env.RESEND_API_KEY);
+const securityLogger = createSecurityLogger({
+  env: process.env,
+  blockSuspiciousPaths: false
+});
+const SECURITY_EVENTS_SEEN = Symbol('prophetiaSecurityEventsSeen');
 
+/*
+  No se delega la identidad de red a Express. Render/Cloudflare se validan
+  exclusivamente mediante resolveClientAddress(), con coherencia entre las
+  cabeceras añadidas por la plataforma. Las cabeceras reenviadas locales no
+  sustituyen nunca la dirección del socket.
+*/
+app.set('trust proxy', false);
 
-if (process.env.NODE_ENV === 'production') {
-  /*
-    Render/Cloudflare actúan como proxy inverso.
-    Permitimos un salto confiable para obtener req.ip.
-  */
-  app.set('trust proxy', 1);
+function emitSecurityEvent(req, eventName, fields = {}) {
+  try {
+    if (req && typeof req === 'object') {
+      let seen = req[SECURITY_EVENTS_SEEN];
+      if (!seen) {
+        seen = new Set();
+        Object.defineProperty(req, SECURITY_EVENTS_SEEN, {
+          configurable: false,
+          enumerable: false,
+          writable: false,
+          value: seen
+        });
+      }
+      seen.add(eventName);
+    }
+
+    return securityLogger.event(req, eventName, fields);
+  } catch {
+    // Fail open: un fallo del registro nunca interrumpe la petición.
+    return false;
+  }
+}
+
+function requestHasSecurityEvent(req, eventNames = []) {
+  const seen = req?.[SECURITY_EVENTS_SEEN];
+  if (!(seen instanceof Set)) return false;
+  return eventNames.some((eventName) => seen.has(eventName));
 }
 /*
   PRODUCCIÓN:
@@ -80,14 +120,19 @@ const CHECKOUT_DISABLED_PAYLOAD = Object.freeze({
   message: 'La compra todavía no está disponible.'
 });
 
-function rejectCheckoutDisabled(res) {
+function rejectCheckoutDisabled(req, res) {
+  emitSecurityEvent(req, 'CHECKOUT_DISABLED_ACCESS', {
+    status: 503,
+    message: 'Disabled checkout endpoint was requested',
+    actionTaken: 'checkout_remained_disabled'
+  });
   res.set('Cache-Control', 'no-store');
   res.set('Retry-After', '3600');
   return res.status(503).json(CHECKOUT_DISABLED_PAYLOAD);
 }
 
 function requireCheckoutEnabled(req, res, next) {
-  if (!CHECKOUT_ENABLED) return rejectCheckoutDisabled(res);
+  if (!CHECKOUT_ENABLED) return rejectCheckoutDisabled(req, res);
   return next();
 }
 /*
@@ -420,7 +465,7 @@ function loadTribeMembers() {
 
     return Array.isArray(data) ? data : [];
   } catch (err) {
-    console.warn('[tribe] No se ha podido leer tribe-members.json:', err.message);
+    console.warn('[tribe] No se ha podido leer el almacenamiento de miembros.');
     return [];
   }
 }
@@ -655,11 +700,7 @@ function findAndLinkTribeMemberForFirebaseUser(
     const memberEmail = normalizeEmail(member.email);
 
     if (memberEmail && memberEmail !== email) {
-      console.warn('[tribe-identity] UID con email distinto. Se conserva el UID como fuente de verdad.', {
-        uid: firebaseUid,
-        memberEmail,
-        tokenEmail: email
-      });
+      console.warn('[tribe-identity] Identidad con email distinto; se conserva el UID verificado.');
     }
 
     return member;
@@ -677,20 +718,13 @@ function findAndLinkTribeMemberForFirebaseUser(
   const existingUid = String(existingMember.firebaseUid || '').trim();
 
   if (existingUid && existingUid !== firebaseUid) {
-    console.warn('[tribe-identity] Membresia ignorada por uid diferente.', {
-      email,
-      existingUid,
-      firebaseUid
-    });
+    console.warn('[tribe-identity] Membresía ignorada por UID diferente.');
 
     return null;
   }
 
   if (!existingUid && !allowLegacyEmailLink) {
-    console.warn('[tribe-identity] Migracion legacy por email bloqueada.', {
-      email,
-      firebaseUid
-    });
+    console.warn('[tribe-identity] Migración legacy por email bloqueada.');
 
     return null;
   }
@@ -2010,7 +2044,7 @@ function loadPrivateDrops() {
 
     return Array.isArray(data) ? data : [];
   } catch (err) {
-    console.warn('[private-drops] No se pudo leer private-drops.json:', err.message);
+    console.warn('[private-drops] No se pudo leer el almacenamiento privado.');
     return [];
   }
 }
@@ -2025,7 +2059,7 @@ function loadPrivateDropPages() {
 
     return Array.isArray(data) ? data : [];
   } catch (err) {
-    console.warn('[private-drop-pages] No se pudo leer private-drop-pages.json:', err.message);
+    console.warn('[private-drop-pages] No se pudo leer el índice de páginas privadas.');
     return [];
   }
 }
@@ -2517,7 +2551,7 @@ prestigeBenefits: newPrestigeInfo.prestigeBenefits,
         });
       }
     } catch (err) {
-      console.error('[tribe-rank-email] error:', err);
+      console.error('[tribe-rank-email] No se pudo enviar la recompensa.');
 
       upsertOrder({
         ...orderWithXp,
@@ -2526,7 +2560,7 @@ prestigeBenefits: newPrestigeInfo.prestigeBenefits,
     }
   }
 
-  console.log('[tribe-xp] puntos añadidos:', email, pointsEarned);
+  console.log('[tribe-xp] Puntos añadidos correctamente.');
 
   return xpEvent;
 }
@@ -2617,13 +2651,13 @@ async function sendTribeWelcomeEmail(member) {
       throw result.error;
     }
 
-    console.log('[tribe] email enviado:', member.email);
+    console.log('[tribe] Email enviado correctamente.');
     return {
       sent: true,
       status: 'sent'
     };
   } catch (err) {
-    console.error('[tribe] error enviando email:', err);
+    console.error('[tribe] No se pudo enviar el email.');
     return {
       sent: false,
       status: 'send_failed'
@@ -2726,7 +2760,7 @@ async function sendTribeRankRewardEmail({ member = {}, rewards = [], xpEvent = {
   }
 
   if (!member.email || !isValidEmail(member.email)) {
-    console.warn('[tribe-rank-email] email no válido:', member.email);
+    console.warn('[tribe-rank-email] Email no válido.');
     return false;
   }
 
@@ -2745,7 +2779,7 @@ async function sendTribeRankRewardEmail({ member = {}, rewards = [], xpEvent = {
     })
   });
 
-  console.log('[tribe-rank-email] enviado:', member.email, cleanRewards.map((reward) => reward.code).join(', '));
+  console.log('[tribe-rank-email] Recompensa enviada correctamente.');
 
   return true;
 }
@@ -3020,7 +3054,7 @@ async function sendOrderEmailsOnce(orderInput) {
   const currentOrder = findOrderByDraftId(orderInput.orderDraftId) || orderInput;
 
   if (currentOrder.customerEmailSentAt) {
-    console.log('[email] ya enviado para:', currentOrder.orderNumber || currentOrder.orderDraftId);
+    console.log('[email] Envío ya completado.');
     return;
   }
 
@@ -3057,9 +3091,9 @@ await resend.emails.send({
       internalEmailSentAt: internalEmail ? new Date().toISOString() : currentOrder.internalEmailSentAt || null
     });
 
-    console.log('[email] enviados para:', orderNumber);
+    console.log('[email] Mensajes de pedido enviados.');
   } catch (err) {
-    console.error('[email] error enviando emails:', err);
+    console.error('[email] No se pudieron enviar los mensajes de pedido.');
   }
 }
 
@@ -3276,7 +3310,7 @@ function loadStockWaitlist() {
       ? data
       : {};
   } catch (err) {
-    console.warn('[stock-waitlist] No se ha podido leer el archivo local:', err.message);
+    console.warn('[stock-waitlist] No se ha podido leer el almacenamiento local.');
     return {};
   }
 }
@@ -3778,6 +3812,11 @@ function getBearerToken(req) {
 async function requireFirebaseUser(req, res, next) {
   try {
     if (!getApps().length) {
+      emitSecurityEvent(req, 'INTERNAL_SECURITY_ERROR', {
+        status: 500,
+        message: 'Authentication verifier is unavailable',
+        actionTaken: 'request_rejected'
+      });
       return res.status(500).json({
         error: 'Firebase Admin no está inicializado en el servidor.'
       });
@@ -3786,6 +3825,11 @@ async function requireFirebaseUser(req, res, next) {
     const idToken = getBearerToken(req);
 
     if (!idToken) {
+      emitSecurityEvent(req, 'AUTH_FAILURE', {
+        status: 401,
+        message: 'Authentication token was not provided',
+        actionTaken: 'request_rejected'
+      });
       return res.status(401).json({
         error: 'Sesión no válida. Inicia sesión de nuevo.'
       });
@@ -3794,6 +3838,11 @@ async function requireFirebaseUser(req, res, next) {
     const decodedToken = await getAuth().verifyIdToken(idToken);
 
     if (!decodedToken || !decodedToken.uid) {
+      emitSecurityEvent(req, 'AUTH_FAILURE', {
+        status: 401,
+        message: 'Authentication token could not be verified',
+        actionTaken: 'request_rejected'
+      });
       return res.status(401).json({
         error: 'Token de usuario inválido.'
       });
@@ -3806,12 +3855,22 @@ async function requireFirebaseUser(req, res, next) {
     };
 
 if (!req.firebaseUser.email) {
+  emitSecurityEvent(req, 'ACCESS_DENIED', {
+    status: 403,
+    message: 'Verified account has no usable email claim',
+    actionTaken: 'request_rejected'
+  });
   return res.status(403).json({
     error: 'Tu cuenta no tiene un email válido asociado.'
   });
 }
 
 if (!req.firebaseUser.emailVerified) {
+  emitSecurityEvent(req, 'ACCESS_DENIED', {
+    status: 403,
+    message: 'Account email verification is required',
+    actionTaken: 'request_rejected'
+  });
   return res.status(403).json({
     error: 'Verifica tu correo antes de continuar.'
   });
@@ -3819,7 +3878,12 @@ if (!req.firebaseUser.emailVerified) {
 
 return next();
   } catch (err) {
-    console.error('[auth] Firebase token inválido:', err.message);
+    emitSecurityEvent(req, 'AUTH_FAILURE', {
+      status: 401,
+      message: 'Authentication token could not be verified',
+      actionTaken: 'request_rejected'
+    });
+    console.error('[auth] No se pudo verificar la sesión.');
 
     return res.status(401).json({
       error: 'Sesión caducada. Vuelve a iniciar sesión.'
@@ -3837,16 +3901,31 @@ async function getOptionalFirebaseUser(req) {
     const decodedToken = await getAuth().verifyIdToken(idToken);
 
     if (!decodedToken || !decodedToken.uid) {
+      emitSecurityEvent(req, 'AUTH_FAILURE', {
+        status: 401,
+        message: 'Optional authentication token could not be verified',
+        actionTaken: 'authentication_ignored'
+      });
       return null;
     }
 
     const email = normalizeEmail(decodedToken.email || '');
 
 if (!email || !isValidEmail(email)) {
+  emitSecurityEvent(req, 'AUTH_FAILURE', {
+    status: 401,
+    message: 'Optional authentication claims were incomplete',
+    actionTaken: 'authentication_ignored'
+  });
   return null;
 }
 
 if (!decodedToken.email_verified) {
+  emitSecurityEvent(req, 'ACCESS_DENIED', {
+    status: 403,
+    message: 'Optional account email is not verified',
+    actionTaken: 'authentication_ignored'
+  });
   return null;
 }
 
@@ -3856,12 +3935,145 @@ return {
   emailVerified: true
 };
   } catch (err) {
-    console.warn('[auth optional] Firebase token no válido:', err.message);
+    emitSecurityEvent(req, 'AUTH_FAILURE', {
+      status: 401,
+      message: 'Optional authentication token could not be verified',
+      actionTaken: 'authentication_ignored'
+    });
+    console.warn('[auth optional] No se pudo verificar la sesión opcional.');
     return null;
   }
 }
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const CATALOG_PATH = path.join(PUBLIC_DIR, 'assets', 'data', 'catalog.json');
+
+const API_METHOD_RULES = new Map([
+  ['/api/stripe-webhook', ['POST']],
+  ['/api/health', ['GET']],
+  ['/api/storefront-config', ['GET']],
+  ['/api/tribe/subscribe', ['POST']],
+  ['/api/reservations/notify', ['POST']],
+  ['/api/discount/validate', ['POST']],
+  ['/api/shipping-options', ['POST']],
+  ['/api/cart-summary', ['POST']],
+  ['/api/order-by-session', ['GET']],
+  ['/api/guest-order-account-intent', ['POST']],
+  ['/api/tribe/me', ['GET']],
+  ['/api/tribe/mission/check', ['POST']],
+  ['/api/drops/private', ['GET']],
+  ['/api/private-drops', ['GET']],
+  ['/api/my-orders', ['POST']],
+  ['/api/create-checkout-session', ['POST']]
+]);
+const API_JSON_BODY_REQUIRED = new Set([
+  '/api/stripe-webhook',
+  '/api/tribe/subscribe',
+  '/api/reservations/notify',
+  '/api/discount/validate',
+  '/api/shipping-options',
+  '/api/cart-summary',
+  '/api/guest-order-account-intent',
+  '/api/tribe/mission/check',
+  '/api/create-checkout-session'
+]);
+
+function requestPathname(req) {
+  const pathname = String(req?.originalUrl || req?.url || '/')
+    .split(/[?#]/, 1)[0] || '/';
+  const withoutTrailingSlash = pathname.length > 1
+    ? pathname.replace(/\/+$/, '')
+    : pathname;
+  return (withoutTrailingSlash || '/').toLowerCase();
+}
+
+function allowedApiMethods(pathname) {
+  if (API_METHOD_RULES.has(pathname)) return API_METHOD_RULES.get(pathname);
+  if (/^\/api\/private-drops\/[^/]+$/.test(pathname)) return ['GET'];
+  return null;
+}
+
+function contentTypeIsJson(req) {
+  const value = String(req.headers['content-type'] || '').trim();
+  return /^application\/(?:[a-z0-9!#$&^_.+-]+\+)?json(?:\s*;|$)/i.test(value);
+}
+
+const centralSecurityMiddleware = securityLogger.middleware();
+
+app.use((req, res, next) => {
+  try {
+    return centralSecurityMiddleware(req, res, next);
+  } catch {
+    // Fail open: la aplicación continúa incluso si falla la instrumentación.
+    return next();
+  }
+});
+
+app.use((req, res, next) => {
+  res.once('finish', () => {
+    try {
+      const pathname = requestPathname(req);
+      if (!pathname.startsWith('/api/') || pathname === '/api/health') return;
+
+      if (res.statusCode === 400 && !requestHasSecurityEvent(req, [
+        'INPUT_VALIDATION_FAILURE',
+        'MALFORMED_JSON',
+        'INVALID_SKU',
+        'INVALID_VARIANT',
+        'INVALID_QUANTITY',
+        'WEBHOOK_SIGNATURE_FAILURE'
+      ])) {
+        emitSecurityEvent(req, 'INPUT_VALIDATION_FAILURE', {
+          status: 400,
+          message: 'API input validation failed',
+          actionTaken: 'request_rejected'
+        });
+      } else if (res.statusCode === 401 && !requestHasSecurityEvent(req, ['AUTH_FAILURE'])) {
+        emitSecurityEvent(req, 'AUTH_FAILURE', {
+          status: 401,
+          message: 'Authentication could not be verified',
+          actionTaken: 'request_rejected'
+        });
+      } else if (res.statusCode === 403 && !requestHasSecurityEvent(req, ['ACCESS_DENIED'])) {
+        emitSecurityEvent(req, 'ACCESS_DENIED', {
+          status: 403,
+          message: 'Access was denied',
+          actionTaken: 'request_rejected'
+        });
+      }
+    } catch {
+      // La observación posterior a la respuesta nunca afecta al cliente.
+    }
+  });
+  return next();
+});
+
+app.use((req, res, next) => {
+  const pathname = requestPathname(req);
+  const allowedMethods = allowedApiMethods(pathname);
+  const method = String(req.method || '').toUpperCase();
+
+  if (!allowedMethods || !allowedMethods.includes(method)) return next();
+  if (!CHECKOUT_ENABLED && [
+    '/api/stripe-webhook',
+    '/api/guest-order-account-intent',
+    '/api/create-checkout-session'
+  ].includes(pathname)) return next();
+  if (!['POST', 'PUT', 'PATCH'].includes(method)) return next();
+
+  const contentLength = Number(req.headers['content-length'] || 0);
+  const hasBody = contentLength > 0 || Boolean(req.headers['transfer-encoding']);
+  if (!hasBody && !API_JSON_BODY_REQUIRED.has(pathname)) return next();
+  if (contentTypeIsJson(req)) return next();
+
+  emitSecurityEvent(req, 'INVALID_CONTENT_TYPE', {
+    status: 415,
+    message: 'API request requires a JSON content type',
+    actionTaken: 'request_rejected'
+  });
+  return res.status(415).json({
+    error: 'El tipo de contenido debe ser application/json.'
+  });
+});
 
 /* =========================================================
    STRIPE WEBHOOK · Confirmación real de pago
@@ -3873,7 +4085,11 @@ const CATALOG_PATH = path.join(PUBLIC_DIR, 'assets', 'data', 'catalog.json');
    - Este bloque debe ir SIEMPRE antes de express.json().
    - En local puede probarse con Stripe CLI.
    ========================================================= */
-app.post('/api/stripe-webhook', requireCheckoutEnabled, express.raw({ type: 'application/json' }), async (req, res) => {
+app.post(
+  '/api/stripe-webhook',
+  requireCheckoutEnabled,
+  express.raw({ type: 'application/json', limit: '80kb' }),
+  async (req, res) => {
 const signature = req.headers['stripe-signature'];
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const isLocal =
@@ -3885,6 +4101,11 @@ let event;
 try {
   if (!webhookSecret) {
     if (!isLocal) {
+      emitSecurityEvent(req, 'INTERNAL_SECURITY_ERROR', {
+        status: 500,
+        message: 'Webhook verification is unavailable',
+        actionTaken: 'request_rejected'
+      });
       console.error('[stripe-webhook] STRIPE_WEBHOOK_SECRET vacío en entorno no local.');
 
       return res.status(500).json({
@@ -3898,8 +4119,13 @@ try {
     event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret);
   }
 } catch (err) {
-  console.error('[stripe-webhook] firma inválida:', err.message);
-  return res.status(400).send(`Webhook Error: ${err.message}`);
+  emitSecurityEvent(req, 'WEBHOOK_SIGNATURE_FAILURE', {
+    status: 400,
+    message: 'Webhook signature could not be verified',
+    actionTaken: 'request_rejected'
+  });
+  console.error('[stripe-webhook] Firma no válida.');
+  return res.status(400).json({ error: 'Webhook no válido.' });
 }
 
   try {
@@ -3908,7 +4134,7 @@ try {
       const orderDraftId = session.metadata?.orderDraftId || null;
 
       if (!orderDraftId) {
-        console.warn('[stripe-webhook] sesión sin orderDraftId:', session.id);
+        console.warn('[stripe-webhook] Evento sin referencia interna de pedido.');
         return res.json({ received: true });
       }
 
@@ -3930,15 +4156,16 @@ const paidOrder = {
 upsertOrder(paidOrder);
 await finalizePaidOrderOnce(paidOrder);
 
-console.log('[stripe-webhook] pedido pagado:', orderDraftId);
+console.log('[stripe-webhook] Pedido pagado procesado.');
     }
 
     return res.json({ received: true });
   } catch (err) {
-    console.error('[stripe-webhook] error procesando evento:', err);
+    console.error('[stripe-webhook] No se pudo procesar el evento.');
     return res.status(500).json({ error: 'Webhook processing failed' });
   }
-});
+  }
+);
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -4032,64 +4259,173 @@ childSrc: [
 }));
 app.disable('x-powered-by');
 
-const apiLimiter = rateLimit({
+const RATE_LIMIT_PSEUDONYM_KEY = crypto.randomBytes(32);
+
+function rateLimitPseudonym(namespace, value) {
+  const cleanValue = String(value || '').trim();
+  if (!cleanValue) return null;
+  return crypto
+    .createHmac('sha256', RATE_LIMIT_PSEUDONYM_KEY)
+    .update(`${namespace}\u0000${cleanValue}`, 'utf8')
+    .digest('hex');
+}
+
+function securityRateLimitKey(req, scope = 'api', identityMode = 'source') {
+  try {
+    const context = req.securityContext;
+    let sourceKey = context?.sourceId || null;
+
+    if (!sourceKey) {
+      const resolved = resolveClientAddress(req, { env: process.env });
+      sourceKey = resolved.address
+        ? createSourceId(resolved.address, process.env.SECURITY_LOG_HASH_KEY) ||
+          `ephemeral:${rateLimitPseudonym('source', resolved.address)}`
+        : null;
+    }
+
+    const verifiedUserId = identityMode === 'verified'
+      ? String(req.firebaseUser?.uid || '').trim()
+      : '';
+    const identityKey = verifiedUserId
+      ? `user:${rateLimitPseudonym('user', verifiedUserId)}`
+      : 'anonymous';
+
+    if (!sourceKey) {
+      if (!verifiedUserId) return null;
+      sourceKey = 'unresolved';
+    }
+
+    const scopeKey = String(scope || 'api')
+      .toLowerCase()
+      .replace(/[^a-z0-9:_-]+/g, '-')
+      .slice(0, 96) || 'api';
+    return `${scopeKey}|${sourceKey}|${identityKey}`;
+  } catch {
+    return null;
+  }
+}
+
+function createApiRateLimiter({ scope, identityMode = 'source', windowMs, limit, message }) {
+  return rateLimit({
+    windowMs,
+    limit,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip(req) {
+      return securityRateLimitKey(req, scope, identityMode) === null;
+    },
+    keyGenerator(req) {
+      return securityRateLimitKey(req, scope, identityMode) || 'skipped';
+    },
+    message,
+    handler(req, res, next, options) {
+      emitSecurityEvent(req, 'RATE_LIMIT_EXCEEDED', {
+        status: options.statusCode || 429,
+        message: 'Endpoint rate limit was exceeded',
+        actionTaken: 'request_rejected'
+      });
+      return res.status(options.statusCode || 429).json(options.message);
+    }
+  });
+}
+
+const cartSummaryLimiter = createApiRateLimiter({
+  scope: 'cart-summary',
   windowMs: 15 * 60 * 1000,
   limit: 180,
-  standardHeaders: true,
-  legacyHeaders: false,
   message: {
-    error:
-      'Demasiadas solicitudes. Espera unos minutos y vuelve a intentarlo.'
+    error: 'Demasiadas solicitudes. Espera unos minutos y vuelve a intentarlo.'
   }
 });
 
-const checkoutLimiter = rateLimit({
+const shippingOptionsLimiter = createApiRateLimiter({
+  scope: 'shipping-options',
+  windowMs: 15 * 60 * 1000,
+  limit: 180,
+  message: {
+    error: 'Demasiadas solicitudes. Espera unos minutos y vuelve a intentarlo.'
+  }
+});
+
+const checkoutLimiter = createApiRateLimiter({
+  scope: 'checkout',
   windowMs: 10 * 60 * 1000,
   limit: 40,
-  standardHeaders: true,
-  legacyHeaders: false,
   message: {
-    error:
-      'Demasiados intentos de checkout. Espera unos minutos.'
+    error: 'Demasiados intentos de checkout. Espera unos minutos.'
   }
 });
 
-const authSensitiveLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  limit: 60,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    error:
-      'Demasiadas solicitudes. Inténtalo de nuevo más tarde.'
-  }
-});
+function createAuthSensitiveLimiter(scope, options = {}) {
+  return createApiRateLimiter({
+    scope,
+    identityMode: options.verified === true ? 'verified' : 'source',
+    windowMs: 10 * 60 * 1000,
+    limit: Number(options.limit) || 60,
+    message: {
+      error: 'Demasiadas solicitudes. Inténtalo de nuevo más tarde.'
+    }
+  });
+}
 
-const reservationNotifyLimiter = rateLimit({
+const reservationNotifyLimiter = createApiRateLimiter({
+  scope: 'reservation-notify',
   windowMs: 15 * 60 * 1000,
   limit: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
   message: {
-    error:
-      'Demasiados avisos de reserva o stock. Espera unos minutos antes de volver a intentarlo.'
+    error: 'Demasiados avisos de reserva o stock. Espera unos minutos antes de volver a intentarlo.'
   }
 });
 
-const tribeSubscribeLimiter = rateLimit({
+const tribeSubscribeLimiter = createApiRateLimiter({
+  scope: 'tribe-subscribe',
   windowMs: 15 * 60 * 1000,
   limit: 8,
-  standardHeaders: true,
-  legacyHeaders: false,
   message: {
-    error:
-      'Demasiados intentos de suscripción. Espera unos minutos antes de volver a intentarlo.'
+    error: 'Demasiados intentos de suscripción. Espera unos minutos antes de volver a intentarlo.'
   }
 });
 
-app.use('/api/cart-summary', apiLimiter);
-app.use('/api/shipping-options', apiLimiter);
-app.use('/api/discount/validate', authSensitiveLimiter);
+const suspiciousProbeLimiter = createApiRateLimiter({
+  scope: 'suspicious-probe',
+  windowMs: 10 * 60 * 1000,
+  limit: 60,
+  message: {
+    error: 'Demasiadas solicitudes. Inténtalo de nuevo más tarde.'
+  }
+});
+
+app.use((req, res, next) => {
+  let pathClassification = null;
+  try {
+    pathClassification = classifyPath(req.originalUrl || req.url || '');
+  } catch {
+    return next();
+  }
+  if (!pathClassification?.scanCandidate) return next();
+  return suspiciousProbeLimiter(req, res, next);
+});
+
+/*
+  El logger clasifica primero y el limitador procesa las repeticiones. Este
+  rechazo separado permanece activo aunque el registro esté deshabilitado o
+  degradado, y evita que un archivo sensible llegue a express.static().
+*/
+app.use((req, res, next) => {
+  try {
+    const pathClassification = classifyPath(req.originalUrl || req.url || '');
+    if (pathClassification?.block) {
+      return res.status(pathClassification.status || 404).send('Not Found');
+    }
+  } catch {
+    return next();
+  }
+  return next();
+});
+
+app.use('/api/cart-summary', cartSummaryLimiter);
+app.use('/api/shipping-options', shippingOptionsLimiter);
+app.use('/api/discount/validate', createAuthSensitiveLimiter('discount-validate'));
 
 app.use(
   '/api/tribe/subscribe',
@@ -4097,16 +4433,152 @@ app.use(
 );
 
 app.use('/api/create-checkout-session', checkoutLimiter);
-app.use('/api/my-orders', authSensitiveLimiter);
+app.use('/api/my-orders', createAuthSensitiveLimiter('my-orders-pre-auth', { limit: 300 }));
 app.use('/api/reservations/notify', reservationNotifyLimiter);
-app.use('/api/tribe/me', authSensitiveLimiter);
-app.use('/api/tribe/mission/check', authSensitiveLimiter);
-app.use('/api/drops/private', authSensitiveLimiter);
-app.use('/api/private-drops', authSensitiveLimiter);
+app.use('/api/tribe/me', createAuthSensitiveLimiter('tribe-me-pre-auth', { limit: 300 }));
+app.use('/api/tribe/mission/check', createAuthSensitiveLimiter('tribe-mission-pre-auth', { limit: 300 }));
+app.use('/api/drops/private', createAuthSensitiveLimiter('private-drops-access-pre-auth', { limit: 300 }));
+app.use('/api/private-drops', createAuthSensitiveLimiter('private-drops-pre-auth', { limit: 300 }));
 
 app.use(express.json({
   limit: '80kb'
 }));
+
+const CART_SECURITY_PATHS = new Set([
+  '/api/cart-summary',
+  '/api/shipping-options',
+  '/api/discount/validate',
+  '/api/create-checkout-session'
+]);
+const CLIENT_PRICE_FIELDS = new Set([
+  'price',
+  'unitPrice',
+  'unit_amount',
+  'amount',
+  'lineTotal',
+  'total'
+]);
+
+function hasNonCanonicalClientPrice(item, canonicalUnitPrice, quantity) {
+  const expectedUnit = Number(canonicalUnitPrice);
+  const expectedLine = expectedUnit * quantity;
+  if (!Number.isFinite(expectedUnit) || expectedUnit <= 0) return false;
+
+  for (const key of CLIENT_PRICE_FIELDS) {
+    if (!Object.prototype.hasOwnProperty.call(item, key)) continue;
+    const supplied = Number(item[key]);
+    if (!Number.isFinite(supplied)) return true;
+
+    const expected = key === 'unit_amount'
+      ? Math.round(expectedUnit * 100)
+      : ['lineTotal', 'amount', 'total'].includes(key)
+        ? expectedLine
+        : expectedUnit;
+    if (Math.abs(supplied - expected) > 0.005) return true;
+  }
+
+  return false;
+}
+
+function auditCartSecurityInput(req, res, next) {
+  const pathname = requestPathname(req);
+  if (!CART_SECURITY_PATHS.has(pathname)) return next();
+
+  const cart = req.body?.cart;
+  if (!Array.isArray(cart) || cart.length === 0) return next();
+
+  try {
+    const catalog = loadCatalog();
+    let nonCanonicalClientPrice = false;
+
+    for (const item of cart) {
+      if (!item || typeof item !== 'object' || Array.isArray(item)) {
+        emitSecurityEvent(req, 'INPUT_VALIDATION_FAILURE', {
+          status: 400,
+          message: 'Cart item structure is invalid',
+          actionTaken: 'request_rejected'
+        });
+        return res.status(400).json({ error: 'La cesta contiene una línea no válida.' });
+      }
+
+      if (Object.prototype.hasOwnProperty.call(item, 'qty')) {
+        const quantity = Number(item.qty);
+        if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+          emitSecurityEvent(req, 'INVALID_QUANTITY', {
+            status: 400,
+            message: 'Cart quantity is outside the accepted range',
+            actionTaken: 'request_rejected'
+          });
+          return res.status(400).json({ error: 'La cantidad indicada no es válida.' });
+        }
+      }
+
+      const product = findProduct(catalog, item);
+      if (!product) {
+        emitSecurityEvent(req, 'INVALID_SKU', {
+          status: 400,
+          message: 'Cart product identifier is not in the catalog',
+          actionTaken: 'request_rejected'
+        });
+        continue;
+      }
+
+      const variant = findVariant(product, item);
+      if (!variant) {
+        const eventName = String(item.sku || '').trim() ? 'INVALID_SKU' : 'INVALID_VARIANT';
+        emitSecurityEvent(req, eventName, {
+          status: 400,
+          message: eventName === 'INVALID_SKU'
+            ? 'Cart SKU is not in the catalog'
+            : 'Cart variant is not valid for the product',
+          actionTaken: 'request_rejected'
+        });
+        continue;
+      }
+
+      const version = findVersion(product, item);
+      try {
+        assertVariantSelection(product, variant, version, item);
+      } catch {
+        emitSecurityEvent(req, 'INVALID_VARIANT', {
+          status: 400,
+          message: 'Cart variant selection is inconsistent',
+          actionTaken: 'request_rejected'
+        });
+        continue;
+      }
+
+      const canonicalUnitPrice = Number(version?.price) || Number(product.price);
+      const quantity = Object.prototype.hasOwnProperty.call(item, 'qty')
+        ? Number(item.qty)
+        : 1;
+      nonCanonicalClientPrice = nonCanonicalClientPrice || hasNonCanonicalClientPrice(
+        item,
+        canonicalUnitPrice,
+        quantity
+      );
+    }
+
+    if (nonCanonicalClientPrice) {
+      emitSecurityEvent(req, 'PRICE_TAMPERING_ATTEMPT', {
+        severity: 'warning',
+        confidence: 'high',
+        message: 'Client supplied non-canonical price data',
+        actionTaken: 'canonical_server_price_used'
+      });
+    }
+  } catch {
+    emitSecurityEvent(req, 'INTERNAL_SECURITY_ERROR', {
+      status: 500,
+      message: 'Cart security validation could not be completed',
+      actionTaken: 'validation_degraded'
+    });
+  }
+
+  return next();
+}
+
+app.use(Array.from(CART_SECURITY_PATHS), auditCartSecurityInput);
 
 /*
   PRODUCCIÓN:
@@ -4125,6 +4597,11 @@ const isLocalDev =
 app.get(['/checkout', '/checkout.html'], (req, res, next) => {
   if (CHECKOUT_ENABLED) return next();
 
+  emitSecurityEvent(req, 'CHECKOUT_DISABLED_ACCESS', {
+    status: 503,
+    message: 'Disabled checkout page was requested',
+    actionTaken: 'checkout_remained_disabled'
+  });
   res.set('Cache-Control', 'no-store');
   return res.status(503).sendFile(path.join(PUBLIC_DIR, 'checkout-disabled.html'));
 });
@@ -4185,7 +4662,7 @@ async function finalizePaidOrderOnce(orderInput = {}) {
  try {
   deductStockForOrderOnce(order);
 } catch (err) {
-  console.warn('[finalize] stock:', err.message);
+  console.warn('[finalize] Fallo al actualizar stock; requiere revisión manual.');
 
   upsertOrder({
     ...order,
@@ -4200,7 +4677,7 @@ async function finalizePaidOrderOnce(orderInput = {}) {
   try {
     await sendOrderEmailsOnce(order);
   } catch (err) {
-    console.warn('[finalize] email:', err.message);
+    console.warn('[finalize] Fallo al enviar el email del pedido.');
   }
 
 if (order.discount?.code) {
@@ -4342,7 +4819,7 @@ function deductStockForOrderOnce(orderInput) {
   }
 
   if (order.stockDeductedAt) {
-    console.log('[stock] ya descontado para:', order.orderNumber || order.orderDraftId);
+    console.log('[stock] Descuento ya aplicado.');
     return;
   }
 
@@ -4395,7 +4872,7 @@ function deductStockForOrderOnce(orderInput) {
     stockDeductedAt: new Date().toISOString()
   });
 
-  console.log('[stock] descontado para:', order.orderNumber || order.orderDraftId);
+  console.log('[stock] Descuento aplicado correctamente.');
 }
 function toCents(euros) {
   const n = Number(euros);
@@ -4993,17 +5470,14 @@ app.post(
             : 'Ya formas parte de Prophetia Tribe.'
       });
     } catch (error) {
-      console.error(
-        '[tribe] subscribe error:',
-        error
-      );
+      console.error('[tribe] No se pudo completar la suscripción.');
 
       if (
         error.code ===
         'TRIBE_UID_CONFLICT'
       ) {
         return res.status(409).json({
-          error: error.message
+          error: 'Esta membresía Tribe ya está vinculada a otra cuenta.'
         });
       }
 
@@ -5133,7 +5607,7 @@ app.post('/api/reservations/notify', async (req, res) => {
       try {
         emailResult = await sendReservationInterestEmail(emailPayload);
       } catch (emailError) {
-        console.error('[reservations] internal email error:', emailError.message);
+        console.error('[reservations] Fallo al enviar el aviso interno.');
         emailResult = {
           sent: false,
           reason: 'email_send_failed'
@@ -5145,7 +5619,7 @@ app.post('/api/reservations/notify', async (req, res) => {
       try {
         await markStockWaitlistEmailStatus(emailPayload, emailResult);
       } catch (statusError) {
-        console.error('[reservations] email status error:', statusError.message);
+        console.error('[reservations] Fallo al enviar el estado del aviso.');
       }
     }
 
@@ -5158,7 +5632,7 @@ app.post('/api/reservations/notify', async (req, res) => {
       alreadyRegistered: type === 'stock-waitlist' && waitlistResult.created === false
     });
   } catch (err) {
-    console.error('[reservations] notify error:', err);
+    console.error('[reservations] No se pudo registrar el aviso.');
 
     return res.status(500).json({
       error: 'No se ha podido registrar el aviso.'
@@ -5216,10 +5690,10 @@ const summary = buildSecureCartSummary(cart, shippingDetails, {
 
     return res.json(discountedSummary);
   } catch (err) {
-    console.error('[discount] validate error:', err);
+    console.error('[discount] No se pudo validar el descuento.');
 
     return res.status(400).json({
-      error: err.message || 'No se ha podido validar el descuento.'
+      error: 'No se ha podido validar el descuento.'
     });
   }
 });
@@ -5242,9 +5716,9 @@ app.post('/api/shipping-options', async (req, res) => {
       shippingRate: summary.shippingRate
     });
   } catch (err) {
-    console.error('[shipping-options] error:', err);
+    console.error('[shipping-options] No se pudieron calcular las opciones.');
     return res.status(400).json({
-      error: err.message || 'No se han podido calcular las opciones de envío.'
+      error: 'No se han podido calcular las opciones de envío.'
     });
   }
 });
@@ -5316,10 +5790,10 @@ if (discountCode) {
 
 return res.json(summary);
   } catch (err) {
-    console.error('[cart-summary] error:', err);
+    console.error('[cart-summary] No se pudo validar la cesta.');
 
     return res.status(400).json({
-      error: err.message || 'No se ha podido validar la cesta.'
+      error: 'No se ha podido validar la cesta.'
     });
   }
 });
@@ -5430,7 +5904,7 @@ app.get('/api/order-by-session', requireCheckoutEnabled, async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('[order-by-session] error:', err);
+    console.error('[order-by-session] No se pudo consultar el pedido.');
     return res.status(500).json({
       error: 'No se ha podido recuperar el pedido.'
     });
@@ -5473,7 +5947,7 @@ app.post('/api/guest-order-account-intent', requireCheckoutEnabled, async (req, 
 
     return res.json({ ok: true });
   } catch (err) {
-    console.error('[guest-order-account-intent] error:', err);
+    console.error('[guest-order-account-intent] No se pudo registrar la intención.');
     return res.status(500).json({ error: 'No se ha podido preparar la cuenta invitada.' });
   }
 });
@@ -5482,7 +5956,7 @@ app.post('/api/guest-order-account-intent', requireCheckoutEnabled, async (req, 
    Fuente local: data/tribe-members.json
    Seguridad: Firebase ID token verificado en servidor
    ========================================================= */
-app.get('/api/tribe/me', requireFirebaseUser, async (req, res) => {
+app.get('/api/tribe/me', requireFirebaseUser, createAuthSensitiveLimiter('tribe-me-verified', { verified: true }), async (req, res) => {
   try {
     const cleanEmail = normalizeEmail(req.firebaseUser.email);
 
@@ -5648,19 +6122,14 @@ rankMessage: publicRankBenefits.message,
 rewardOnUnlock: publicRankBenefits.rewardOnUnlock
     });
  } catch (err) {
-  console.error(
-    '[tribe-me] error:',
-    err
-  );
+  console.error('[tribe-me] No se pudo cargar el perfil.');
 
   if (
     err.code ===
     'TRIBE_UID_CONFLICT'
   ) {
     return res.status(409).json({
-      error:
-        err.message ||
-        'Esta membresía Tribe ya está vinculada a otra cuenta.'
+      error: 'Esta membresía Tribe ya está vinculada a otra cuenta.'
     });
   }
 
@@ -5696,7 +6165,7 @@ async function userHasAtLeastOneAddress(uid = '', since = '') {
       return addressTime && addressTime >= sinceMs;
     });
   } catch (err) {
-    console.error('[tribe-mission] error verificando direcciones:', err);
+    console.error('[tribe-mission] No se pudo verificar la misión de direcciones.');
     return false;
   }
 }
@@ -5705,7 +6174,7 @@ async function userHasAtLeastOneAddress(uid = '', since = '') {
    Completa misiones automáticas desde acciones verificadas
    ========================================================= */
 
-app.post('/api/tribe/mission/check', requireFirebaseUser, async (req, res) => {
+app.post('/api/tribe/mission/check', requireFirebaseUser, createAuthSensitiveLimiter('tribe-mission-verified', { verified: true }), async (req, res) => {
   try {
     const cleanEmail = normalizeEmail(req.firebaseUser.email);
     const missionId = String(req.body?.missionId || '').trim();
@@ -5812,7 +6281,7 @@ const result = completeTribeMissionForEmail({
       missions: getPublicTribeMissions(member)
     });
   } catch (err) {
-    console.error('[tribe-mission-check] error:', err);
+    console.error('[tribe-mission-check] No se pudo verificar la misión.');
 
     return res.status(500).json({
       error: 'No se ha podido comprobar la misión Tribe.'
@@ -5825,7 +6294,7 @@ const result = completeTribeMissionForEmail({
    Devuelve solo fechas permitidas por rango Tribe
    ========================================================= */
 
-app.get('/api/drops/private', requireFirebaseUser, async (req, res) => {
+app.get('/api/drops/private', requireFirebaseUser, createAuthSensitiveLimiter('private-drops-access-verified', { verified: true }), async (req, res) => {
   try {
     const cleanEmail = normalizeEmail(req.firebaseUser.email);
 
@@ -5903,7 +6372,7 @@ app.get('/api/drops/private', requireFirebaseUser, async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('[private-drops] error:', err);
+    console.error('[private-drops] No se pudo cargar el acceso privado.');
 
     return res.status(500).json({
       error: 'No se han podido cargar las fechas privadas.'
@@ -5916,7 +6385,7 @@ app.get('/api/drops/private', requireFirebaseUser, async (req, res) => {
    Seguridad: Firebase + Tribe + rango + unlockAt
    ========================================================= */
 
-app.get('/api/private-drops', requireFirebaseUser, async (req, res) => {
+app.get('/api/private-drops', requireFirebaseUser, createAuthSensitiveLimiter('private-drops-verified', { verified: true }), async (req, res) => {
   try {
     const cleanEmail = normalizeEmail(req.firebaseUser.email);
 
@@ -5978,7 +6447,7 @@ app.get('/api/private-drops', requireFirebaseUser, async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('[private-drops-list] error:', err);
+    console.error('[private-drops-list] No se pudo cargar el listado privado.');
 
     return res.status(500).json({
       error: 'No se han podido cargar los drops privados.'
@@ -5986,7 +6455,7 @@ app.get('/api/private-drops', requireFirebaseUser, async (req, res) => {
   }
 });
 
-app.get('/api/private-drops/:id', requireFirebaseUser, async (req, res) => {
+app.get('/api/private-drops/:id', requireFirebaseUser, createAuthSensitiveLimiter('private-drop-detail-verified', { verified: true }), async (req, res) => {
   try {
     const cleanEmail = normalizeEmail(req.firebaseUser.email);
     const dropId = String(req.params.id || '').trim();
@@ -6057,7 +6526,7 @@ app.get('/api/private-drops/:id', requireFirebaseUser, async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('[private-drop-detail] error:', err);
+    console.error('[private-drop-detail] No se pudo cargar el detalle privado.');
 
     return res.status(500).json({
       error: 'No se ha podido cargar el drop privado.'
@@ -6070,7 +6539,7 @@ app.get('/api/private-drops/:id', requireFirebaseUser, async (req, res) => {
    Fuente local: data/orders.json
    Seguridad: Firebase ID token verificado en servidor
    ========================================================= */
-app.post('/api/my-orders', requireFirebaseUser, async (req, res) => {
+app.post('/api/my-orders', requireFirebaseUser, createAuthSensitiveLimiter('my-orders-verified', { verified: true }), async (req, res) => {
   try {
     const cleanEmail = String(req.firebaseUser.email || '').trim().toLowerCase();
 
@@ -6112,7 +6581,7 @@ shippingRate: order.shippingRate || null,
       orders
     });
   } catch (err) {
-    console.error('[my-orders] error:', err);
+    console.error('[my-orders] No se pudieron cargar los pedidos.');
 
     return res.status(500).json({
       error: 'No se han podido cargar los pedidos.'
@@ -6349,12 +6818,31 @@ invoiceWanted: invoice?.invoiceWanted ? 'yes' : 'no'
   orderNumber: findOrderByDraftId(orderDraftId)?.orderNumber || orderDraftId
 });
   } catch (err) {
-    console.error('[stripe] create-checkout-session error:', err);
+    console.error('[stripe] No se pudo crear la sesión de pago.');
 
     return res.status(400).json({
-      error: err.message || 'No se ha podido crear la sesión de pago.'
+      error: 'No se ha podido crear la sesión de pago.'
     });
   }
+});
+
+app.use((req, res, next) => {
+  const pathname = requestPathname(req);
+  const allowedMethods = allowedApiMethods(pathname);
+  const method = String(req.method || '').toUpperCase();
+
+  if (!allowedMethods || method === 'OPTIONS') return next();
+  if (allowedMethods.includes(method) || (method === 'HEAD' && allowedMethods.includes('GET'))) {
+    return next();
+  }
+
+  emitSecurityEvent(req, 'METHOD_NOT_ALLOWED', {
+    status: 405,
+    message: 'HTTP method is not allowed for this API path',
+    actionTaken: 'request_rejected'
+  });
+  res.set('Allow', allowedMethods.join(', '));
+  return res.status(405).json({ error: 'Método no permitido.' });
 });
 /* =========================================================
    PROPHETIA · CLEAN URLS
@@ -6418,14 +6906,73 @@ app.get(/^\/(.+)$/, (req, res, next) => {
 
   return res.sendFile(filePath);
 });
+
 /* =========================================================
    PROPHETIA · 404
    Página elegante para rutas inexistentes.
    Debe ir después de rutas API, estáticos y clean URLs.
    ========================================================= */
 
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(PUBLIC_DIR, '404.html'));
+app.use((req, res, next) => {
+  return res.status(404).sendFile(path.join(PUBLIC_DIR, '404.html'), (err) => {
+    if (err) next(err);
+  });
+});
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+
+  if (err?.type === 'entity.parse.failed') {
+    emitSecurityEvent(req, 'MALFORMED_JSON', {
+      status: 400,
+      message: 'Malformed JSON was rejected',
+      actionTaken: 'request_rejected'
+    });
+    return res.status(400).json({ error: 'El JSON enviado no es válido.' });
+  }
+
+  if (Number(err?.status) === 400) {
+    emitSecurityEvent(req, 'INPUT_VALIDATION_FAILURE', {
+      status: 400,
+      message: 'Request body validation failed',
+      actionTaken: 'request_rejected'
+    });
+    return res.status(400).json({ error: 'El cuerpo de la solicitud no es válido.' });
+  }
+
+  if (err?.type === 'entity.too.large' || Number(err?.status) === 413) {
+    emitSecurityEvent(req, 'PAYLOAD_TOO_LARGE', {
+      status: 413,
+      message: 'Payload exceeded the configured limit',
+      actionTaken: 'request_rejected'
+    });
+    return res.status(413).json({ error: 'La solicitud supera el tamaño permitido.' });
+  }
+
+  if (
+    err?.type === 'charset.unsupported' ||
+    err?.type === 'encoding.unsupported' ||
+    Number(err?.status) === 415
+  ) {
+    emitSecurityEvent(req, 'INVALID_CONTENT_TYPE', {
+      status: 415,
+      message: 'Unsupported JSON encoding was rejected',
+      actionTaken: 'request_rejected'
+    });
+    return res.status(415).json({ error: 'La codificación del contenido no es compatible.' });
+  }
+
+  emitSecurityEvent(req, 'INTERNAL_SECURITY_ERROR', {
+    status: 500,
+    message: 'Unhandled request processing error',
+    actionTaken: 'request_failed_closed'
+  });
+  console.error('[server] Error interno durante una petición.');
+
+  if (requestPathname(req).startsWith('/api/')) {
+    return res.status(500).json({ error: 'No se ha podido procesar la solicitud.' });
+  }
+  return res.status(500).send('No se ha podido procesar la solicitud.');
 });
 function startServer(port = PORT) {
   return app.listen(port, () => {
@@ -6438,8 +6985,8 @@ function startServer(port = PORT) {
       - Nunca imprimir STRIPE_SECRET_KEY, RESEND_API_KEY ni Firebase credentials.
     */
     console.log(`PROPHETIA server running: ${SITE_URL}`);
-    console.log(`[orders] file: ${ORDERS_FILE}`);
-    console.log(`[stock] file: ${STOCK_FILE}`);
+    console.log('[orders] almacenamiento inicializado.');
+    console.log('[stock] almacenamiento inicializado.');
   });
 }
 
