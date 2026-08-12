@@ -8,6 +8,9 @@
   const STORAGE_KEY = 'pp_tribe_xp_event';
   const MAX_EVENT_AGE_MS = 1000 * 60 * 30;
   const SHOWN_KEY_PREFIX = 'pp_tribe_xp_shown:';
+  const TOAST_EXIT_MS = 240;
+  const TOAST_AUTO_DISMISS_MS = 2600;
+  const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)') || null;
   let lastShownSignature = '';
   let claimFetchInFlight = false;
   let claimCheckedUid = '';
@@ -22,6 +25,33 @@
 
   function clamp(value, min = 0, max = 100) {
     return Math.max(min, Math.min(max, Number(value || 0)));
+  }
+
+  function prefersReducedMotion() {
+    return reducedMotionQuery?.matches === true;
+  }
+
+  function getToastFillDuration(fromPercent = 0, toPercent = 0) {
+    const distance = Math.abs(clamp(toPercent) - clamp(fromPercent));
+
+    if (distance < 0.5 || prefersReducedMotion()) return 0;
+
+    return Math.round(clamp(900 + (distance * 7), 900, 1600));
+  }
+
+  function setToastProgress(fillEl, barEl, percent = 0, valueText = '', updateAccessibleValue = true) {
+    const safePercent = clamp(percent);
+
+    fillEl?.style.setProperty('transform', `scaleX(${safePercent / 100})`);
+    barEl?.style.setProperty('--xp-progress', String(safePercent));
+
+    if (updateAccessibleValue) {
+      barEl?.setAttribute('aria-valuenow', String(Math.round(safePercent)));
+      barEl?.setAttribute(
+        'aria-valuetext',
+        replaceXpWithLp(valueText) || `${Math.round(safePercent)}%`
+      );
+    }
   }
 function escapeHtml(value = '') {
   return String(value ?? '')
@@ -126,16 +156,19 @@ function replaceXpWithLp(value = '') {
     }
   }
  function wait(ms) {
+  if (prefersReducedMotion() || Number(ms) <= 0) return Promise.resolve();
+
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 function animateToastFill({
   fillEl,
+  barEl,
   metaXpEl,
   fromPercent = 0,
   toPercent = 0,
   fromText = '',
   toText = '',
-  duration = 3600
+  duration = getToastFillDuration(fromPercent, toPercent)
 } = {}) {
   return new Promise((resolve) => {
     if (!fillEl) {
@@ -147,41 +180,44 @@ function animateToastFill({
     const endPercent = clamp(toPercent);
     const start = performance.now();
 
+    const progressBar = barEl || fillEl.closest('.pp-xpToast__bar');
+
     fillEl.style.transition = 'none';
     fillEl.style.transformOrigin = 'left center';
-    fillEl.style.transform = `scaleX(${startPercent / 100})`;
+    setToastProgress(fillEl, progressBar, startPercent, fromText);
 
     if (metaXpEl) {
-     metaXpEl.textContent = replaceXpWithLp(fromText) || '';
+     metaXpEl.textContent = replaceXpWithLp(fromText) || `${Math.round(startPercent)}%`;
     }
 
-    const easeInOutQuad = (t) => {
-      return t < 0.5
-        ? 2 * t * t
-        : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    };
+    if (duration <= 0 || prefersReducedMotion()) {
+      setToastProgress(fillEl, progressBar, endPercent, toText);
+
+      if (metaXpEl) {
+        metaXpEl.textContent = replaceXpWithLp(toText) || `${Math.round(endPercent)}%`;
+      }
+
+      resolve();
+      return;
+    }
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
     const tick = (now) => {
       const elapsed = now - start;
       const rawProgress = Math.min(1, elapsed / duration);
-      const eased = easeInOutQuad(rawProgress);
+      const eased = easeOutCubic(rawProgress);
       const currentPercent = startPercent + ((endPercent - startPercent) * eased);
 
-      fillEl.style.transform = `scaleX(${currentPercent / 100})`;
+      setToastProgress(fillEl, progressBar, currentPercent, '', false);
 
-      if (metaXpEl) {
-        metaXpEl.textContent = rawProgress < 1
-          ? `${currentPercent.toFixed(1)}%`
-          : replaceXpWithLp(toText) || `${endPercent}%`;
-      }
-
-      if (rawProgress < 1) {
+      if (rawProgress < 1 && fillEl.isConnected && !prefersReducedMotion()) {
         requestAnimationFrame(tick);
       } else {
-        fillEl.style.transform = `scaleX(${endPercent / 100})`;
+        setToastProgress(fillEl, progressBar, endPercent, toText);
 
         if (metaXpEl) {
-          metaXpEl.textContent = replaceXpWithLp(toText) || '';
+          metaXpEl.textContent = replaceXpWithLp(toText) || `${Math.round(endPercent)}%`;
         }
 
         resolve();
@@ -216,7 +252,9 @@ function playProphetiaSound(type = 'xp', toast = null) {
       return playPromise
         .then(() => true)
         .catch((error) => {
-          console.warn('[Prophetia audio] El navegador bloqueó el sonido:', error?.name || error);
+          if (error?.name !== 'NotAllowedError') {
+            console.warn('[Prophetia audio] No se pudo reproducir:', error?.name || error);
+          }
 
           // No mostramos botón de sonido: el desbloqueo se intenta en checkout-success
 // usando el clic natural de “Volver al inicio”.
@@ -442,53 +480,80 @@ function getToastProgress(event) {
   };
 }
 
+function applyFinalToastState({ toast, event, progress, fill, rankEl, metaXpEl, noteEl }) {
+  const barEl = fill?.closest('.pp-xpToast__bar');
+  const finalRank = progress.finalRank || event.newRank || progress.currentRank || 'member';
+  const finalPrestigeLabel = progress.finalPrestigeLabel || progress.prestigeLabel || '';
+  const finalRankId = normalizeRankId(finalRank);
+  const isProphet = finalRankId === 'prophet';
+  const nextGoal = progress.nextPrestigeLabel || progress.nextRank || event.nextRank || '';
+  const pointsToNextGoal = isProphet
+    ? Number(progress.pointsToNextPrestige || event.pointsToNextPrestige || 0)
+    : Number(event.pointsToNextRank || 0);
+
+  setToastVisualRank(toast, getVisualRankKeyFromState(finalRank, finalPrestigeLabel));
+  setToastProgress(fill, barEl, progress.toPercent, progress.toText);
+  barEl?.classList.remove('is-charging', 'is-settled');
+
+  if (metaXpEl) {
+    metaXpEl.textContent = replaceXpWithLp(progress.toText) || `${Math.round(progress.toPercent)}%`;
+  }
+
+  if (rankEl) {
+    rankEl.textContent = isProphet && finalPrestigeLabel
+      ? `Prophet · ${finalPrestigeLabel}`
+      : finalRank;
+  }
+
+  if (noteEl) {
+    noteEl.innerHTML = pointsToNextGoal > 0 && nextGoal
+      ? `Faltan <strong>${pointsToNextGoal}</strong> LP para ${escapeHtml(nextGoal)}.`
+      : isProphet
+        ? `Prestige activo. Nuevos círculos de prestigio podrán revelarse en futuras temporadas.`
+        : `Has alcanzado el rango máximo Prophetia.`;
+  }
+}
+
 async function animateToastXp({ toast, event, fill, rankEl, metaXpEl, noteEl }) {
   const steps = Array.isArray(event.xpAnimationSteps) ? event.xpAnimationSteps : [];
+  const finalProgress = getToastProgress(event);
+
+  if (prefersReducedMotion()) {
+    applyFinalToastState({ toast, event, progress: finalProgress, fill, rankEl, metaXpEl, noteEl });
+    return;
+  }
 
 if (!steps.length) {
-  const progress = getToastProgress(event);
+  const progress = finalProgress;
   const barEl = fill?.closest('.pp-xpToast__bar');
 
   fill.style.transition = 'none';
-  fill.style.transform = `scaleX(${progress.fromPercent / 100})`;
+  setToastProgress(fill, barEl, progress.fromPercent, progress.fromText);
   fill.offsetHeight;
 
-  await wait(420);
+  await wait(160);
 
   barEl?.classList.add('is-charging');
 
   await animateToastFill({
     fillEl: fill,
+    barEl,
     metaXpEl,
     fromPercent: progress.fromPercent,
     toPercent: progress.toPercent,
     fromText: progress.fromText,
     toText: progress.toText,
-    duration: 3600
+    duration: getToastFillDuration(progress.fromPercent, progress.toPercent)
   });
 
   barEl?.classList.remove('is-charging');
   barEl?.classList.add('is-settled');
 
-  await wait(850);
+  await wait(320);
 
   barEl?.classList.remove('is-settled');
 
-rankEl.textContent =
-  progress.currentRankId === 'prophet' && progress.prestigeLabel
-    ? `Prophet · ${progress.prestigeLabel}`
-    : progress.currentRank;
-
-const isProphetProgress = String(progress.currentRank).toLowerCase() === 'prophet';
-const pointsToNextGoal = isProphetProgress
-  ? Number(progress.pointsToNextPrestige || 0)
-  : Number(event.pointsToNextRank || 0);
-
-noteEl.innerHTML = pointsToNextGoal > 0 && progress.nextRank
-  ? `Faltan <strong>${pointsToNextGoal}</strong> LP para ${escapeHtml(progress.nextRank)}.`
-  : isProphetProgress
-    ? `Prestige activo. Nuevos círculos de prestigio podrán revelarse en futuras temporadas.`
-    : `Has alcanzado el rango máximo Prophetia.`;
+applyFinalToastState({ toast, event, progress, fill, rankEl, metaXpEl, noteEl });
 
     return;
   }
@@ -552,22 +617,23 @@ if (step.type === 'fill') {
 
   barEl?.classList.add('is-charging');
 
-  await wait(260);
+  await wait(120);
 
   await animateToastFill({
     fillEl: fill,
+    barEl,
     metaXpEl,
     fromPercent: step.fromPercent,
     toPercent: step.toPercent,
     fromText: step.fromText || '',
     toText: step.toText || '',
-    duration: 3600
+    duration: getToastFillDuration(step.fromPercent, step.toPercent)
   });
 
   barEl?.classList.remove('is-charging');
   barEl?.classList.add('is-settled');
 
-  await wait(680);
+  await wait(260);
 
   barEl?.classList.remove('is-settled');
 }
@@ -580,12 +646,14 @@ if (step.type === 'fill') {
       rankEl.textContent = step.toRank || event.newRank || 'Nuevo rango';
       noteEl.innerHTML = `Nuevo rango desbloqueado: <strong>${escapeHtml(step.toRank || event.newRank)}</strong>.`;
 
-spawnGoldParticles(toast);
-playProphetiaSound('rank', toast);
-playSoftChime();
-triggerHaptic();
+if (!prefersReducedMotion()) {
+  spawnGoldParticles(toast);
+  playProphetiaSound('rank', toast);
+  playSoftChime();
+  triggerHaptic();
+}
 
-      await wait(1050);
+      await wait(820);
 
 fill.style.transition = 'none';
 fill.style.transform = 'scaleX(0)';
@@ -593,7 +661,7 @@ fill.offsetHeight;
 
       toast.classList.remove('is-level-up');
 
-      await wait(320);
+      await wait(160);
     }
 if (step.type === 'prestige-up') {
   const toPrestige =
@@ -617,12 +685,14 @@ if (emblemImg) {
       rankEl.textContent = `Prophet · ${toPrestige}`;
       noteEl.innerHTML = `Prestigio desbloqueado: <strong>${escapeHtml(toPrestige)}</strong>.`;
 
-spawnGoldParticles(toast);
-playProphetiaSound('prestige', toast);
-playSoftChime();
-triggerHaptic();
+if (!prefersReducedMotion()) {
+  spawnGoldParticles(toast);
+  playProphetiaSound('prestige', toast);
+  playSoftChime();
+  triggerHaptic();
+}
 
-      await wait(1250);
+      await wait(920);
 
 fill.style.transition = 'none';
 fill.style.transform = 'scaleX(0)';
@@ -630,7 +700,7 @@ fill.offsetHeight;
 
       toast.classList.remove('is-level-up');
 
-      await wait(360);
+      await wait(180);
     }
   }
 }
@@ -718,6 +788,14 @@ const rankDisplay = isProphet && prestigeLabel
   : rankTheme.id === 'member'
     ? 'Prophetia Member'
     : rankTheme.label || rank;
+const announcedRank = progress.finalRank || event.newRank || rankDisplay;
+const announcedPrestigeLabel = progress.finalPrestigeLabel || progress.prestigeLabel || '';
+const announcedRankDisplay = normalizeRankId(announcedRank) === 'prophet' && announcedPrestigeLabel
+  ? `Prophet · ${announcedPrestigeLabel}`
+  : announcedRank;
+const liveAnnouncement = initiationUnlocked
+  ? `Initiate activado. ${pointsEarned} LP añadidos.`
+  : `${pointsEarned} LP añadidos. Rango ${announcedRankDisplay}.`;
 const titleMarkup = initiationUnlocked
   ? 'Initiate activado'
   : `+<span data-xp-count>0</span> LP añadidos`;
@@ -745,10 +823,13 @@ const initialNote = prestigeUnlocked
   const toast = document.createElement('section');
   toast.className = `pp-xpToast rank-${rankTheme.id}`;
   toast.dataset.rank = rankTheme.id;
-  toast.setAttribute('role', 'status');
-  toast.setAttribute('aria-live', 'polite');
+  toast.setAttribute('role', 'region');
+  toast.setAttribute('aria-label', 'Actualización de Prophetia Tribe');
 
   toast.innerHTML = `
+    <p class="pp-xpToast__srStatus" role="status" aria-live="polite" aria-atomic="true">
+      ${escapeHtml(liveAnnouncement)}
+    </p>
     <div class="pp-xpToast__inner">
       <div class="pp-xpToast__aura" aria-hidden="true"></div>
 
@@ -777,14 +858,23 @@ const initialNote = prestigeUnlocked
           <span data-xp-total>${formatLegacyPoints(lifetimePoints)} total</span>
         </div>
 
-        <div class="pp-xpToast__bar" aria-label="Progreso de rango">
+        <div
+          class="pp-xpToast__bar"
+          role="progressbar"
+          aria-label="Progreso de rango"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="${Math.round(progress.fromPercent)}"
+          aria-valuetext="${escapeHtml(replaceXpWithLp(progress.fromText) || `${Math.round(progress.fromPercent)}%`)}"
+          style="--xp-progress:${progress.fromPercent}"
+        >
           <span class="pp-xpToast__barTrack" aria-hidden="true"></span>
-          <span class="pp-xpToast__barFill" style="transform:scaleX(${progress.fromPercent / 100})"></span>
+          <span class="pp-xpToast__barFill" aria-hidden="true" style="transform:scaleX(${progress.fromPercent / 100})"></span>
           <span class="pp-xpToast__barGlow" aria-hidden="true"></span>
         </div>
 
         <div class="pp-xpToast__micro">
-          <span data-xp-step>${escapeHtml(replaceXpWithLp(progress.fromText || ''))}</span>
+          <span data-xp-step aria-hidden="true">${escapeHtml(replaceXpWithLp(progress.fromText) || `${Math.round(progress.fromPercent)}%`)}</span>
           <span>${microNextLabel}</span>
         </div>
 
@@ -816,6 +906,11 @@ const initialNote = prestigeUnlocked
 const animateCount = () => {
   if (!countEl) return;
 
+  if (prefersReducedMotion()) {
+    countEl.textContent = String(pointsEarned);
+    return;
+  }
+
   const duration = 1100;
     const start = performance.now();
 
@@ -838,7 +933,9 @@ const animateCount = () => {
 window.setTimeout(() => {
   toast.classList.add('is-visible');
 
-playProphetiaSound(getToastSoundType(event), toast);
+if (!prefersReducedMotion()) {
+  playProphetiaSound(getToastSoundType(event), toast);
+}
 animateCount();
 
   const animationPromise = animateToastXp({
@@ -853,9 +950,9 @@ animateCount();
   });
 
   animationPromise.then(() => {
-    window.setTimeout(remove, 1400);
+    window.setTimeout(remove, TOAST_AUTO_DISMISS_MS);
   });
-}, 40);
+}, prefersReducedMotion() ? 0 : 40);
 
   const remove = () => {
     if (toast.classList.contains('is-leaving')) return;
@@ -865,7 +962,7 @@ animateCount();
 
     window.setTimeout(() => {
       toast.remove();
-    }, 920);
+    }, prefersReducedMotion() ? 0 : TOAST_EXIT_MS);
   };
 
   close?.addEventListener('click', remove);

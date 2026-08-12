@@ -1,6 +1,6 @@
 /* =========================================================
    PROPHETIA · AFTERHOUR PROPHETIA (AHP)
-   Página: /assets/collects/ahp
+   Página: /colecciones/afterhour-prophetia
    Estilo: noche editorial, neón controlado, lujo silencioso
    ========================================================= */
 /* ===========================
@@ -129,7 +129,6 @@ body.ahp-page .pp-header .icon-btn svg rect{
   max-width: none;
   width: 100%;
   margin: 0;
-  padding-inline: 40px;
   box-sizing: border-box;
 }
 
@@ -137,7 +136,6 @@ body.ahp-page .pp-header .icon-btn svg rect{
   height: 110px;
   width: auto;
   display: block;
-  margin-left: -60px; /* same “editorial push” que MS */
 }
 
 /* =========================================================

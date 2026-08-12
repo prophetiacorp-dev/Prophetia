@@ -4,6 +4,34 @@
 .brand-band{ margin:0; padding:0; border:0; }
 .brand-band .container{ display:flex; align-items:flex-start; padding:0; }
 
+/* Colecciones editoriales: mismo anclaje visual que el floating logo de las PLP. */
+body:is(.ms-page, .ahp-page, .lfts-page){
+  --pp-editorial-logo-edge: max(0px, calc(clamp(24px, 2.6vw, 48px) - 30px));
+  --pp-editorial-logo-top: 16px;
+}
+
+body:is(.ms-page, .ahp-page, .lfts-page) .brand-band .container{
+  padding-block: var(--pp-editorial-logo-top) 0;
+  padding-inline: var(--pp-editorial-logo-edge);
+}
+
+@media (min-width: 1025px) and (max-width: 1365px){
+  body:is(.ms-page, .ahp-page, .lfts-page){
+    --pp-editorial-logo-edge: clamp(10px, calc(82.3px - 5.3vw), 28px);
+    --pp-editorial-logo-top: clamp(16px, calc(2.65vw - 11.1px), 25px);
+  }
+}
+
+@media (max-width: 1024px){
+  body:is(.ms-page, .ahp-page, .lfts-page){
+    --pp-editorial-logo-edge: max(
+      clamp(12px, 3.5vw, 28px),
+      env(safe-area-inset-left),
+      env(safe-area-inset-right)
+    );
+  }
+}
+
 .brand-band--plp { margin:0; padding: clamp(22px, 4vw, 40px) 0 0; background:#fff; border-bottom:1px solid rgba(0,0,0,.08); }
 .brand-band--plp .container{ max-width:100%; padding-inline: var(--edge, 24px); }
 .page-logo{ line-height:0; display:inline-block; }

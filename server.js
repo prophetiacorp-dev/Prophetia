@@ -21,6 +21,10 @@ const {
   createSourceId,
   classifyPath
 } = require('./lib/security-logger');
+const {
+  PUBLIC_HTML_ROUTES,
+  PUBLIC_LEGACY_REDIRECTS
+} = require('./config/public-routes');
 
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -4594,6 +4598,19 @@ const isLocalDev =
   SITE_URL.includes('localhost') ||
   process.env.NODE_ENV !== 'production';
 
+app.get(Object.keys(PUBLIC_LEGACY_REDIRECTS), (req, res) => {
+  const target = PUBLIC_LEGACY_REDIRECTS[requestPathname(req)];
+  return res.redirect(301, target);
+});
+
+app.get(Object.keys(PUBLIC_HTML_ROUTES), (req, res, next) => {
+  const relativeFile = PUBLIC_HTML_ROUTES[requestPathname(req)];
+  if (!relativeFile) return next();
+
+  res.set('Cache-Control', 'no-cache, must-revalidate');
+  return res.sendFile(path.join(PUBLIC_DIR, relativeFile));
+});
+
 app.get(['/checkout', '/checkout.html'], (req, res, next) => {
   if (CHECKOUT_ENABLED) return next();
 
@@ -6880,7 +6897,8 @@ app.get('/:page', (req, res, next) => {
 
 /* =========================================================
    PROPHETIA · CLEAN URLS ANIDADAS LOCAL
-   /assets/collects/ms -> public/assets/collects/ms.html
+   Las colecciones editoriales públicas usan las rutas
+   canónicas explícitas registradas antes de los estáticos.
    ========================================================= */
 
 app.get(/^\/(.+)$/, (req, res, next) => {

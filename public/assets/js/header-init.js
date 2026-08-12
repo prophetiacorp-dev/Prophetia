@@ -193,6 +193,515 @@
   const $  = (sel, el = document) => el.querySelector(sel);
   const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
 
+  /* =============== Búsqueda compartida de catálogo =============== */
+  const ppCatalogSearch = (() => {
+    let catalogPromise = null;
+
+    const sectionAliases = {
+      'camisetas-punto': 'camiseta camisetas camiseta de punto camisetas de punto',
+      'sudaderas-punto': 'sudadera sudaderas sudadera de punto sudaderas de punto',
+      hoodies: 'hoodie hoodies sudadera sudaderas capucha',
+      streetwear: 'streetwear ropa urbana'
+    };
+
+    const typeAliases = {
+      tshirt: 'camiseta camisetas tee',
+      hoodie: 'hoodie sudadera capucha',
+      sweatshirt: 'sudadera sudaderas'
+    };
+
+    const colorAliases = {
+      white: 'blanco blanca',
+      black: 'negro negra',
+      blue: 'azul',
+      green: 'verde',
+      red: 'rojo roja',
+      grey: 'gris',
+      gray: 'gris',
+      beige: 'beige',
+      brown: 'marrón marron'
+    };
+
+    function normalize(value) {
+      return String(value ?? '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLocaleLowerCase('es')
+        .replace(/[-_/]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function labelsOf(item) {
+      return Array.isArray(item?.labels)
+        ? item.labels.map((label) => typeof label === 'string' ? label : label?.label)
+        : [];
+    }
+
+    function searchText(item) {
+      const colors = [item?.color, ...(Array.isArray(item?.colors) ? item.colors : [])]
+        .filter(Boolean);
+      const aliases = [
+        sectionAliases[item?.section],
+        typeAliases[item?.type],
+        ...colors.map((color) => colorAliases[normalize(color)])
+      ];
+
+      return normalize([
+        item?.id,
+        item?.slug,
+        item?.title,
+        item?.short,
+        item?.long,
+        item?.section,
+        item?.collection,
+        item?.collectionLabel,
+        item?.gender,
+        item?.type,
+        ...colors,
+        ...labelsOf(item),
+        ...aliases
+      ].filter(Boolean).join(' '));
+    }
+
+    function load() {
+      if (!catalogPromise) {
+        catalogPromise = fetch('/assets/data/catalog.json', {
+          cache: 'no-store',
+          headers: { Accept: 'application/json' }
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+          })
+          .then((payload) => {
+            if (Array.isArray(payload)) return payload;
+            if (Array.isArray(payload?.products)) return payload.products;
+            throw new Error('Formato de catálogo no reconocido');
+          })
+          .catch((error) => {
+            catalogPromise = null;
+            throw error;
+          });
+      }
+
+      return catalogPromise;
+    }
+
+    async function search(rawQuery, { limit = 8 } = {}) {
+      const query = normalize(rawQuery);
+      if (!query) return [];
+
+      const tokens = query.split(' ').filter(Boolean);
+      const catalog = await load();
+
+      return catalog
+        .filter((item) => item?.active !== false && (String(item?.slug || '').trim() || String(item?.id || '').trim()))
+        .map((item, index) => {
+          const title = normalize(item?.title);
+          const id = normalize(item?.id);
+          const section = normalize(`${item?.section || ''} ${sectionAliases[item?.section] || ''}`);
+          const haystack = searchText(item);
+          const matches = tokens.every((token) => haystack.includes(token));
+          let score = 5;
+          if (title.startsWith(query)) score = 0;
+          else if (title.includes(query)) score = 1;
+          else if (section.includes(query)) score = 2;
+          else if (id.includes(query)) score = 3;
+          else if (haystack.includes(query)) score = 4;
+          return { item, index, score, matches };
+        })
+        .filter((entry) => entry.matches)
+        .sort((a, b) => a.score - b.score || a.index - b.index)
+        .slice(0, limit)
+        .map((entry) => entry.item);
+    }
+
+    function productUrl(item) {
+      const reference = String(item?.slug || item?.id || '').trim();
+      return reference ? `/producto?id=${encodeURIComponent(reference)}` : '';
+    }
+
+    function productMeta(item) {
+      return [item?.collectionLabel || item?.collection, item?.section, item?.type]
+        .map((value) => String(value || '').replace(/-/g, ' ').trim())
+        .filter(Boolean)
+        .join(' · ');
+    }
+
+    function productImage(item) {
+      return String(
+        item?.media?.mujer?.cover ||
+        item?.media?.hombre?.cover ||
+        item?.variants?.find?.((variant) => variant?.img)?.img ||
+        ''
+      ).trim();
+    }
+
+    function formatPrice(value) {
+      const amount = Number(value);
+      if (!Number.isFinite(amount)) return '';
+      return new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR'
+      }).format(amount);
+    }
+
+    return { formatPrice, normalize, productImage, productMeta, productUrl, search };
+  })();
+
+  function appendHighlightedText(target, text, rawQuery) {
+    const source = String(text || '');
+    const query = String(rawQuery || '').trim();
+    const start = source.toLocaleLowerCase('es').indexOf(query.toLocaleLowerCase('es'));
+    if (!query || start < 0) {
+      target.textContent = source;
+      return;
+    }
+
+    target.append(document.createTextNode(source.slice(0, start)));
+    const mark = document.createElement('mark');
+    mark.textContent = source.slice(start, start + query.length);
+    target.append(mark, document.createTextNode(source.slice(start + query.length)));
+  }
+
+  function initHeaderSearch() {
+    const form = document.querySelector('#header .search-inline');
+    const input = form?.querySelector('.search-input');
+    const listbox = form?.querySelector('#ppDesktopSearchMenu');
+    if (!form || !input || !listbox) return;
+
+    const previousController = window.__ppHeaderSearchController;
+    if (form.dataset.ppSearchBound === 'true') return;
+    if (previousController?.isCurrent?.(form)) return;
+    previousController?.destroy?.();
+
+    const lifecycle = new AbortController();
+    const { signal } = lifecycle;
+    let results = [];
+    let activeIndex = -1;
+    let searchTimer = 0;
+    let searchRevision = 0;
+
+    form.dataset.ppSearchBound = 'true';
+
+    const queryFromUrl = new URLSearchParams(window.location.search).get('q');
+    if (window.location.pathname === '/colecciones' && queryFromUrl && !input.value) {
+      input.value = queryFromUrl.slice(0, 128);
+    }
+
+    function setExpanded(expanded) {
+      input.setAttribute('aria-expanded', String(expanded));
+      listbox.hidden = !expanded;
+    }
+
+    function clearSuggestions() {
+      window.clearTimeout(searchTimer);
+      searchRevision += 1;
+      results = [];
+      activeIndex = -1;
+      listbox.replaceChildren();
+      input.removeAttribute('aria-activedescendant');
+      setExpanded(false);
+    }
+
+    function setActive(index) {
+      const options = Array.from(listbox.querySelectorAll('[role="option"]'));
+      if (!options.length) return;
+
+      activeIndex = Math.max(-1, Math.min(index, options.length - 1));
+      options.forEach((option, optionIndex) => {
+        option.setAttribute('aria-selected', String(optionIndex === activeIndex));
+      });
+
+      const activeOption = options[activeIndex];
+      if (activeOption) {
+        input.setAttribute('aria-activedescendant', activeOption.id);
+        activeOption.scrollIntoView({ block: 'nearest' });
+      } else {
+        input.removeAttribute('aria-activedescendant');
+      }
+    }
+
+    function createOption({ title, meta = '', href, query, modifier = '' }, index) {
+      const option = document.createElement('li');
+      option.id = `ppDesktopSearchOption${index}`;
+      option.className = `pp-search-suggestion${modifier ? ` ${modifier}` : ''}`;
+      option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', 'false');
+      option.dataset.href = href;
+      option.dataset.optionIndex = String(index);
+
+      const titleElement = document.createElement('span');
+      titleElement.className = 'pp-search-suggestion__title';
+      appendHighlightedText(titleElement, title, query);
+      option.appendChild(titleElement);
+
+      if (meta) {
+        const metaElement = document.createElement('span');
+        metaElement.className = 'pp-search-suggestion__meta';
+        metaElement.textContent = meta;
+        option.appendChild(metaElement);
+      }
+
+      return option;
+    }
+
+    function renderStatus(message) {
+      const status = document.createElement('li');
+      status.className = 'pp-search-suggestion pp-search-suggestion--status';
+      status.textContent = message;
+      listbox.replaceChildren(status);
+      listbox.removeAttribute('aria-busy');
+      results = [];
+      activeIndex = -1;
+      input.removeAttribute('aria-activedescendant');
+      setExpanded(true);
+    }
+
+    function renderSuggestions(items, query) {
+      const options = items.map((item) => ({
+        title: String(item?.title || item?.id || 'Producto'),
+        meta: ppCatalogSearch.productMeta(item),
+        href: ppCatalogSearch.productUrl(item),
+        query
+      }));
+      options.push({
+        title: `Ver todos los resultados para “${query}”`,
+        href: `/colecciones?q=${encodeURIComponent(query)}`,
+        modifier: 'pp-search-suggestion--all'
+      });
+
+      results = options;
+      listbox.replaceChildren(...options.map(createOption));
+      listbox.removeAttribute('aria-busy');
+      activeIndex = -1;
+      input.removeAttribute('aria-activedescendant');
+      setExpanded(true);
+    }
+
+    async function runSearch(rawQuery) {
+      const query = String(rawQuery || '').trim();
+      const revision = ++searchRevision;
+      if (query.length < 2) {
+        clearSuggestions();
+        return;
+      }
+
+      listbox.setAttribute('aria-busy', 'true');
+      try {
+        const items = await ppCatalogSearch.search(query, { limit: 5 });
+        if (revision !== searchRevision) return;
+        if (!items.length) {
+          renderStatus('No hay resultados para esta búsqueda.');
+          return;
+        }
+        renderSuggestions(items, query);
+      } catch (error) {
+        if (revision !== searchRevision) return;
+        console.error('[search] catálogo no disponible:', error);
+        renderStatus('No se ha podido cargar la búsqueda. Inténtalo de nuevo.');
+      }
+    }
+
+    input.addEventListener('input', () => {
+      window.clearTimeout(searchTimer);
+      searchRevision += 1;
+      const query = input.value.trim();
+      if (query.length < 2) {
+        clearSuggestions();
+        return;
+      }
+      searchTimer = window.setTimeout(() => runSearch(query), 140);
+    }, { signal });
+
+    input.addEventListener('focus', () => {
+      if (input.value.trim().length >= 2) runSearch(input.value);
+    }, { signal });
+
+    input.addEventListener('keydown', (event) => {
+      const options = Array.from(listbox.querySelectorAll('[role="option"]'));
+
+      if (event.key === 'Escape' && !listbox.hidden) {
+        event.preventDefault();
+        clearSuggestions();
+        return;
+      }
+
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        if (!options.length) return;
+        event.preventDefault();
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        const next = activeIndex < 0
+          ? (direction > 0 ? 0 : options.length - 1)
+          : (activeIndex + direction + options.length) % options.length;
+        setActive(next);
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        const query = input.value.trim();
+        const target = activeIndex >= 0
+          ? results[activeIndex]?.href
+          : query ? `/colecciones?q=${encodeURIComponent(query)}` : '';
+        if (!target) return;
+        event.preventDefault();
+        window.location.assign(target);
+      }
+    }, { signal });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const query = input.value.trim();
+      if (!query) {
+        clearSuggestions();
+        return;
+      }
+      input.value = query;
+      window.location.assign(`/colecciones?q=${encodeURIComponent(query)}`);
+    }, { signal });
+
+    listbox.addEventListener('pointerdown', (event) => {
+      if (event.target.closest('[data-href]')) event.preventDefault();
+    }, { signal });
+
+    listbox.addEventListener('pointerover', (event) => {
+      const option = event.target.closest('[data-option-index]');
+      if (option) setActive(Number(option.dataset.optionIndex));
+    }, { signal });
+
+    listbox.addEventListener('click', (event) => {
+      const option = event.target.closest('[data-href]');
+      if (!option) return;
+      window.location.assign(option.dataset.href);
+    }, { signal });
+
+    document.addEventListener('pointerdown', (event) => {
+      if (!form.contains(event.target)) clearSuggestions();
+    }, { signal, capture: true });
+
+    const controller = {
+      destroy() {
+        lifecycle.abort();
+        clearSuggestions();
+        delete form.dataset.ppSearchBound;
+      },
+      isCurrent(candidate) {
+        return candidate === form && form.isConnected;
+      }
+    };
+    window.__ppHeaderSearchController = controller;
+  }
+
+  function initCollectionSearchPage() {
+    const page = document.querySelector('.colecciones-index-page');
+    const searchSection = document.getElementById('ppCollectionSearch');
+    if (!page || !searchSection || searchSection.dataset.ppSearchBound === 'true') return;
+
+    const query = String(new URLSearchParams(window.location.search).get('q') || '')
+      .trim()
+      .slice(0, 128);
+    if (!query) return;
+
+    const queryLabel = searchSection.querySelector('[data-pp-search-query]');
+    const status = searchSection.querySelector('[data-pp-search-status]');
+    const grid = searchSection.querySelector('[data-pp-search-grid]');
+    if (!queryLabel || !status || !grid) return;
+
+    searchSection.dataset.ppSearchBound = 'true';
+    page.classList.add('is-searching');
+    searchSection.hidden = false;
+    queryLabel.textContent = query;
+    status.textContent = 'Buscando productos…';
+    grid.setAttribute('aria-busy', 'true');
+    document.title = `Buscar “${query}” | PROPHETIA`;
+
+    ppCatalogSearch.search(query, { limit: 100 })
+      .then((items) => {
+        const fragment = document.createDocumentFragment();
+
+        items.forEach((item) => {
+          const href = ppCatalogSearch.productUrl(item);
+          if (!href) return;
+
+          const card = document.createElement('a');
+          card.className = 'pp-collection-search-card';
+          card.href = href;
+
+          const media = document.createElement('span');
+          media.className = 'pp-collection-search-card__media';
+          const imageUrl = ppCatalogSearch.productImage(item);
+          if (imageUrl) {
+            const image = document.createElement('img');
+            image.src = imageUrl;
+            image.alt = String(item?.title || 'Producto Prophetia');
+            image.loading = 'lazy';
+            image.decoding = 'async';
+            media.appendChild(image);
+          } else {
+            const placeholder = document.createElement('span');
+            placeholder.className = 'pp-collection-search-card__placeholder';
+            placeholder.textContent = 'PROPHETIA';
+            media.appendChild(placeholder);
+          }
+
+          const body = document.createElement('span');
+          body.className = 'pp-collection-search-card__body';
+
+          const meta = document.createElement('span');
+          meta.className = 'pp-collection-search-card__meta';
+          meta.textContent = ppCatalogSearch.productMeta(item) || 'Prophetia';
+
+          const title = document.createElement('strong');
+          title.className = 'pp-collection-search-card__title';
+          title.textContent = String(item?.title || item?.id || 'Producto');
+
+          const description = document.createElement('span');
+          description.className = 'pp-collection-search-card__description';
+          description.textContent = String(item?.short || '');
+
+          const footer = document.createElement('span');
+          footer.className = 'pp-collection-search-card__footer';
+          const price = document.createElement('span');
+          price.textContent = ppCatalogSearch.formatPrice(item?.price);
+          const cta = document.createElement('span');
+          cta.textContent = 'Ver pieza →';
+          footer.append(price, cta);
+
+          body.append(meta, title);
+          if (description.textContent) body.appendChild(description);
+          body.appendChild(footer);
+          card.append(media, body);
+          fragment.appendChild(card);
+        });
+
+        grid.replaceChildren(fragment);
+        grid.removeAttribute('aria-busy');
+        grid.classList.toggle('is-empty', items.length === 0);
+        status.textContent = items.length === 1
+          ? '1 resultado encontrado.'
+          : `${items.length} resultados encontrados.`;
+
+        if (!items.length) {
+          const empty = document.createElement('p');
+          empty.className = 'pp-collection-search__empty';
+          empty.textContent = 'Prueba con otro nombre, colección, tipo de prenda o color.';
+          grid.appendChild(empty);
+        }
+      })
+      .catch((error) => {
+        console.error('[search-page] catálogo no disponible:', error);
+        grid.removeAttribute('aria-busy');
+        grid.classList.add('is-empty');
+        status.textContent = 'No se ha podido cargar la búsqueda.';
+        const retry = document.createElement('a');
+        retry.className = 'pp-collection-search__empty';
+        retry.href = window.location.href;
+        retry.textContent = 'Volver a intentarlo';
+        grid.replaceChildren(retry);
+      });
+  }
+
   /* =============== Parciales (header/footer) =============== */
   let partialsInjected = false;
   let partialsInjectionPromise = null;
@@ -352,7 +861,6 @@ function initMobileDock() {
   const sections = Array.from(panel.querySelectorAll('[data-pp-mobile-section]'));
   const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let returnFocus = null;
-  let catalogPromise = null;
   let searchTimer = 0;
   let searchRevision = 0;
   let searchResults = null;
@@ -447,7 +955,11 @@ function initMobileDock() {
       return 'women';
     }
 
-    if (pathname === '/colecciones' || pathname.startsWith('/assets/collects/')) {
+    if (
+      pathname === '/colecciones' ||
+      pathname.startsWith('/colecciones/') ||
+      pathname.startsWith('/assets/collects/')
+    ) {
       return 'collections';
     }
 
@@ -812,57 +1324,6 @@ function initMobileDock() {
     setSearchExpanded(true);
   }
 
-  function normalizeSearchText(value) {
-    return String(value ?? '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLocaleLowerCase('es')
-      .trim();
-  }
-
-  function catalogSearchText(item) {
-    const labels = Array.isArray(item?.labels)
-      ? item.labels.map((label) => typeof label === 'string' ? label : label?.label)
-      : [];
-
-    return normalizeSearchText([
-      item?.id,
-      item?.slug,
-      item?.title,
-      item?.short,
-      item?.section,
-      item?.collection,
-      item?.gender,
-      item?.type,
-      ...labels
-    ].filter(Boolean).join(' '));
-  }
-
-  function loadCatalog() {
-    if (!catalogPromise) {
-      catalogPromise = fetch('/assets/data/catalog.json', {
-        cache: 'no-store',
-        headers: { Accept: 'application/json' },
-        signal
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          return response.json();
-        })
-        .then((payload) => {
-          if (Array.isArray(payload)) return payload;
-          if (Array.isArray(payload?.products)) return payload.products;
-          throw new Error('Formato de catálogo no reconocido');
-        })
-        .catch((error) => {
-          catalogPromise = null;
-          throw error;
-        });
-    }
-
-    return catalogPromise;
-  }
-
   function renderCatalogResults(items) {
     const container = ensureSearchResults();
     if (!container) return;
@@ -876,18 +1337,16 @@ function initMobileDock() {
 
       const link = document.createElement('a');
       link.className = 'pp-mobile-search-result';
-      link.href = `/producto?id=${encodeURIComponent(productId)}`;
+      link.href = ppCatalogSearch.productUrl(item);
 
       const title = document.createElement('strong');
       title.textContent = String(item?.title || id);
       link.appendChild(title);
 
-      const metaParts = [item?.collection, item?.section, item?.type]
-        .map((value) => String(value || '').replace(/-/g, ' ').trim())
-        .filter(Boolean);
-      if (metaParts.length) {
+      const metaText = ppCatalogSearch.productMeta(item);
+      if (metaText) {
         const meta = document.createElement('span');
-        meta.textContent = metaParts.join(' · ');
+        meta.textContent = metaText;
         link.appendChild(meta);
       }
 
@@ -925,26 +1384,8 @@ function initMobileDock() {
     ensureSearchResults()?.setAttribute('aria-busy', 'true');
 
     try {
-      const catalog = await loadCatalog();
+      const matches = await ppCatalogSearch.search(query, { limit: 8 });
       if (revision !== searchRevision) return;
-
-      const normalizedQuery = normalizeSearchText(query);
-      const matches = catalog
-        .filter((item) => item?.active !== false && (String(item?.slug || '').trim() || String(item?.id || '').trim()))
-        .map((item, index) => {
-          const title = normalizeSearchText(item?.title);
-          const id = normalizeSearchText(item?.id);
-          const haystack = catalogSearchText(item);
-          let score = 3;
-          if (title.startsWith(normalizedQuery)) score = 0;
-          else if (title.includes(normalizedQuery)) score = 1;
-          else if (id.includes(normalizedQuery)) score = 2;
-          return { item, index, score, matches: haystack.includes(normalizedQuery) };
-        })
-        .filter((entry) => entry.matches)
-        .sort((a, b) => a.score - b.score || a.index - b.index)
-        .slice(0, 8)
-        .map((entry) => entry.item);
 
       if (!matches.length) {
         renderSearchStatus('No hay resultados para esta búsqueda.', 'empty');
@@ -1463,6 +1904,7 @@ function finalizeHeaderPartial() {
   }
 
   partialsInjected = true;
+  initHeaderSearch();
   initMobileDock();
   setHeaderHeightVar();
 }
@@ -2580,12 +3022,15 @@ window.addEventListener('partials:ready', () => {
 
 
 window.addEventListener("partials:ready", normalizeHeaderAuthIcons);
+window.addEventListener("partials:ready", initHeaderSearch);
 window.addEventListener("partials:ready", initMobileDock);
 window.addEventListener("partials:ready", initMobileHeroVideoFallbacks);
 window.addEventListener("pp:auth-changed", normalizeHeaderAuthIcons);
 
 document.addEventListener("DOMContentLoaded", () => {
   normalizeHeaderAuthIcons();
+  initHeaderSearch();
+  initCollectionSearchPage();
   initMobileDock();
   initMobileHeroVideoFallbacks();
 });

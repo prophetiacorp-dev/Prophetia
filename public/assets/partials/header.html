@@ -53,9 +53,9 @@
                 </ul>
 
                 <ul class="mega-col">
-                  <li><a href="/assets/collects/ms">Myth Series</a></li>
-                  <li><a href="/assets/collects/lfts">Letters From The Soul</a></li>
-                  <li><a href="/assets/collects/ahp">AfterHour Prophetia</a></li>
+                  <li><a href="/colecciones/myth-series">Myth Series</a></li>
+                  <li><a href="/colecciones/letters-from-the-soul">Letters From The Soul</a></li>
+                  <li><a href="/colecciones/afterhour-prophetia">AfterHour Prophetia</a></li>
                   <li><a href="/assets/collects/archive-summer">Archive</a></li>
                 </ul>
                 <a class="mega-originals" href="/prophetia-originals" aria-label="Ver Prophetia Originals">
@@ -85,9 +85,9 @@
     </ul>
 
     <ul class="mega-col">
-      <li><a href="/assets/collects/ms">Myth Series Prophetia</a></li>
-      <li><a href="/assets/collects/lfts">Letters From The Soul</a></li>
-      <li><a href="/assets/collects/ahp">AfterHour Prophetia</a></li>
+      <li><a href="/colecciones/myth-series">Myth Series Prophetia</a></li>
+      <li><a href="/colecciones/letters-from-the-soul">Letters From The Soul</a></li>
+      <li><a href="/colecciones/afterhour-prophetia">AfterHour Prophetia</a></li>
       <li><a href="/assets/collects/archive-summer">Archive</a></li>
     </ul>
     <a class="mega-originals" href="/prophetia-originals" aria-label="Ver Prophetia Originals">
@@ -104,9 +104,9 @@
 <section id="panel-colecciones" class="panel" role="tabpanel" aria-labelledby="tab-colecciones" hidden>
   <div class="mega-grid mega-grid--collections">
     <ul class="mega-col">
-      <li><a href="/assets/collects/ms">Myth Series</a></li>
-      <li><a href="/assets/collects/lfts">Letters From The Soul</a></li>
-      <li><a href="/assets/collects/ahp">AfterHour Prophetia</a></li>
+      <li><a href="/colecciones/myth-series">Myth Series</a></li>
+      <li><a href="/colecciones/letters-from-the-soul">Letters From The Soul</a></li>
+      <li><a href="/colecciones/afterhour-prophetia">AfterHour Prophetia</a></li>
       <li><a href="/assets/collects/archive-summer">Archive</a></li>
     </ul>
 
@@ -138,9 +138,31 @@
       <!-- DERECHA: buscador + auth + guardados + carrito -->
       <div class="pp-right">
         <form class="search-inline" role="search" action="/colecciones" method="get">
-
-          <label for="q" class="sr-only">Buscar</label>
-          <input id="q" name="q" class="search-input" type="search" placeholder="Buscar" />
+          <div class="pp-search-combobox">
+            <label for="q" class="sr-only">Buscar en Prophetia</label>
+            <input
+              id="q"
+              name="q"
+              class="search-input"
+              type="search"
+              maxlength="128"
+              placeholder="¿Qué estás buscando?"
+              autocomplete="off"
+              role="combobox"
+              aria-haspopup="listbox"
+              aria-autocomplete="list"
+              aria-controls="ppDesktopSearchMenu"
+              aria-expanded="false"
+            />
+            <ul
+              id="ppDesktopSearchMenu"
+              class="pp-search-suggestions"
+              role="listbox"
+              aria-label="Sugerencias de búsqueda"
+              aria-live="polite"
+              hidden
+            ></ul>
+          </div>
         </form>
 
       <div class="pp-account">
@@ -333,7 +355,7 @@
 
   <form class="pp-mobile-panel__search" role="search" action="/colecciones" method="get">
     <label class="sr-only" for="ppMobileSearchInput">Buscar</label>
-    <input id="ppMobileSearchInput" name="q" type="search" autocomplete="off" enterkeyhint="search" aria-autocomplete="list" placeholder="Buscar en Prophetia">
+    <input id="ppMobileSearchInput" name="q" type="search" maxlength="128" autocomplete="off" enterkeyhint="search" aria-autocomplete="list" placeholder="¿Qué estás buscando?">
     <button class="pp-mobile-panel__search-clear" type="button" data-pp-mobile-search-clear aria-label="Borrar búsqueda" hidden>×</button>
     <button class="pp-mobile-panel__search-submit" type="submit" aria-label="Buscar">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4 4"/></svg>
@@ -440,9 +462,9 @@
     <section id="ppMobileSectionCollections" class="pp-mobile-menu__section" role="tabpanel" aria-labelledby="ppMobileTabCollections" data-pp-mobile-section="collections" hidden>
       <ul class="pp-mobile-menu__links">
         <li><a href="/colecciones">Todas las colecciones</a></li>
-        <li><a href="/assets/collects/ms">Myth Series</a></li>
-        <li><a href="/assets/collects/lfts">Letters From The Soul</a></li>
-        <li><a href="/assets/collects/ahp">AfterHour Prophetia</a></li>
+        <li><a href="/colecciones/myth-series">Myth Series</a></li>
+        <li><a href="/colecciones/letters-from-the-soul">Letters From The Soul</a></li>
+        <li><a href="/colecciones/afterhour-prophetia">AfterHour Prophetia</a></li>
         <li><a href="/assets/collects/archive-summer">Archive</a></li>
       </ul>
     </section>

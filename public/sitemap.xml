@@ -12,6 +12,21 @@
   </url>
 
   <url>
+    <loc>https://prophetia.es/colecciones/myth-series</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://prophetia.es/colecciones/letters-from-the-soul</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://prophetia.es/colecciones/afterhour-prophetia</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://prophetia.es/camisetas-punto-hombre</loc>
     <priority>0.8</priority>
   </url>

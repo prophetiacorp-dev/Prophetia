@@ -12,19 +12,19 @@
   width: min(760px, calc(100vw - 28px));
 
   transform:
-    translate(-50%, -22px)
-    scale(.985);
+    translate(-50%, -10px)
+    scale(.995);
 
   opacity: 0;
-  filter: blur(10px);
+  filter: blur(2px);
 
   pointer-events: none;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 
   transition:
-    transform 1180ms cubic-bezier(.16, 1, .3, 1),
-    opacity 980ms ease,
-    filter 1180ms ease;
+    transform 300ms cubic-bezier(.16, 1, .3, 1),
+    opacity 220ms ease-out,
+    filter 220ms ease-out;
 }
 .pp-xpToast.is-visible {
   transform:
@@ -37,20 +37,20 @@
   pointer-events: auto;
 
   transition:
-    transform 980ms cubic-bezier(.16, 1, .3, 1),
-    opacity 860ms ease,
-    filter 980ms ease;
+    transform 300ms cubic-bezier(.16, 1, .3, 1),
+    opacity 220ms ease-out,
+    filter 220ms ease-out;
 }
 .pp-xpToast__inner {
   transform: translateY(-4px);
   opacity: .92;
 
   transition:
-    transform 980ms cubic-bezier(.16, 1, .3, 1),
-    opacity 760ms ease,
-    box-shadow 820ms ease,
-    border-color 820ms ease,
-    background 820ms ease;
+    transform 280ms cubic-bezier(.16, 1, .3, 1),
+    opacity 220ms ease-out,
+    box-shadow 280ms ease,
+    border-color 280ms ease,
+    background 280ms ease;
 }
 
 .pp-xpToast.is-visible .pp-xpToast__inner {
@@ -59,18 +59,18 @@
 }
 .pp-xpToast.is-leaving {
   transform:
-    translate(-50%, -18px)
-    scale(.985);
+    translate(-50%, -8px)
+    scale(.995);
 
   opacity: 0;
-  filter: blur(10px);
+  filter: blur(2px);
 
   pointer-events: none;
 
   transition:
-    transform 920ms cubic-bezier(.16, 1, .3, 1),
-    opacity 760ms ease,
-    filter 920ms ease;
+    transform 240ms cubic-bezier(.4, 0, 1, 1),
+    opacity 180ms ease-in,
+    filter 180ms ease-in;
 }
 .pp-xpToast.is-leaving .pp-xpToast__inner {
   box-shadow:
@@ -79,16 +79,16 @@
     inset 0 1px 0 rgba(255,255,255,.52);
 
   transition:
-    box-shadow 820ms ease,
-    border-color 820ms ease,
-    background 820ms ease;
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
 }
 .pp-xpToast__inner {
   position: relative;
   overflow: hidden;
 
   display: grid;
-  grid-template-columns: 92px 1fr 34px;
+  grid-template-columns: 92px minmax(0, 1fr) 44px;
   gap: 18px;
   align-items: center;
 
@@ -144,6 +144,19 @@
   min-width: 0;
 }
 
+.pp-xpToast__srStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .pp-xpToast__kicker {
   margin: 0 0 4px;
 
@@ -188,6 +201,7 @@
 
 .pp-xpToast__bar {
   position: relative;
+  --xp-progress: 0;
 
   height: 9px;
   overflow: hidden;
@@ -234,42 +248,16 @@
     );
 
   transform: translateX(-110%);
-  animation: ppXpBarSheen 1500ms ease-out 560ms both;
+  opacity: 0;
 }
 
 .pp-xpToast__barFill::before {
-  content: "";
-
-  position: absolute;
-  top: 50%;
-  right: -18px;
-  z-index: 2;
-
-  width: 42px;
-  height: 42px;
-
-  border-radius: 999px;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255,248,218,.96) 0%,
-      rgba(255,232,170,.70) 22%,
-      var(--xp-bar-glow, rgba(212,175,100,.42)) 48%,
-      transparent 72%
-    );
-
-  opacity: 0;
-  filter: blur(9px);
-
-  transform: translateY(-50%) scale(.82);
-
-  pointer-events: none;
+  content: none;
 }
 
-.pp-xpToast__bar.is-charging .pp-xpToast__barFill::before {
-  opacity: .88;
-  animation: ppToastXpLeadingGlow 980ms ease-in-out infinite;
+.pp-xpToast__bar.is-charging .pp-xpToast__barFill::after {
+  opacity: 1;
+  animation: ppXpBarSheen 720ms cubic-bezier(.22, .61, .36, 1) 120ms both;
 }
 
 /* Rangos Prophetia Tribe */
@@ -894,8 +882,8 @@ background:
 .pp-xpToast__close {
   appearance: none;
 
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
 
   display: grid;
   place-items: center;
@@ -1244,46 +1232,6 @@ background:
     transform: scale(1.08);
   }
 }
-@keyframes ppToastXpBorderFlow {
-  0% {
-    background-position: 0% 50%;
-    opacity: .28;
-  }
-
-  46% {
-    opacity: .86;
-  }
-
-  100% {
-    background-position: 220% 50%;
-    opacity: .38;
-  }
-}
-
-@keyframes ppToastXpBorderPulse {
-  0%, 100% {
-    opacity: .42;
-    filter: brightness(1);
-  }
-
-  50% {
-    opacity: .94;
-    filter: brightness(1.12);
-  }
-}
-
-@keyframes ppToastXpLeadingGlow {
-  0%, 100% {
-    opacity: .46;
-    transform: translateY(-50%) scale(.86);
-  }
-
-  50% {
-    opacity: .92;
-    transform: translateY(-50%) scale(1.08);
-  }
-}
-
 @keyframes ppToastXpBarSettle {
   0% {
     opacity: .96;
@@ -1393,13 +1341,16 @@ background:
   .pp-xpToast *,
   .pp-xpToast *::before,
   .pp-xpToast *::after {
-    animation-duration: 1ms;
-    animation-iteration-count: 1;
-    transition-duration: 1ms;
+    animation: none !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
   }
 
+  .pp-xpToast__aura,
+  .pp-xpToast__barGlow,
+  .pp-xpToast__emblemSheen,
   .pp-xpParticle {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -1418,11 +1369,9 @@ background:
     radial-gradient(circle at 22% 42%, var(--xp-glow, rgba(212,175,100,.22)), transparent 28%),
     radial-gradient(circle at 76% 18%, rgba(255,255,255,.22), transparent 22%);
 
-  opacity: .72;
+  opacity: .52;
   filter: blur(18px);
   pointer-events: none;
-
-  animation: ppXpAuraBreath 2600ms ease-in-out infinite;
 }
 
 .pp-xpToast__emblem,
@@ -1441,7 +1390,9 @@ background:
 .pp-xpToast__bar {
   position: relative;
   isolation: isolate;
-  overflow: visible;
+  overflow: hidden;
+  contain: paint;
+  clip-path: inset(0 round 999px);
 
   height: 12px;
 
@@ -1461,8 +1412,8 @@ background:
   content: "";
 
   position: absolute;
-  inset: -7px;
-  z-index: -1;
+  inset: 0;
+  z-index: 0;
 
   border-radius: 999px;
 
@@ -1476,10 +1427,7 @@ background:
       transparent 100%
     );
 
-  background-size: 220% 100%;
-
-  opacity: 0;
-  filter: blur(8px);
+  opacity: .16;
 
   pointer-events: none;
 }
@@ -1488,7 +1436,7 @@ background:
   content: "";
 
   position: absolute;
-  inset: -2px;
+  inset: 0;
   z-index: 5;
 
   border-radius: inherit;
@@ -1503,13 +1451,11 @@ background:
 }
 
 .pp-xpToast__bar.is-charging::before {
-  opacity: .88;
-  animation: ppToastXpBorderFlow 2600ms ease-in-out infinite;
+  opacity: .28;
 }
 
 .pp-xpToast__bar.is-charging::after {
-  opacity: .95;
-  animation: ppToastXpBorderPulse 1200ms ease-in-out infinite;
+  opacity: .82;
 
   box-shadow:
     inset 0 0 0 1px rgba(255,232,170,.38),
@@ -1519,7 +1465,7 @@ background:
 }
 
 .pp-xpToast__bar.is-settled::after {
-  animation: ppToastXpBarSettle 780ms ease-out both;
+  animation: ppToastXpBarSettle 520ms ease-out both;
 }
 
 .pp-xpToast__barTrack {
@@ -1541,17 +1487,28 @@ background:
 
 .pp-xpToast__barGlow {
   position: absolute;
-  inset: -12px 0 auto auto;
+  inset: 0;
+  z-index: 4;
 
-  width: 80px;
-  height: 36px;
+  background: radial-gradient(
+    circle at calc(var(--xp-progress) * 1%) 50%,
+    rgba(255, 248, 218, .92) 0,
+    var(--xp-bar-glow, rgba(212,175,100,.54)) 3%,
+    transparent 10%
+  );
+  opacity: 0;
+  filter: blur(3px);
 
-  background: radial-gradient(circle, var(--xp-bar-glow, rgba(212,175,100,.5)), transparent 68%);
-  opacity: .72;
-  filter: blur(8px);
-
-  animation: ppXpGlowDrift 1800ms ease-in-out infinite;
+  transition: opacity 160ms ease;
   pointer-events: none;
+}
+
+.pp-xpToast__bar.is-charging .pp-xpToast__barGlow {
+  opacity: .78;
+}
+
+.pp-xpToast__bar.is-settled .pp-xpToast__barGlow {
+  opacity: .34;
 }
 
 .pp-xpToast__micro {
@@ -1616,7 +1573,7 @@ background:
 }
 
 .pp-xpToast.is-level-up .pp-xpToast__bar {
-  animation: ppXpBarImpact 900ms ease both;
+  animation: ppToastXpBarSettle 520ms ease-out both;
 }
 .pp-xpToast.rank-initiate .pp-xpToast__cta {
   border-color: rgba(123, 63, 31, .24);
@@ -1641,47 +1598,6 @@ background:
   background: rgba(255, 249, 238, .54);
 }
 
-@keyframes ppXpAuraBreath {
-  0%, 100% {
-    opacity: .45;
-    transform: scale(.98);
-  }
-
-  50% {
-    opacity: .86;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes ppXpGlowDrift {
-  0%, 100% {
-    transform: translateX(-8px);
-    opacity: .42;
-  }
-
-  50% {
-    transform: translateX(18px);
-    opacity: .88;
-  }
-}
-
-@keyframes ppXpBarImpact {
-  0% {
-    transform: scaleX(1);
-    filter: brightness(1);
-  }
-
-  42% {
-    transform: scaleX(1.012);
-    filter: brightness(1.18);
-  }
-
-  100% {
-    transform: scaleX(1);
-    filter: brightness(1);
-  }
-}
-
 @media (max-width: 640px) {
   .pp-xpToast {
     top: 10px;
@@ -1689,7 +1605,7 @@ background:
   }
 
   .pp-xpToast__inner {
-    grid-template-columns: 56px 1fr 28px;
+    grid-template-columns: 56px minmax(0, 1fr) 44px;
     gap: 12px;
     align-items: start;
     padding: 14px;
@@ -1745,72 +1661,9 @@ background:
   }
 }
 
-/* PROPHETIA XP BAR CLEAN CLIP */
-.pp-xpToast__bar {
-  overflow: hidden !important;
-  contain: paint !important;
-  clip-path: inset(0 round 999px);
-}
-
-.pp-xpToast__bar::before {
-  inset: 0 !important;
-  z-index: 0 !important;
-  border-radius: inherit !important;
-  filter: none !important;
-  opacity: .16 !important;
-}
-
-.pp-xpToast__bar.is-charging::before {
-  opacity: .28 !important;
-}
-
-.pp-xpToast__bar::after {
-  inset: 0 !important;
-  border-radius: inherit !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,232,170,.24),
-    inset 0 0 8px var(--xp-bar-glow, rgba(212,175,100,.16)) !important;
-}
-
-.pp-xpToast__bar.is-charging::after {
-  box-shadow:
-    inset 0 0 0 1px rgba(255,232,170,.34),
-    inset 0 0 12px var(--xp-bar-glow, rgba(212,175,100,.24)) !important;
-}
-
-.pp-xpToast__barTrack,
-.pp-xpToast__barFill,
-.pp-xpToast__barFill::after,
-.pp-xpToast__barGlow {
-  border-radius: inherit !important;
-}
-
-.pp-xpToast__barFill {
-  overflow: hidden !important;
-  box-shadow:
-    inset 0 1px 3px rgba(255,255,255,.18),
-    inset 0 -2px 5px rgba(0,0,0,.22),
-    0 0 12px var(--xp-bar-glow, rgba(212,175,100,.22)) !important;
-}
-
-.pp-xpToast__barFill::before {
-  right: 0 !important;
-  width: 34px !important;
-  height: 34px !important;
-  filter: blur(6px) !important;
-  transform: translate(36%, -50%) scale(.72) !important;
-}
-
-.pp-xpToast__barGlow {
-  inset: 0 0 0 auto !important;
-  width: 58px !important;
-  height: 100% !important;
-  opacity: .32 !important;
-  filter: blur(5px) !important;
-}
 /* PROPHETIA XP TOAST EMBLEM CLEAN */
 .pp-xpToast .pp-xpToast__inner {
-  grid-template-columns: 98px minmax(0, 1fr) 34px;
+  grid-template-columns: 98px minmax(0, 1fr) 44px;
 }
 
 .pp-xpToast .pp-xpToast__emblem {
@@ -1890,7 +1743,7 @@ background:
 
 @media (max-width: 640px) {
   .pp-xpToast .pp-xpToast__inner {
-    grid-template-columns: 76px minmax(0, 1fr) 30px;
+    grid-template-columns: 76px minmax(0, 1fr) 44px;
   }
 
   .pp-xpToast .pp-xpToast__emblem {

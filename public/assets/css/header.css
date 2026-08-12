@@ -167,6 +167,99 @@
   width: 200px;
 }
 
+.search-inline .pp-search-combobox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  line-height: normal;
+}
+
+.search-inline .pp-search-suggestions[hidden] {
+  display: none;
+}
+
+.search-inline .pp-search-suggestions {
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline-end: 0;
+  z-index: 2300;
+  width: min(430px, calc(100vw - 32px));
+  max-height: min(66vh, 520px);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  border: 1px solid rgba(17, 17, 17, .16);
+  background: #f8f5ef;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .16);
+  color: #111;
+  line-height: 1.35;
+}
+
+.search-inline .pp-search-suggestion {
+  display: grid;
+  min-height: 54px;
+  box-sizing: border-box;
+  align-content: center;
+  gap: 3px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(17, 17, 17, .1);
+  cursor: pointer;
+}
+
+.search-inline .pp-search-suggestion:last-child {
+  border-bottom: 0;
+}
+
+.search-inline .pp-search-suggestion[aria-selected="true"] {
+  background: rgba(17, 17, 17, .08);
+}
+
+.search-inline .pp-search-suggestion__title,
+.search-inline .pp-search-suggestion__meta {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.search-inline .pp-search-suggestion__title {
+  color: #111;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .01em;
+}
+
+.search-inline .pp-search-suggestion__title mark {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+}
+
+.search-inline .pp-search-suggestion__meta {
+  color: rgba(17, 17, 17, .6);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+.search-inline .pp-search-suggestion--all {
+  min-height: 46px;
+}
+
+.search-inline .pp-search-suggestion--all .pp-search-suggestion__title {
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.search-inline .pp-search-suggestion--status {
+  cursor: default;
+  color: rgba(17, 17, 17, .62);
+  font-size: 12px;
+}
+
 /* -----------------------------
    Iconografía del lado derecho (CANÓNICO)
    - Área clicable accesible 44×44

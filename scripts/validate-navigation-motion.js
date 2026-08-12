@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { PUBLIC_HTML_ROUTES } = require('../config/public-routes');
 
 const ROOT = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -292,6 +293,9 @@ function collectCustomProperties(source) {
 function routeTargetExists(route) {
   const normalized = normalizeRoute(route);
   if (normalized === '/') return fs.existsSync(path.join(PUBLIC_DIR, 'home.html'));
+
+  const routedFile = PUBLIC_HTML_ROUTES[normalized];
+  if (routedFile) return fs.existsSync(path.join(PUBLIC_DIR, routedFile));
 
   const clean = normalized.replace(/^\/+/, '');
   if (!clean || clean.includes('..')) return false;

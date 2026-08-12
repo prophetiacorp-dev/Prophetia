@@ -1,6 +1,6 @@
 /* =========================================================
    PROPHETIA · LETTERS FROM THE SOUL (LFTS)
-   Página: /assets/collects/lfts
+   Página: /colecciones/letters-from-the-soul
    Estilo: pergamino editorial, tinta, lujo silencioso
    ========================================================= */
 /* ===========================
@@ -93,7 +93,6 @@ body.lfts-page .pp-header .icon-btn svg{
   max-width: none;
   width: 100%;
   margin: 0;
-  padding-inline: 40px;
   box-sizing: border-box;
 }
 
@@ -102,7 +101,6 @@ body.lfts-page .pp-header .icon-btn svg{
   height: 120px;
   width: auto;
   display: block;
-  margin-left: -60px; /* microajuste como en MS */
 }
 
 /* =========================================================

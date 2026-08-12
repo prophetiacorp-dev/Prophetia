@@ -2,6 +2,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { PUBLIC_HTML_ROUTES } = require('../config/public-routes');
 
 const ROOT = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -80,6 +81,8 @@ function cleanRoute(value) {
 function routeTargetExists(route) {
   const clean = cleanRoute(route);
   if (!clean) return fs.existsSync(path.join(PUBLIC_DIR, 'home.html'));
+  const routedFile = PUBLIC_HTML_ROUTES[`/${clean}`];
+  if (routedFile) return fs.existsSync(path.join(PUBLIC_DIR, routedFile));
   const direct = path.join(PUBLIC_DIR, clean);
   return fs.existsSync(direct) || fs.existsSync(`${direct}.html`);
 }

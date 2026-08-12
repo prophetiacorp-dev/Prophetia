@@ -1,6 +1,6 @@
   /* =========================================================
     PROPHETIA · MYTH SERIES
-    Página: /assets/collects/ms
+    Página: /colecciones/myth-series
     Estilo: mitología editorial, lujo silencioso
     ========================================================= */
 
@@ -150,7 +150,6 @@
     max-width: none;
     width: 100%;
     margin: 0;
-    padding-inline: 40px;
     box-sizing: border-box;
   }
 
@@ -159,7 +158,6 @@
     height: 120px;
     width: auto;
     display: block;
-      margin-left: -73px; /* ajusta el valor según lo necesites */
   }
 
 

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { PUBLIC_HTML_ROUTES } = require('../config/public-routes');
 
 const ROOT = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -24,6 +25,9 @@ function publicReferenceExists(fromFile, reference) {
 
   const clean = decodeURIComponent(raw.split('#')[0].split('?')[0]);
   if (!clean) return true;
+
+  const routedFile = clean.startsWith('/') ? PUBLIC_HTML_ROUTES[clean] : null;
+  if (routedFile) return fs.existsSync(path.join(PUBLIC_DIR, routedFile));
 
   const target = clean.startsWith('/')
     ? path.join(PUBLIC_DIR, clean.replace(/^\/+/, ''))

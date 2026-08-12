@@ -1945,13 +1945,13 @@ body:is(.men-page, .women-page, .wishlist-page, .home-page) {
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
-    padding-inline: max(var(--pp-mobile-edge), env(safe-area-inset-left), env(safe-area-inset-right));
+    padding-inline: var(--pp-editorial-logo-edge);
   }
 
   body.ahp-page .brand-band .page-logo {
     display: flex;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   body.ahp-page .brand-band .page-logo img {

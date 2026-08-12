@@ -85,6 +85,22 @@
       <div class="pp-collections-hairline container" aria-hidden="true"></div>
     </section>
 
+    <section id="ppCollectionSearch" class="pp-collection-search" aria-labelledby="ppCollectionSearchTitle" hidden>
+      <div class="container">
+        <div class="pp-collection-search__head">
+          <div>
+            <p class="pp-collection-search__kicker">Buscar en Prophetia</p>
+            <h1 id="ppCollectionSearchTitle" class="pp-collection-search__title">
+              Resultados para “<span data-pp-search-query></span>”
+            </h1>
+            <p class="pp-collection-search__status" data-pp-search-status role="status" aria-live="polite"></p>
+          </div>
+          <a class="pp-collection-search__clear" href="/colecciones">Limpiar búsqueda</a>
+        </div>
+        <div class="pp-collection-search__grid" data-pp-search-grid></div>
+      </div>
+    </section>
+
     <!-- GRID -->
     <section class="pp-collections-grid section-gap">
       <div class="container">
@@ -92,7 +108,7 @@
         <div class="pp-collections-cards">
 
   <!-- MYTH SERIES -->
-  <a class="pp-col-card" href="/assets/collects/ms" aria-label="Explorar Myth Series">
+  <a class="pp-col-card" href="/colecciones/myth-series" aria-label="Explorar Myth Series">
     <div class="pp-col-card__media pp-col-card__media--cover" aria-hidden="true">
      <img src="/assets/img/portadas/ms.png" alt="Portada editorial Myth Series" loading="lazy">
       <div class="pp-col-card__overlay"></div>
@@ -138,7 +154,7 @@
   </a>
 
   <!-- LETTERS FROM THE SOUL -->
-  <a class="pp-col-card" href="/assets/collects/lfts" aria-label="Explorar Letters From The Soul">
+  <a class="pp-col-card" href="/colecciones/letters-from-the-soul" aria-label="Explorar Letters From The Soul">
     <div class="pp-col-card__media pp-col-card__media--cover" aria-hidden="true">
       <img src="/assets/img/portadas/ltfs.png" alt="Portada editorial Letters From The Soul" loading="lazy">
       <div class="pp-col-card__overlay"></div>
@@ -182,7 +198,7 @@
   </a>
 
   <!-- AFTERHOUR PROPHETIA -->
-  <a class="pp-col-card" href="/assets/collects/ahp" aria-label="Explorar AfterHour Prophetia">
+  <a class="pp-col-card" href="/colecciones/afterhour-prophetia" aria-label="Explorar AfterHour Prophetia">
     <div class="pp-col-card__media pp-col-card__media--cover" aria-hidden="true">
       <img src="/assets/img/portadas/aft.png" alt="Portada editorial AfterHour Prophetia" loading="lazy">
       <div class="pp-col-card__overlay"></div>
@@ -247,4 +263,3 @@
   
 </body>
 </html>
-
