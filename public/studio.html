@@ -1,133 +1,181 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>PROPHETIA · Studio</title>
-  <meta name="description" content="Studio Prophetia: dirección creativa, estudio de la moda, innovación y proceso editorial." />
+  <title>Studio — PROPHETIA</title>
+  <meta name="description" content="Entra en Studio Prophetia: observar, destilar y construir una identidad visual con intención.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#101316">
 
-  <!-- BASE -->
+  <link rel="canonical" href="https://prophetia.es/studio">
+  <link rel="alternate" href="https://prophetia.es/studio" hreflang="es">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PROPHETIA">
+  <meta property="og:title" content="Studio — PROPHETIA">
+  <meta property="og:description" content="El espacio editorial donde Prophetia observa, destila y construye.">
+  <meta property="og:url" content="https://prophetia.es/studio">
+  <meta property="og:image" content="https://prophetia.es/assets/img/pack/packaging.png">
+  <meta property="og:image:alt" content="Sistema visual y packaging desarrollado por Prophetia">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Studio — PROPHETIA">
+  <meta name="twitter:description" content="El espacio editorial donde Prophetia observa, destila y construye.">
+  <meta name="twitter:image" content="https://prophetia.es/assets/img/pack/packaging.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/assets/css/tokens.css">
   <link rel="stylesheet" href="/assets/css/typography.css">
   <link rel="stylesheet" href="/assets/css/layout.css">
-
-  <!-- HEADER & NAV -->
   <link rel="stylesheet" href="/assets/css/header.css">
   <link rel="stylesheet" href="/assets/css/megamenu.css">
   <link rel="stylesheet" href="/assets/css/brand-band.css">
-
-  <!-- SITE -->
-  <link rel="stylesheet" href="/assets/css/catalog.css">
-  <link rel="stylesheet" href="/assets/css/plp.css">
-  <link rel="stylesheet" href="/assets/css/products.css">
-  <link rel="stylesheet" href="/assets/css/pdp.css">
-  <link rel="stylesheet" href="/assets/css/camisetas.css">
-  <link rel="stylesheet" href="/assets/css/colecciones.css">
-  <link rel="stylesheet" href="/assets/css/wishlist.css">
-
-  <!-- PANEL, LOGIN Y CARRITO -->
   <link rel="stylesheet" href="/assets/css/auth.css">
   <link rel="stylesheet" href="/assets/css/cart.css">
   <link rel="stylesheet" href="/assets/css/footer.css">
-
-  <!-- UTILS -->
   <link rel="stylesheet" href="/assets/css/utilities.css">
   <link rel="stylesheet" href="/assets/css/popup.css">
   <link rel="stylesheet" href="/assets/css/cookies.css">
+  <link rel="stylesheet" href="/assets/css/transitions.css">
   <link rel="stylesheet" href="/assets/css/overrides.css?v=20260724-mobile-parity1">
-
-  <!-- STUDIO -->
-  <link rel="stylesheet" href="/assets/css/studio.css">
-
-  <!-- FONTS -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/house-editorial.css?v=20260812-house1">
+  <link rel="stylesheet" href="/assets/css/studio.css?v=20260812-house1">
   <link rel="stylesheet" href="/assets/css/mobile-shell.css?v=20260724-mobile-parity1" data-pp-mobile-shell>
 </head>
 
-<body class="house-page studio-page">
-  <div id="header" role="banner" aria-label="Cabecera"></div>
+<body class="house-page studio-page" data-page="studio">
+  <div id="header"></div>
 
-  <main id="main" tabindex="-1">
-    <div class="studio-wrap">
+  <main id="main" class="house-editorial studio-main" tabindex="-1">
+    <section class="studio-hero" aria-labelledby="studio-title">
+      <div class="house-shell studio-hero__inner">
+        <div class="studio-hero__top house-reveal" data-house-reveal>
+          <p class="house-eyebrow"><span>Prophetia House</span><span>Creative Studio</span></p>
+          <p class="studio-hero__mark" aria-hidden="true">STUDIO</p>
+        </div>
 
-      <header class="studio-hero" aria-label="Studio Prophetia">
-        <p class="studio-kicker">Prophetia House</p>
-        <h1 class="studio-title">Studio</h1>
-        <p class="studio-lede">
-          El estudio es el lugar donde Prophetia observa, investiga y transforma referencias en dirección creativa.
-          Aquí analizamos moda, proporción, color, cultura visual y energía estética para construir piezas con identidad.
-        </p>
-      </header>
+        <div class="studio-hero__grid">
+          <div class="studio-hero__copy house-reveal" data-house-reveal style="--house-delay: 80ms">
+            <h1 id="studio-title">Observar.<br>Destilar.<br><em>Construir.</em></h1>
+          </div>
+          <div class="studio-hero__intro house-reveal" data-house-reveal style="--house-delay: 140ms">
+            <p>
+              Studio es el espacio editorial donde una referencia deja de ser inspiración
+              y empieza a convertirse en un sistema Prophetia.
+            </p>
+            <nav class="studio-index" aria-label="Etapas del proceso creativo">
+              <a href="#observar"><span>01</span> Observar</a>
+              <a href="#destilar"><span>02</span> Destilar</a>
+              <a href="#construir"><span>03</span> Construir</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      <section class="studio-grid" aria-label="Proceso creativo Prophetia">
-        <article class="studio-card">
-          <h2 class="studio-card__title">Cómo trabajamos</h2>
-          <p>
-            Nuestro espacio de trabajo funciona como una zona de creación y análisis. No solo diseñamos prendas:
-            estudiamos cómo se perciben, cómo se equilibran y cómo conectan visualmente con las personas.
-          </p>
-          <p>
-            Cada colección nace de una investigación constante sobre siluetas, materiales, lenguaje visual,
-            contraste, ritmo compositivo y presencia editorial.
-          </p>
+    <section class="studio-process" aria-labelledby="studio-process-title">
+      <div class="house-shell">
+        <h2 id="studio-process-title" class="sr-only">Proceso creativo Prophetia</h2>
+
+        <article id="observar" class="studio-step studio-step--image-left">
+          <figure class="studio-step__media house-reveal" data-house-reveal>
+            <img src="/assets/img/portadas/ms.png" alt="Composición visual de Myth Series" width="1920" height="1080" loading="lazy" decoding="async">
+            <figcaption>Estudio de símbolo / Myth Series</figcaption>
+          </figure>
+          <div class="studio-step__copy house-reveal" data-house-reveal style="--house-delay: 100ms">
+            <p class="studio-step__number">01</p>
+            <p class="studio-step__verb">Observar</p>
+            <h3>Antes de diseñar,<br>hay que aprender a mirar.</h3>
+            <p>
+              Arquitectura, música, archivo, ciudad y materia. Reunimos referencias por la tensión
+              que crean entre sí, no por pertenecer a una tendencia.
+            </p>
+            <ul class="studio-step__tags" aria-label="Áreas de observación">
+              <li>Contexto</li><li>Forma</li><li>Símbolo</li>
+            </ul>
+          </div>
         </article>
 
-        <article class="studio-card">
-          <h2 class="studio-card__title">Moda, estudio e innovación</h2>
-          <p>
-            Prophetia entiende la moda como una disciplina viva. Observamos tendencias, revisamos referentes,
-            exploramos códigos de lujo y reinterpretamos influencias para construir una estética propia:
-            silenciosa, artística y contemporánea.
-          </p>
-          <p>
-            Innovar no es romper por romper. Es refinar, depurar y elevar una idea hasta que tenga fuerza,
-            claridad y personalidad.
-          </p>
+        <article id="destilar" class="studio-step studio-step--image-right">
+          <figure class="studio-step__media house-reveal" data-house-reveal>
+            <img src="/assets/img/portadas/ltfs.png" alt="Sistema editorial de Letters From The Soul" width="1920" height="1080" loading="lazy" decoding="async">
+            <figcaption>Estudio de narrativa / Letters From The Soul</figcaption>
+          </figure>
+          <div class="studio-step__copy house-reveal" data-house-reveal style="--house-delay: 100ms">
+            <p class="studio-step__number">02</p>
+            <p class="studio-step__verb">Destilar</p>
+            <h3>Quitar hasta que<br>la idea hable sola.</h3>
+            <p>
+              Editamos color, proporción, tipografía y ritmo. La referencia se transforma
+              en una dirección clara, capaz de sostener una colección completa.
+            </p>
+            <ul class="studio-step__tags" aria-label="Áreas de edición">
+              <li>Paleta</li><li>Proporción</li><li>Ritmo</li>
+            </ul>
+          </div>
         </article>
 
-        <article class="studio-card studio-card--wide">
-          <h2 class="studio-card__title">Inspiración en movimiento</h2>
-          <p>
-            Gran parte del proceso creativo nace fuera del estudio. Visitamos distintos lugares, observamos arquitectura,
-            paisajes, espacios urbanos, escaparates, texturas, objetos, luz y color. Cada entorno aporta una lectura distinta
-            que después se convierte en diseño, narrativa y atmósfera.
-          </p>
-          <p>
-            Prophetia se construye desde esa mezcla entre observación real y sensibilidad estética: viajar, mirar,
-            estudiar y volver al estudio con una idea más precisa. Porque la inspiración no aparece sentada en una silla;
-            normalmente entra por la puerta después de haber caminado bastante.
-          </p>
+        <article id="construir" class="studio-step studio-step--image-left">
+          <figure class="studio-step__media house-reveal" data-house-reveal>
+            <img src="/assets/img/pack/packaging.png" alt="Packaging y sistema de identidad de Prophetia" width="1920" height="1080" loading="lazy" decoding="async">
+            <figcaption>Aplicación de sistema / Identidad Prophetia</figcaption>
+          </figure>
+          <div class="studio-step__copy house-reveal" data-house-reveal style="--house-delay: 100ms">
+            <p class="studio-step__number">03</p>
+            <p class="studio-step__verb">Construir</p>
+            <h3>La idea se vuelve<br>un sistema tangible.</h3>
+            <p>
+              Silueta, gráfica, acabado y presentación deben contar la misma historia.
+              El resultado no es una suma de detalles: es una experiencia coherente.
+            </p>
+            <ul class="studio-step__tags" aria-label="Áreas de construcción">
+              <li>Pieza</li><li>Gráfica</li><li>Presentación</li>
+            </ul>
+          </div>
         </article>
+      </div>
+    </section>
 
-        <article class="studio-card">
-          <h2 class="studio-card__title">Nuestro enfoque</h2>
-          <ul class="studio-list">
-            <li>Dirección creativa con criterio editorial</li>
-            <li>Estudio de color, forma y composición</li>
-            <li>Inspiración cultural y visual en movimiento</li>
-            <li>Búsqueda constante de innovación estética</li>
-          </ul>
-        </article>
+    <section class="studio-principles" aria-labelledby="studio-principles-title">
+      <div class="house-shell studio-principles__grid">
+        <div class="house-reveal" data-house-reveal>
+          <p class="house-index">Método / Siempre</p>
+          <h2 id="studio-principles-title">Una decisión debe tener intención.</h2>
+        </div>
+        <ul class="studio-principles__list house-reveal" data-house-reveal style="--house-delay: 100ms">
+          <li><span>01</span> Criterio antes que tendencia.</li>
+          <li><span>02</span> Claridad antes que exceso.</li>
+          <li><span>03</span> Coherencia antes que ruido.</li>
+        </ul>
+      </div>
+    </section>
 
-        <article class="studio-card">
-          <h2 class="studio-card__title">Propósito</h2>
-          <p>
-            Todo lo que hacemos en Studio tiene un objetivo: desarrollar una marca con alma visual,
-            coherencia estética y capacidad de evolución. Prophetia no busca producir ruido, sino construir una identidad
-            que se reconozca al instante.
-          </p>
-        </article>
-      </section>
-
-    </div>
+    <section class="house-closing studio-closing" aria-labelledby="studio-closing-title">
+      <div class="house-shell house-closing__grid house-reveal" data-house-reveal>
+        <div>
+          <p class="house-eyebrow"><span>Del proceso</span><span>A la pieza</span></p>
+          <h2 id="studio-closing-title">La dirección creativa termina donde empieza la colección.</h2>
+        </div>
+        <div class="house-actions">
+          <a class="house-button house-button--light" href="/colecciones">Explorar colecciones</a>
+          <a class="house-text-link house-text-link--light" href="/about">Leer el manifiesto <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <div id="footer" role="contentinfo" aria-label="Pie de página"></div>
+  <div id="footer"></div>
   <div id="popup-area"></div>
 
+  <script type="module" src="/assets/js/firebase-init.js"></script>
+  <script type="module" src="/assets/js/firebase-auth.js"></script>
   <script defer src="/assets/js/header-init.js?v=20260724-mobile-parity1"></script>
+  <script defer src="/assets/js/script.js"></script>
   <script defer src="/assets/js/popup.js"></script>
+  <script defer src="/assets/js/cookies.js"></script>
+  <script defer src="/assets/js/cart.js"></script>
+  <script defer src="/assets/js/house-editorial.js?v=20260812-house1"></script>
 </body>
 </html>

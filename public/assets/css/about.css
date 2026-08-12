@@ -1,479 +1,358 @@
-/* =========================================================
-   PROPHETIA · about.css
-   Silent Luxury editorial + convivencia con Streetwear
-   - Sin overrides agresivos
-   - Tipografía: Playfair Display (títulos) + Inter (texto)
-   ========================================================= */
-
-/* Página */
-body.about-page{
-  --about-edge: clamp(18px, 3.2vw, 44px);
-  --about-max: 1120px;
-
-  --about-ink: #0b0b0c;
-  --about-muted: rgba(0,0,0,.62);
-  --about-line: rgba(0,0,0,.12);
-  --about-surface: rgba(255,255,255,.72);
-  --about-surface-strong: rgba(255,255,255,.88);
-
-  --about-radius: 18px;
-  --about-radius-sm: 14px;
-
-  --about-shadow: 0 10px 35px rgba(0,0,0,.06);
-  --about-shadow-soft: 0 10px 28px rgba(0,0,0,.05);
-
-  color: var(--about-ink);
-  background: #fff;
+/* About / Prophetia manifesto */
+body.about-page .about-hero {
+  padding-block: clamp(44px, 6vw, 94px) clamp(72px, 10vw, 150px);
+  background:
+    radial-gradient(circle at 75% 16%, rgba(169, 139, 82, 0.13), transparent 28%),
+    var(--house-paper);
 }
 
-/* Mural sutil (opcional, coherente con tu camisetas-page) */
-body.about-page{
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-body.about-page::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  background: rgba(255,255,255,.60);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Contenedor: si tu .container ya existe, lo refinamos solo en about */
-body.about-page .container{
-  max-width: var(--about-max);
-  margin-inline: auto;
-  padding-inline: var(--about-edge);
-}
-
-/* Layout base del about */
-body.about-page .site-main{
-  padding-bottom: 64px;
-}
-
-/* Banda de marca (logo) */
-body.about-page .brand-band{
-  background: transparent;
-  border: 0;
-}
-body.about-page .page-logo img{
-  height: 28px;
-  width: auto;
-  display: block;
-  margin: 18px auto 0;
-  opacity: .92;
-}
-
-/* Secciones: aire editorial */
-body.about-page .section{
-  padding: clamp(30px, 4.2vw, 56px) 0;
-}
-body.about-page .section + .section{
-  border-top: 1px solid var(--about-line);
-}
-
-/* Grid helpers (por si tu HTML los usa y no tienes CSS global) */
-body.about-page .grid{
+body.about-page .about-hero__grid {
   display: grid;
-  gap: clamp(18px, 2.6vw, 34px);
-}
-body.about-page .grid-2{
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
-}
-body.about-page .grid-3{
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: start;
+  grid-template-columns: minmax(300px, 0.72fr) minmax(440px, 1.28fr);
+  align-items: center;
+  gap: clamp(44px, 7vw, 126px);
 }
 
-/* Responsive */
-@media (max-width: 980px){
-  body.about-page .grid-2,
-  body.about-page .grid-3{
-    grid-template-columns: 1fr;
-  }
+body.about-page .about-hero__copy h1 {
+  margin: clamp(70px, 10vw, 152px) 0 34px;
+  font-size: clamp(4.1rem, 7.7vw, 9.7rem);
+  line-height: 0.86;
+  letter-spacing: -0.065em;
 }
 
-/* Tipografía: jerarquía luxe */
-body.about-page h2{
-  font-family: var(--font-display, "Playfair Display", serif);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  font-size: clamp(1.2rem, 1.02rem + .6vw, 1.6rem);
-  line-height: 1.18;
-  margin: 0 0 12px;
-}
-body.about-page h3{
-  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  font-size: 0.95rem;
-  margin: 0 0 10px;
-}
-body.about-page p{
-  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 0.98rem;
-  line-height: 1.75;
-  color: var(--about-ink);
-  margin: 0 0 12px;
-}
-body.about-page p em{ color: var(--about-ink); }
-body.about-page p strong{ font-weight: 600; }
-
-/* Texto centrado */
-body.about-page .text-center{
-  text-align: center;
-}
-body.about-page .text-center p{
-  margin-inline: auto;
-  max-width: 64ch;
-  color: var(--about-muted);
+body.about-page .about-hero__copy h1 em {
+  color: var(--house-accent);
+  font-weight: 500;
 }
 
-/* Listas bullets elegantes */
-body.about-page .bullets{
-  list-style: none;
-  padding: 0;
-  margin: 16px 0 0;
-  display: grid;
-  gap: 10px;
+body.about-page .about-hero__lead {
+  max-width: 48ch;
+  margin-bottom: 38px;
+  color: var(--house-muted);
+  font-size: clamp(1rem, 0.91rem + 0.42vw, 1.32rem);
+  line-height: 1.65;
 }
-body.about-page .bullets li{
+
+body.about-page .about-hero__visual {
   position: relative;
-  padding-left: 18px;
-  color: var(--about-muted);
-  line-height: 1.6;
-  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 0.94rem;
+  min-height: clamp(520px, 62vw, 790px);
 }
-body.about-page .bullets li::before{
-  content:"";
+
+body.about-page .about-code {
   position: absolute;
-  left: 0;
-  top: .72em;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--about-ink);
-  opacity: .22;
-}
-
-/* Cards */
-body.about-page .card{
-  background: var(--about-surface);
-  border: 1px solid rgba(0,0,0,.10);
-  border-radius: var(--about-radius);
-  box-shadow: var(--about-shadow-soft);
-  padding: 18px 18px 16px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-body.about-page .card.note{
-  background: var(--about-surface-strong);
-}
-body.about-page .card p{
-  color: var(--about-muted);
-  margin-bottom: 0;
-}
-
-/* Tiles (bloques 3 columnas) */
-body.about-page .tile{
-  background: rgba(255,255,255,.70);
-  border: 1px solid rgba(0,0,0,.10);
-  border-radius: var(--about-radius-sm);
-  box-shadow: var(--about-shadow-soft);
-  padding: 18px 18px 14px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-body.about-page .tile p{
-  color: var(--about-muted);
+  overflow: hidden;
   margin: 0;
+  background: #d8d0c2;
+  box-shadow: 0 24px 80px rgba(28, 24, 19, 0.14);
 }
 
-/* Estadísticas */
-body.about-page .stats{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+body.about-page .about-code img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-@media (max-width: 980px){
-  body.about-page .stats{
+
+body.about-page .about-code:hover img {
+  transform: scale(1.025);
+}
+
+body.about-page .about-code--silent {
+  inset: 0 30% 20% 0;
+}
+
+body.about-page .about-code--street {
+  inset: 28% 0 0 45%;
+  border: clamp(8px, 1vw, 15px) solid var(--house-paper);
+}
+
+body.about-page .about-code figcaption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 16px;
+  padding: 11px 16px;
+  background: rgba(250, 248, 242, 0.92);
+  color: var(--house-ink);
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+body.about-page .about-code figcaption span {
+  color: rgba(17, 18, 20, 0.48);
+}
+
+body.about-page .about-statement {
+  padding-block: clamp(90px, 13vw, 190px);
+  background: var(--house-ink);
+  color: #fff;
+}
+
+body.about-page .about-statement__grid {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.42fr) minmax(0, 1.58fr);
+  gap: clamp(42px, 8vw, 150px);
+}
+
+body.about-page .about-statement .house-index {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+body.about-page .about-statement h2 {
+  margin-bottom: clamp(36px, 5vw, 70px);
+  font-size: clamp(3.5rem, 8vw, 9.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+body.about-page .about-statement p:last-child {
+  max-width: 52ch;
+  margin: 0 0 0 auto;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(1.08rem, 0.98rem + 0.48vw, 1.5rem);
+}
+
+body.about-page .about-duality {
+  padding-block: clamp(90px, 12vw, 175px);
+  background: var(--house-paper-soft);
+}
+
+body.about-page .about-duality__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.about-page .about-world {
+  position: relative;
+  min-height: clamp(490px, 48vw, 720px);
+  padding: clamp(28px, 4vw, 66px);
+  border: 1px solid var(--house-line);
+}
+
+body.about-page .about-world--dark {
+  border-color: var(--house-petrol);
+  background: var(--house-petrol);
+  color: #fff;
+}
+
+body.about-page .about-world__number {
+  position: absolute;
+  top: clamp(28px, 4vw, 66px);
+  right: clamp(28px, 4vw, 66px);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+}
+
+body.about-page .about-world__label {
+  font-size: 0.69rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+body.about-page .about-world h3 {
+  margin: clamp(90px, 11vw, 170px) 0 42px;
+  font-size: clamp(3rem, 5.3vw, 6.8rem);
+  line-height: 0.93;
+  letter-spacing: -0.055em;
+}
+
+body.about-page .about-world > p:last-child {
+  max-width: 36ch;
+  margin: 0;
+  color: var(--house-muted);
+}
+
+body.about-page .about-world--dark > p:last-child {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+body.about-page .about-origin {
+  position: relative;
+  min-height: clamp(670px, 78vw, 980px);
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  background: #8a7a5a;
+}
+
+body.about-page .about-origin__media,
+body.about-page .about-origin__media::after {
+  position: absolute;
+  inset: 0;
+}
+
+body.about-page .about-origin__media::after {
+  content: "";
+  background: linear-gradient(90deg, rgba(12, 14, 14, 0.66), rgba(12, 14, 14, 0.05) 68%);
+}
+
+body.about-page .about-origin__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.about-page .about-origin__content {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(40px, 6vw, 90px);
+}
+
+body.about-page .about-origin__card {
+  width: min(620px, 100%);
+  padding: clamp(34px, 5vw, 72px);
+  background: rgba(16, 19, 22, 0.9);
+  color: #fff;
+  backdrop-filter: blur(14px);
+}
+
+body.about-page .about-origin__card .house-index {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+body.about-page .about-origin__card h2 {
+  margin: clamp(52px, 7vw, 92px) 0 32px;
+  font-size: clamp(3rem, 6.2vw, 7.2rem);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+}
+
+body.about-page .about-origin__card p:last-child {
+  max-width: 43ch;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body.about-page .about-principles {
+  padding-block: clamp(90px, 12vw, 175px);
+  background: var(--house-paper);
+}
+
+body.about-page .about-principles__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--house-line);
+}
+
+body.about-page .about-principles__list li {
+  display: grid;
+  grid-template-columns: 70px minmax(180px, 0.55fr) minmax(0, 1fr);
+  align-items: baseline;
+  gap: clamp(20px, 5vw, 84px);
+  padding-block: clamp(25px, 3vw, 44px);
+  border-bottom: 1px solid var(--house-line);
+}
+
+body.about-page .about-principles__list span {
+  color: rgba(17, 18, 20, 0.42);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+}
+
+body.about-page .about-principles__list h3 {
+  margin-bottom: 0;
+  font-size: clamp(1.8rem, 3vw, 3.5rem);
+}
+
+body.about-page .about-principles__list p {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--house-muted);
+}
+
+@media (max-width: 980px) {
+  body.about-page .about-hero__grid {
     grid-template-columns: 1fr;
   }
-}
-body.about-page .stat{
-  border: 1px solid rgba(0,0,0,.10);
-  border-radius: var(--about-radius-sm);
-  background: rgba(255,255,255,.76);
-  padding: 14px 14px 12px;
-  box-shadow: var(--about-shadow-soft);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-body.about-page .stat span{
-  display: block;
-  font-family: var(--font-display, "Playfair Display", serif);
-  font-weight: 600;
-  font-size: 1.5rem;
-  letter-spacing: .02em;
-}
-body.about-page .stat small{
-  display: block;
-  margin-top: 6px;
-  color: var(--about-muted);
-  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
 
-/* Places list */
-body.about-page .places{
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 10px;
-}
-body.about-page .places li{
-  padding: 12px 14px;
-  border: 1px solid rgba(0,0,0,.10);
-  border-radius: var(--about-radius-sm);
-  background: rgba(255,255,255,.72);
-  color: var(--about-muted);
-  line-height: 1.55;
-  box-shadow: var(--about-shadow-soft);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-body.about-page .places strong{
-  color: var(--about-ink);
-}
+  body.about-page .about-hero__copy h1 {
+    margin-top: clamp(58px, 11vw, 100px);
+  }
 
-/* Quote */
-body.about-page .quote blockquote{
-  margin: 0;
-  padding: 18px 18px 16px;
-  border-radius: var(--about-radius);
-  border: 1px solid rgba(0,0,0,.10);
-  background: rgba(255,255,255,.78);
-  box-shadow: var(--about-shadow);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-body.about-page .quote p{
-  margin: 0;
-  font-family: var(--font-display, "Playfair Display", serif);
-  font-size: 1.05rem;
-  line-height: 1.55;
-  color: rgba(0,0,0,.78);
-}
-
-/* Botón CTA (por si tu .btn global no está o quieres más “luxe”) */
-body.about-page .btn{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border-radius: 999px;
-  padding: 12px 18px;
-  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 0.9rem;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: 1px solid rgba(0,0,0,.14);
-  background: rgba(255,255,255,.86);
-  color: var(--about-ink);
-  box-shadow: var(--about-shadow-soft);
-  transition: transform .25s ease, opacity .25s ease;
-}
-body.about-page .btn:hover{
-  transform: translateY(-1px);
-  opacity: .92;
-}
-body.about-page .btn--primary{
-  background: rgba(0,0,0,.92);
-  color: #fff;
-  border-color: rgba(0,0,0,.92);
-}
-
-/* Enlaces dentro del about: negros, sin azul “link default” */
-body.about-page a{
-  color: inherit;
-}
-body.about-page a:visited{
-  color: inherit;
-}
-body.about-page a:hover{
-  opacity: .86;
-}
-
-/* Accesibilidad: focus visible elegante */
-body.about-page :focus-visible{
-  outline: 2px solid rgba(0,0,0,.55);
-  outline-offset: 3px;
-  border-radius: 10px;
-}
-
-/* Pequeños detalles */
-body.about-page abbr[title]{
-  text-decoration: none;
-  border-bottom: 1px dotted rgba(0,0,0,.35);
-  cursor: help;
-}
-/* =========================================================
-   ABOUT · Fix logo centrado y visible (blindado)
-   ========================================================= */
-
-/* Asegura que la banda no quede “aplastada” y que el logo tenga espacio */
-body.about-page .brand-band{
-  position: relative;
-  z-index: 5;              /* por encima de fondos/overlays */
-  padding: 22px 0 8px;     /* aire editorial */
-  overflow: visible;       /* por si algo lo recorta */
-}
-
-/* Centrado real del anchor */
-body.about-page .brand-band .container{
-  display: flex;
-  justify-content: center;
-}
-
-body.about-page a.page-logo{
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 320px;        /* evita que se “estire” raro */
-  margin: 0 auto;
-}
-
-/* El SVG: que siempre pinte, que no herede cosas raras y que se vea */
-body.about-page .page-logo img{
-  display: block;
-  width: min(220px, 62vw); /* responsive */
-  height: auto;
-  max-height: 40px;
-  opacity: 1;              /* fuera transparencias */
-  filter: none;            /* fuera filtros “fancy” heredados */
-  mix-blend-mode: normal;  /* fuera mezclas */
-}
-
-/* Si algún CSS global oculta imágenes dentro de brand-band */
-body.about-page .brand-band img{
-  visibility: visible !important;
-}
-
-/* Evita que el overlay del opener pueda tapar (si por error queda abierto) */
-body.about-page #ppHouseOpener{
-  pointer-events: none;
-}
-/* =========================================================
-   ABOUT · Micro-hero (editorial, limpio, lujo silencioso)
-   ========================================================= */
-
-body.about-page .about-hero{
-  padding: clamp(26px, 3.6vw, 44px) 0 0;
-}
-
-body.about-page .about-hero__eyebrow{
-  margin: 0 0 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-
-  font-family: var(--font-ui, "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(0,0,0,.62);
-}
-
-body.about-page .about-hero__kicker{
-  color: rgba(0,0,0,.85);
-}
-
-body.about-page .about-hero__dot{
-  opacity: .35;
-}
-
-body.about-page .about-hero__title{
-  margin: 0;
-  text-align: center;
-  font-family: var(--font-display, "Playfair Display", serif);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  font-size: clamp(2rem, 1.4rem + 2.2vw, 3.1rem);
-  line-height: 1.05;
-}
-
-body.about-page .about-hero__lead{
-  margin: 14px auto 0;
-  max-width: 62ch;
-  text-align: center;
-  color: rgba(0,0,0,.68);
-  font-size: 1.02rem;
-  line-height: 1.75;
-}
-
-body.about-page .about-hero__rule{
-  margin: clamp(18px, 2.8vw, 26px) auto 0;
-  width: min(720px, 86vw);
-  height: 1px;
-  background: rgba(0,0,0,.10);
-}
-
-/* =========================================================
-   ABOUT · Ritmo global: que no “choque” con el header
-   ========================================================= */
-
-/* Le damos aire arriba del contenido principal (según tu header sticky) */
-body.about-page .cat-layout{
-  padding-top: 10px;
-}
-
-/* Sección 1 (intent) un poco más cerca del micro-hero */
-body.about-page .section--intent{
-  padding-top: clamp(22px, 3.2vw, 40px);
-}
-
-/* Más coherencia: títulos H2 no “pican” demasiado grande en desktop */
-@media (min-width: 1100px){
-  body.about-page h2{
-    font-size: 1.55rem;
+  body.about-page .about-hero__visual {
+    width: min(780px, 100%);
+    min-height: clamp(480px, 88vw, 720px);
+    margin: 0 auto;
   }
 }
 
-/* =========================================================
-   ABOUT · CTA premium: acciones y fine print
-   ========================================================= */
+@media (max-width: 800px) {
+  body.about-page .about-statement__grid,
+  body.about-page .about-duality__grid {
+    grid-template-columns: 1fr;
+  }
 
-body.about-page .about-cta__actions{
-  margin-top: 16px;
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
+  body.about-page .about-statement__grid {
+    gap: 34px;
+  }
+
+  body.about-page .about-statement p:last-child {
+    margin-left: 0;
+  }
+
+  body.about-page .about-world {
+    min-height: auto;
+  }
+
+  body.about-page .about-world h3 {
+    margin-top: clamp(82px, 18vw, 130px);
+  }
+
+  body.about-page .about-origin__media::after {
+    background: linear-gradient(0deg, rgba(12, 14, 14, 0.72), rgba(12, 14, 14, 0.06) 72%);
+  }
+
+  body.about-page .about-principles__list li {
+    grid-template-columns: 42px 1fr;
+    gap: 10px 20px;
+  }
+
+  body.about-page .about-principles__list p {
+    grid-column: 2;
+  }
 }
 
-body.about-page .btn--ghost{
-  background: rgba(255,255,255,.72);
-  color: var(--about-ink);
-  border-color: rgba(0,0,0,.14);
-}
+@media (max-width: 520px) {
+  body.about-page .about-hero {
+    padding-top: 26px;
+  }
 
-body.about-page .about-cta__fine{
-  margin: 14px auto 0;
-  max-width: 60ch;
-  font-size: 0.82rem;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  color: rgba(0,0,0,.55);
+  body.about-page .about-hero__copy h1 {
+    font-size: clamp(3.5rem, 18vw, 5.5rem);
+  }
+
+  body.about-page .about-hero__visual {
+    min-height: 470px;
+  }
+
+  body.about-page .about-code--silent {
+    inset: 0 18% 27% 0;
+  }
+
+  body.about-page .about-code--street {
+    inset: 39% 0 0 29%;
+  }
+
+  body.about-page .about-origin {
+    min-height: 720px;
+  }
+
+  body.about-page .about-origin__media img {
+    object-position: 54% center;
+  }
+
+  body.about-page .about-origin__content {
+    width: 100%;
+    padding-bottom: 14px;
+  }
+
+  body.about-page .about-origin__card {
+    padding: 32px 24px;
+  }
 }
