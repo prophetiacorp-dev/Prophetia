@@ -1941,27 +1941,6 @@ body:is(.men-page, .women-page, .wishlist-page, .home-page) {
     --footer-logo-filter: brightness(0) invert(1);
   }
 
-  body.ahp-page .brand-band .container {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
-    padding-inline: var(--pp-editorial-logo-edge);
-  }
-
-  body.ahp-page .brand-band .page-logo {
-    display: flex;
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  body.ahp-page .brand-band .page-logo img {
-    width: min(86vw, 360px);
-    max-width: 100%;
-    height: auto;
-    margin-left: 0;
-    object-fit: contain;
-  }
-
   .site-footer :is(.footer-editorial, .footer-panel, .footer-inner.container,
                    .footer-bottom.container, .brand-col, .news-row) {
     min-width: 0;

@@ -4,21 +4,61 @@
 .brand-band{ margin:0; padding:0; border:0; }
 .brand-band .container{ display:flex; align-items:flex-start; padding:0; }
 
-/* Colecciones editoriales: mismo anclaje visual que el floating logo de las PLP. */
+/* Colecciones editoriales: reutilizan la geometría efectiva del floating logo
+   de las PLP de ropa, incluida su relación de aspecto en tablet y móvil. */
 body:is(.ms-page, .ahp-page, .lfts-page){
-  --pp-editorial-logo-edge: max(0px, calc(clamp(24px, 2.6vw, 48px) - 30px));
-  --pp-editorial-logo-top: 16px;
+  --pp-editorial-logo-edge: 10px;
+  --pp-editorial-logo-top: 18px;
+  --pp-editorial-logo-header-offset: 0px;
+  --pp-editorial-logo-width: min(100%, 920px);
+}
+
+/* MS y LFTS eliminan el borde del header por diseño. Se compensa solo esa
+   diferencia de caja para conservar la misma coordenada visual que las PLP. */
+body:is(.ms-page, .lfts-page){
+  --pp-editorial-logo-header-offset: 4px;
 }
 
 body:is(.ms-page, .ahp-page, .lfts-page) .brand-band .container{
-  padding-block: var(--pp-editorial-logo-top) 0;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-block: calc(
+    var(--pp-editorial-logo-top) + var(--pp-editorial-logo-header-offset)
+  ) 0;
   padding-inline: var(--pp-editorial-logo-edge);
+}
+
+body:is(.ms-page, .ahp-page, .lfts-page) .brand-band .page-logo{
+  display: block;
+  width: var(--pp-editorial-logo-width);
+}
+
+body:is(.ms-page, .ahp-page, .lfts-page) .brand-band .page-logo img{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
 }
 
 @media (min-width: 1025px) and (max-width: 1365px){
   body:is(.ms-page, .ahp-page, .lfts-page){
     --pp-editorial-logo-edge: clamp(10px, calc(82.3px - 5.3vw), 28px);
+    --pp-editorial-logo-end: clamp(28px, calc(3.53vw - 8.2px), 40px);
+    --pp-editorial-logo-gap: clamp(24px, 3vw, 40px);
     --pp-editorial-logo-top: clamp(16px, calc(2.65vw - 11.1px), 25px);
+    --pp-editorial-logo-width: min(100%, 920px);
+  }
+
+  body:is(.ms-page, .ahp-page, .lfts-page) .brand-band .container{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 240px;
+    column-gap: var(--pp-editorial-logo-gap);
+    padding-inline: var(--pp-editorial-logo-edge) var(--pp-editorial-logo-end);
   }
 }
 
@@ -29,6 +69,14 @@ body:is(.ms-page, .ahp-page, .lfts-page) .brand-band .container{
       env(safe-area-inset-left),
       env(safe-area-inset-right)
     );
+    --pp-editorial-logo-top: 16px;
+    --pp-editorial-logo-width: min(100%, 683px);
+  }
+}
+
+@media (max-width: 900px){
+  body:is(.ms-page, .lfts-page){
+    --pp-editorial-logo-header-offset: 2px;
   }
 }
 

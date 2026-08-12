@@ -132,10 +132,6 @@
     border-bottom: 1px solid rgba(255,255,255,0.04);
   }
 
-  .ms-page .brand-band .page-logo img {
-    height: 42px;
-  }
-
   /* =========================================================
     BRAND BAND · LOGO PROPHETIA
     ========================================================= */
@@ -152,14 +148,6 @@
     margin: 0;
     box-sizing: border-box;
   }
-
-  /* Tamaño del logo similar al de camisetas-punto-hombre */
-  .ms-page .brand-band .page-logo img {
-    height: 120px;
-    width: auto;
-    display: block;
-  }
-
 
   /* =========================================================
     HERO · MYTH SERIES
