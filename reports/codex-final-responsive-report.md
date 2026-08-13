@@ -161,3 +161,11 @@ Validaciones superadas: `node --check public/assets/js/product-page.js`, parseo 
 La cascada visual nueva termina en 860 px, por lo que el visor de escritorio mantiene sus reglas previas; a 1366×768 la X siguió visible y dentro del viewport. Riesgo residual: las safe areas se validaron mediante las variables del navegador responsive, no en un dispositivo iOS físico con notch. Las comprobaciones autenticadas de Wishlist registradas en la sección anterior continúan pendientes y no forman parte de esta corrección.
 
 El checkout continúa bloqueado, con cero tarifas activas. Tras la autorización expresa del 13/08/2026, esta adenda y sus dos cambios de producto se prepararon para commit y push en la rama de producción existente; no se hizo despliegue manual en Render ni cambio de rama.
+
+## 23. Adenda — portadas de Prophetia House y Studio (2026-08-13)
+
+La causa de que las nuevas imágenes no aparecieran en Render era que `portadahouse1.png`, `portadahouse2.png` y `studio1.png` existían solo en el working tree y todavía no formaban parte de Git. `about.html` ya contenía las dos rutas nuevas y se preservó ese cambio del usuario.
+
+Se actualizaron los atributos intrínsecos y los textos alternativos de las dos figuras de `/about`: Silent usa `portadahouse1.png` (1122×1402) y Street usa `portadahouse2.png` (1122×1402). En `/studio`, el bloque `#destilar` usa `studio1.png` (1448×1086) y el pie editorial `Estudio de síntesis / Dirección Prophetia`. No fue necesario modificar CSS ni JavaScript.
+
+Se validaron `/about` y `/studio#destilar` en navegador real a 390×844, 820×1180 y 1366×768. Las imágenes cargaron con sus dimensiones naturales, `object-fit: cover`, sin recursos rotos ni overflow horizontal. El checkout continuó bloqueado: cuatro endpoints protegidos, cero pedidos y cero tarifas activas. No se hizo despliegue manual en Render ni cambio de rama.
