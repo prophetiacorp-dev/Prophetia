@@ -1181,7 +1181,8 @@ function imgOfColor(color){
 
   const currentVersion = getActiveVersion();
   if (currentVersion) {
-    return currentVersion.cover || currentVersion.images?.[0] || FALLBACK_IMG;
+    const versionImage = currentVersion.cover || currentVersion.images?.[0];
+    if (versionImage) return versionImage;
   }
 
   const v = getActiveVariants().find(x => String(x.color) === String(color));

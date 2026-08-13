@@ -1244,8 +1244,10 @@
         "images": [
           "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigetras.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarback1.png",
           "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
           "/assets/img/camisetas-punto/Hombre/guitar/GUITARTRAS.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitartrasblue.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitetras.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitarwhitefront.png",
@@ -1272,14 +1274,16 @@
           "cover": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
           "images": [
             "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
-            "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigetras.png"
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigetras.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarback1.png"
           ]
         },
         "blue-ice": {
           "cover": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
           "images": [
             "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
-            "/assets/img/camisetas-punto/Hombre/guitar/GUITARTRAS.png"
+            "/assets/img/camisetas-punto/Hombre/guitar/GUITARTRAS.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitartrasblue.png"
           ]
         },
         "off-white": {
@@ -1769,8 +1773,8 @@
         "images": [
           "/assets/img/hoodies/hombre/likegods/likegods1.png",
           "/assets/img/hoodies/hombre/likegods/likegods2.png",
-          "/assets/img/hoodies/hombre/likegods/likegods3.png",
-          "/assets/img/hoodies/hombre/likegods/likegods4.png"
+          "/assets/img/hoodies/hombre/likegods/likegodsfront.png",
+          "/assets/img/hoodies/hombre/likegods/likegodsback.png"
         ]
       },
       "mujer": {
@@ -1876,15 +1880,14 @@
     "short": "Sudadera Atlas: mito, peso y calma editorial.",
     "media": {
       "hombre": {
-        "cover": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png",
+        "cover": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png",
         "images": [
-          "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png",
-          "/assets/img/sudaderas-punto/Hombre/atlas/atlas2.png",
-          "/assets/img/sudaderas-punto/Hombre/atlas/atlas3.png",
-          "/assets/img/sudaderas-punto/Hombre/atlas/atlas4.png",
-          "/assets/img/sudaderas-punto/Hombre/atlas/atlas5.png",
-          "/assets/img/sudaderas-punto/Hombre/atlas/atlas6.png",
-          "/assets/img/sudaderas-punto/Hombre/atlas/atlas7.png"
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionpalabra.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlasback.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlasversionlogo.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlasversionletra.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlasbackk.png"
         ]
       },
       "mujer": {
@@ -1950,35 +1953,35 @@
         "color": "white",
         "size": "S",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png"
       },
       {
         "sku": "atlas-hoodie_white_M",
         "color": "white",
         "size": "M",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png"
       },
       {
         "sku": "atlas-hoodie_white_L",
         "color": "white",
         "size": "L",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png"
       },
       {
         "sku": "atlas-hoodie_white_XL",
         "color": "white",
         "size": "XL",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png"
       },
       {
         "sku": "atlas-hoodie_white_XXL",
         "color": "white",
         "size": "XXL",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png"
       }
     ]
   },
@@ -2012,8 +2015,8 @@
         "images": [
           "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png",
           "/assets/img/sudaderas-punto/Hombre/forgave/forgave2.png",
-          "/assets/img/sudaderas-punto/Hombre/forgave/forgave3.png",
-          "/assets/img/sudaderas-punto/Hombre/forgave/forgave4.png"
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgavefront.png",
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgaveback.png"
         ]
       },
       "mujer": {
@@ -2138,7 +2141,10 @@
         "images": [
           "/assets/img/sudaderas-punto/Hombre/letter/letter1.png",
           "/assets/img/sudaderas-punto/Hombre/letter/letter2.png",
-          "/assets/img/sudaderas-punto/Hombre/letter/letter3.png"
+          "/assets/img/sudaderas-punto/Hombre/letter/letterfront.png",
+          "/assets/img/sudaderas-punto/Hombre/letter/letterback.png",
+          "/assets/img/sudaderas-punto/Hombre/letter/letterfront2.png",
+          "/assets/img/sudaderas-punto/Hombre/letter/letterback2.png"
         ]
       },
       "mujer": {
@@ -2585,7 +2591,9 @@
         "cover": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
         "images": [
           "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
-          "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png"
+          "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png",
+          "/assets/img/streetwear/Hombre/brokengods/boxyfront.png",
+          "/assets/img/streetwear/Hombre/brokengods/boxyback.png"
         ]
       },
       "mujer": {
@@ -2602,7 +2610,9 @@
           "cover": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
           "images": [
             "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
-            "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png"
+            "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png",
+            "/assets/img/streetwear/Hombre/brokengods/boxyfront.png",
+            "/assets/img/streetwear/Hombre/brokengods/boxyback.png"
           ]
         }
       },
