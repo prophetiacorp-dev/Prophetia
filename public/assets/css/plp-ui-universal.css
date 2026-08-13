@@ -508,6 +508,89 @@ html:has(#ppTopNotice[aria-hidden="false"]) body:is(
   }
 }
 
+/* =========================================================
+   PLP product media pair
+   Grid-only front/reverse presentation inspired by luxury PLPs.
+   The complete editorial gallery remains available on the PDP.
+   ========================================================= */
+body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media {
+  position: relative !important;
+  isolation: isolate;
+}
+
+body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media > img.card-media__image {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  transition: opacity 240ms ease, transform .6s cubic-bezier(.25,.15,.25,1) !important;
+}
+
+body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media > img.card-media__image--front {
+  z-index: 1;
+  opacity: 1 !important;
+}
+
+body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media > img.card-media__image--reverse {
+  z-index: 2;
+  opacity: 0 !important;
+}
+
+body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse.is-showing-reverse .card-media > img.card-media__image--front {
+  opacity: 0 !important;
+}
+
+body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse.is-showing-reverse .card-media > img.card-media__image--reverse {
+  opacity: 1 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse:hover .card-media > img.card-media__image--front,
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media:focus-visible > img.card-media__image--front {
+    opacity: 0 !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse:hover .card-media > img.card-media__image--reverse,
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media:focus-visible > img.card-media__image--reverse {
+    opacity: 1 !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .plp-media > :is(.nav.prev, .nav.next) {
+    display: none !important;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .plp-media > :is(.nav.prev, .nav.next) {
+    position: absolute;
+    top: 50%;
+    z-index: 30;
+    display: grid !important;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    transform: translateY(-50%);
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse:not(.is-showing-reverse) .plp-media > .nav.next,
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse.is-showing-reverse .plp-media > .nav.prev {
+    opacity: .92 !important;
+    pointer-events: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media > img.card-media__image {
+    transition: none !important;
+  }
+}
+
 @media (max-width: 380px) {
   body:is(
     .men-page,

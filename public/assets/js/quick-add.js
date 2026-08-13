@@ -492,39 +492,64 @@ const COLOR_META = {
     return clean || "hombre";
   }
 
-  function getColorMediaImage(
+  function getColorMediaBucket(
     product,
     color
   ) {
     const key = normalize(color);
     const selectedVersion =
       getSelectedVersion(product);
-    const mediaByColor =
-      selectedVersion?.mediaByColor ||
-      product?.mediaByColor;
+    const mediaSources = [
+      selectedVersion?.mediaByColor,
+      product?.mediaByColor
+    ].filter((source) => {
+      return (
+        source &&
+        typeof source === "object"
+      );
+    });
 
     if (
       !key ||
-      !mediaByColor ||
-      typeof mediaByColor !== "object"
+      !mediaSources.length
     ) {
-      return "";
+      return null;
     }
 
     const gender = getPageGender();
-    const genderMap =
-      mediaByColor[gender] ||
-      mediaByColor.unisex ||
-      null;
 
-    const bucket =
-      (genderMap && genderMap[key]) ||
-      mediaByColor[key] ||
-      null;
+    for (const mediaByColor of mediaSources) {
+      const genderMap =
+        mediaByColor[gender] ||
+        mediaByColor.unisex ||
+        null;
+
+      const bucket =
+        (genderMap && genderMap[key]) ||
+        mediaByColor[key] ||
+        null;
+
+      if (bucket) return bucket;
+    }
+
+    return null;
+  }
+
+  function getColorMediaImage(
+    product,
+    color
+  ) {
+    const bucket = getColorMediaBucket(
+      product,
+      color
+    );
 
     if (!bucket) return "";
 
     return (
+      (Array.isArray(bucket.listingImages)
+        ? bucket.listingImages[0]
+        : "") ||
       bucket.cover ||
       (Array.isArray(bucket.images)
         ? bucket.images[0]
@@ -1071,7 +1096,10 @@ const COLOR_META = {
     color
   ) {
     const image = card?.querySelector(
-      ".card-media img"
+      ".card-media__image--front, .card-media img"
+    );
+    const reverseImage = card?.querySelector(
+      ".card-media__image--reverse"
     );
 
     if (!image) return;
@@ -1090,7 +1118,22 @@ const COLOR_META = {
         }
       );
 
+    const colorMedia =
+      getColorMediaBucket(
+        product,
+        normalizedColor
+      ) ||
+      product?._media ||
+      null;
+    const colorImages = Array.isArray(
+      colorMedia?.listingImages
+    ) && colorMedia.listingImages.length
+      ? colorMedia.listingImages.filter(Boolean)
+      : Array.isArray(colorMedia?.images)
+        ? colorMedia.images.filter(Boolean)
+        : [];
     const nextImage =
+      colorImages[0] ||
       getColorMediaImage(
         product,
         normalizedColor
@@ -1104,8 +1147,43 @@ const COLOR_META = {
 
     image.src = nextImage;
 
+    if (reverseImage) {
+      const candidates = colorImages.filter(
+        (source) => source !== nextImage
+      );
+      const nextReverse =
+        candidates.find((source) =>
+          /back|tras|rear|reverse|verso|dorso/i.test(
+            String(source).split("?")[0]
+          )
+        ) || candidates[0] || "";
+
+      if (nextReverse) {
+        reverseImage.src = nextReverse;
+        reverseImage.hidden = false;
+        card.dataset.images = [
+          nextImage,
+          nextReverse
+        ].join("|");
+        card.classList.add(
+          "has-carousel",
+          "has-product-reverse"
+        );
+      } else {
+        reverseImage.hidden = true;
+        card.dataset.images = nextImage;
+        card.classList.remove(
+          "has-carousel",
+          "has-product-reverse"
+        );
+      }
+    }
+
     // Reinicia el carrusel al cambiar color.
     card.dataset.imgIndex = "0";
+    card.classList.remove(
+      "is-showing-reverse"
+    );
   }
 
   function createSizeButton(variant) {

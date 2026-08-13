@@ -585,6 +585,26 @@ function resolveMedia(p){
       return (Array.isArray(arr) && arr.length) ? arr : [imgOf(p)];
     }
 
+    function gridImagesOf(p){
+      const listing = (p._media && Array.isArray(p._media.listingImages))
+        ? [...new Set(p._media.listingImages.filter(Boolean))]
+        : [];
+
+      if (listing.length) return listing.slice(0, 2);
+
+      const primary = imgOf(p);
+      const gallery = [...new Set([primary, ...imagesOf(p)].filter(Boolean))];
+
+      if (gallery.length < 2) return gallery;
+
+      const secondaryCandidates = gallery.filter(src => src !== primary);
+      const reverse = secondaryCandidates.find(src =>
+        /back|tras|rear|reverse|verso|dorso/i.test(String(src).split('?')[0])
+      );
+
+      return [primary, reverse || secondaryCandidates[0]].filter(Boolean);
+    }
+
     async function fetchCatalog(){
     // 1) Intentar Firestore si está habilitado en la página
     if (grid.dataset.source === 'firestore') {
@@ -726,12 +746,12 @@ function resolveMedia(p){
   if (out) badge = `<span class="card-badge is-out">OUT OF STOCK</span>`;
   else if (p.isNew) badge = `<span class="card-badge is-new">NEW</span>`;
 
-  const imgs = imagesOf(p);
+  const imgs = gridImagesOf(p);
   const dataImages = imgs.join('|');
-  const hasNav = imgs.length > 1;
+  const hasReverse = imgs.length > 1;
 
   return `
-    <article class="card ${hasNav ? 'has-carousel' : ''}"
+    <article class="card ${hasReverse ? 'has-carousel has-product-reverse' : ''}"
             data-id="${p._id}"
             data-images="${dataImages}"
             data-img-index="0"
@@ -742,13 +762,14 @@ function resolveMedia(p){
 
       <div class="plp-media">
         <a class="card-media" href="${url}" aria-label="${p.title || 'Producto Prophetia'}" data-id="${p._id}">
-          <img loading="lazy" src="${imgs[0]}" alt="${p.title || 'Producto Prophetia'}">
+          <img class="card-media__image card-media__image--front" loading="lazy" src="${imgs[0]}" alt="${p.title || 'Producto Prophetia'}">
+          ${hasReverse ? `<img class="card-media__image card-media__image--reverse" loading="lazy" src="${imgs[1]}" alt="" aria-hidden="true">` : ''}
           <div class="card-badges">${badge}</div>
         </a>
 
-        ${hasNav ? `
-          <button class="nav prev" type="button" aria-label="Imagen anterior"></button>
-          <button class="nav next" type="button" aria-label="Imagen siguiente"></button>
+        ${hasReverse ? `
+          <button class="nav prev" type="button" aria-label="Mostrar vista frontal"></button>
+          <button class="nav next" type="button" aria-label="Mostrar vista trasera"></button>
         ` : ''}
       </div>
 
@@ -876,6 +897,12 @@ window.ppPLP.getProduct = (productId) => {
     const safeIndex = ((nextIndex % len) + len) % len;
 
     card.dataset.imgIndex = String(safeIndex);
+
+    if (card.classList.contains('has-product-reverse')) {
+      card.classList.toggle('is-showing-reverse', safeIndex === 1);
+      return;
+    }
+
     img.src = images[safeIndex];
   };
 

@@ -1635,6 +1635,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png",
+        "listingImages": [
+          "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png",
+          "/assets/img/camisetas-punto/Hombre/mascaras/mascarasback.png"
+        ],
         "images": [
           "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png",
           "/assets/img/camisetas-punto/Hombre/mascaras/mascarasback.png",
@@ -1771,6 +1775,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/hoodies/hombre/likegods/likegods1.png",
+        "listingImages": [
+          "/assets/img/hoodies/hombre/likegods/likegodsfront.png",
+          "/assets/img/hoodies/hombre/likegods/likegodsback.png"
+        ],
         "images": [
           "/assets/img/hoodies/hombre/likegods/likegods1.png",
           "/assets/img/hoodies/hombre/likegods/likegods2.png",
@@ -1780,6 +1788,10 @@
       },
       "mujer": {
         "cover": "/assets/img/hoodies/mujer/likegods/likemujer1.png",
+        "listingImages": [
+          "/assets/img/hoodies/mujer/likegods/likemujer2.png",
+          "/assets/img/hoodies/mujer/likegods/likemujer3.png"
+        ],
         "images": [
           "/assets/img/hoodies/mujer/likegods/likemujer1.png",
           "/assets/img/hoodies/mujer/likegods/likemujer2.png",
@@ -1882,6 +1894,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png",
+        "listingImages": [
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlasversionlogo.png",
+          "/assets/img/sudaderas-punto/Hombre/atlas/atlasbackk.png"
+        ],
         "images": [
           "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionlogo.png",
           "/assets/img/sudaderas-punto/Hombre/atlas/atlas1versionpalabra.png",
@@ -1893,6 +1909,10 @@
       },
       "mujer": {
         "cover": "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
+        "listingImages": [
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas2-mujer.png"
+        ],
         "images": [
           "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
           "/assets/img/sudaderas-punto/Mujer/atlas/atlas2-mujer.png",
@@ -2013,6 +2033,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2",
+        "listingImages": [
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgavefront.png",
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgaveback.png"
+        ],
         "images": [
           "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2",
           "/assets/img/sudaderas-punto/Hombre/forgave/forgave2.png?v=20260813-2",
@@ -2139,6 +2163,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2",
+        "listingImages": [
+          "/assets/img/sudaderas-punto/Hombre/letter/letterfront2.png",
+          "/assets/img/sudaderas-punto/Hombre/letter/letterback2.png"
+        ],
         "images": [
           "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2",
           "/assets/img/sudaderas-punto/Hombre/letter/letter2.png?v=20260813-2",
@@ -2255,6 +2283,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+        "listingImages": [
+          "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+          "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png"
+        ],
         "images": [
           "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
           "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png",
@@ -2276,6 +2308,10 @@
       "hombre": {
         "white": {
           "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+          "listingImages": [
+            "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+            "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png"
+          ],
           "images": [
             "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
             "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png",
@@ -2598,6 +2634,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
+        "listingImages": [
+          "/assets/img/streetwear/Hombre/brokengods/boxyfront.png",
+          "/assets/img/streetwear/Hombre/brokengods/boxyback.png"
+        ],
         "images": [
           "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
           "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png",
@@ -2617,6 +2657,10 @@
       "hombre": {
         "white": {
           "cover": "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
+          "listingImages": [
+            "/assets/img/streetwear/Hombre/brokengods/boxyfront.png",
+            "/assets/img/streetwear/Hombre/brokengods/boxyback.png"
+          ],
           "images": [
             "/assets/img/streetwear/Hombre/brokengods/brokengodsboxyfront.png",
             "/assets/img/streetwear/Hombre/brokengods/brokengodsboxytras.png",
@@ -2844,6 +2888,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/streetwear/Hombre/after/driftfront.png",
+        "listingImages": [
+          "/assets/img/streetwear/Hombre/after/driftfront.png",
+          "/assets/img/streetwear/Hombre/after/driftback.png"
+        ],
         "images": [
           "/assets/img/streetwear/Hombre/after/driftfront.png",
           "/assets/img/streetwear/Hombre/after/driftback.png",
@@ -2853,6 +2901,10 @@
       },
       "mujer": {
         "cover": "/assets/img/streetwear/Hombre/after/driftfront.png",
+        "listingImages": [
+          "/assets/img/streetwear/Hombre/after/driftfront.png",
+          "/assets/img/streetwear/Hombre/after/driftback.png"
+        ],
         "images": [
           "/assets/img/streetwear/Hombre/after/driftfront.png",
           "/assets/img/streetwear/Hombre/after/driftback.png",
@@ -2976,6 +3028,10 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/streetwear/Hombre/after/breakfront.png",
+        "listingImages": [
+          "/assets/img/streetwear/Hombre/after/breakfront.png",
+          "/assets/img/streetwear/Hombre/after/breakback.png"
+        ],
         "images": [
           "/assets/img/streetwear/Hombre/after/breakfront.png",
           "/assets/img/streetwear/Hombre/after/breakback.png",
@@ -2985,6 +3041,10 @@
       },
       "mujer": {
         "cover": "/assets/img/streetwear/Hombre/after/breakfront.png",
+        "listingImages": [
+          "/assets/img/streetwear/Hombre/after/breakfront.png",
+          "/assets/img/streetwear/Hombre/after/breakback.png"
+        ],
         "images": [
           "/assets/img/streetwear/Hombre/after/breakfront.png",
           "/assets/img/streetwear/Hombre/after/breakback.png",
