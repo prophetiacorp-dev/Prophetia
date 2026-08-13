@@ -2011,10 +2011,10 @@
     "short": "Mantra urbano: perdón propio, presencia y lujo silencioso.",
     "media": {
       "hombre": {
-        "cover": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png",
+        "cover": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2",
         "images": [
-          "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png",
-          "/assets/img/sudaderas-punto/Hombre/forgave/forgave2.png",
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2",
+          "/assets/img/sudaderas-punto/Hombre/forgave/forgave2.png?v=20260813-2",
           "/assets/img/sudaderas-punto/Hombre/forgave/forgavefront.png",
           "/assets/img/sudaderas-punto/Hombre/forgave/forgaveback.png"
         ]
@@ -2079,35 +2079,35 @@
         "color": "white",
         "size": "S",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2"
       },
       {
         "sku": "letter-for-self_white_M",
         "color": "white",
         "size": "M",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2"
       },
       {
         "sku": "letter-for-self_white_L",
         "color": "white",
         "size": "L",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2"
       },
       {
         "sku": "letter-for-self_white_XL",
         "color": "white",
         "size": "XL",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2"
       },
       {
         "sku": "letter-for-self_white_XXL",
         "color": "white",
         "size": "XXL",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/forgave/forgave1.png?v=20260813-2"
       }
     ]
   },
@@ -2137,10 +2137,10 @@
     "short": "Texto editorial, calma nocturna, lujo silencioso.",
     "media": {
       "hombre": {
-        "cover": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png",
+        "cover": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2",
         "images": [
-          "/assets/img/sudaderas-punto/Hombre/letter/letter1.png",
-          "/assets/img/sudaderas-punto/Hombre/letter/letter2.png",
+          "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2",
+          "/assets/img/sudaderas-punto/Hombre/letter/letter2.png?v=20260813-2",
           "/assets/img/sudaderas-punto/Hombre/letter/letterfront.png",
           "/assets/img/sudaderas-punto/Hombre/letter/letterback.png",
           "/assets/img/sudaderas-punto/Hombre/letter/letterfront2.png",
@@ -2208,35 +2208,35 @@
         "color": "navy",
         "size": "S",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2"
       },
       {
         "sku": "letter_navy_M",
         "color": "navy",
         "size": "M",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2"
       },
       {
         "sku": "letter_navy_L",
         "color": "navy",
         "size": "L",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2"
       },
       {
         "sku": "letter_navy_XL",
         "color": "navy",
         "size": "XL",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2"
       },
       {
         "sku": "letter_navy_XXL",
         "color": "navy",
         "size": "XXL",
         "stock": 0,
-        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png"
+        "img": "/assets/img/sudaderas-punto/Hombre/letter/letter1.png?v=20260813-2"
       }
     ]
   },

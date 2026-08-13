@@ -616,6 +616,9 @@ const initialVersionColor = colorKey(prod.color || prod.colors?.[0] || '');
 const initialVersionGenderImages = imagesFromMediaBucket(
   mediaBucketOfColor(initialVersion?.mediaByColor, initialVersionColor)
 );
+const initialProductColorImages = imagesFromMediaBucket(
+  mediaBucketOfColor(prod.mediaByColor, initialVersionColor)
+);
 const initialVersionImages = initialVersionGenderImages.length
   ? initialVersionGenderImages
   : initialVersion
@@ -627,6 +630,8 @@ const initialVersionImages = initialVersionGenderImages.length
 
 let baseImages = initialVersionImages.length
   ? initialVersionImages
+  : initialProductColorImages.length
+    ? initialProductColorImages
   : dedupe(
       Array.isArray(media?.images) && media.images.length
         ? media.images
@@ -1661,6 +1666,8 @@ if (urlColor && colors.includes(urlColor)) {
   saveSel();
 } else if (prev?.color && colors.includes(prev.color)) {
   state.color = prev.color;
+} else if (colors[0]) {
+  state.color = colors[0];
 }
 if (prev?.size && state.color && sizesForColor(state.color).includes(prev.size)) {
   state.size = prev.size;
