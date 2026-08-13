@@ -135,3 +135,29 @@ La discontinuidad de `/streetwear-mujer` entre 1365 y 1366 quedó corregida en l
 La auditoría estática también deja dos residuos de mantenimiento: `camisetas-punto-hombre.html` carga directamente `plp-firestore.js` aunque su grid usa JSON —el módulo solo exporta y no inicia otro render—, y `script.js` conserva un bloque Tribe potencialmente redundante con `popup.js`. En la carga canónica no hay doble listener porque el partial todavía no existe cuando pasa `script.js`, pero el contrato depende de ese orden de inyección. Wishlist conserva dos recorridos de sincronización visual tras eventos de autenticación; son idempotentes y no duplican la mutación de añadir/eliminar.
 
 No se hizo commit, push, despliegue ni cambio de rama. El checkout continúa bloqueado.
+
+## 22. Adenda — visor de producto móvil/tablet y limpieza de proveedor (2026-08-13)
+
+### Referencias y causa raíz
+
+Se compararon las capturas aportadas de Loewe, Zara y Lacoste con los visores reales de Lacoste y Bottega Veneta a 390×844 y Lacoste a 768×1024. El patrón común es un visor a pantalla completa con imagen protagonista, salida persistente en la parte superior y navegación secundaria que no compite con la prenda.
+
+En Prophetia el botón `#pdpZoomClose` ya existía y su JavaScript era correcto. El fallo procedía de la cascada responsive de `pdp.css`: `.lb-figure` declaraba `height: 100vh` o `100dvh` y añadía entre 172 y 174 px de padding con el modelo de caja `content-box`. El flex centraba ese bloque sobredimensionado y desplazaba la X a `y=-73 px` en 390×844. No se duplicó el lightbox ni su controlador.
+
+### Archivos y solución
+
+- `public/assets/css/pdp.css`: el visor hasta 860 px usa un contenedor `border-box` de `100dvh`, respeta safe areas y mantiene X, flechas y miniaturas dentro del viewport. La superficie pasa a un fondo neutro Prophetia, los controles alcanzan un área táctil mínima de 44×44 px y la tira de miniaturas conserva desplazamiento táctil sin mostrar scrollbar. Se modificaron y consolidaron los selectores existentes de `#pdpZoom`; no se añadió otro componente ni se eliminó ningún selector.
+- `public/assets/data/catalog.json`: la descripción pública `Stanley/Stella Creator 2.0` se sustituyó en la fuente por `Corte clásico de líneas limpias`. La auditoría posterior encontró cero apariciones de `Stanley` o `Stella` en HTML, CSS, JavaScript y datos públicos.
+- JavaScript modificado: ninguno; cierre por X, Escape, backdrop, navegación y restauración de foco ya estaban correctamente implementados.
+
+### Validación real
+
+La X quedó visible y dentro de límites en 320×568, 360×800, 390×844, 430×932, 600×960, 768×1024, 820×1180, 860×1180, 861×1180, 912×1368, 1024×1366 y 1366×768. El barrido 860/861 confirmó que ambos lados del breakpoint conservan la salida. No hubo overflow horizontal entre 320 y 1024.
+
+Se probaron `/producto?id=atlas-seal`, `/producto?id=calyra-ego` con 10 imágenes y `/producto?id=atlas-hoodie` con 5 imágenes. En todas se abrió el visor desde la primera imagen y la X permaneció accesible; la galería larga desplazó sus miniaturas horizontalmente sin scrollbar visible. Siguiente cambió la imagen y activó la miniatura `1`; X y Escape cerraron el diálogo, eliminaron el bloqueo modal y devolvieron el foco a la imagen exacta que lo abrió. La consola local registró cero errores.
+
+Validaciones superadas: `node --check public/assets/js/product-page.js`, parseo de `catalog.json`, `git diff --check`, `validate-mobile-parity.js` (47 documentos, 18 rutas, 23 resoluciones obligatorias y 28 anchuras intermedias), `validate-commerce.js` (14 productos, 6 zonas y 0 tarifas activas) y `npm.cmd run check:technical` (425 archivos públicos y 146 SKU).
+
+La cascada visual nueva termina en 860 px, por lo que el visor de escritorio mantiene sus reglas previas; a 1366×768 la X siguió visible y dentro del viewport. Riesgo residual: las safe areas se validaron mediante las variables del navegador responsive, no en un dispositivo iOS físico con notch. Las comprobaciones autenticadas de Wishlist registradas en la sección anterior continúan pendientes y no forman parte de esta corrección.
+
+El checkout continúa bloqueado, con cero tarifas activas. Tras la autorización expresa del 13/08/2026, esta adenda y sus dos cambios de producto se prepararon para commit y push en la rama de producción existente; no se hizo despliegue manual en Render ni cambio de rama.
