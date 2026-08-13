@@ -1634,11 +1634,12 @@
     "short": "Iconografía mediterránea con contraste gráfico y textura editorial.",
     "media": {
       "hombre": {
-        "cover": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png",
+        "cover": "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png",
         "images": [
+          "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png",
+          "/assets/img/camisetas-punto/Hombre/mascaras/mascarasback.png",
           "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png",
-          "/assets/img/camisetas-punto/Hombre/mascaras/mask2.png",
-          "/assets/img/camisetas-punto/Hombre/mascaras/mask3.png"
+          "/assets/img/camisetas-punto/Hombre/mascaras/mask2.png"
         ]
       }
     },
@@ -1694,35 +1695,35 @@
         "color": "orange",
         "size": "S",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_M",
         "color": "orange",
         "size": "M",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_L",
         "color": "orange",
         "size": "L",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_XL",
         "color": "orange",
         "size": "XL",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png"
       },
       {
         "sku": "mascaras-del-mediterraneo_orange_XXL",
         "color": "orange",
         "size": "XXL",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mask1.png"
+        "img": "/assets/img/camisetas-punto/Hombre/mascaras/mascarafront.png"
       }
     ]
   },
@@ -2253,8 +2254,12 @@
     "price": 42,
     "media": {
       "hombre": {
-        "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
+        "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
         "images": [
+          "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+          "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png",
+          "/assets/img/camisetas-punto/Hombre/gaia/gaiafront2.png",
+          "/assets/img/camisetas-punto/Hombre/gaia/gaiaback2.png",
           "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
           "/assets/img/camisetas-punto/Hombre/gaia/gaia2-blanco.png"
         ]
@@ -2270,8 +2275,12 @@
     "mediaByColor": {
       "hombre": {
         "white": {
-          "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
+          "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
           "images": [
+            "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+            "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png",
+            "/assets/img/camisetas-punto/Hombre/gaia/gaiafront2.png",
+            "/assets/img/camisetas-punto/Hombre/gaia/gaiaback2.png",
             "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png",
             "/assets/img/camisetas-punto/Hombre/gaia/gaia2-blanco.png"
           ]
@@ -2351,28 +2360,28 @@
         "color": "white",
         "size": "S",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png"
       },
       {
         "sku": "gaia-pulse_white_M",
         "color": "white",
         "size": "M",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png"
       },
       {
         "sku": "gaia-pulse_white_L",
         "color": "white",
         "size": "L",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png"
       },
       {
         "sku": "gaia-pulse_white_XL",
         "color": "white",
         "size": "XL",
         "stock": 0,
-        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaia1-blanco.png"
+        "img": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png"
       }
     ]
   },
@@ -2834,15 +2843,19 @@
     "long": "Freestyler Drift by Prophetia pertenece al universo AfterHour: una pieza nocturna creada para cuando el plan cambia de sitio, el club se cierra y la carretera empieza a hablar. Drift, silencio, velocidad contenida y presencia urbana.",
     "media": {
       "hombre": {
-        "cover": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
+        "cover": "/assets/img/streetwear/Hombre/after/driftfront.png",
         "images": [
+          "/assets/img/streetwear/Hombre/after/driftfront.png",
+          "/assets/img/streetwear/Hombre/after/driftback.png",
           "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
           "/assets/img/streetwear/Hombre/after/freestyler-drift-trasera.png"
         ]
       },
       "mujer": {
-        "cover": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
+        "cover": "/assets/img/streetwear/Hombre/after/driftfront.png",
         "images": [
+          "/assets/img/streetwear/Hombre/after/driftfront.png",
+          "/assets/img/streetwear/Hombre/after/driftback.png",
           "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
           "/assets/img/streetwear/Hombre/after/freestyler-drift-trasera.png"
         ]
@@ -2899,35 +2912,35 @@
         "color": "black",
         "size": "S",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+        "img": "/assets/img/streetwear/Hombre/after/driftfront.png"
       },
       {
         "sku": "freestyler-drift_black_M",
         "color": "black",
         "size": "M",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+        "img": "/assets/img/streetwear/Hombre/after/driftfront.png"
       },
       {
         "sku": "freestyler-drift_black_L",
         "color": "black",
         "size": "L",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+        "img": "/assets/img/streetwear/Hombre/after/driftfront.png"
       },
       {
         "sku": "freestyler-drift_black_XL",
         "color": "black",
         "size": "XL",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+        "img": "/assets/img/streetwear/Hombre/after/driftfront.png"
       },
       {
         "sku": "freestyler-drift_black_XXL",
         "color": "black",
         "size": "XXL",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png"
+        "img": "/assets/img/streetwear/Hombre/after/driftfront.png"
       }
     ]
   },
@@ -2962,15 +2975,19 @@
     "long": "Break Negra by Prophetia pertenece al universo AfterHour: una pieza creada para noches largas, parkineo, segundos planes y música que no pide permiso. Inspirada en el breakbeat andaluz y en todos los sonidos que sostienen la fiesta: house, techno, reggaetón, hardstyle y cultura club.",
     "media": {
       "hombre": {
-        "cover": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
+        "cover": "/assets/img/streetwear/Hombre/after/breakfront.png",
         "images": [
+          "/assets/img/streetwear/Hombre/after/breakfront.png",
+          "/assets/img/streetwear/Hombre/after/breakback.png",
           "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
           "/assets/img/streetwear/Hombre/after/TRASERA-BREAK-NEGRO.png"
         ]
       },
       "mujer": {
-        "cover": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
+        "cover": "/assets/img/streetwear/Hombre/after/breakfront.png",
         "images": [
+          "/assets/img/streetwear/Hombre/after/breakfront.png",
+          "/assets/img/streetwear/Hombre/after/breakback.png",
           "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
           "/assets/img/streetwear/Hombre/after/TRASERA-BREAK-NEGRO.png"
         ]
@@ -3028,28 +3045,28 @@
         "color": "black",
         "size": "S",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+        "img": "/assets/img/streetwear/Hombre/after/breakfront.png"
       },
       {
         "sku": "break-negra_black_M",
         "color": "black",
         "size": "M",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+        "img": "/assets/img/streetwear/Hombre/after/breakfront.png"
       },
       {
         "sku": "break-negra_black_L",
         "color": "black",
         "size": "L",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+        "img": "/assets/img/streetwear/Hombre/after/breakfront.png"
       },
       {
         "sku": "break-negra_black_XL",
         "color": "black",
         "size": "XL",
         "stock": 0,
-        "img": "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png"
+        "img": "/assets/img/streetwear/Hombre/after/breakfront.png"
       }
     ]
   }
