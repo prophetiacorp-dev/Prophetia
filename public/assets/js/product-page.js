@@ -1190,13 +1190,17 @@ function imgOfColor(color){
     if (versionImage) return versionImage;
   }
 
+  const requestedColor = colorKey(color);
+  const defaultColor = colorKey(prod.color || prod.colors?.[0] || '');
+  if (requestedColor && requestedColor === defaultColor) {
+    const genderImage = media?.cover || media?.images?.[0] || baseImages[0];
+    if (genderImage) return genderImage;
+  }
+
   const v = getActiveVariants().find(x => String(x.color) === String(color));
   if (v?.img) return v.img;
 
-  const pref = (params.get('g') || params.get('gender') || localStorage.getItem('pp_gender') || 'hombre').toLowerCase();
-  const m = (prod.media && (prod.media[pref] || prod.media.hombre || prod.media.mujer)) || null;
-
-  return (m && (m.cover || (Array.isArray(m.images) && m.images[0]))) || baseImages[0] || FALLBACK_IMG;
+  return media?.cover || media?.images?.[0] || baseImages[0] || FALLBACK_IMG;
 }
 
 // Devuelve tallas disponibles para un color

@@ -43,3 +43,17 @@ El selector de la guía se renombró de forma coordinada a `fit-guide__preferenc
 - `git diff --check`: correcto; solo avisos informativos de normalización LF/CRLF.
 
 No se realizó despliegue, commit ni push en esta tarea.
+
+## Corrección posterior — imagen principal de Break Mujer
+
+La galería femenina estaba configurada correctamente, pero la restauración automática del color negro ejecutaba después `imgOfColor()`. Al no existir un bloque `mediaByColor` para esa pieza, la función priorizaba el `img` genérico del SKU, compartido y apuntando a Hombre, sobre el medio específico del género activo. Esto sustituía solo la imagen principal y dejaba las miniaturas femeninas, produciendo la inconsistencia visible.
+
+La prioridad se corrigió en la capa compartida del PDP: para el color principal se conserva primero el medio del género ya normalizado y las variantes genéricas quedan como fallback para colores sin medios específicos. `producto.html` incorpora una versión nueva de `product-page.js` para impedir que producción reutilice el script anterior desde caché.
+
+Validación posterior:
+
+- `break-negra&g=mujer` y `break-negra&g=women`: cuatro imágenes femeninas y frontal femenino como principal.
+- `break-negra&g=hombre`: cuatro imágenes masculinas y frontal masculino como principal.
+- Freestyler Drift Mujer/Hombre: medios correctos para cada género.
+- Guitar Mujer: medios por color conservados.
+- Cero imágenes rotas y cero errores o avisos de consola.
