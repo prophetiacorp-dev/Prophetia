@@ -530,6 +530,10 @@ body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media 
   transition: opacity 240ms ease, transform .6s cubic-bezier(.25,.15,.25,1) !important;
 }
 
+body:is(.men-page, .women-page) #plp-grid .card.has-contained-listing-media .card-media > img.card-media__image {
+  object-fit: contain !important;
+}
+
 body:is(.men-page, .women-page) #plp-grid .card.has-product-reverse .card-media > img.card-media__image--front {
   z-index: 1;
   opacity: 1 !important;

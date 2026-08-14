@@ -749,9 +749,10 @@ function resolveMedia(p){
   const imgs = gridImagesOf(p);
   const dataImages = imgs.join('|');
   const hasReverse = imgs.length > 1;
+  const containsListingMedia = norm(p._media?.listingFit) === 'contain';
 
   return `
-    <article class="card ${hasReverse ? 'has-carousel has-product-reverse' : ''}"
+    <article class="card ${hasReverse ? 'has-carousel has-product-reverse' : ''}${containsListingMedia ? ' has-contained-listing-media' : ''}"
             data-id="${p._id}"
             data-images="${dataImages}"
             data-img-index="0"

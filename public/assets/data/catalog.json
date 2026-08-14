@@ -1241,12 +1241,18 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
+        "listingImages": [
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarfront1.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarback1.png"
+        ],
         "images": [
           "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigetras.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarfront1.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitarback1.png",
           "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
           "/assets/img/camisetas-punto/Hombre/guitar/GUITARTRAS.png",
+          "/assets/img/camisetas-punto/Hombre/guitar/guitarfrontblueice1.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitartrasblue.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitefront.png",
           "/assets/img/camisetas-punto/Hombre/guitar/guitaroffwhitetras.png",
@@ -1256,11 +1262,19 @@
       },
       "mujer": {
         "cover": "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
+        "listingImages": [
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarfrontm.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarbackm.png"
+        ],
         "images": [
           "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
           "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigetras.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarfrontm.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarbackm.png",
           "/assets/img/camisetas-punto/Mujer/guitar/GUITARFRONT.png",
           "/assets/img/camisetas-punto/Mujer/guitar/GUITARTRAS.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarblueicefront.png",
+          "/assets/img/camisetas-punto/Mujer/guitar/guitarblueiceback.png",
           "/assets/img/camisetas-punto/Mujer/guitar/guitaroffwhitefront.png",
           "/assets/img/camisetas-punto/Mujer/guitar/guitaroffwhitetras.png",
           "/assets/img/camisetas-punto/Mujer/guitar/guitarwhitefront.png",
@@ -1272,17 +1286,27 @@
       "hombre": {
         "beige": {
           "cover": "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
+          "listingImages": [
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarfront1.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarback1.png"
+          ],
           "images": [
             "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigefront.png",
             "/assets/img/camisetas-punto/Hombre/guitar/guitarbeigetras.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarfront1.png",
             "/assets/img/camisetas-punto/Hombre/guitar/guitarback1.png"
           ]
         },
         "blue-ice": {
           "cover": "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
+          "listingImages": [
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarfrontblueice1.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitartrasblue.png"
+          ],
           "images": [
             "/assets/img/camisetas-punto/Hombre/guitar/GUITARFRONT.png",
             "/assets/img/camisetas-punto/Hombre/guitar/GUITARTRAS.png",
+            "/assets/img/camisetas-punto/Hombre/guitar/guitarfrontblueice1.png",
             "/assets/img/camisetas-punto/Hombre/guitar/guitartrasblue.png"
           ]
         },
@@ -1304,16 +1328,28 @@
       "mujer": {
         "beige": {
           "cover": "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
+          "listingImages": [
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarfrontm.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarbackm.png"
+          ],
           "images": [
             "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigefront.png",
-            "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigetras.png"
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarbeigetras.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarfrontm.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarbackm.png"
           ]
         },
         "blue-ice": {
           "cover": "/assets/img/camisetas-punto/Mujer/guitar/GUITARFRONT.png",
+          "listingImages": [
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarblueicefront.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarblueiceback.png"
+          ],
           "images": [
             "/assets/img/camisetas-punto/Mujer/guitar/GUITARFRONT.png",
-            "/assets/img/camisetas-punto/Mujer/guitar/GUITARTRAS.png"
+            "/assets/img/camisetas-punto/Mujer/guitar/GUITARTRAS.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarblueicefront.png",
+            "/assets/img/camisetas-punto/Mujer/guitar/guitarblueiceback.png"
           ]
         },
         "off-white": {
@@ -1787,16 +1823,16 @@
         ]
       },
       "mujer": {
-        "cover": "/assets/img/hoodies/mujer/likegods/likemujer1.png",
+        "cover": "/assets/img/hoodies/mujer/likegods/likegods1.png",
         "listingImages": [
-          "/assets/img/hoodies/mujer/likegods/likemujer2.png",
-          "/assets/img/hoodies/mujer/likegods/likemujer3.png"
+          "/assets/img/hoodies/mujer/likegods/likegodsfront.png",
+          "/assets/img/hoodies/mujer/likegods/likegodsback.png"
         ],
         "images": [
-          "/assets/img/hoodies/mujer/likegods/likemujer1.png",
-          "/assets/img/hoodies/mujer/likegods/likemujer2.png",
-          "/assets/img/hoodies/mujer/likegods/likemujer3.png",
-          "/assets/img/hoodies/mujer/likegods/likemujer4.png"
+          "/assets/img/hoodies/mujer/likegods/likegods1.png",
+          "/assets/img/hoodies/mujer/likegods/likegods2.png",
+          "/assets/img/hoodies/mujer/likegods/likegodsfront.png",
+          "/assets/img/hoodies/mujer/likegods/likegodsback.png"
         ]
       }
     },
@@ -2283,6 +2319,7 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+        "listingFit": "contain",
         "listingImages": [
           "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
           "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png"
@@ -2308,6 +2345,7 @@
       "hombre": {
         "white": {
           "cover": "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
+          "listingFit": "contain",
           "listingImages": [
             "/assets/img/camisetas-punto/Hombre/gaia/gaiafront.png",
             "/assets/img/camisetas-punto/Hombre/gaia/gaiaback.png"
@@ -2459,18 +2497,32 @@
           "hombre": {
             "white": {
               "cover": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+              "listingImages": [
+                "/assets/img/archive/summer/somewhere/Hombre/somewherefront.png",
+                "/assets/img/archive/summer/somewhere/Hombre/somewhereback.png"
+              ],
               "images": [
                 "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
-                "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png"
+                "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png",
+                "/assets/img/archive/summer/somewhere/Hombre/somewherefront.png",
+                "/assets/img/archive/summer/somewhere/Hombre/somewhereback.png",
+                "/assets/img/archive/summer/somewhere/Hombre/somewherefront1.png",
+                "/assets/img/archive/summer/somewhere/Hombre/somewhereback1.png"
               ]
             }
           },
           "mujer": {
             "white": {
               "cover": "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+              "listingImages": [
+                "/assets/img/archive/summer/somewhere/Mujer/somewherefront1.png",
+                "/assets/img/archive/summer/somewhere/Mujer/somewherebackm.png"
+              ],
               "images": [
                 "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
-                "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png"
+                "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png",
+                "/assets/img/archive/summer/somewhere/Mujer/somewherefront1.png",
+                "/assets/img/archive/summer/somewhere/Mujer/somewherebackm.png"
               ]
             }
           }
@@ -2489,16 +2541,30 @@
     "media": {
       "hombre": {
         "cover": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+        "listingImages": [
+          "/assets/img/archive/summer/somewhere/Hombre/somewherefront.png",
+          "/assets/img/archive/summer/somewhere/Hombre/somewhereback.png"
+        ],
         "images": [
           "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
-          "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png"
+          "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png",
+          "/assets/img/archive/summer/somewhere/Hombre/somewherefront.png",
+          "/assets/img/archive/summer/somewhere/Hombre/somewhereback.png",
+          "/assets/img/archive/summer/somewhere/Hombre/somewherefront1.png",
+          "/assets/img/archive/summer/somewhere/Hombre/somewhereback1.png"
         ]
       },
       "mujer": {
         "cover": "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+        "listingImages": [
+          "/assets/img/archive/summer/somewhere/Mujer/somewherefront1.png",
+          "/assets/img/archive/summer/somewhere/Mujer/somewherebackm.png"
+        ],
         "images": [
           "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
-          "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png"
+          "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png",
+          "/assets/img/archive/summer/somewhere/Mujer/somewherefront1.png",
+          "/assets/img/archive/summer/somewhere/Mujer/somewherebackm.png"
         ]
       }
     },
@@ -2506,18 +2572,32 @@
       "hombre": {
         "white": {
           "cover": "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
+          "listingImages": [
+            "/assets/img/archive/summer/somewhere/Hombre/somewherefront.png",
+            "/assets/img/archive/summer/somewhere/Hombre/somewhereback.png"
+          ],
           "images": [
             "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup01.png",
-            "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png"
+            "/assets/img/archive/summer/somewhere/Hombre/fullcolor-mockup2.png",
+            "/assets/img/archive/summer/somewhere/Hombre/somewherefront.png",
+            "/assets/img/archive/summer/somewhere/Hombre/somewhereback.png",
+            "/assets/img/archive/summer/somewhere/Hombre/somewherefront1.png",
+            "/assets/img/archive/summer/somewhere/Hombre/somewhereback1.png"
           ]
         }
       },
       "mujer": {
         "white": {
           "cover": "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
+          "listingImages": [
+            "/assets/img/archive/summer/somewhere/Mujer/somewherefront1.png",
+            "/assets/img/archive/summer/somewhere/Mujer/somewherebackm.png"
+          ],
           "images": [
             "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup01.png",
-            "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png"
+            "/assets/img/archive/summer/somewhere/Mujer/fullcolor-mockup2.png",
+            "/assets/img/archive/summer/somewhere/Mujer/somewherefront1.png",
+            "/assets/img/archive/summer/somewhere/Mujer/somewherebackm.png"
           ]
         }
       }
@@ -2647,9 +2727,15 @@
       },
       "mujer": {
         "cover": "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
+        "listingImages": [
+          "/assets/img/streetwear/Mujer/brokengods/brokengodsfront.png",
+          "/assets/img/streetwear/Mujer/brokengods/brokengodssback.png"
+        ],
         "images": [
           "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
-          "/assets/img/streetwear/Mujer/brokengods/brokengodsboxytras.png"
+          "/assets/img/streetwear/Mujer/brokengods/brokengodsboxytras.png",
+          "/assets/img/streetwear/Mujer/brokengods/brokengodsfront.png",
+          "/assets/img/streetwear/Mujer/brokengods/brokengodssback.png"
         ]
       }
     },
@@ -2672,9 +2758,15 @@
       "mujer": {
         "white": {
           "cover": "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
+          "listingImages": [
+            "/assets/img/streetwear/Mujer/brokengods/brokengodsfront.png",
+            "/assets/img/streetwear/Mujer/brokengods/brokengodssback.png"
+          ],
           "images": [
             "/assets/img/streetwear/Mujer/brokengods/brokengodsboxyfront.png",
-            "/assets/img/streetwear/Mujer/brokengods/brokengodsboxytras.png"
+            "/assets/img/streetwear/Mujer/brokengods/brokengodsboxytras.png",
+            "/assets/img/streetwear/Mujer/brokengods/brokengodsfront.png",
+            "/assets/img/streetwear/Mujer/brokengods/brokengodssback.png"
           ]
         }
       }
