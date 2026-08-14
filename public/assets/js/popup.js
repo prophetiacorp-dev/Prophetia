@@ -1378,9 +1378,6 @@ function closeModal() {
   if (!modal.classList.contains('is-open')) return;
   const revision = ++tribeTransitionRevision;
   cancelPendingTribePresentation();
-  const wasAutomaticallyOpened =
-    modal.dataset.openSource === 'auto';
-
   const wasShowingRegistrationForm =
     form &&
     form.hidden !== true &&
@@ -1422,9 +1419,7 @@ function closeModal() {
     hideReopenButton();
 
     void restoreReopenAfterClose({
-      showCoachmark:
-        wasAutomaticallyOpened &&
-        wasShowingRegistrationForm
+      showCoachmark: wasShowingRegistrationForm
     }).finally(() => {
       if (revision !== tribeTransitionRevision || modal.classList.contains('is-open')) return;
       const target = isVisibleTribeFocusTarget(focusTarget)

@@ -1944,17 +1944,18 @@
         ]
       },
       "mujer": {
-        "cover": "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
+        "cover": "/assets/img/sudaderas-punto/Mujer/atlas/atlas1versionlogo.png",
         "listingImages": [
-          "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
-          "/assets/img/sudaderas-punto/Mujer/atlas/atlas2-mujer.png"
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlasfrontlogo.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlasbackm.png"
         ],
         "images": [
-          "/assets/img/sudaderas-punto/Mujer/atlas/atlas1-mujer.png",
-          "/assets/img/sudaderas-punto/Mujer/atlas/atlas2-mujer.png",
-          "/assets/img/sudaderas-punto/Mujer/atlas/atlas3-mujer.png",
-          "/assets/img/sudaderas-punto/Mujer/atlas/atlas4-mujer.png",
-          "/assets/img/sudaderas-punto/Mujer/atlas/atlas5-mujer.png"
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas1versionlogo.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlas1versionpalabra.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlasback.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlasfrontlogo.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlasfrontpalabra.png",
+          "/assets/img/sudaderas-punto/Mujer/atlas/atlasbackm.png"
         ]
       }
     },
@@ -2081,10 +2082,16 @@
         ]
       },
       "mujer": {
-        "cover": "/assets/img/sudaderas-punto/Mujer/forgave/forgave1.png",
+        "cover": "/assets/img/sudaderas-punto/Mujer/forgave/forgave1.png?v=20260814-1",
+        "listingImages": [
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgavefront.png",
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgaveback.png"
+        ],
         "images": [
-          "/assets/img/sudaderas-punto/Mujer/forgave/forgave1.png",
-          "/assets/img/sudaderas-punto/Mujer/forgave/forgave2.png"
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgave1.png?v=20260814-1",
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgave2.png?v=20260814-1",
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgavefront.png",
+          "/assets/img/sudaderas-punto/Mujer/forgave/forgaveback.png"
         ]
       }
     },
@@ -2213,11 +2220,16 @@
         ]
       },
       "mujer": {
-        "cover": "/assets/img/sudaderas-punto/Mujer/letter/letter1.png",
+        "cover": "/assets/img/sudaderas-punto/Mujer/letter/letter1.png?v=20260814-1",
+        "listingImages": [
+          "/assets/img/sudaderas-punto/Mujer/letter/letterfrontm.png",
+          "/assets/img/sudaderas-punto/Mujer/letter/letterbackm.png"
+        ],
         "images": [
-          "/assets/img/sudaderas-punto/Mujer/letter/letter1.png",
-          "/assets/img/sudaderas-punto/Mujer/letter/letter2.png",
-          "/assets/img/sudaderas-punto/Mujer/letter/letter3.png"
+          "/assets/img/sudaderas-punto/Mujer/letter/letter1.png?v=20260814-1",
+          "/assets/img/sudaderas-punto/Mujer/letter/letter2.png?v=20260814-1",
+          "/assets/img/sudaderas-punto/Mujer/letter/letterfrontm.png",
+          "/assets/img/sudaderas-punto/Mujer/letter/letterbackm.png"
         ]
       }
     },
