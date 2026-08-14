@@ -2992,16 +2992,16 @@
         ]
       },
       "mujer": {
-        "cover": "/assets/img/streetwear/Hombre/after/driftfront.png",
+        "cover": "/assets/img/streetwear/Mujer/after/driftfront.png",
         "listingImages": [
-          "/assets/img/streetwear/Hombre/after/driftfront.png",
-          "/assets/img/streetwear/Hombre/after/driftback.png"
+          "/assets/img/streetwear/Mujer/after/driftfront.png",
+          "/assets/img/streetwear/Mujer/after/driftback.png"
         ],
         "images": [
-          "/assets/img/streetwear/Hombre/after/driftfront.png",
-          "/assets/img/streetwear/Hombre/after/driftback.png",
-          "/assets/img/streetwear/Hombre/after/freestyler-drift-frontal-0.png",
-          "/assets/img/streetwear/Hombre/after/freestyler-drift-trasera.png"
+          "/assets/img/streetwear/Mujer/after/driftfront.png",
+          "/assets/img/streetwear/Mujer/after/driftback.png",
+          "/assets/img/streetwear/Mujer/after/freestyler-drift-frontal-0.png",
+          "/assets/img/streetwear/Mujer/after/freestyler-drift-trasera.png"
         ]
       }
     },
@@ -3132,16 +3132,16 @@
         ]
       },
       "mujer": {
-        "cover": "/assets/img/streetwear/Hombre/after/breakfront.png",
+        "cover": "/assets/img/streetwear/Mujer/after/breakfront1.png",
         "listingImages": [
-          "/assets/img/streetwear/Hombre/after/breakfront.png",
-          "/assets/img/streetwear/Hombre/after/breakback.png"
+          "/assets/img/streetwear/Mujer/after/breakfront1.png",
+          "/assets/img/streetwear/Mujer/after/breakback1.png"
         ],
         "images": [
-          "/assets/img/streetwear/Hombre/after/breakfront.png",
-          "/assets/img/streetwear/Hombre/after/breakback.png",
-          "/assets/img/streetwear/Hombre/after/FRONTAL-BREAK-NEGRA.png",
-          "/assets/img/streetwear/Hombre/after/TRASERA-BREAK-NEGRO.png"
+          "/assets/img/streetwear/Mujer/after/breakfront1.png",
+          "/assets/img/streetwear/Mujer/after/breakback1.png",
+          "/assets/img/streetwear/Mujer/after/FRONTAL-BREAK-NEGRA.png",
+          "/assets/img/streetwear/Mujer/after/TRASERA-BREAK-NEGRO.png"
         ]
       }
     },

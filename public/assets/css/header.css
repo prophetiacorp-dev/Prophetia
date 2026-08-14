@@ -949,7 +949,7 @@ max-height: var(--pp-header-icon-size) !important;
 }
 /* =========================================================
    PROPHETIA - Header definition while mega menu is open
-   Loewe-like: crisp top bar, clear separation, dark UI.
+   Prophetia: crisp top bar, clear separation, dark UI.
    ========================================================= */
 
 html body.pp-mega-open .pp-header.pp-header {
@@ -1085,7 +1085,7 @@ html body.pp-mega-open .pp-header.pp-header #ppCartBtn .pp-cart-count {
 }
 
 /* =========================================================
-   PROPHETIA - Cart badge Loewe-like final
+   PROPHETIA - Cart badge final
    Empty: bag icon. With items: black SVG disc + centered number.
    ========================================================= */
 .pp-header #ppCartBtn.pp-header-cart-btn {

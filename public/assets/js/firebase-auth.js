@@ -1235,7 +1235,7 @@ onAuthStateChanged(auth, (user) => {
 
 
 // =============================================================
-// BOTÓN CABECERA: Login vs Mi Cuenta (modo Lacoste)
+// BOTÓN CABECERA: Login vs Mi Cuenta (modo Prophetia)
 // =============================================================
 
 // =============================================================

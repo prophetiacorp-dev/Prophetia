@@ -2320,7 +2320,7 @@ function renderFitGuideProfileStep(profile) {
       <h4>Datos de referencia</h4>
       <p>Para invitados, necesitamos una lectura mínima antes de calcular la talla.</p>
 
-      <section class="fit-guide__zaraBlock" aria-label="Sección favorita">
+      <section class="fit-guide__preferenceBlock" aria-label="Sección favorita">
         <span class="fit-guide__question">Sección favorita</span>
         <div class="fit-guide__selectRow">
           ${FIT_SECTION_OPTIONS.map((option) => renderFitGuideChoiceButton(
