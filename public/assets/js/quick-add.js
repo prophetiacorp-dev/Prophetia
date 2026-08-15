@@ -2483,6 +2483,10 @@ if (typeof MOBILE_QUICK_ADD_MEDIA.addEventListener === "function") {
   document.addEventListener(
     "pointerover",
     (event) => {
+      if (isMobileQuickAdd()) {
+        return;
+      }
+
       if (
         event.pointerType &&
         event.pointerType !== "mouse"
@@ -2547,6 +2551,15 @@ if (typeof MOBILE_QUICK_ADD_MEDIA.addEventListener === "function") {
         );
 
       if (!toggle) return;
+
+      /*
+       * En el modo bottom-sheet la apertura debe ser explícita.
+       * Portar el panel durante focusin interrumpe el tap/Enter que
+       * todavía debe llegar al mismo botón.
+       */
+      if (isMobileQuickAdd()) {
+        return;
+      }
 
       if (skipFocusOpen.has(toggle)) {
         return;

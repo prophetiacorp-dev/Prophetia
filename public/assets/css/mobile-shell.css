@@ -2573,12 +2573,11 @@ body:is(.men-page, .women-page)
     transform: none !important;
   }
 
-  /* Los swatches y controles decorativos no invaden la tarjeta móvil.
-     Las variantes del panel Quick Add permanecen disponibles. */
+  /* Los controles decorativos legacy no invaden la tarjeta móvil.
+     Los swatches canónicos de Quick Add permanecen disponibles. */
   body:is(.men-page, .women-page)
   :is(#plp-grid, .pp-plp, #gridCamisetas)
-  :is(.pp-card-colors, .pp-card-cuts,
-      .card-colors, .color-swatches, .product-swatches,
+  :is(.card-colors, .color-swatches, .product-swatches,
       .swatches, .variant-swatches) {
     display: none !important;
   }
@@ -3698,6 +3697,83 @@ body.archive-page.archive-page--summer .archive-version-modal.is-open .archive-v
 
   .pp-mobile-panel__search-clear:active {
     transform: translateY(-50%) scale(.97) !important;
+  }
+}
+
+/* =========================================================
+   PRODUCT CARDS · Paridad táctil
+   Mismo DOM y controlador que escritorio; solo cambia el área
+   de interacción cuando el viewport es compacto o el puntero
+   principal no dispone de hover preciso.
+   ========================================================= */
+@media (max-width: 1024px), (hover: none), (pointer: coarse) {
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-options {
+    min-height: 44px;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-colors {
+    display: flex !important;
+    flex: 1 1 auto;
+    gap: 0;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-cuts {
+    display: flex !important;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-color {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    flex: 0 0 44px;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-color__dot {
+    width: 14px;
+    height: 14px;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-color.is-selected::after {
+    inset: 11px;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-color.is-out::before {
+    left: 13px;
+    right: 13px;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-card-cut,
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-quick-add-toggle {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  body[data-quick-add-enabled]:is(.men-page, .women-page)
+  :is(#plp-grid, .pp-plp, #gridCamisetas)
+  .pp-quick-add-toggle {
+    width: 44px;
+    height: 44px;
   }
 }
 
