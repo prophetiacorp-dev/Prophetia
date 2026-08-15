@@ -34,19 +34,38 @@
   const WISHLIST_KEY = 'pp_wishlist_v1';
 
 function hasAccountSession() {
-  return !!(
+  const user =
     window.ppHasAccountSession?.() ||
     window.__ppAuthCurrentUser ||
     window.__ppLastUser ||
-    window.__ppFirebaseAuth?.currentUser
-  );
+    window.__ppFirebaseAuth?.currentUser ||
+    null;
+
+  if (user === true) return true;
+  return Boolean(user?.uid && user.emailVerified !== false);
+}
+
+function getWishlistStorageKey() {
+  const user =
+    window.__ppAuthCurrentUser ||
+    window.__ppLastUser ||
+    window.__ppFirebaseAuth?.currentUser ||
+    null;
+
+  return window.ppGetAccountStorageKey?.(WISHLIST_KEY, user) ||
+    (user?.uid && user.emailVerified !== false
+      ? `${WISHLIST_KEY}:user:${user.uid}`
+      : '');
 }
 
 function readWishlist() {
   if (!hasAccountSession()) return [];
 
+  const key = getWishlistStorageKey();
+  if (!key) return [];
+
   try {
-    const data = JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]');
+    const data = JSON.parse(localStorage.getItem(key) || '[]');
     return Array.isArray(data) ? data.filter(item => item && item.id) : [];
   } catch {
     return [];

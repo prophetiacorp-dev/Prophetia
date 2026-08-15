@@ -38,7 +38,21 @@
       null
     ));
 
-    window.ppHasAccountSession = window.ppHasAccountSession || (() => !!window.ppGetCurrentUser?.());
+    window.ppHasAccountSession = window.ppHasAccountSession || (() => {
+      const user = window.ppGetCurrentUser?.();
+      return Boolean(user?.uid && user.emailVerified !== false);
+    });
+
+    window.ppGetAccountStorageKey = window.ppGetAccountStorageKey || ((baseKey, user = null) => {
+      const cleanBaseKey = String(baseKey || '').trim();
+      const accountUser = user || window.ppGetCurrentUser?.();
+
+      if (!cleanBaseKey || !accountUser?.uid || accountUser.emailVerified === false) {
+        return '';
+      }
+
+      return `${cleanBaseKey}:user:${accountUser.uid}`;
+    });
 
     const ACCOUNT_ACCESS_MESSAGE = 'Inicia sesión o crea una cuenta para guardar productos en tu lista de deseos.';
     const AUTH_OPEN_DELAY = 700;
@@ -187,13 +201,18 @@
     const KEY = 'pp_wishlist_v1';
     const unlocked = () => !!window.ppHasAccountSession?.();
     const promptLogin = () => window.ppPromptAccountAccess?.();
+    const storageKey = () => window.ppGetAccountStorageKey?.(KEY) || '';
     const load = () => {
       if (!unlocked()) return [];
-      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; }
+      const key = storageKey();
+      if (!key) return [];
+      try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; }
     };
     const save = (arr) => {
       if (!unlocked()) return false;
-      localStorage.setItem(KEY, JSON.stringify(arr));
+      const key = storageKey();
+      if (!key) return false;
+      localStorage.setItem(key, JSON.stringify(arr));
       return true;
     };
     const find = (id, arr) => arr.find(x => String(x.id) === String(id));
@@ -276,13 +295,18 @@ if (!item.id) {
     const KEY='pp_wishlist_v1';
     const unlocked = () => !!window.ppHasAccountSession?.();
     const promptLogin = () => window.ppPromptAccountAccess?.();
+    const storageKey = () => window.ppGetAccountStorageKey?.(KEY) || '';
     const load = () => {
       if (!unlocked()) return [];
-      try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; }
+      const key = storageKey();
+      if (!key) return [];
+      try { return JSON.parse(localStorage.getItem(key)||'[]'); } catch { return []; }
     };
     const save = (arr) => {
       if (!unlocked()) return false;
-      localStorage.setItem(KEY, JSON.stringify(arr));
+      const key = storageKey();
+      if (!key) return false;
+      localStorage.setItem(key, JSON.stringify(arr));
       return true;
     };
     const exists = (id, arr) => arr.some(x => String(x.id) === String(id));
@@ -467,7 +491,9 @@ if (!item.id) {
     const KEY='pp_wishlist_v1';
     const load=()=>{
       if (!window.ppHasAccountSession?.()) return [];
-      try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}
+      const key = window.ppGetAccountStorageKey?.(KEY) || '';
+      if (!key) return [];
+      try{return JSON.parse(localStorage.getItem(key)||'[]')}catch{return[]}
     };
     const update=()=>{
       const savedButton = document.getElementById('ppSavedBtn');

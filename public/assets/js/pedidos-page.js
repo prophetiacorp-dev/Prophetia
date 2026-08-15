@@ -10,6 +10,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 const ordersLoading = document.querySelector("[data-orders-loading]");
+const guestBlock = document.querySelector("[data-pp-orders-guest]");
 const loggedBlock = document.querySelector("[data-pp-orders-logged]");
 const ordersList = document.querySelector("[data-orders-list]");
 const ordersEmpty = document.querySelector("[data-orders-empty]");
@@ -66,10 +67,18 @@ function formatDate(value) {
 
 
 function showLoggedState() {
+  if (guestBlock) guestBlock.hidden = true;
   if (loggedBlock) loggedBlock.hidden = false;
 
   document.body.classList.add("pp-auth-logged");
   document.body.classList.remove("pp-auth-guest");
+}
+
+function showGuestState() {
+  if (guestBlock) guestBlock.hidden = false;
+  if (loggedBlock) loggedBlock.hidden = true;
+  document.body.classList.remove("pp-auth-logged");
+  document.body.classList.add("pp-auth-guest");
 }
 
 function getStatusStep(order) {
@@ -225,7 +234,7 @@ if (ordersLoading) {
 
 async function loadOrdersForUser(user) {
   if (!user || !user.email) {
-    window.location.assign("/home");
+    showGuestState();
     return;
   }
 
@@ -302,7 +311,7 @@ onAuthStateChanged(auth, (user) => {
   currentUser = user || null;
 
   if (!currentUser) {
-    window.location.assign("/home");
+    showGuestState();
     return;
   }
 

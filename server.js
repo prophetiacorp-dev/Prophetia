@@ -2375,7 +2375,11 @@ function calculatePointsForOrder(order = {}) {
 }
 
 async function addTribePointsForPaidOrder(orderInput = {}) {
-  const order = findOrderByDraftId(orderInput.orderDraftId) || orderInput;
+  const storedOrder = findOrderByDraftId(orderInput.orderDraftId);
+  const order = {
+    ...(storedOrder || {}),
+    ...orderInput
+  };
 
   if (!order || !order.orderDraftId) return null;
 
@@ -2388,7 +2392,15 @@ async function addTribePointsForPaidOrder(orderInput = {}) {
   if (!email || !isValidEmail(email)) return null;
 
   const members = loadTribeMembers();
-  const index = members.findIndex((member) => normalizeEmail(member.email) === email);
+  const orderUid = String(order.firebaseUid || '').trim();
+  const isAccountOrder = String(order.customerType || order.checkoutMode || '').trim().toLowerCase() === 'account';
+  const index = orderUid
+    ? members.findIndex((member) => {
+        return String(member.firebaseUid || '').trim() === orderUid && normalizeEmail(member.email) === email;
+      })
+    : isAccountOrder
+      ? -1
+      : members.findIndex((member) => normalizeEmail(member.email) === email);
 
   if (index < 0) return null;
 
@@ -3713,6 +3725,10 @@ function isOrderPaidForTribe(order = {}) {
   return order.status === 'paid' || order.paymentStatus === 'paid';
 }
 
+function isStripeSessionPaid(session = {}) {
+  return String(session.payment_status || '').trim().toLowerCase() === 'paid';
+}
+
 function isGuestCheckoutOrder(order = {}) {
   const customerType = String(order.customerType || order.checkoutMode || '').trim().toLowerCase();
 
@@ -3778,13 +3794,19 @@ async function claimGuestAccountPurchaseXpForFirebaseUser(firebaseUser = {}) {
     email: cleanEmail,
     firebaseUid,
     name: String(firebaseUser.name || firebaseUser.displayName || cleanEmail.split('@')[0] || '').trim(),
-    optin: true
+    // Crear una cuenta tras comprar no implica consentimiento de marketing.
+    optin: false
   });
 
   const claimedXpEvents = [];
 
   for (const order of claimableOrders) {
-    const xpEvent = await addTribePointsForPaidOrder(order);
+    const xpEvent = await addTribePointsForPaidOrder({
+      ...order,
+      firebaseUid,
+      customerType: 'account',
+      checkoutMode: 'account'
+    });
 
     if (xpEvent) {
       claimedXpEvents.push({
@@ -4133,7 +4155,10 @@ try {
 }
 
   try {
-    if (event.type === 'checkout.session.completed') {
+    if (
+      event.type === 'checkout.session.completed' ||
+      event.type === 'checkout.session.async_payment_succeeded'
+    ) {
       const session = event.data.object;
       const orderDraftId = session.metadata?.orderDraftId || null;
 
@@ -4144,23 +4169,33 @@ try {
 
       const currentOrder = findOrderByDraftId(orderDraftId);
 
-const paidOrder = {
+const paymentConfirmed = isStripeSessionPaid(session);
+const updatedOrder = {
   ...(currentOrder || {}),
   orderDraftId,
   stripeSessionId: session.id,
   stripePaymentIntentId: session.payment_intent || null,
-  status: 'paid',
-  paymentStatus: session.payment_status || 'paid',
+  status: paymentConfirmed ? 'paid' : currentOrder?.status || 'pending_payment',
+  paymentStatus: session.payment_status || currentOrder?.paymentStatus || 'unpaid',
   customerEmail: session.customer_email || currentOrder?.customerEmail || '',
   amountTotal: Number(session.amount_total || 0) / 100,
   currency: String(session.currency || 'eur').toUpperCase(),
-  paidAt: new Date().toISOString()
+  paidAt: paymentConfirmed
+    ? currentOrder?.paidAt || new Date().toISOString()
+    : currentOrder?.paidAt || null
 };
 
-upsertOrder(paidOrder);
-await finalizePaidOrderOnce(paidOrder);
+upsertOrder(updatedOrder);
 
-console.log('[stripe-webhook] Pedido pagado procesado.');
+if (paymentConfirmed) {
+  await finalizePaidOrderOnce(updatedOrder);
+}
+
+console.log(
+  paymentConfirmed
+    ? '[stripe-webhook] Pedido pagado procesado.'
+    : '[stripe-webhook] Sesión completada pendiente de pago; no se finaliza el pedido.'
+);
     }
 
     return res.json({ received: true });
@@ -5841,7 +5876,7 @@ app.get('/api/order-by-session', requireCheckoutEnabled, async (req, res) => {
             ...currentOrder,
             stripeSessionId: stripeSession.id,
             paymentStatus: stripeSession.payment_status,
-            status: stripeSession.payment_status === 'paid' ? 'paid' : currentOrder.status,
+            status: isStripeSessionPaid(stripeSession) ? 'paid' : currentOrder.status,
             amountTotal: Number(stripeSession.amount_total || 0) / 100,
             currency: String(stripeSession.currency || currentOrder.currency || 'eur').toUpperCase(),
             customerType: currentOrder.customerType || (isStripeGuest ? 'guest' : 'account'),
@@ -6761,6 +6796,7 @@ upsertOrder({
   paymentStatus: 'unpaid',
   customerEmail: cleanEmail,
   customerType: checkoutMode,
+  firebaseUid: isAuthenticatedCheckout ? String(firebaseUser.uid || '').trim() : null,
   guestAccountIntent: wantsGuestAccount ? {
     wantsAccount: true,
     passwordProvided: guestPasswordProvided
@@ -7015,5 +7051,8 @@ if (require.main === module) {
 module.exports = {
   app,
   startServer,
-  CHECKOUT_ENABLED
+  CHECKOUT_ENABLED,
+  __test: {
+    isStripeSessionPaid
+  }
 };

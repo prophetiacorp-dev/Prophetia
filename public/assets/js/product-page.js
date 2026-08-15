@@ -392,6 +392,14 @@ try {
 
       // 3) Establecer datos del producto
       $('#pTitle').textContent = prod.title || 'Producto';
+      const productDocumentTitle = `${prod.title || 'Producto'} — PROPHETIA`;
+      const productDescription = String(prod.short || 'Pieza de la colección Prophetia.').trim();
+      document.title = productDocumentTitle;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', productDescription);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', productDocumentTitle);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', productDescription);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', productDocumentTitle);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', productDescription);
       // Breadcrumb Prophetia-like (con memoria Hombre/Mujer + categoría)
 window.ppBreadcrumbs?.inferRootFromReferrer();
 window.ppBreadcrumbs?.build({ currentLabel: (prod.title || 'Producto') });

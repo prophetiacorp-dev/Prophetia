@@ -795,12 +795,13 @@ function renderCart() {
     checkoutButton.setAttribute('aria-disabled', String(!canCheckout));
   }
 
+  drawer?.querySelectorAll('.pp-cart-empty').forEach((node) => {
+    if (!list.contains(node)) {
+      node.remove();
+    }
+  });
+
   if (!items.length) {
-    drawer?.querySelectorAll('.pp-cart-empty').forEach((node) => {
-      if (!list.contains(node)) {
-        node.remove();
-      }
-    });
 
     list.hidden = false;
     list.innerHTML = `

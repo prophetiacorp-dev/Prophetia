@@ -71,7 +71,7 @@
   <a href="/my-services">Mis servicios</a>
 </div>
 
-        <button class="account-nav__logout" type="button" data-pp-logout>
+        <button class="account-nav__logout" type="button" data-pp-logout hidden>
           Cerrar sesión
         </button>
       </div>
@@ -94,6 +94,14 @@
           </p>
         </header>
 
+        <section class="orders-section" data-pp-orders-guest>
+          <div class="orders-empty">
+            <p class="orders-empty__kicker">Acceso privado</p>
+            <h2>Inicia sesión para consultar tus pedidos.</h2>
+            <p>Tu historial solo se carga después de verificar tu cuenta Prophetia.</p>
+            <button type="button" class="orders-empty__link" data-pp-open-login>Iniciar sesión</button>
+          </div>
+        </section>
 
 
         <!-- BLOQUE LOGADO -->

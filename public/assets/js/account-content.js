@@ -7,6 +7,25 @@
   const STORAGE_KEY = "pp_shop_preference";
   const WISHLIST_KEY = "pp_wishlist_v1";
 
+  function getVerifiedAccountUser(user = null) {
+    const candidate =
+      user ||
+      window.__ppAuthCurrentUser ||
+      window.__ppLastUser ||
+      window.__ppFirebaseAuth?.currentUser ||
+      null;
+
+    return candidate?.uid && candidate.emailVerified !== false
+      ? candidate
+      : null;
+  }
+
+  function getAccountScopedKey(baseKey, user = null) {
+    const accountUser = getVerifiedAccountUser(user);
+    return window.ppGetAccountStorageKey?.(baseKey, accountUser) ||
+      (accountUser ? `${baseKey}:user:${accountUser.uid}` : "");
+  }
+
 const TRIBE_MISSION_ORDER = [
   "join-tribe",
   "first-address",
@@ -243,8 +262,11 @@ function renderBenefitList(card, benefits = []) {
 }
 
 function getLocalWishlistCount() {
+  const key = getAccountScopedKey(WISHLIST_KEY);
+  if (!key) return 0;
+
   try {
-    const data = JSON.parse(localStorage.getItem(WISHLIST_KEY) || "[]");
+    const data = JSON.parse(localStorage.getItem(key) || "[]");
     return Array.isArray(data)
       ? data.filter((item) => item && item.id).length
       : 0;
@@ -365,8 +387,11 @@ function ppDateKey(date) {
 }
 
 function ppReadCalendarPersonalEvents() {
+  const key = getAccountScopedKey(PP_CALENDAR_EVENTS_KEY);
+  if (!key) return [];
+
   try {
-    const data = JSON.parse(localStorage.getItem(PP_CALENDAR_EVENTS_KEY) || "[]");
+    const data = JSON.parse(localStorage.getItem(key) || "[]");
     return Array.isArray(data) ? data.filter((item) => item && item.date) : [];
   } catch {
     return [];
@@ -374,8 +399,11 @@ function ppReadCalendarPersonalEvents() {
 }
 
 function ppReadWishlistCount() {
+  const key = getAccountScopedKey(PP_WISHLIST_KEY);
+  if (!key) return 0;
+
   try {
-    const data = JSON.parse(localStorage.getItem(PP_WISHLIST_KEY) || "[]");
+    const data = JSON.parse(localStorage.getItem(key) || "[]");
     return Array.isArray(data) ? data.filter((item) => item && item.id).length : 0;
   } catch {
     return 0;
@@ -413,6 +441,17 @@ async function renderAccountCalendarPreview() {
   const nextSlot = document.querySelector("[data-account-calendar-next]");
 
   if (!summarySlot && !nextSlot) return;
+
+  if (!getVerifiedAccountUser()) {
+    if (summarySlot) {
+      summarySlot.textContent =
+        "Inicia sesión para consultar tus fechas y piezas guardadas.";
+    }
+    if (nextSlot) {
+      nextSlot.textContent = "Calendario personal pendiente de sesión.";
+    }
+    return;
+  }
 
   const todayKey = ppDateKey(new Date());
   const personal = ppReadCalendarPersonalEvents();
@@ -1074,6 +1113,38 @@ if (isMember) {
   }
 }
 
+function renderSignedOutTribeCard() {
+  renderTribeCard({
+    ...getFallbackTribeData(),
+    rank: "Acceso privado",
+    rankId: "member",
+    discountStatus: "signed_out",
+    points: 0,
+    lifetimePoints: 0,
+    pointsToNextRank: 0,
+    progressPercent: 0,
+  });
+
+  const card = document.querySelector("[data-tribe-profile-card]");
+  if (!card) return;
+
+  const prestige = card.querySelector("[data-tribe-prestige]");
+  const summary = card.querySelector("[data-tribe-summary]");
+  const points = card.querySelector("[data-tribe-points]");
+  const next = card.querySelector("[data-tribe-next]");
+  const lifetime = card.querySelector("[data-tribe-lifetime]");
+  const remaining = card.querySelector("[data-tribe-remaining]");
+  const benefit = card.querySelector("[data-tribe-benefit]");
+
+  if (prestige) prestige.textContent = "Sesión cerrada";
+  if (summary) summary.textContent = "Inicia sesión para consultar tus Legacy Points, rango y beneficios privados.";
+  if (points) points.textContent = "—";
+  if (next) next.textContent = "Progreso pendiente de sesión";
+  if (lifetime) lifetime.textContent = "—";
+  if (remaining) remaining.textContent = "—";
+  if (benefit) benefit.textContent = "Inicia sesión para acceder a Prophetia Tribe.";
+}
+
   async function getFirebaseUserToken() {
     const directUser =
       window.__ppAuthCurrentUser ||
@@ -1132,6 +1203,11 @@ if (isMember) {
     const card = document.querySelector("[data-tribe-profile-card]");
     if (!card) return;
 
+    if (window.__ppAuthStateResolved === true && !getVerifiedAccountUser()) {
+      renderSignedOutTribeCard();
+      return;
+    }
+
     if (!tribeProfileRequested) {
       tribeProfileRequested = true;
 
@@ -1151,7 +1227,7 @@ if (isMember) {
     const token = await getFirebaseUserToken();
 
     if (!token) {
-      console.warn("[Prophetia Tribe] No hay token Firebase todavía.");
+      renderSignedOutTribeCard();
       return;
     }
 
@@ -1168,8 +1244,6 @@ if (isMember) {
       }
 
 const member = await response.json();
-
-console.info("[Prophetia Tribe] Perfil cargado:", member);
 
 ppCachedTribeMember = member;
 
@@ -1188,15 +1262,42 @@ renderAccountVaultPreview(member);
 
     loadTribeProfile();
   }
+
+function syncAccountIdentity(user = null) {
+  const accountUser = getVerifiedAccountUser(user);
+  const eyebrow = document.querySelector(".account-panel__eyebrow");
+  const name = document.querySelector("#ppAccountPageName");
+  const email = document.querySelector("#ppAccountPageEmail");
+  const logout = document.querySelector("[data-pp-logout]");
+
+  if (accountUser) {
+    const fallbackName = String(accountUser.email || "").split("@")[0];
+    if (eyebrow) eyebrow.textContent = "Sesión activa";
+    if (name) name.textContent = accountUser.displayName || fallbackName || "Cliente Prophetia";
+    if (email) email.textContent = accountUser.email || "Cuenta verificada";
+    if (logout) logout.hidden = false;
+    document.body.classList.add("pp-auth-logged");
+    document.body.classList.remove("pp-auth-guest");
+    return;
+  }
+
+  if (eyebrow) eyebrow.textContent = "Sesión cerrada";
+  if (name) name.textContent = "Acceso de cliente";
+  if (email) email.textContent = "Inicia sesión para consultar tu archivo";
+  if (logout) logout.hidden = true;
+  document.body.classList.remove("pp-auth-logged");
+  document.body.classList.add("pp-auth-guest");
+  renderSignedOutTribeCard();
+}
+
 function handleTribeMissionCompleted(event) {
   const detail = event.detail || {};
   const missionEvent = detail.missionEvent || null;
+  const xpEventKey = getAccountScopedKey("pp_tribe_xp_event");
 
-  console.info("[Prophetia Tribe] Misión completada:", detail);
-
-  if (missionEvent) {
+  if (missionEvent && xpEventKey) {
     try {
-      localStorage.setItem("pp_tribe_xp_event", JSON.stringify(missionEvent));
+      localStorage.setItem(xpEventKey, JSON.stringify(missionEvent));
     } catch {}
   }
 
@@ -1207,6 +1308,7 @@ function handleTribeMissionCompleted(event) {
 
 function initPage() {
   init();
+  syncAccountIdentity(getVerifiedAccountUser());
   renderAccountCalendarPreview();
   renderAccountVaultPreview();
     /*
@@ -1221,23 +1323,14 @@ function initPage() {
  window.addEventListener("pp:auth-changed", (event) => {
   const user = event.detail?.user || null;
 
+syncAccountIdentity(user);
+renderAccountCalendarPreview();
+
 if (!user) {
   tribeProfileRequested = false;
   ppCachedTribeMember = null;
 
-  renderTribeCard({
-    ...getFallbackTribeData(),
-    rank: "Sesión cerrada",
-    rankId: "member",
-    nextRank: "Inicia sesión",
-    points: 0,
-    lifetimePoints: 0,
-    pointsToNextRank: 0,
-    progressPercent: 0,
-    discountStatus: "signed_out",
-    benefits: [],
-    rankMessage: "Inicia sesión para consultar tu archivo Prophetia Tribe."
-  });
+  renderSignedOutTribeCard();
 
   renderAccountVaultPreview(null);
   return;
@@ -1259,13 +1352,16 @@ renderAccountVaultPreview();
       refreshTribeProfile();
     }, 1800);
 window.addEventListener("storage", (event) => {
-  if (event.key === WISHLIST_KEY) {
+  const wishlistKey = getAccountScopedKey(WISHLIST_KEY);
+  const calendarKey = getAccountScopedKey(PP_CALENDAR_EVENTS_KEY);
+
+  if (wishlistKey && event.key === wishlistKey) {
     refreshTribeProfile();
     renderAccountCalendarPreview();
     renderAccountVaultPreview();
   }
 
-  if (event.key === PP_CALENDAR_EVENTS_KEY) {
+  if (calendarKey && event.key === calendarKey) {
     renderAccountCalendarPreview();
   }
 });

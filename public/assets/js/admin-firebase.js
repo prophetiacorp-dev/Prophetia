@@ -117,8 +117,6 @@ els.btnHomeLoad?.addEventListener("click", loadHome);
 els.btnHomeSave?.addEventListener("click", saveHome);
 
 onAuthStateChanged(auth, async (user) => {
-  console.info("[ADMIN] auth state:", user?.uid, user?.email);
-
   if (!user){
     els.gate.classList.remove("hide");
     els.app.classList.add("hide");

@@ -275,8 +275,6 @@ async function completeFirstAddressMission() {
       detail: data
     }));
 
-    console.info("[ADDRESSES] Misión first-address comprobada:", data);
-
     return data;
   } catch (error) {
     console.warn("[ADDRESSES] No se pudo comprobar misión first-address:", error);

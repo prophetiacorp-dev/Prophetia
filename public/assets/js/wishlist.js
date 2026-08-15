@@ -10,15 +10,6 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  const rawLoad = () => {
-    try {
-      const data = JSON.parse(localStorage.getItem(KEY) || '[]');
-      return Array.isArray(data) ? data.filter(p => p && p.id) : [];
-    } catch {
-      return [];
-    }
-  };
-
   function getWishlistUser() {
     return (
       window.__ppAuthCurrentUser ||
@@ -29,14 +20,34 @@ const SHOP_PREF_KEY = 'pp_shop_preference';
   }
 
   function isWishlistUnlocked() {
-    return !!getWishlistUser();
+    const user = getWishlistUser();
+    return Boolean(user?.uid && user.emailVerified !== false);
   }
 
-  const load = () => (isWishlistUnlocked() ? rawLoad() : []);
+  const getStorageKey = () => {
+    const user = getWishlistUser();
+    return window.ppGetAccountStorageKey?.(KEY, user) ||
+      (user?.uid && user.emailVerified !== false ? `${KEY}:user:${user.uid}` : '');
+  };
+
+  const load = () => {
+    if (!isWishlistUnlocked()) return [];
+    const key = getStorageKey();
+    if (!key) return [];
+
+    try {
+      const data = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(data) ? data.filter(p => p && p.id) : [];
+    } catch {
+      return [];
+    }
+  };
 
   const save = (list) => {
     if (!isWishlistUnlocked()) return;
-    localStorage.setItem(KEY, JSON.stringify(Array.isArray(list) ? list : []));
+    const key = getStorageKey();
+    if (!key) return;
+    localStorage.setItem(key, JSON.stringify(Array.isArray(list) ? list : []));
   };
 
   const del = (id) => {

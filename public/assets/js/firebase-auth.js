@@ -33,6 +33,29 @@ import {
   signInWithPopup,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+function getVerifiedAccountStorageUser(user = null) {
+  const candidate =
+    user ||
+    window.__ppAuthCurrentUser ||
+    window.__ppLastUser ||
+    auth?.currentUser ||
+    null;
+
+  if (!candidate?.uid || candidate.emailVerified === false) {
+    return null;
+  }
+
+  return candidate;
+}
+
+window.ppGetAccountStorageKey = (baseKey, user = null) => {
+  const cleanBaseKey = String(baseKey || "").trim();
+  const accountUser = getVerifiedAccountStorageUser(user);
+
+  if (!cleanBaseKey || !accountUser) return "";
+  return `${cleanBaseKey}:user:${accountUser.uid}`;
+};
 window.ppResendVerificationForCurrentUser = async () => {
   if (!auth) throw new Error("Firebase auth no inicializado");
   const user = auth.currentUser;
@@ -1150,6 +1173,9 @@ function syncAuthUI(user) {
   const profileAvatar = document.querySelector(".pp-profile-avatar");
   const accountName = document.querySelector("[data-pp-account-name]");
   const accountEmail = document.querySelector("[data-pp-account-email]");
+  document.querySelectorAll("[data-pp-logout]").forEach((button) => {
+    button.hidden = !user;
+  });
 
   if (user) {
     document.body.classList.add("pp-auth-logged");
@@ -1305,6 +1331,12 @@ function clearProphetiaSessionStorage() {
     localStorage.removeItem("pp_checkout_shipping_details");
     localStorage.removeItem("pp_checkout_tribe_code");
     localStorage.removeItem("pp_checkout_step");
+    localStorage.removeItem("pp_checkout_isGift");
+    localStorage.removeItem("pp_checkout_invoiceWanted");
+    localStorage.removeItem("pp_checkout_order_draft_id");
+    localStorage.removeItem("pp_checkout_mode");
+    localStorage.removeItem("pp_checkout_guest_account_intent");
+    localStorage.removeItem("pp_checkout_owner");
   } catch {}
 }
 

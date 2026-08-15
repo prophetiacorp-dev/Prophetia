@@ -38,6 +38,14 @@ const getVerifiedSuccessUserSnapshot = (user = null) => {
   return { uid, email };
 };
 
+const getSuccessAccountStorageKey = (baseKey, user = null) => {
+  const verifiedUser = getVerifiedSuccessUserSnapshot(user);
+  if (!verifiedUser?.uid) return '';
+
+  return window.ppGetAccountStorageKey?.(baseKey, user) ||
+    `${baseKey}:user:${verifiedUser.uid}`;
+};
+
 const canExposeSuccessXpEvent = (order = {}, user = null) => {
   if (isGuestSuccessOrder(order)) return false;
 
@@ -1199,6 +1207,22 @@ async function waitForSuccessFirebaseUser(timeoutMs = 5000) {
     }, timeoutMs);
   });
 }
+    function setSuccessHeading(state = 'checking') {
+      const kicker = document.querySelector('.success-kicker');
+      const title = document.querySelector('.success-title');
+      const copy = {
+        checking: ['Confirmación de pedido', 'Comprobando tu pago', 'Confirmación de pedido — PROPHETIA'],
+        paid: ['Pedido confirmado', 'Gracias por tu pedido', 'Pedido confirmado — PROPHETIA'],
+        pending: ['Pago en comprobación', 'Tu pedido está pendiente', 'Pago en comprobación — PROPHETIA'],
+        error: ['Confirmación no disponible', 'No podemos mostrar este pedido', 'Confirmación no disponible — PROPHETIA']
+      }[state] || null;
+
+      if (!copy) return;
+      if (kicker) kicker.textContent = copy[0];
+      if (title) title.textContent = copy[1];
+      document.title = copy[2];
+    }
+
     async function loadOrder() {
       const params = new URLSearchParams(window.location.search);
       const sessionId = params.get('session_id');
@@ -1209,6 +1233,7 @@ async function waitForSuccessFirebaseUser(timeoutMs = 5000) {
       const orderBox = document.getElementById('orderBox');
 
       if (!sessionId) {
+        setSuccessHeading('error');
         status.textContent = 'No se ha recibido session_id.';
         status.classList.add('success-error');
         return;
@@ -1249,6 +1274,7 @@ const res = await fetch(`/api/order-by-session?session_id=${encodeURIComponent(s
         const order = data.order || {};
         const currency = order.currency || 'EUR';
         const isPaid = order.status === 'paid' || order.paymentStatus === 'paid';
+        setSuccessHeading(isPaid ? 'paid' : 'pending');
 
         status.textContent = isPaid
           ? 'Pedido pagado correctamente. Recibirás la confirmación en tu correo electrónico.'
@@ -1321,7 +1347,6 @@ const res = await fetch(`/api/order-by-session?session_id=${encodeURIComponent(s
 
   if (isGuestSuccessOrder(order)) {
     try {
-      localStorage.removeItem('pp_tribe_xp_event');
       sessionStorage.removeItem('pp_pending_xp_sound_type');
     } catch {}
   }
@@ -1338,16 +1363,21 @@ if (canExposeSuccessXpEvent(order, successUser) && order.tribeXpEvent && Number(
     sessionStorage.setItem('pp_pending_xp_sound_type', xpSoundType);
   } catch {}
 
-  localStorage.setItem('pp_tribe_xp_event', JSON.stringify({
-    ...exposedXpEvent,
-    storedAt: Date.now()
-  }));
+  const xpEventStorageKey = getSuccessAccountStorageKey('pp_tribe_xp_event', successUser);
+
+  if (xpEventStorageKey) {
+    localStorage.setItem(xpEventStorageKey, JSON.stringify({
+      ...exposedXpEvent,
+      storedAt: Date.now()
+    }));
+  }
 
   playSuccessXpAnimation(exposedXpEvent);
   renderUnlockedRewards(exposedXpEvent);
 }
 }
       } catch (err) {
+        setSuccessHeading('error');
         status.textContent = err.message;
         status.classList.add('success-error');
         orderSummary.innerHTML = '';

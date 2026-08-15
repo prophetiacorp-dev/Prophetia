@@ -81,6 +81,13 @@ function replaceXpWithLp(value = '') {
     return { rawUser, uid, email };
   }
 
+  function getXpEventStorageKey(user = getVerifiedToastUser()) {
+    if (!user?.uid) return '';
+
+    return window.ppGetAccountStorageKey?.(STORAGE_KEY, user.rawUser) ||
+      `${STORAGE_KEY}:user:${user.uid}`;
+  }
+
   function isGuestToastEvent(event = {}) {
     const customerType = String(event.customerType || event.checkoutMode || '').trim().toLowerCase();
 
@@ -1154,14 +1161,17 @@ function getRankTheme(rank) {
     };
   }
 
-  function clearStoredXpEventSoon() {
+  function clearStoredXpEventSoon(user = getVerifiedToastUser()) {
+    const storageKey = getXpEventStorageKey(user);
+    if (!storageKey) return;
+
     try {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(storageKey);
     } catch {}
 
     window.setTimeout(() => {
       try {
-        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(storageKey);
       } catch {}
     }, 160);
   }
@@ -1179,13 +1189,13 @@ function getRankTheme(rank) {
 
     if (signature && signature === lastShownSignature) return;
     if (hasEventBeenShownForUser(normalizedEvent, user)) {
-      clearStoredXpEventSoon();
+      clearStoredXpEventSoon(user);
       return;
     }
 
     lastShownSignature = signature;
     markEventShownForUser(normalizedEvent, user);
-    clearStoredXpEventSoon();
+    clearStoredXpEventSoon(user);
     createToast(normalizedEvent);
   }
 
@@ -1198,7 +1208,9 @@ function getRankTheme(rank) {
   }
 
   function initXpToast() {
-    const event = safeParse(localStorage.getItem(STORAGE_KEY));
+    const user = getVerifiedToastUser();
+    const storageKey = getXpEventStorageKey(user);
+    const event = storageKey ? safeParse(localStorage.getItem(storageKey)) : null;
 
     if (!event) {
       tryShowClaimedXpAfterLogin();
@@ -1208,16 +1220,14 @@ function getRankTheme(rank) {
     const storedAt = Number(event.storedAt || 0) || Date.parse(event.createdAt || '');
 
     if (!storedAt || Date.now() - storedAt > MAX_EVENT_AGE_MS) {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(storageKey);
       return;
     }
-
-    const user = getVerifiedToastUser();
 
     if (!user) return;
 
     if (!toastEventBelongsToUser(event, user)) {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(storageKey);
       tryShowClaimedXpAfterLogin();
       return;
     }

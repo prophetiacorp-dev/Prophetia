@@ -17,6 +17,7 @@ const LS_ORDER_DRAFT_ID = 'pp_checkout_order_draft_id';
 const LS_TRIBE_CODE = 'pp_checkout_tribe_code';
 const LS_CHECKOUT_MODE = 'pp_checkout_mode';
 const LS_GUEST_ACCOUNT_INTENT = 'pp_checkout_guest_account_intent';
+const LS_CHECKOUT_OWNER = 'pp_checkout_owner';
 
 let ppSecureCartSummary = null; let checkoutAuthMode = 'email'; let checkoutAwaitingVerification = false; let pendingVerificationEmail = ''; let pendingVerificationPassword = '';
   // Función para formatear el dinero
@@ -1044,6 +1045,13 @@ function syncUIFromStorage() {
   const E = els();
   const verifiedUser = getVerifiedCheckoutUser();
   const authResolved = window.__ppAuthStateResolved === true;
+  const verifiedOwner = verifiedUser?.uid ? `user:${verifiedUser.uid}` : '';
+
+  if (verifiedOwner && localStorage.getItem(LS_CHECKOUT_OWNER) !== verifiedOwner) {
+    clearCheckoutSensitiveStorage({ keepCart: true });
+    localStorage.setItem(LS_CHECKOUT_OWNER, verifiedOwner);
+  }
+
   let savedEmail = localStorage.getItem(LS_EMAIL) || '';
   const savedMode = localStorage.getItem(LS_SHIP_MODE) || '';
   let savedShipDetails = localStorage.getItem(LS_SHIP_DETAILS) || '';
@@ -1063,6 +1071,7 @@ function syncUIFromStorage() {
     localStorage.removeItem(LS_SHIP_MODE);
     localStorage.removeItem(LS_SHIP_DETAILS);
     localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+    localStorage.removeItem(LS_CHECKOUT_OWNER);
     savedShipDetails = '';
   }
   const hasCheckoutIdentity = Boolean(hasVerifiedSession || hasGuestSession);
@@ -1519,6 +1528,7 @@ function clearGuestCheckoutState({ keepEmail = false } = {}) {
   localStorage.removeItem(LS_CHECKOUT_MODE);
   localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
   localStorage.removeItem(LS_TRIBE_CODE);
+  localStorage.removeItem(LS_CHECKOUT_OWNER);
   if (!keepEmail) {
     localStorage.removeItem(LS_EMAIL);
     localStorage.removeItem(LS_SHIP_MODE);
@@ -1539,8 +1549,13 @@ async function continueCheckoutAsGuest() {
     targetInput?.focus?.();
     return;
   }
+  const guestOwner = `guest:${email}`;
+  if (localStorage.getItem(LS_CHECKOUT_OWNER) !== guestOwner) {
+    clearCheckoutSensitiveStorage({ keepCart: true });
+  }
   localStorage.setItem(LS_EMAIL, email);
   localStorage.setItem(LS_CHECKOUT_MODE, 'guest');
+  localStorage.setItem(LS_CHECKOUT_OWNER, guestOwner);
   localStorage.removeItem(LS_SHIP_DETAILS);
   localStorage.removeItem(LS_TRIBE_CODE);
   localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
@@ -1603,7 +1618,7 @@ async function waitForCheckoutFirebaseUser(timeoutMs = 4000) {
    Si el usuario ya está logado en Prophetia, el paso 2 no pide credenciales
    ========================================================= */
 
-async function syncCheckoutAuthFromFirebase({ moveToShipping = false } = {}) { const E = els(); const user = await waitForCheckoutFirebaseUser( 2600 ); const email = String( user?.email || '' ) .trim() .toLowerCase(); if ( !user?.uid || user.emailVerified === false || !email || !isEmailValid(email) ) { return false; } localStorage.setItem( LS_EMAIL, email ); localStorage.setItem( LS_CHECKOUT_MODE, 'account' ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; if (E.emailInput) { E.emailInput.value = email; E.emailInput.disabled = true; E.emailInput.classList.remove( 'is-invalid' ); } const passEl = document.getElementById( 'ckPass' ); if (passEl) { passEl.value = ''; clearFieldError( passEl ); } E.authGuest?.classList.add( 'd-none' ); E.authGuest?.setAttribute( 'aria-hidden', 'true' ); renderDetailsSummary( email ); renderShippingLoginSummary( email ); if (E.logoutBtn) { E.logoutBtn.hidden = false; } enableShipping(true); enableTabs(); if (moveToShipping) { setTab( 'nav-js-shipping-checkoutnc' ); setTimeout( () => { ppMaybeApplyDefaultAddress(); }, 250 ); } return true; }
+async function syncCheckoutAuthFromFirebase({ moveToShipping = false } = {}) { const E = els(); const user = await waitForCheckoutFirebaseUser( 2600 ); const email = String( user?.email || '' ) .trim() .toLowerCase(); if ( !user?.uid || user.emailVerified === false || !email || !isEmailValid(email) ) { return false; } const owner = `user:${user.uid}`; if ( localStorage.getItem( LS_CHECKOUT_OWNER ) !== owner ) { clearCheckoutSensitiveStorage({ keepCart: true }); } localStorage.setItem( LS_CHECKOUT_OWNER, owner ); localStorage.setItem( LS_EMAIL, email ); localStorage.setItem( LS_CHECKOUT_MODE, 'account' ); localStorage.removeItem( LS_GUEST_ACCOUNT_INTENT ); ppSecureCartSummary = null; if (E.emailInput) { E.emailInput.value = email; E.emailInput.disabled = true; E.emailInput.classList.remove( 'is-invalid' ); } const passEl = document.getElementById( 'ckPass' ); if (passEl) { passEl.value = ''; clearFieldError( passEl ); } E.authGuest?.classList.add( 'd-none' ); E.authGuest?.setAttribute( 'aria-hidden', 'true' ); renderDetailsSummary( email ); renderShippingLoginSummary( email ); if (E.logoutBtn) { E.logoutBtn.hidden = false; } enableShipping(true); enableTabs(); if (moveToShipping) { setTab( 'nav-js-shipping-checkoutnc' ); setTimeout( () => { ppMaybeApplyDefaultAddress(); }, 250 ); } return true; }
 async function getCheckoutAuthHeaders() {
   const headers = {
     'Content-Type': 'application/json'
@@ -2013,6 +2028,7 @@ function clearCheckoutSensitiveStorage({
   localStorage.removeItem(LS_TRIBE_CODE);
   localStorage.removeItem(LS_CHECKOUT_MODE);
   localStorage.removeItem(LS_GUEST_ACCOUNT_INTENT);
+  localStorage.removeItem(LS_CHECKOUT_OWNER);
 
   if (!keepCart) {
     window.ppCart?.write?.([]);

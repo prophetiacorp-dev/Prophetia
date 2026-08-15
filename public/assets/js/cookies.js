@@ -38,7 +38,6 @@
     const id = (e.target && e.target.id) || '';
     if (id === 'onetrust-accept-btn-handler') { e.preventDefault(); setChoice('accept_all'); hideBanner(); }
     if (id === 'onetrust-reject-all-handler') { e.preventDefault(); setChoice('reject_all'); hideBanner(); }
-    if (id === 'onetrust-pc-btn-handler')     { setChoice('prefs'); /* abrirías tu modal si aplica */ }
   });
 
   /* --- Opcional: programar apertura del Tribe a los 5s si no hay banner --- */

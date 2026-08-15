@@ -9,6 +9,22 @@ const PRIVATE_DROPS_URL = '/api/drops/private';
 const PERSONAL_KEY = 'pp_calendar_events_v1';
 const WISHLIST_KEY = 'pp_wishlist_v1';
 const REMINDER_SEEN_KEY = 'pp_calendar_seen_reminders_v1';
+
+  function getVerifiedAccountUser() {
+    const user =
+      window.__ppAuthCurrentUser ||
+      window.__ppLastUser ||
+      window.__ppFirebaseAuth?.currentUser ||
+      null;
+
+    return user?.uid && user.emailVerified !== false ? user : null;
+  }
+
+  function getAccountScopedKey(baseKey) {
+    const user = getVerifiedAccountUser();
+    return window.ppGetAccountStorageKey?.(baseKey, user) ||
+      (user ? `${baseKey}:user:${user.uid}` : '');
+  }
   const monthLabel = document.querySelector('[data-calendar-month-label]');
   const selectedLabel = document.querySelector('[data-selected-date-label]');
   const grid = document.querySelector('[data-calendar-grid]');
@@ -65,8 +81,11 @@ const REMINDER_SEEN_KEY = 'pp_calendar_seen_reminders_v1';
   }
 
   function readPersonalEvents() {
+    const key = getAccountScopedKey(PERSONAL_KEY);
+    if (!key) return [];
+
     try {
-      const data = JSON.parse(localStorage.getItem(PERSONAL_KEY) || '[]');
+      const data = JSON.parse(localStorage.getItem(key) || '[]');
       return Array.isArray(data) ? data.filter(item => item && item.date) : [];
     } catch {
       return [];
@@ -74,12 +93,18 @@ const REMINDER_SEEN_KEY = 'pp_calendar_seen_reminders_v1';
   }
 
   function writePersonalEvents(events) {
-    localStorage.setItem(PERSONAL_KEY, JSON.stringify(Array.isArray(events) ? events : []));
+    const key = getAccountScopedKey(PERSONAL_KEY);
+    if (!key) return false;
+    localStorage.setItem(key, JSON.stringify(Array.isArray(events) ? events : []));
+    return true;
   }
 
   function readWishlistCount() {
+    const key = getAccountScopedKey(WISHLIST_KEY);
+    if (!key) return 0;
+
     try {
-      const data = JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]');
+      const data = JSON.parse(localStorage.getItem(key) || '[]');
       return Array.isArray(data) ? data.filter(item => item && item.id).length : 0;
     } catch {
       return 0;
@@ -185,8 +210,11 @@ async function loadPrivateDrops() {
   }
 }
 function readSeenReminders() {
+  const key = getAccountScopedKey(REMINDER_SEEN_KEY);
+  if (!key) return {};
+
   try {
-    const data = JSON.parse(localStorage.getItem(REMINDER_SEEN_KEY) || '{}');
+    const data = JSON.parse(localStorage.getItem(key) || '{}');
     return data && typeof data === 'object' ? data : {};
   } catch {
     return {};
@@ -194,7 +222,10 @@ function readSeenReminders() {
 }
 
 function writeSeenReminders(data) {
-  localStorage.setItem(REMINDER_SEEN_KEY, JSON.stringify(data || {}));
+  const key = getAccountScopedKey(REMINDER_SEEN_KEY);
+  if (!key) return false;
+  localStorage.setItem(key, JSON.stringify(data || {}));
+  return true;
 }
 function isEventUnlocked(event = {}) {
   if (!event.unlockAt) {
@@ -632,6 +663,13 @@ function render() {
     form?.addEventListener('submit', (event) => {
       event.preventDefault();
 
+      if (!getVerifiedAccountUser()) {
+        window.ppPromptAccountAccess?.(
+          'Inicia sesión para guardar fechas en tu calendario personal.'
+        );
+        return;
+      }
+
       const data = new FormData(form);
 
 const item = {
@@ -681,9 +719,13 @@ const item = {
 
 let calendarEventsBound = false;
 let calendarInitRunning = false;
+let calendarInitQueued = false;
 
 async function init() {
-  if (calendarInitRunning) return;
+  if (calendarInitRunning) {
+    calendarInitQueued = true;
+    return;
+  }
 
   calendarInitRunning = true;
 
@@ -709,6 +751,11 @@ async function init() {
   render();
 
   calendarInitRunning = false;
+
+  if (calendarInitQueued) {
+    calendarInitQueued = false;
+    void init();
+  }
 }
 
 init();

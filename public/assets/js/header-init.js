@@ -2425,7 +2425,7 @@ function bindAuthSteps(modal) {
   if (modal.__ppStepsBound) return;
   modal.__ppStepsBound = true;
 
-const emailForm = q('#ppAuthEmailForm', modal); const emailInp = q('#ppAuthEmail', modal); const loginForm = q('#ppLoginForm', modal); const regForm = q('#ppRegisterForm', modal); bindBirthDateControl(modal);
+const emailForm = q('#ppAuthEmailForm', modal); const emailInp = q('#ppAuthEmail', modal); const loginForm = q('#ppLoginForm', modal); const regForm = q('#ppRegisterForm', modal); let loginSubmitInFlight = false; let registrationSubmitInFlight = false; bindBirthDateControl(modal);
 
   // Click router dentro del modal
   modal.addEventListener('click', (ev) => {
@@ -2514,6 +2514,7 @@ const emailForm = q('#ppAuthEmailForm', modal); const emailInp = q('#ppAuthEmail
   // Submit login (STEP 2)
   loginForm?.addEventListener('submit', async (ev) => {
     ev.preventDefault();
+    if (loginSubmitInFlight) return;
 
     const passInp = q('#ppLoginPass', loginForm);
     const pass = (passInp?.value ?? '');
@@ -2521,6 +2522,13 @@ const emailForm = q('#ppAuthEmailForm', modal); const emailInp = q('#ppAuthEmail
 
     const email = (q('#ppLoginEmailHidden', modal)?.value || state.email || '').trim();
     if (!email) { showStep(modal, 'email'); return; }
+
+    const loginSubmitButton = loginForm.querySelector('button[type="submit"]');
+    loginSubmitInFlight = true;
+    if (loginSubmitButton) {
+      loginSubmitButton.disabled = true;
+      loginSubmitButton.setAttribute('aria-busy', 'true');
+    }
 
     try {
       const fn = window.ppSignInWithEmailPass;
@@ -2562,12 +2570,19 @@ closeAuthWhenLoggedIn();
       const code = err?.code || 'auth/unknown';
       showStep(modal, 'login');
       showAuthError(modal, 'login', code === 'auth/wrong-password' ? 'auth/invalid-credential' : code);
+    } finally {
+      loginSubmitInFlight = false;
+      if (loginSubmitButton) {
+        loginSubmitButton.disabled = false;
+        loginSubmitButton.removeAttribute('aria-busy');
+      }
     }
   });
 
   // Submit register (STEP 3)
   regForm?.addEventListener('submit', async (ev) => {
     ev.preventDefault();
+    if (registrationSubmitInFlight) return;
 
     const gender = (q('#ppRegGender', regForm)?.value || '').trim();
     if (!gender) { q('#ppRegGender', regForm)?.focus(); return; }
@@ -2622,6 +2637,13 @@ const profileData = { gender, firstName: first, lastName: last, /* Compatibilida
   termsAccepted: !!termsOk
 };
 
+const registerSubmitButton = regForm.querySelector('button[type="submit"]');
+registrationSubmitInFlight = true;
+if (registerSubmitButton) {
+  registerSubmitButton.disabled = true;
+  registerSubmitButton.setAttribute('aria-busy', 'true');
+}
+
 try {
   const fn = window.ppCreateUserWithEmailPass;
   if (typeof fn !== 'function') throw new Error('Missing ppCreateUserWithEmailPass');
@@ -2643,9 +2665,19 @@ setTimeout(() => {
   if (loginHidden) loginHidden.value = email;
 
   showStep(modal, 'login');
+  registrationSubmitInFlight = false;
+  if (registerSubmitButton) {
+    registerSubmitButton.disabled = false;
+    registerSubmitButton.removeAttribute('aria-busy');
+  }
 }, 5000);
 
     } catch (err) {
+      registrationSubmitInFlight = false;
+      if (registerSubmitButton) {
+        registerSubmitButton.disabled = false;
+        registerSubmitButton.removeAttribute('aria-busy');
+      }
       const code = err?.code || '';
       if (code === 'auth/email-already-in-use') {
         showStep(modal, 'login');
